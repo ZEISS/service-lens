@@ -1,0 +1,4 @@
+# .g.yml is a YAML file that describes the project.
+version: 1
+name: template-go
+description: A template for go projects

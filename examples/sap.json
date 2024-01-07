@@ -1,0 +1,54 @@
+{
+    "version": 1,
+    "name": "SAP Lens",
+    "description": "This evaluates an SAP against best practices.",
+    "pillars": [
+      {
+        "id": "operational_excellence",
+        "name": "Operational Excellence",
+        "description": "Operational Excellence",
+        "questions": [
+          {
+            "id": "question_1",
+            "title": "Question 1",
+            "description": "Question 1 asks about operational exelence",
+            "resources": [
+              {
+                "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+                "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+              }
+            ],
+            "choices": [
+              {
+                "id": "choice_1",
+                "title": "Choice 1",
+                "description": "Choice 1 is provding a good choice."
+              },
+              {
+                "id": "choice_2",
+                "title": "Choice 2",
+                "description": "Choice 2 is provding a good choice."
+              },
+              {
+                "id": "none_of_these",
+                "title": "None of these",
+                "description": "None of these"
+              }
+            ],
+            "risks": [
+              {
+                "risk": "HIGH_RISK",
+                "condition": "default"
+              }
+            ]
+          }
+        ],
+        "resources": [
+          {
+            "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+            "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+          }
+        ]
+      }
+    ]
+  }
