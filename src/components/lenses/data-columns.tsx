@@ -36,9 +36,8 @@ export const columns: ColumnDef<Lens>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
-    enableSorting: false,
-    enableHiding: false
+    cell: ({ row }) => <div>{row.getValue('id')}</div>,
+    enableSorting: false
   },
   {
     accessorKey: 'name',
@@ -82,7 +81,7 @@ export const columns: ColumnDef<Lens>[] = [
     }
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'isDraft',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
