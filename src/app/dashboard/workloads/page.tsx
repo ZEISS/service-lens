@@ -1,4 +1,4 @@
-import { AddWorkloadButton } from './components/add-button'
+import { AddWorkloadButton } from '@/components/workloads/add-button'
 import {
   SubNav,
   SubNavTitle,
@@ -6,7 +6,7 @@ import {
   SubNavSubtitle
 } from '@/components/sub-nav'
 import { Main } from '@/components/main'
-import { WorkloadDataTable } from './components/data-table'
+import { WorkloadDataTable } from '@/components/workloads/data-table'
 
 export default function Page() {
   return (
@@ -20,7 +20,7 @@ export default function Page() {
           <AddWorkloadButton />
         </SubNavActions>
       </SubNav>
-      <Main>
+      <Main className="space-y-8 p-8">
         <WorkloadDataTable />
       </Main>
     </>

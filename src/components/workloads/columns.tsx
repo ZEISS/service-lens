@@ -9,7 +9,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Workload } from '@/db/models/workload'
 import type { Profile } from '@/db/models/profile'
 import { DataTableColumnHeader } from '@/components/data-table-column-header'
-import { DataTableRowActions } from '@/app/dashboard/workloads/components/data-rows-actions'
+import { DataTableRowActions } from '@/components/workloads/data-rows-actions'
 
 export const columns: ColumnDef<Workload>[] = [
   {

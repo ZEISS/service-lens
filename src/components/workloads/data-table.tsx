@@ -27,7 +27,7 @@ export function WorkloadDataTable() {
   )
 
   return (
-    <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+    <div className="h-full flex-1 flex-col md:flex">
       <DataTable columns={columns} query={query()} options={options} />
     </div>
   )

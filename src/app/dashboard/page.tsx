@@ -11,6 +11,8 @@ import { ActionButton } from '@/app/dashboard/components/add-button'
 import TotalWorkloadsCard from './components/total-workloads-card'
 import TotalSolutionsCard from './components/total-solutions-card'
 import LoadingCard from './components/loading-card'
+import { Main } from '@/components/main'
+import WorkloadsListCard from '@/components/dashboard/workloads-card'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -29,8 +31,8 @@ export default async function Page() {
           <ActionButton />
         </SubNavActions>
       </SubNav>
-      <main>
-        <div className="flex-1 space-y-4 p-8 pt-6">
+      <Main className="space-y-8 p-8">
+        <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between space-y-2"></div>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>
@@ -54,10 +56,15 @@ export default async function Page() {
                   <TotalSolutionsCard />
                 </Suspense>
               </div>
+              <div className="grid gap-4">
+                <Suspense fallback={<LoadingCard />}>
+                  <WorkloadsListCard />
+                </Suspense>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
-      </main>
+      </Main>
     </>
   )
 }
