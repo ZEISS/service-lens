@@ -18,8 +18,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DateFormat from '@/components/date-format'
-import { ActionsDropdown } from './components/actions-dropdown'
-import { PublishButton } from './components/publish-button'
+import { ActionsDropdown } from '@/components/lenses/actions-dropdown'
+import { PublishButton } from '@/components/lenses/publish-button'
 
 export type PageProps = {
   params: { id: string }
@@ -31,10 +31,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <SubNav>
-        <SubNavTitle>
-          {lens?.name}
-          <SubNavSubtitle>{lens?.description}</SubNavSubtitle>
-        </SubNavTitle>
+        <SubNavTitle>{lens?.name}</SubNavTitle>
         <SubNavActions>
           {lens?.isDraft && <PublishButton lensId={lens.id} />}
           <ActionsDropdown lens={lens} />

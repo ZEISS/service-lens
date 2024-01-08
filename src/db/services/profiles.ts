@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { Profile } from '@/db/models/profile'
 import { ProfileQuestion } from '@/db/models/profile-question'
 import { ProfileQuestionAnswer } from '@/db/models/profile-question-answers'
@@ -8,7 +7,8 @@ import {
   FindOneProfileSchema,
   CreateProfileSchema,
   FindAllProfilesQuestionsSchema,
-  DestroyProfileSchema
+  DestroyProfileSchema,
+  MakeCopyProfileSchema
 } from '../schemas/profiles'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
@@ -22,10 +22,7 @@ export const createProfile = async (
   opts: z.infer<typeof CreateProfileSchema>
 ) =>
   sequelize.transaction(async transaction => {
-    const profile = await Profile.create(
-      { id: uuidv4(), ...opts },
-      { transaction }
-    )
+    const profile = await Profile.create({ ...opts }, { transaction })
 
     await ProfileQuestionAnswer.bulkCreate(
       Object.values(opts.selectedChoices)
@@ -47,10 +44,6 @@ export const destroyProfile = async (
     async transaction =>
       await Profile.destroy({ where: { id: opts }, transaction })
   )
-
-// export async function deleteProfile(id: string) {
-//   return await Profile.destroy({ where: { id } })
-// }
 
 export const findOneProfile = async (
   opts: z.infer<typeof FindOneProfileSchema>

@@ -1,4 +1,4 @@
-import { AddLensButton } from './components/add-button'
+import { AddLensButton } from '@/components/lenses/add-button'
 import {
   SubNav,
   SubNavTitle,
@@ -6,7 +6,7 @@ import {
   SubNavSubtitle
 } from '@/components/sub-nav'
 import { Main } from '@/components/main'
-import { LensesDataTable } from './components/data-table'
+import { LensesDataTable } from '@/components/lenses/data-table'
 
 export default function Lenses() {
   return (
@@ -14,7 +14,9 @@ export default function Lenses() {
       <SubNav>
         <SubNavTitle>
           Lenses
-          <SubNavSubtitle>Review specifications for workloads</SubNavSubtitle>
+          <SubNavSubtitle>
+            Measure any architecture against best practices.
+          </SubNavSubtitle>
         </SubNavTitle>
         <SubNavActions>
           <AddLensButton />

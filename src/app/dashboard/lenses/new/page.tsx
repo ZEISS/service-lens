@@ -1,6 +1,6 @@
 import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
-import { NewSolutionForm } from './components/new-form'
+import { NewSolutionForm } from '@/components/lenses/new-form'
 
 export default function Page() {
   return (
@@ -8,7 +8,9 @@ export default function Page() {
       <SubNav>
         <SubNavTitle>
           New Lens
-          <SubNavSubtitle>Lenses help to evalute workloads.</SubNavSubtitle>
+          <SubNavSubtitle>
+            Measure workloads against best practices.
+          </SubNavSubtitle>
         </SubNavTitle>
       </SubNav>
       <Section>

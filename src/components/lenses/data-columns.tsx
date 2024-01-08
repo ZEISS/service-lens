@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Lens } from '@/db/models/lens'
 import { DataTableColumnHeader } from '@/components/data-table-column-header'
-import { DataTableRowActions } from '@/app/dashboard/lenses/components/data-rows-actions'
+import { DataTableRowActions } from '@/components/lenses/data-rows-actions'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -87,6 +87,7 @@ export const columns: ColumnDef<Lens>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
+      console.log(row)
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">

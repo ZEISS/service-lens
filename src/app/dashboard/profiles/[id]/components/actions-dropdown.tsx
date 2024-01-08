@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'next/navigation'
 import type { Profile } from '@/db/models/profile'
 import { useAction } from '@/trpc/client'
-import { rhfActionDeleteProfile } from '@/app/dashboard/profiles/actions/profile.action'
+import { rhfActionDeleteProfile } from '@/actions/profile.action'
 
 interface ActionsDropdownProps {
   profile?: Profile | null

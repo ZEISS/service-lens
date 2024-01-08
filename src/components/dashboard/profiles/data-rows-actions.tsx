@@ -2,7 +2,6 @@
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
-
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/client'
 import {
@@ -11,9 +10,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
@@ -43,24 +39,10 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <Link href={`/dashboard/workloads/${id}`}>
+        <Link href={`/dashboard/profiles/${id}`}>
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            {/* <DropdownMenuRadioGroup value={}>
-              {labels.map(label => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup> */}
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => deleteWorkload(id)}>
           Delete

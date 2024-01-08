@@ -1,4 +1,4 @@
-import { Suspense, use, useDeferredValue } from 'react'
+import { Suspense } from 'react'
 import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
 import { NewProfileForm } from '@/components/dashboard/profiles/new-form'

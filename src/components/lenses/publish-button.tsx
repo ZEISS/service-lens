@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { useAction } from '@/trpc/client'
-import { rhfActionPushlishLens } from '@/app/dashboard/lenses/actions/lens.action'
+import { rhfActionPushlishLens } from '@/actions/lens.action'
 
 interface PublishButtonProps {
   lensId: string

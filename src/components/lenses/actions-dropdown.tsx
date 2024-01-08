@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { Lens } from '@/db/models/lens'
 import { useAction } from '@/trpc/client'
-import { rhfActionDeleteLens } from '@/app/dashboard/lenses/actions/lens.action'
+import { rhfActionDeleteLens } from '@/actions/lens.action'
 
 interface ActionsDropdownProps {
   lens?: Lens | null

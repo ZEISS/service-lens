@@ -11,7 +11,8 @@ import {
   Min,
   Max,
   HasMany,
-  Default
+  Default,
+  AllowNull
 } from 'sequelize-typescript'
 import { LensPillar } from './lens-pillars'
 import type { Spec } from '../schemas/spec'
@@ -31,7 +32,7 @@ export interface LensAttributes {
 
 export type LensCreationAttributes = Omit<
   LensAttributes,
-  'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
@@ -40,6 +41,8 @@ export type LensCreationAttributes = Omit<
 })
 export class Lens extends Model<LensAttributes, LensCreationAttributes> {
   @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
   @Column(DataType.UUIDV4)
   id!: string
 
@@ -59,7 +62,7 @@ export class Lens extends Model<LensAttributes, LensCreationAttributes> {
 
   @Default(true)
   @Column
-  isDraft!: boolean
+  isDraft?: boolean
 
   @NotEmpty
   @Min(12)

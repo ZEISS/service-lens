@@ -10,7 +10,8 @@ export const WorkloadGetQuestionSchema = z.object({
 export const WorkloadListSchema = PaginationSchema
 export const WorkloadAddSchema = z.object({
   name: z.string().min(3).max(256),
-  description: z.string().min(10).max(2048)
+  description: z.string().min(10).max(2048),
+  spec: z.string()
 })
 export const WorkloadGetLensQuestionSchema = z.object({
   workloadId: z.string().uuid(),

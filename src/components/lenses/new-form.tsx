@@ -9,8 +9,9 @@ import {
   FormMessage,
   FormField
 } from '@/components/ui/form'
+import type { PropsWithChildren } from 'react'
 import { Textarea } from '@/components/ui/textarea'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,11 +22,11 @@ import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 
-export type NewSolutionFormProps = {
-  className?: string
-}
+export type NewSolutionFormProps = {}
 
-export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
+export function NewSolutionForm({
+  ...props
+}: PropsWithChildren<NewSolutionFormProps>) {
   const form = useForm<z.infer<typeof rhfActionSchema>>({
     resolver: zodResolver(rhfActionSchema),
     defaultValues: {
@@ -41,11 +42,16 @@ export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
     await mutation.mutateAsync({ ...data })
   }
 
+  const isLoading = useMemo(
+    () => mutation.status === 'loading',
+    [mutation.status]
+  )
+
   useEffect(() => {
     if (mutation.status === 'success') {
       router.push(`/dashboard/lenses/${mutation.data?.id}`)
     }
-  })
+  }, [mutation.status, mutation.data?.id, router])
 
   const fileRef = form.register('spec', { required: true })
 
@@ -66,7 +72,7 @@ export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
                   <h1>Name</h1>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input disabled={isLoading} {...field} />
                 </FormControl>
                 <FormDescription>Give it a great name.</FormDescription>
                 <FormMessage />
@@ -82,7 +88,7 @@ export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
                 <FormControl>
                   <Input
                     type="file"
-                    disabled={form.formState.isSubmitting}
+                    disabled={isLoading}
                     placeholder=""
                     {...fileRef}
                   />
@@ -102,6 +108,7 @@ export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
                 <FormControl>
                   <Textarea
                     {...field}
+                    disabled={isLoading}
                     className="w-full"
                     placeholder="Add a description ..."
                   />
@@ -111,10 +118,7 @@ export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
               </div>
             )}
           />
-          <Button
-            type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
-          >
+          <Button type="submit" disabled={isLoading || !form.formState.isValid}>
             New Lens
           </Button>
         </form>

@@ -9,11 +9,13 @@ import {
   LensesGetSchema,
   LensesDeleteSchema,
   LensesPublishSchema,
-  LensesGetQuestionSchema
+  LensesGetQuestionSchema,
+  LensesAddSchema
 } from '../schemas/lenses'
 import sequelize from '@/db/config/config'
 import { z } from 'zod'
 import { LensPillarResource } from '../models/lens-pillar-resources'
+import { MakeCopyProfileSchema } from '../schemas/profiles'
 
 export type Pagination = {
   offset?: number
@@ -34,27 +36,15 @@ export const deleteLens = async (opts: z.infer<typeof LensesDeleteSchema>) =>
 export const publishLens = async (opts: z.infer<typeof LensesPublishSchema>) =>
   await Lens.update({ isDraft: false }, { where: { id: opts } })
 
-export async function createLens({
-  id = uuidv4(),
-  name,
-  description,
-  spec
-}: {
-  id: string
-  name: string
-  description: string
-  spec: string
-}) {
-  return await sequelize.transaction(async transaction => {
-    const s = await Spec.parseAsync(JSON.parse(spec))
+export const createLens = async (opts: z.infer<typeof LensesAddSchema>) =>
+  await sequelize.transaction(async transaction => {
+    const spec = await Spec.parseAsync(JSON.parse(opts.spec))
 
     const lens = await Lens.create(
       {
-        id,
-        name,
-        version: s.version,
-        description,
-        spec: s,
+        ...opts,
+        version: spec.version,
+        spec: spec,
         isDraft: true
       },
       {
@@ -64,7 +54,7 @@ export async function createLens({
 
     const pillars = await LensPillar.bulkCreate(
       [
-        ...s.pillars.map(pillar => ({
+        ...spec.pillars.map(pillar => ({
           lensId: lens.id,
           name: pillar.name,
           ref: pillar.id,
@@ -80,7 +70,7 @@ export async function createLens({
 
     const pillarsResources = await LensPillarResource.bulkCreate(
       pillars.flatMap((pillar, idx) => [
-        ...(s.pillars[idx].resources?.map(resource => {
+        ...(spec.pillars[idx].resources?.map(resource => {
           return {
             pillarId: pillar.id,
             url: resource.url,
@@ -93,7 +83,7 @@ export async function createLens({
 
     const questions = await LensPillarQuestion.bulkCreate(
       pillars.flatMap((pillar, idx) => [
-        ...s.pillars[idx].questions.map(question => {
+        ...spec.pillars[idx].questions.map(question => {
           return {
             pillarId: pillar.id,
             ref: question.id,
@@ -108,7 +98,7 @@ export async function createLens({
     const questionResources = await LensPillarQuestionResource.bulkCreate(
       pillars.flatMap((pillar, a) => [
         ...questions.flatMap((question, b) => [
-          ...(s.pillars[a].questions[b]?.resources?.map(resource => {
+          ...(spec.pillars[a].questions[b]?.resources?.map(resource => {
             return {
               questionId: question.id,
               url: resource.url,
@@ -123,7 +113,7 @@ export async function createLens({
     const choices = await LensPillarChoice.bulkCreate(
       pillars.flatMap((pillar, a) => [
         ...questions.flatMap((question, b) => [
-          ...s.pillars[a].questions[b].choices.map(choice => {
+          ...spec.pillars[a].questions[b].choices.map(choice => {
             return {
               questionId: question.id,
               ref: choice.id,
@@ -137,7 +127,6 @@ export async function createLens({
 
     return { ...lens.dataValues }
   })
-}
 
 export const findOneLensPillarQuestion = async (
   opts: z.infer<typeof LensesGetQuestionSchema>

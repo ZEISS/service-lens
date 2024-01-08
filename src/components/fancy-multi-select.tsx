@@ -1,8 +1,7 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect, useCallback, useState, useRef } from 'react'
 import { X } from 'lucide-react'
-
 import { Badge } from '@/components/ui/badge'
 import { Command, CommandGroup, CommandItem } from '@/components/ui/command'
 import { Command as CommandPrimitive } from 'cmdk'
@@ -24,29 +23,26 @@ export function FancyMultiSelect<T>({
   onValueChange,
   dataValues = []
 }: FancyMultiSelectProps<T>) {
-  const inputRef = React.useRef<HTMLInputElement>(null)
-  const [open, setOpen] = React.useState(false)
-  const [selected, setSelected] = React.useState<FancyMultiSelectValue<T>[]>([
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState<FancyMultiSelectValue<T>[]>([
     dataValues[0]
   ])
-  const [inputValue, setInputValue] = React.useState('')
+  const [inputValue, setInputValue] = useState('')
 
-  React.useEffect(() => {
+  useEffect(() => {
     onValueChange?.(selected.map(s => s.value))
   }, [selected, onValueChange])
 
-  const handleSelect = React.useCallback((value: FancyMultiSelectValue<T>) => {
+  const handleSelect = useCallback((value: FancyMultiSelectValue<T>) => {
     setSelected(prev => [...prev, value])
   }, [])
 
-  const handleUnselect = React.useCallback(
-    (select: FancyMultiSelectValue<T>) => {
-      setSelected(prev => prev.filter(s => s.value !== select.value))
-    },
-    []
-  )
+  const handleUnselect = useCallback((select: FancyMultiSelectValue<T>) => {
+    setSelected(prev => prev.filter(s => s.value !== select.value))
+  }, [])
 
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const input = inputRef.current
       if (input) {

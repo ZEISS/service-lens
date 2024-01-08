@@ -7,7 +7,8 @@ import {
   listWorkloads,
   deleteWorkload,
   findWorkloadLensQuestion,
-  totalWorkloads
+  totalWorkloads,
+  workloadsRouter
 } from './actions/workloads'
 import { getProfile, listProfilesQuestions } from './actions/profiles'
 import { getLens, getLensQuestion } from './actions/lenses'
@@ -77,7 +78,10 @@ export const appRouter = router({
   solutions: solutionsRouter,
 
   // profiles
-  profiles: profilesRouter
+  profiles: profilesRouter,
+
+  // workloads
+  workloads: workloadsRouter
 })
 
 export type AppRouter = typeof appRouter

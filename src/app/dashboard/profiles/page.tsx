@@ -6,7 +6,7 @@ import {
 } from '@/components/sub-nav'
 import { Main } from '@/components/main'
 import { AddProfileButton } from '@/components/dashboard/profiles/add-button'
-import { ProfileDataTable } from '@/components/dashboard/profiles/data-table'
+import { ProfilesDataTable } from '@/components/dashboard/profiles/data-table'
 
 export default function Page() {
   return (
@@ -14,16 +14,14 @@ export default function Page() {
       <SubNav>
         <SubNavTitle>
           <p>Profiles</p>
-          <SubNavSubtitle>
-            Provide business context for a workload
-          </SubNavSubtitle>
+          <SubNavSubtitle>Business context of a workload.</SubNavSubtitle>
         </SubNavTitle>
         <SubNavActions>
           <AddProfileButton />
         </SubNavActions>
       </SubNav>
       <Main>
-        <ProfileDataTable />
+        <ProfilesDataTable />
       </Main>
     </>
   )

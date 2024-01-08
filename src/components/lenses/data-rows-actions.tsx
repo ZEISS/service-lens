@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { useAction } from '@/trpc/client'
-import { rhfActionDeleteLens } from '../actions/lens.action'
+import { rhfActionDeleteLens } from '@/actions/lens.action'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -46,21 +46,6 @@ export function DataTableRowActions<TData>({
         <Link href={`/dashboard/lenses/${id}`} passHref>
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            {/* <DropdownMenuRadioGroup value={}>
-              {labels.map(label => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup> */}
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => deleteLens(id)}>
           Delete

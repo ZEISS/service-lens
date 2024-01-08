@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const rhfActionSchema = z.object({
   name: z.string().min(3, {}).default(''),
   lensesIds: z.array(z.string().uuid()).min(1).default([]),
-  environmentsIds: z.array(z.bigint()).min(1).default([]),
+  environmentsIds: z.array(z.coerce.bigint()).min(1).default([]),
   description: z
     .string()
     .min(10, {

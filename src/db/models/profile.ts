@@ -10,7 +10,9 @@ import {
   NotEmpty,
   Min,
   Max,
-  BelongsToMany
+  BelongsToMany,
+  AllowNull,
+  Default
 } from 'sequelize-typescript'
 import { ProfileQuestionAnswer } from '@/db/models/profile-question-answers'
 import { ProfileQuestionChoice } from '@/db/models/profile-question-choice'
@@ -26,7 +28,7 @@ export interface ProfileAttributes {
 
 export type ProfileCreationAttributes = Omit<
   ProfileAttributes,
-  'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
@@ -38,6 +40,8 @@ export class Profile extends Model<
   ProfileCreationAttributes
 > {
   @PrimaryKey
+  @Default(DataType.UUIDV4)
+  @AllowNull(false)
   @Column(DataType.UUIDV4)
   id!: string
 
