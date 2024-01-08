@@ -11,6 +11,8 @@
 
 Service Lens is an enterprise service management tool. It allows you to manage your services, identify risks, review the solutions that created them and the business context of every service. It follows the Well-Architected methodology established by AWS and Microsoft.
 
+![preview](assets/screenshot_1.png)
+
 ## Development
 
 Please create a `.env.local` file from the `.env.example` file. You need to [create a OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) on GitHub to get the `GITHUB_ID` and `GITHUB_SECRET`.
