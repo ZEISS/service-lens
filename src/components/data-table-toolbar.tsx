@@ -2,15 +2,12 @@
 
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
-import { CgSpinner } from 'react-icons/cg'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/data-table-view-options'
 
-import { statuses } from './data/data'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
-import type { DataTableFacetedFilterProps } from './data-table-faceted-filter'
 import { DataTableLoading } from './data-table-loading'
 
 interface DataTableToolbarProps<TData> {

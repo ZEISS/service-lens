@@ -22,11 +22,9 @@ import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 
-export type NewSolutionFormProps = {}
+export type NewLensFormProps = {}
 
-export function NewSolutionForm({
-  ...props
-}: PropsWithChildren<NewSolutionFormProps>) {
+export function NewLensForm({ ...props }: PropsWithChildren<NewLensFormProps>) {
   const form = useForm<z.infer<typeof rhfActionSchema>>({
     resolver: zodResolver(rhfActionSchema),
     defaultValues: {

@@ -31,12 +31,13 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
+import type { PropsWithChildren } from 'react'
 
-export type NewProfilesFormProps = {
-  className?: string
-}
+export type NewWorkloadFormProps = {}
 
-export function NewProfilesForm({ ...props }: NewProfilesFormProps) {
+export function NewWorkloadForm({
+  ...props
+}: PropsWithChildren<NewWorkloadFormProps>) {
   const profiles = use(api.listProfiles.query({}))
   const environments = use(api.listEnvironments.query({}))
   const lenses = use(api.listLenses.query({}))

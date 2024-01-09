@@ -2,7 +2,6 @@
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
-
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/client'
 import {
@@ -47,20 +46,6 @@ export function DataTableRowActions<TData>({
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            {/* <DropdownMenuRadioGroup value={}>
-              {labels.map(label => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup> */}
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => deleteWorkload(id)}>
           Delete

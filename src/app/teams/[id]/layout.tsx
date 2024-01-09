@@ -1,5 +1,5 @@
 import { SidebarNav } from '@/components/sidebar-nav'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 
 export type LayoutProps = {
   children?: React.ReactNode

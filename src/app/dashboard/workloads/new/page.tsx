@@ -1,6 +1,6 @@
 import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
-import { NewProfilesForm } from './components/new-form'
+import { NewWorkloadForm } from '@/components/workloads/new-form'
 import { Suspense } from 'react'
 
 export default function Page() {
@@ -17,7 +17,7 @@ export default function Page() {
       </SubNav>
       <Section>
         <Suspense>
-          <NewProfilesForm />
+          <NewWorkloadForm />
         </Suspense>
       </Section>
     </>

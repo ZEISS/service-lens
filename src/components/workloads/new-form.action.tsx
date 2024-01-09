@@ -10,7 +10,6 @@ export const rhfAction = createAction(
   protectedProcedure.input(rhfActionSchema).mutation(
     async opts =>
       await createWorkload({
-        id: uuidv4(),
         name: opts.input.name,
         description: opts.input.description,
         environmentsIds: opts.input.environmentsIds,

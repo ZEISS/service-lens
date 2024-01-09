@@ -13,7 +13,9 @@ import {
   PrimaryKey,
   Table,
   UpdatedAt,
-  HasMany
+  HasMany,
+  AllowNull,
+  Default
 } from 'sequelize-typescript'
 import { Profile } from './profile'
 import { Lens } from './lens'
@@ -36,7 +38,7 @@ export interface WorkloadAttributes {
 
 export type WorkloadCreationAttributes = Omit<
   WorkloadAttributes,
-  'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
@@ -48,6 +50,8 @@ export class Workload extends Model<
   WorkloadCreationAttributes
 > {
   @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
   @Column(DataType.UUIDV4)
   id!: string
 

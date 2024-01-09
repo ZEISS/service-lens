@@ -1,6 +1,6 @@
 import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
-import { NewSolutionForm } from '@/components/lenses/new-form'
+import { NewLensForm } from '@/components/lenses/new-form'
 
 export default function Page() {
   return (
@@ -14,7 +14,7 @@ export default function Page() {
         </SubNavTitle>
       </SubNav>
       <Section>
-        <NewSolutionForm />
+        <NewLensForm />
       </Section>
     </>
   )

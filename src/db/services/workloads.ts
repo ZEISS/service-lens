@@ -41,11 +41,8 @@ export async function createWorkload({
   lensesIds: string[]
 }) {
   return await sequelize.transaction(async transaction => {
-    const id = uuidv4()
-
     const workload = await Workload.create(
       {
-        id,
         profilesId,
         name,
         description
