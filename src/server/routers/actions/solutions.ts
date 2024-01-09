@@ -31,7 +31,7 @@ export const listSolutions = protectedProcedure
 
 export const addSolution = protectedProcedure
   .input(SolutionAddSchema)
-  .query(async opts => as({ id: uuidv4(), ...opts.input }))
+  .query(async opts => as({ ...opts.input }))
 
 export const getSolution = protectedProcedure
   .input(SolutionGetSchema)
