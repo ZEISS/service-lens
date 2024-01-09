@@ -10,19 +10,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
+import { useAction } from '@/trpc/client'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
 async function deleteWorkload(id: string): Promise<void> {
-  await api.deleteWorkload.query(id)
+  await api.workloads.delete.query(id)
 }
 
 export function DataTableRowActions<TData>({
@@ -45,7 +43,11 @@ export function DataTableRowActions<TData>({
         <Link href={`/dashboard/solutions/${id}`}>
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={async () => await api.solutions.makeCopy.query(id)}
+        >
+          Make a copy
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => deleteWorkload(id)}>
           Delete

@@ -23,6 +23,7 @@ import {
   SolutionMakeCopySchema
 } from '../schemas/solution'
 import { router } from '@/server/trpc'
+import { revalidatePath } from 'next/cache'
 
 export const listSolutions = protectedProcedure
   .input(SolutionListSchema)
@@ -63,7 +64,10 @@ export const deleteSolutionTemplate = protectedProcedure
 
 export const makeCopySolutionTemplate = protectedProcedure
   .input(SolutionMakeCopySchema)
-  .query(async opts => await makeCopySolution(opts.input))
+  .query(async opts => {
+    revalidatePath('/dashboard/solutions')
+    return await makeCopySolution(opts.input)
+  })
 
 export const solutionsRouter = router({
   add: addSolution,

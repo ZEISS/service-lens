@@ -22,14 +22,12 @@ import { z } from 'zod'
 export const countSolutions = async () => await Solution.count()
 
 export async function addSolution({
-  id = uuidv4(),
   userId,
   title,
   body,
   description
 }: SolutionCreationAttributes) {
   return await Solution.create({
-    id,
     title,
     body,
     description,
@@ -51,12 +49,13 @@ export const makeCopySolution = async (
   opts: z.infer<typeof MakeCopySolutionSchema>
 ) =>
   sequelize.transaction(async transaction => {
+    console.log(opts)
     const solution = await Solution.findOne({ where: { id: opts } })
 
-    return SolutionTemplate.create(
+    return Solution.create(
       {
         title: `${solution?.title} (Copy)`,
-        body: solution?.body,
+        body: solution?.body ?? '',
         description: solution?.description
       },
       { transaction }

@@ -12,7 +12,9 @@ import {
   Max,
   HasMany,
   ForeignKey,
-  BelongsTo
+  BelongsTo,
+  Default,
+  AllowNull
 } from 'sequelize-typescript'
 import { SolutionComment } from './solution-comments'
 import { User } from './users'
@@ -32,7 +34,7 @@ export interface SolutionAttributes {
 
 export type SolutionCreationAttributes = Omit<
   SolutionAttributes,
-  'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
@@ -44,6 +46,8 @@ export class Solution extends Model<
   SolutionCreationAttributes
 > {
   @PrimaryKey
+  @AllowNull(false)
+  @Default(DataType.UUIDV4)
   @Column(DataType.UUIDV4)
   id?: string
 

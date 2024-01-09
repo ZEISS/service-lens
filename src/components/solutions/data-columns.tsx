@@ -36,7 +36,7 @@ export const columns: ColumnDef<Solution>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
+    cell: ({ row }) => <div>{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false
   },
@@ -46,7 +46,6 @@ export const columns: ColumnDef<Solution>[] = [
       <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
-      //   const label = labels.find(label => label.value === row.original.)
       return (
         <Link
           href={`/dashboard/solutions/${row.getValue('id')}`}
