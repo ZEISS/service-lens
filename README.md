@@ -15,6 +15,16 @@ Service Lens is an enterprise service management tool. It allows you to manage y
 
 ## Development
 
+The projects has mutiple packages.
+
+```
+├── packages/app
+├── packages/docs
+├── packages/tools
+```
+
+The `packages/app` contains the servie lens app. The `docs` folder contains the documentation of the project and `tools` the shared tooling of the project.
+
 Please create a `.env.local` file from the `.env.example` file. You need to [create a OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) on GitHub to get the `GITHUB_ID` and `GITHUB_SECRET`.
 
 ```bash
@@ -25,13 +35,13 @@ npm i
 docker compose up
 
 # Run migrations
-npm run migrate:up
+npm run migrate:up -w @service-lens/app
 
 # Run seeds
-npm run db:seed
+npm run db:seed -w @service-lens/app
 
 # Run the server
-npm run dev
+npm run dev -w @service-lens/app
 ```
 
 # License
