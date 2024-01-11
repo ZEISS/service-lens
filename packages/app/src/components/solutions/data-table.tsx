@@ -1,6 +1,7 @@
 'use client'
 
 import { columns } from './data-columns'
+import { Suspense } from 'react'
 import { DataTable, Query } from '@/components/data-table'
 import type { Solution } from '@/db/models/solution'
 import { api } from '@/trpc/client'

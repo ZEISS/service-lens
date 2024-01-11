@@ -17,7 +17,6 @@ export const api = experimental_createTRPCNextAppDirClient<AppRouter>({
   },
   config() {
     return {
-      filter: [],
       transformer: superjson,
       links: [
         loggerLink({

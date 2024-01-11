@@ -4,7 +4,6 @@ import 'server-only'
 import { createAction, protectedProcedure } from '@/server/trpc'
 import { rhfActionSchema } from './new-form.schema'
 import { createWorkload } from '@/db/services/workloads'
-import { v4 as uuidv4 } from 'uuid'
 
 export const rhfAction = createAction(
   protectedProcedure.input(rhfActionSchema).mutation(

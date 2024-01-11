@@ -4,7 +4,6 @@ import 'server-only'
 import { createAction, protectedProcedure } from '@/server/trpc'
 import { rhfActionSchema } from './new-form.schema'
 import { addSolution } from '@/db/services/solutions'
-import { v4 as uuidv4 } from 'uuid'
 import { User } from '@/db/models/users'
 
 export const rhfAction = createAction(
@@ -14,7 +13,6 @@ export const rhfAction = createAction(
     })
 
     return await addSolution({
-      id: uuidv4(),
       userId: user?.id,
       ...opts.input
     })

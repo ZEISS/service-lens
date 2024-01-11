@@ -2,7 +2,6 @@ import { Solution } from '@/db/models/solution'
 import { SolutionComment } from '@/db/models/solution-comments'
 import { SolutionTemplate } from '@/db/models/solution-templates'
 import { User } from '@/db/models/users'
-import { v4 as uuidv4 } from 'uuid'
 import type { SolutionCreationAttributes } from '../models/solution'
 import sequelize from '../config/config'
 import {

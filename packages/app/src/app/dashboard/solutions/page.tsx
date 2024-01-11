@@ -6,6 +6,7 @@ import {
   SubNavSubtitle
 } from '@/components/sub-nav'
 import { Main } from '@/components/main'
+import { Suspense } from 'react'
 import SolutionsDataTable from '@/components/solutions/data-table'
 
 export default function Page() {
@@ -23,7 +24,9 @@ export default function Page() {
         </SubNavActions>
       </SubNav>
       <Main>
-        <SolutionsDataTable />
+        <Suspense>
+          <SolutionsDataTable />
+        </Suspense>
       </Main>
     </>
   )

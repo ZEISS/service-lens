@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
 import { Lens } from '@/db/models/lens'
 import { LensPillar } from '@/db/models/lens-pillars'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
