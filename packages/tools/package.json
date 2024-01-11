@@ -14,8 +14,7 @@
         "precommit": "lint-staged",
         "clean": "rm -rf node_modules"
     },
-    "dependencies": {},
-    "devDependencies": {
+    "dependencies": {
         "@types/node": "^20.10.6",
         "@types/pg": "^8.10.9",
         "@types/react": "^18",
@@ -32,5 +31,6 @@
         "prettier": "^3.1.1",
         "sequelize-cli": "^6.6.2",
         "typescript": "^5"
-    }
+    },
+    "devDependencies": {}
 }

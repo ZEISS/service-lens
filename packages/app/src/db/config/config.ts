@@ -21,6 +21,8 @@ import { WorkloadEnvironment } from '../models/workload-environment'
 import { WorkloadLens } from '../models/workload-lens'
 import { WorkloadLensesAnswer } from '../models/workload-lenses-answers'
 import { WorkloadLensesAnswerChoice } from '../models/workload-lenses-answers-choices'
+import { Team } from '../models/team'
+import { TeamMembers } from '../models/team-members'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
@@ -47,7 +49,9 @@ const models = [
   LensPillarChoiceResource,
   LensPillarQuestionResource,
   ProfileQuestionAnswer,
-  User
+  User,
+  Team,
+  TeamMembers
 ]
 
 export interface Config {

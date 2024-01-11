@@ -48,7 +48,6 @@ export const makeCopySolution = async (
   opts: z.infer<typeof MakeCopySolutionSchema>
 ) =>
   sequelize.transaction(async transaction => {
-    console.log(opts)
     const solution = await Solution.findOne({ where: { id: opts } })
 
     return Solution.create(

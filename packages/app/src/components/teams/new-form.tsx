@@ -14,10 +14,9 @@ import { useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { rhfActionSchema } from './new-form.schema'
 import { rhfAction } from './new-form.action'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { TeamsCreateSchema } from '@/server/routers/schemas/teams'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
@@ -28,14 +27,14 @@ export type NewTeamFormProps = {}
 
 export function NewTeamForm({ ...props }: PropsWithChildren<NewTeamFormProps>) {
   const form = useForm<NewTeamFormValues>({
-    resolver: zodResolver(rhfActionSchema),
+    resolver: zodResolver(TeamsCreateSchema),
     defaultValues,
     mode: 'onChange'
   })
   const router = useRouter()
 
   const mutation = useAction(rhfAction)
-  const handleSubmit = async (data: z.infer<typeof rhfActionSchema>) =>
+  const handleSubmit = async (data: NewTeamFormValues) =>
     await mutation.mutateAsync({ ...data })
 
   useEffect(() => {

@@ -34,12 +34,7 @@ export const addSolution = protectedProcedure
 
 export const getSolution = protectedProcedure
   .input(SolutionGetSchema)
-  .query(async opts => {
-    const s = await gs(opts.input)
-    console.log(s?.comments)
-
-    return s
-  })
+  .query(async opts => await gs(opts.input))
 
 export const deleteSolutionComment = protectedProcedure
   .input(SolutionCommentDeleteSchema)

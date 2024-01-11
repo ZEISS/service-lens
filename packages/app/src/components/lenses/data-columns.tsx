@@ -86,7 +86,6 @@ export const columns: ColumnDef<Lens>[] = [
       <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
-      console.log(row)
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">

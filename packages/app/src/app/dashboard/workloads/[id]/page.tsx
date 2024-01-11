@@ -10,7 +10,6 @@ import { Section } from '@/components/section'
 import { api } from '@/trpc/server-http'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PropertiesCard } from './components/properties-card'
-import { LensCard } from './components/lens-card'
 import { MoreButton } from './components/more-button'
 import { LensesCard } from './components/lenses-card'
 

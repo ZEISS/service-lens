@@ -1,8 +1,10 @@
 import { SidebarNav } from '@/components/sidebar-nav'
+import { SubNav, SubNavTitle, SubNavActions } from '@/components/sub-nav'
 import type { PropsWithChildren } from 'react'
+import { api } from '@/trpc/server-invoker'
 
 export type LayoutProps = {
-  children?: React.ReactNode
+  params: { id: string }
 }
 
 const sidebarNavItems = [
@@ -20,15 +22,28 @@ const sidebarNavItems = [
   }
 ]
 
-export default function Layout({ children }: PropsWithChildren<LayoutProps>) {
+export default async function Layout({
+  children,
+  params
+}: PropsWithChildren<LayoutProps>) {
+  const team = await api.teams.get.query(params.id)
+
   return (
     <>
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <SidebarNav items={sidebarNavItems} />
-        <div className="flex-1 lg:max-w-2xl">
-          <div className="space-y-6">{children}</div>
+      <SubNav>
+        <SubNavTitle>{team?.name}</SubNavTitle>
+        <SubNavActions></SubNavActions>
+      </SubNav>
+      <main className="p-8">
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <aside className="-mx-4 lg:w-1/5">
+            <SidebarNav items={sidebarNavItems} />
+          </aside>
+          <div className="flex-1 lg:max-w-2xl">
+            <div className="space-y-6">{children}</div>
+          </div>
         </div>
-      </div>
+      </main>
     </>
   )
 }
