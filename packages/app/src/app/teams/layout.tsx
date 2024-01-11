@@ -15,16 +15,7 @@ type PageProps = {
 export default function Layout({ children }: PageProps) {
   return (
     <>
-      <DefaultLayout>
-        <SubNav>
-          <SubNavTitle>
-            Teams
-            <SubNavSubtitle>Manage teams and team members.</SubNavSubtitle>
-          </SubNavTitle>
-          <SubNavActions></SubNavActions>
-        </SubNav>
-        <Main className="p-8">{children}</Main>
-      </DefaultLayout>
+      <DefaultLayout>{children}</DefaultLayout>
     </>
   )
 }
