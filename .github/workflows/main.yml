@@ -24,8 +24,6 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build -w packages/app
-        env:
-          BASE_PATH: /service-lens
 
   lint:
     runs-on: ubuntu-latest
