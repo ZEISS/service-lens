@@ -4,7 +4,8 @@ import * as React from 'react'
 import {
   CaretSortIcon,
   CheckIcon,
-  PlusCircledIcon
+  PlusCircledIcon,
+  PersonIcon
 } from '@radix-ui/react-icons'
 
 import { cn } from '@/lib/utils'
@@ -42,6 +43,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { useRouter } from 'next/navigation'
 
 const groups = [
   {
@@ -72,7 +74,7 @@ type Team = (typeof groups)[number]['teams'][number]
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
-interface TeamSwitcherProps extends PopoverTriggerProps {}
+interface TeamSwitcherProps extends PopoverTriggerProps { }
 
 export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const [open, setOpen] = React.useState(false)
@@ -80,6 +82,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
     groups[0].teams[0]
   )
+  const router = useRouter()
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -151,10 +154,12 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                       setShowNewTeamDialog(true)
                     }}
                   >
-                    <PlusCircledIcon className="mr-2 h-5 w-5" />
                     Create Team
                   </CommandItem>
                 </DialogTrigger>
+                <CommandItem onSelect={() => router.push('/teams')}>
+                  Manage Teams
+                </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
