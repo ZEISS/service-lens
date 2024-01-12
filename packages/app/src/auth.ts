@@ -30,9 +30,9 @@ export const options = {
     signIn: '/login'
   },
   callbacks: {
-    session: async ({ session, token }) => {
-      if (token?.sub) {
-        session.user.id = token.sub
+    session: async ({ session, user }) => {
+      if (user?.id) {
+        session.user.id = user.id
       }
 
       return session

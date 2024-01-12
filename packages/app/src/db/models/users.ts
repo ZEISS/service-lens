@@ -6,8 +6,11 @@ import {
   DataType,
   AutoIncrement,
   Unique,
-  Default
+  Default,
+  BelongsToMany
 } from 'sequelize-typescript'
+import { Team } from './team'
+import { TeamMembers } from './team-members'
 
 export interface UserAttributes {
   id: string
@@ -43,4 +46,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @Column
   image?: string
+
+  @BelongsToMany(() => Team, () => TeamMembers, 'userId', 'teamId')
+  teams?: Team[]
 }

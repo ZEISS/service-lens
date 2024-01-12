@@ -7,6 +7,7 @@ import {
 } from '../schemas/teams'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
+import { TeamMembers } from '../models/team-members'
 
 export type Pagination = {
   offset?: number
@@ -14,9 +15,12 @@ export type Pagination = {
 }
 
 export const createTeam = async (opts: z.infer<typeof CreateTeamSchema>) =>
-  sequelize.transaction(
-    async transaction => await Team.create({ ...opts }, { transaction })
-  )
+  sequelize.transaction(async transaction => {
+    const team = await Team.create({ ...opts }, { transaction })
+    await TeamMembers.create({ userId: opts.userId, teamId: team.id })
+
+    return team
+  })
 
 export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
   await Team.findOne({

@@ -7,6 +7,7 @@ export const FindAndCountTeamsSchema = z.object({
 export const FindOneTeamSchema = z.string().uuid()
 export const CreateTeamSchema = z.object({
   name: z.string().min(3).max(128),
+  userId: z.string().uuid(),
   description: z.string().min(3).max(255).optional(),
   contactEmail: z.string().email().optional()
 })

@@ -1,5 +1,4 @@
 import { protectedProcedure } from '../../trpc'
-import { z } from 'zod'
 import {
   TeamsCreateSchema,
   TeamsGetSchema,
@@ -18,7 +17,10 @@ export const getTeam = protectedProcedure
 
 export const addTeam = protectedProcedure
   .input(TeamsCreateSchema)
-  .mutation(async opts => await createTeam({ ...opts.input }))
+  .mutation(
+    async opts =>
+      await createTeam({ ...opts.input, userId: opts.ctx.session.user.id })
+  )
 
 export const teamsRouter = router({
   list: listTeams,

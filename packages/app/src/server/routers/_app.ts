@@ -27,6 +27,7 @@ import { lensRouter } from '@/server/routers/actions/lenses'
 import { solutionsRouter } from './actions/solutions'
 import { profilesRouter } from './actions/profiles'
 import { teamsRouter } from './actions/teams'
+import { usersRouter } from './actions/users'
 
 export const appRouter = router({
   greeting: publicProcedure
@@ -85,7 +86,10 @@ export const appRouter = router({
   workloads: workloadsRouter,
 
   // teams
-  teams: teamsRouter
+  teams: teamsRouter,
+
+  // users
+  users: usersRouter
 })
 
 export type AppRouter = typeof appRouter
