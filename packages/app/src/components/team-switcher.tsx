@@ -1,16 +1,26 @@
 'use client'
 
 import * as React from 'react'
-import {
-  CaretSortIcon,
-  CheckIcon,
-  PlusCircledIcon,
-  PersonIcon
-} from '@radix-ui/react-icons'
-
+import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { NewTeamFormValues } from '@/components/teams/new-form.schema'
+import { defaultValues } from '@/components/teams/new-form.schema'
+import { TeamsCreateSchema } from '@/server/routers/schemas/teams'
+import { useAction } from '@/trpc/client'
+import { rhfAction } from '@/components/teams/new-form.action'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Form,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormDescription,
+  FormMessage,
+  FormField
+} from '@/components/ui/form'
 import {
   Command,
   CommandEmpty,
@@ -29,6 +39,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -44,17 +55,9 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
+import { api } from '@/trpc/client'
 
 const groups = [
-  {
-    label: 'Personal Account',
-    teams: [
-      {
-        label: 'Alicia Koch',
-        value: 'personal'
-      }
-    ]
-  },
   {
     label: 'Teams',
     teams: [
@@ -77,12 +80,35 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 interface TeamSwitcherProps extends PopoverTriggerProps { }
 
 export default function TeamSwitcher({ className }: TeamSwitcherProps) {
+  const me = React.use(api.me.query())
+  const user = React.use(api.users.get.query())
+  const teams = React.useMemo(
+    () => user?.teams?.map(team => ({ label: team.name, value: team.id })),
+    [user?.teams]
+  )
+
   const [open, setOpen] = React.useState(false)
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
   const [selectedTeam, setSelectedTeam] = React.useState<Team>(
     groups[0].teams[0]
   )
   const router = useRouter()
+
+  const form = useForm<NewTeamFormValues>({
+    resolver: zodResolver(TeamsCreateSchema),
+    defaultValues,
+    mode: 'onChange'
+  })
+
+  const mutation = useAction(rhfAction)
+  const handleSubmit = async (data: NewTeamFormValues) =>
+    await mutation.mutateAsync({ ...data })
+
+  React.useEffect(() => {
+    if (mutation.status === 'success') {
+      setShowNewTeamDialog(false)
+    }
+  }, [showNewTeamDialog, mutation.status])
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -97,8 +123,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           >
             <Avatar className="mr-2 h-5 w-5">
               <AvatarImage
-                src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-                alt={selectedTeam.label}
+                src={me?.user.image ?? ''}
+                alt={me?.user.name ?? ''}
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
@@ -111,6 +137,26 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             <CommandList>
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
+              <CommandGroup heading="Personal Account">
+                <CommandItem className="text-sm">
+                  <Avatar className="mr-2 h-5 w-5">
+                    <AvatarImage
+                      src={me?.user.image ?? ''}
+                      alt={me?.user.name ?? ''}
+                      className="grayscale"
+                    />
+                    <AvatarFallback>SC</AvatarFallback>
+                  </Avatar>
+                  {me?.user.name}
+                </CommandItem>
+              </CommandGroup>
+              <CommandGroup heading="Teams">
+                {teams?.map(team => (
+                  <CommandItem key={team.value} className="text-sm">
+                    {team.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
               {groups.map(group => (
                 <CommandGroup key={group.label} heading={group.label}>
                   {group.teams.map(team => (
@@ -157,7 +203,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     Create Team
                   </CommandItem>
                 </DialogTrigger>
-                <CommandItem onSelect={() => router.push('/teams')}>
+                <CommandItem onSelect={() => router.push('/account/teams')}>
                   Manage Teams
                 </CommandItem>
               </CommandGroup>
@@ -172,42 +218,89 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             Add a new team to manage products and customers.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Team name</Label>
-              <Input id="name" placeholder="Acme Inc." />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="plan">Subscription plan</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="free">
-                    <span className="font-medium">Free</span> -{' '}
-                    <span className="text-muted-foreground">
-                      Trial for two weeks
-                    </span>
-                  </SelectItem>
-                  <SelectItem value="pro">
-                    <span className="font-medium">Pro</span> -{' '}
-                    <span className="text-muted-foreground">
-                      $9/month per user
-                    </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewTeamDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Continue</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form
+            action={rhfAction}
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <h1>Name</h1>
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder="Team name ..." {...field} />
+                  </FormControl>
+                  <FormDescription>Give it a great name.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contactEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <h1>Contact email</h1>
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder="team@acme.com" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Add a shared inbox for you team (optional).
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <div className="grid w-full">
+                  <FormItem>
+                    <FormLabel>
+                      <h1>Description</h1>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        className="w-full"
+                        placeholder="Add a description ..."
+                      />
+                    </FormControl>
+                    <FormDescription>A desciption of your team</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                </div>
+              )}
+            />
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowNewTeamDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={
+                  form.formState.isSubmitting || !form.formState.isValid
+                }
+              >
+                Continue
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

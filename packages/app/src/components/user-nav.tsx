@@ -49,9 +49,6 @@ export async function UserNav() {
             </Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <Link href={'/teams/new'}>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
-          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Link href={me ? '/api/auth/signout' : '/api/auth/signin'}>

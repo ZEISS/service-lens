@@ -7,10 +7,9 @@ import {
 import { SidebarNav } from '@/components/sidebar-nav'
 import { Main } from '@/components/main'
 import DefaultLayout from '@/components/default-layout'
+import { PropsWithChildren } from 'react'
 
-type PageProps = {
-  children?: React.ReactNode
-}
+type PageProps = {}
 
 const sidebarNavItems = [
   {
@@ -20,10 +19,14 @@ const sidebarNavItems = [
   {
     title: 'Appearance',
     href: '/account/appearance'
+  },
+  {
+    title: 'Teams',
+    href: '/account/teams'
   }
 ]
 
-export default function Layout({ children }: PageProps) {
+export default function Layout({ children }: PropsWithChildren<PageProps>) {
   return (
     <>
       <DefaultLayout>

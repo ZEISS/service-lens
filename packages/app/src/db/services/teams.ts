@@ -17,9 +17,12 @@ export type Pagination = {
 export const createTeam = async (opts: z.infer<typeof CreateTeamSchema>) =>
   sequelize.transaction(async transaction => {
     const team = await Team.create({ ...opts }, { transaction })
-    await TeamMembers.create({ userId: opts.userId, teamId: team.id })
+    await TeamMembers.create(
+      { userId: opts.userId, teamId: team.id },
+      { transaction }
+    )
 
-    return team
+    return team.dataValues
   })
 
 export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
