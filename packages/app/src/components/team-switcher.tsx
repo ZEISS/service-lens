@@ -41,37 +41,13 @@ import {
 } from '@/components/ui/dialog'
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
 import { api } from '@/trpc/client'
-
-const groups = [
-  {
-    label: 'Teams',
-    teams: [
-      {
-        label: 'Acme Inc.',
-        value: 'acme-inc'
-      },
-      {
-        label: 'Monsters Inc.',
-        value: 'monsters'
-      }
-    ]
-  }
-]
 
 type Team = (typeof groups)[number]['teams'][number]
 
@@ -89,9 +65,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
 
   const [open, setOpen] = React.useState(false)
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
-  const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-    groups[0].teams[0]
-  )
+  const [selectedTeam, setSelectedTeam] = React.useState<Team>(teams[0])
   const router = useRouter()
 
   const form = useForm<NewTeamFormValues>({
@@ -128,7 +102,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            {selectedTeam.label}
+            {selectedTeam?.label}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -152,12 +126,19 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               </CommandGroup>
               <CommandGroup heading="Teams">
                 {teams?.map(team => (
-                  <CommandItem key={team.value} className="text-sm">
+                  <CommandItem
+                    key={team.value}
+                    className="text-sm"
+                    onSelect={() => {
+                      setSelectedTeam(team)
+                      setOpen(false)
+                    }}
+                  >
                     {team.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
-              {groups.map(group => (
+              {/* {groups.map(group => (
                 <CommandGroup key={group.label} heading={group.label}>
                   {group.teams.map(team => (
                     <CommandItem
@@ -188,7 +169,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     </CommandItem>
                   ))}
                 </CommandGroup>
-              ))}
+              ))} */}
             </CommandList>
             <CommandSeparator />
             <CommandList>

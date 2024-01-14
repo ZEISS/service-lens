@@ -4,9 +4,10 @@ import {
   SubNavActions,
   SubNavSubtitle
 } from '@/components/sub-nav'
-import { SidebarNav } from './components/sidebar-nav'
+import { SidebarNav } from '@/components/dashboard/lenses/sidebar-nav'
 import React from 'react'
 import { api } from '@/trpc/server-http'
+import type { PropsWithChildren } from 'react'
 
 type PageProps = {
   children?: React.ReactNode
@@ -28,11 +29,13 @@ const sidebarNavItems = [
 ]
 
 export type LayoutProps = {
-  children?: React.ReactNode
   params: { id: string; lensId: string }
 }
 
-export default async function Layout({ params, children }: LayoutProps) {
+export default async function Layout({
+  params,
+  children
+}: PropsWithChildren<LayoutProps>) {
   const lens = await api.getLens.query(params?.lensId)
 
   return (
