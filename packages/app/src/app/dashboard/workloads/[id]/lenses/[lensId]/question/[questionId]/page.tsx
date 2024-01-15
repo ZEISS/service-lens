@@ -1,7 +1,5 @@
 import { api } from '@/trpc/server-http'
-import { QuestionFormFactory } from './components/question-form'
-import { id } from 'date-fns/locale'
-import { WorkloadLensesAnswer } from '@/db/models/workload-lenses-answers'
+import { QuestionFormFactory } from '@/components/question/question-form'
 
 export type PageProps = {
   params: { questionId: string; lensId: string; id: string }

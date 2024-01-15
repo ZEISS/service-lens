@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronsUpDown, Plus, X } from 'lucide-react'
+import { ChevronsUpDown } from 'lucide-react'
 import { useState } from 'react'
 import {
   Form,
@@ -67,7 +67,6 @@ export function QuestionFormFactory({
     defaultValues: {
       workloadId,
       lensPillarQuestionId,
-      // answerId: answer?.id,
       selectedChoices: answer?.lensChoices?.map(choice => choice.id) ?? [],
       doesNotApply: answer?.doesNotApply,
       doesNotApplyReason: answer?.doesNotApplyReason
@@ -117,14 +116,14 @@ export function QuestionFormFactory({
                                   onCheckedChange={checked => {
                                     return checked
                                       ? field.onChange([
-                                          ...field.value,
-                                          choice.id
-                                        ])
+                                        ...field.value,
+                                        choice.id
+                                      ])
                                       : field.onChange(
-                                          field.value?.filter(
-                                            value => value !== choice.id
-                                          )
+                                        field.value?.filter(
+                                          value => value !== choice.id
                                         )
+                                      )
                                   }}
                                 />
                               </FormControl>
