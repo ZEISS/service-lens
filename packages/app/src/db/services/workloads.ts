@@ -1,5 +1,5 @@
 import { Profile } from '@/db/models/profile'
-import { WorkloadLensesAnswer } from '@/db/models/workload-lenses-answers'
+import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { Workload } from '@/db/models/workload'
 import { WorkloadEnvironment } from '@/db/models/workload-environment'
@@ -22,7 +22,7 @@ import { Op } from 'sequelize'
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
 ) =>
-  await WorkloadLensesAnswer.findOne({
+  await WorkloadLensAnswer.findOne({
     where: { ...opts },
     include: [LensPillarChoice]
   })
@@ -97,7 +97,7 @@ export const addLensAnswer = async (
   opts: z.infer<typeof WorkloadLensAnswerAddSchema>
 ) =>
   await sequelize.transaction(async transaction => {
-    const [answer] = await WorkloadLensesAnswer.upsert(
+    const [answer] = await WorkloadLensAnswer.upsert(
       {
         ...opts
       },
@@ -158,7 +158,12 @@ export const updateWorkloadAnswer = async ({
 export const getWorkload = async (id: string) =>
   await Workload.findOne({
     where: { id },
-    include: [Profile, Environment, Lens, WorkloadLens]
+    include: [
+      Profile,
+      Environment,
+      Lens,
+      { model: WorkloadLensAnswer, include: [LensPillarChoice] }
+    ]
   })
 
 export type Pagination = {

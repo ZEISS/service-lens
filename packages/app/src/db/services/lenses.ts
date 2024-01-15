@@ -14,7 +14,7 @@ import {
 import sequelize from '@/db/config/config'
 import { z } from 'zod'
 import { LensPillarResource } from '../models/lens-pillar-resources'
-import { MakeCopyProfileSchema } from '../schemas/profiles'
+import { LensPillarQuestionRisk } from '../models/lens-pillar-risks'
 
 export type Pagination = {
   offset?: number
@@ -24,7 +24,17 @@ export type Pagination = {
 export const getLens = async (opts: z.infer<typeof LensesGetSchema>) =>
   await Lens.findOne({
     where: { id: opts },
-    include: [{ model: LensPillar, include: [{ model: LensPillarQuestion }] }]
+    include: [
+      {
+        model: LensPillar,
+        include: [
+          {
+            model: LensPillarQuestion,
+            include: [LensPillarQuestionRisk, LensPillarChoice]
+          }
+        ]
+      }
+    ]
   })
 
 export const deleteLens = async (opts: z.infer<typeof LensesDeleteSchema>) =>
@@ -90,6 +100,21 @@ export const createLens = async (opts: z.infer<typeof LensesAddSchema>) =>
             description: question.description
           }
         })
+      ]),
+      { transaction }
+    )
+
+    const questionRisks = await LensPillarQuestionRisk.bulkCreate(
+      pillars.flatMap((pillar, a) => [
+        ...questions.flatMap((question, b) => [
+          ...(spec.pillars[a].questions[b]?.risks?.map(risk => {
+            return {
+              questionId: question.id,
+              risk: risk.risk,
+              condition: risk.condition
+            }
+          }) ?? [])
+        ])
       ]),
       { transaction }
     )

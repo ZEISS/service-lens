@@ -21,7 +21,7 @@ import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { WorkloadLensesAnswerChoice } from './workload-lenses-answers-choices'
 
-export interface WorkloadLensesAnswerAttributes {
+export interface WorkloadLensAnswerAttributes {
   id: string
   workloadId: string
   lensPillarQuestionId: string
@@ -34,17 +34,18 @@ export interface WorkloadLensesAnswerAttributes {
   deletedAt: Date
 }
 
-export type WorkloadLensesAnswerCreationAttributes = Omit<
-  WorkloadLensesAnswerAttributes,
+export type WorkloadLensAnswerCreationAttributes = Omit<
+  WorkloadLensAnswerAttributes,
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
+  modelName: 'WorkloadLensAnswer',
   tableName: 'workloads-lenses-answers'
 })
-export class WorkloadLensesAnswer extends Model<
-  WorkloadLensesAnswerAttributes,
-  WorkloadLensesAnswerCreationAttributes
+export class WorkloadLensAnswer extends Model<
+  WorkloadLensAnswerAttributes,
+  WorkloadLensAnswerCreationAttributes
 > {
   @PrimaryKey
   @AutoIncrement

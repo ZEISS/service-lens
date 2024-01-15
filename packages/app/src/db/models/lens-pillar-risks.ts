@@ -17,7 +17,7 @@ import { LensPillarQuestion } from './lens-pillar-questions'
 
 export interface LensPillarQuestionRiskAttributes {
   id: bigint
-  lensId: string
+  questionId: bigint
   risk: string
   condition: string
   createdAt: Date
@@ -44,7 +44,7 @@ export class LensPillarQuestionRisk extends Model<
 
   @ForeignKey(() => LensPillarQuestion)
   @Column
-  questionId?: string
+  questionId?: bigint
 
   @NotEmpty
   @Min(3)

@@ -19,7 +19,7 @@ import { User } from '../models/users'
 import { Workload } from '../models/workload'
 import { WorkloadEnvironment } from '../models/workload-environment'
 import { WorkloadLens } from '../models/workload-lens'
-import { WorkloadLensesAnswer } from '../models/workload-lenses-answers'
+import { WorkloadLensAnswer } from '../models/workload-lenses-answers'
 import { WorkloadLensesAnswerChoice } from '../models/workload-lenses-answers-choices'
 import { Team } from '../models/team'
 import { TeamMembers } from '../models/team-members'
@@ -41,7 +41,7 @@ const models = [
   Workload,
   WorkloadEnvironment,
   WorkloadLens,
-  WorkloadLensesAnswer,
+  WorkloadLensAnswer,
   WorkloadLensesAnswerChoice,
   SolutionComment,
   SolutionTemplate,

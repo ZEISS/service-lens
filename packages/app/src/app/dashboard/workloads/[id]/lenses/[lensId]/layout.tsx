@@ -9,25 +9,6 @@ import React from 'react'
 import { api } from '@/trpc/server-http'
 import type { PropsWithChildren } from 'react'
 
-type PageProps = {
-  children?: React.ReactNode
-}
-
-const sidebarNavItems = [
-  {
-    title: 'General',
-    href: '/dashboard/settings'
-  },
-  {
-    title: 'Environments',
-    href: '/dashboard/settings/environments'
-  },
-  {
-    title: 'Developer',
-    href: '/dashboard/settings/developer'
-  }
-]
-
 export type LayoutProps = {
   params: { id: string; lensId: string }
 }
@@ -37,13 +18,14 @@ export default async function Layout({
   children
 }: PropsWithChildren<LayoutProps>) {
   const lens = await api.getLens.query(params?.lensId)
+  const workload = await api.workloads.get.query(params?.id)
 
   return (
     <>
       <SubNav>
         <SubNavTitle>
-          {lens?.name}
-          <SubNavSubtitle>{lens?.description}</SubNavSubtitle>
+          {workload?.name}
+          <SubNavSubtitle>{lens?.name}</SubNavSubtitle>
         </SubNavTitle>
         <SubNavActions></SubNavActions>
       </SubNav>

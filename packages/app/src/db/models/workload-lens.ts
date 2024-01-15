@@ -33,6 +33,7 @@ export type WorkloadLensCreationAttributes = Omit<
 >
 
 @Table({
+  modelName: 'WorkloadLens',
   tableName: 'workloads-lenses'
 })
 export class WorkloadLens extends Model<

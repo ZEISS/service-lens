@@ -21,6 +21,7 @@ import { Profile } from './profile'
 import { Lens } from './lens'
 import { WorkloadLens } from './workload-lens'
 import { WorkloadEnvironment } from './workload-environment'
+import { WorkloadLensAnswer } from './workload-lenses-answers'
 import { Environment } from './environment'
 
 export interface WorkloadAttributes {
@@ -85,8 +86,8 @@ export class Workload extends Model<
   )
   environments?: Environment[]
 
-  @HasMany(() => WorkloadLens, 'workloadId')
-  answers?: WorkloadLens[]
+  @HasMany(() => WorkloadLensAnswer, 'workloadId')
+  answers?: WorkloadLensAnswer[]
 
   @CreatedAt
   @Column

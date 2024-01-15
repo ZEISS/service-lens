@@ -22,8 +22,43 @@ export type PageProps = {
   params: { lensId: string; id: string }
 }
 
+function evalInScope(js: string, contextAsScope: Object) {
+  return new Function(`with (this) { return (${js}); }`).call(contextAsScope)
+}
+
 export default async function Page({ params }: PageProps) {
   const lens = await api.getLens.query(params?.lensId)
+  const workload = await api.workloads.get.query(params?.id)
+
+  const answers = workload?.answers?.reduce((prev, curr) => {
+    prev.set(
+      curr.lensPillarQuestionId,
+      curr.lensChoices?.map(choice => choice.ref)
+    )
+
+    return prev
+  }, new Map<bigint | undefined, string[] | undefined>())
+
+  lens?.pillars?.forEach(
+    pillars =>
+      pillars.questions?.forEach(question => {
+        const ctx = Object.fromEntries(
+          question?.questionAnswers?.map(answer => [answer.ref, false]) ?? []
+        )
+        answers?.get(question.id)?.forEach(answer => (ctx[answer] = true))
+
+        question.risks?.forEach(risk => {
+          try {
+            const truth = evalInScope(risk.condition ?? '', ctx)
+            if (truth) {
+              console.log(risk.risk)
+            }
+          } catch {
+            return
+          }
+        })
+      })
+  )
 
   return (
     <>
@@ -37,7 +72,7 @@ export default async function Page({ params }: PageProps) {
               <h2 className="text-l font-semibold tracking-tight text-muted-foreground">
                 Version
               </h2>
-              <p>{lens?.dataValues?.version}</p>
+              <p>{lens?.version}</p>
             </div>
             <div className="space-y-1">
               <h2 className="text-l font-semibold tracking-tight text-muted-foreground">

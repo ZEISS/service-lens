@@ -11,7 +11,8 @@ export const Risk = z.object({
   risk: z.union([
     z.literal('HIGH_RISK'),
     z.literal('MEDIUM_RISK'),
-    z.literal('LOW_RISK')
+    z.literal('LOW_RISK'),
+    z.literal('NO_RISK')
   ]),
   condition: z.string()
 })

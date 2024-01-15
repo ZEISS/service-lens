@@ -30,12 +30,25 @@
               "description": "Choice 2 is provding a good choice."
             },
             {
+              "id": "choice_3",
+              "title": "Choice 3",
+              "description": "Choice 3 is provding a good choice."
+            },
+            {
               "id": "none_of_these",
               "title": "None of these",
               "description": "None of these"
             }
           ],
           "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "choice_1 && choice_2 && choice_3"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "((choice_1 || choice_2) && choice_3"
+            },
             {
               "risk": "HIGH_RISK",
               "condition": "default"
