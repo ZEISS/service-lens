@@ -58,12 +58,12 @@ export class WorkloadLensAnswer extends Model<
   @ForeignKey(() => Workload)
   @Unique('workload-lens-pillar-question')
   @Column(DataType.UUID)
-  workloadId?: string
+  workloadId!: string
 
   @ForeignKey(() => LensPillarQuestion)
   @Unique('workload-lens-pillar-question')
   @Column
-  lensPillarQuestionId?: bigint
+  lensPillarQuestionId!: bigint
 
   @AllowNull
   @Min(12)
