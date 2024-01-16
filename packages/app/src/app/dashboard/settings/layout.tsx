@@ -20,6 +20,10 @@ const sidebarNavItems = [
     href: '/dashboard/settings/templates'
   },
   {
+    title: 'Teams',
+    href: '/dashboard/settings/teams'
+  },
+  {
     title: 'Environments',
     href: '/dashboard/settings/environments'
   },

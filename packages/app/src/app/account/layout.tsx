@@ -13,16 +13,12 @@ type PageProps = {}
 
 const sidebarNavItems = [
   {
-    title: 'Profile',
+    title: 'General',
     href: '/account'
   },
   {
     title: 'Appearance',
     href: '/account/appearance'
-  },
-  {
-    title: 'Teams',
-    href: '/account/teams'
   }
 ]
 
@@ -32,10 +28,8 @@ export default function Layout({ children }: PropsWithChildren<PageProps>) {
       <DefaultLayout>
         <SubNav>
           <SubNavTitle>
-            Settings
-            <SubNavSubtitle>
-              Manage the settings of the service lens.
-            </SubNavSubtitle>
+            Profile
+            <SubNavSubtitle>Mange your personal settings.</SubNavSubtitle>
           </SubNavTitle>
           <SubNavActions></SubNavActions>
         </SubNav>
