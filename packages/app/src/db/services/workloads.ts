@@ -10,6 +10,7 @@ import { LensPillar } from '@/db/models/lens-pillars'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { WorkloadLensesAnswerChoice } from '@/db/models/workload-lenses-answers-choices'
 import { z } from 'zod'
+import { createContext, evalInScope } from '@/lib/eval'
 import type { WorkloadCreationAttributes } from '../models/workload'
 import sequelize from '../config/config'
 import {
@@ -18,6 +19,10 @@ import {
   WorkloadLensAnswerAddSchema
 } from '../schemas/workload'
 import { Op } from 'sequelize'
+import {
+  LensPillarQuestionRisk,
+  QuestionRisk
+} from '../models/lens-pillar-risks'
 
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
@@ -97,9 +102,42 @@ export const addLensAnswer = async (
   opts: z.infer<typeof WorkloadLensAnswerAddSchema>
 ) =>
   await sequelize.transaction(async transaction => {
+    const question = await LensPillarQuestion.findOne({
+      where: { id: opts.lensPillarQuestionId },
+      include: [LensPillarQuestionRisk, LensPillarChoice],
+      transaction
+    })
+
+    const ctx = {
+      ...createContext(question?.questionAnswers),
+      ...question?.questionAnswers
+        ?.filter(answer => opts.selectedChoices.includes(answer.id))
+        ?.reduce((answers, answer) => ({ ...answers, [answer.ref]: true }), {})
+    }
+
+    const defaultCondition = question?.risks?.find(
+      risk => risk.condition === 'default'
+    )
+
+    const risk =
+      question?.risks?.reduce(
+        (prev, curr) => {
+          try {
+            const truthy = evalInScope(curr.condition, ctx)
+            console.log(curr.condition, truthy, curr.risk)
+            return truthy ? curr.risk ?? QuestionRisk.Unanswered : prev
+          } catch (error) {
+            console.error(error)
+            return prev
+          }
+        },
+        defaultCondition?.risk
+      ) ?? QuestionRisk.Unanswered
+
     const [answer] = await WorkloadLensAnswer.upsert(
       {
-        ...opts
+        ...opts,
+        risk
       },
       { transaction }
     )
@@ -130,29 +168,6 @@ export const addLensAnswer = async (
     )
 
     return answer.dataValues
-  })
-
-export const updateWorkloadAnswer = async ({
-  answerId,
-  doesNotApply,
-  doesNotApplyReason
-}: {
-  answerId: string
-  doesNotApply: boolean
-  doesNotApplyReason: string
-}) =>
-  await sequelize.transaction(async transaction => {
-    // WorkloadLensesAnswer.upsert
-    // const answer = await WorkloadLensPillarAnswer.findOne({
-    //   where: { id: answerId },
-    //   transaction
-    // })
-    // if (!answer) {
-    //   throw Error('Answer not found')
-    // }
-    // answer.doesNotApply = doesNotApply
-    // answer.doesNotApplyReason = doesNotApplyReason
-    // await answer?.save({ transaction })
   })
 
 export const getWorkload = async (id: string) =>

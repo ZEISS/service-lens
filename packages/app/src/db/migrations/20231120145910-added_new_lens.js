@@ -106,8 +106,15 @@ module.exports = {
         primaryKey: true
       },
       risk: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.ENUM,
+        values: [
+          'UNANSWERED',
+          'HIGH_RISK',
+          'MEDIUM_RISK',
+          'LOW_RISK',
+          'NO_RISK'
+        ],
+        defaultValue: 'UNANSWERED'
       },
       condition: {
         type: Sequelize.STRING,

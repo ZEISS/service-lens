@@ -17,48 +17,26 @@ import {
 } from '@/components/ui/table'
 import DateFormat from '@/components/date-format'
 import { Separator } from '@/components/ui/separator'
+import { QuestionRisk } from '@/db/models/lens-pillar-risks'
 
 export type PageProps = {
   params: { lensId: string; id: string }
 }
 
-function evalInScope(js: string, contextAsScope: Object) {
-  return new Function(`with (this) { return (${js}); }`).call(contextAsScope)
-}
-
 export default async function Page({ params }: PageProps) {
   const lens = await api.getLens.query(params?.lensId)
   const workload = await api.workloads.get.query(params?.id)
-
-  const answers = workload?.answers?.reduce((prev, curr) => {
-    prev.set(
-      curr.lensPillarQuestionId,
-      curr.lensChoices?.map(choice => choice.ref)
-    )
-
-    return prev
-  }, new Map<bigint | undefined, string[] | undefined>())
-
-  lens?.pillars?.forEach(
-    pillars =>
-      pillars.questions?.forEach(question => {
-        const ctx = Object.fromEntries(
-          question?.questionAnswers?.map(answer => [answer.ref, false]) ?? []
-        )
-        answers?.get(question.id)?.forEach(answer => (ctx[answer] = true))
-
-        question.risks?.forEach(risk => {
-          try {
-            const truth = evalInScope(risk.condition ?? '', ctx)
-            if (truth) {
-              console.log(risk.risk)
-            }
-          } catch {
-            return
-          }
-        })
-      })
-  )
+  const stats: { [key: string]: number } =
+    workload?.answers?.reduce(
+      (answers, answer) => ({
+        ...answers,
+        [answer.risk]: answers[answer.risk] + 1
+      }),
+      Object.values(QuestionRisk).reduce(
+        (risks, risk) => ({ ...risks, [risk]: 0 }),
+        {} as { [key: string]: number }
+      )
+    ) ?? {}
 
   return (
     <>
@@ -87,25 +65,21 @@ export default async function Page({ params }: PageProps) {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Pillars</CardTitle>
+          <CardTitle>Risks</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Questions</TableHead>
-                <TableHead>High Risk</TableHead>
-                <TableHead>Medium Risk</TableHead>
+                <TableHead>Risk</TableHead>
+                <TableHead>Number</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {lens?.pillars?.map(pillar => (
-                <TableRow key={pillar.id}>
-                  <TableCell className="font-medium">{pillar.name}</TableCell>
-                  <TableCell>{pillar.questions?.length}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell className="text-right"></TableCell>
+              {Object?.entries(stats ?? {}).map(([k, v], n) => (
+                <TableRow key={n}>
+                  <TableCell className="font-medium">{k}</TableCell>
+                  <TableCell>{v}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -44,7 +44,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { rhfAction } from './question-form.action'
-import { WorkloadLensesAnswer } from '@/db/models/workload-lenses-answers'
+import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 
 export type QuestionFormFactoryProps = {
@@ -52,7 +52,7 @@ export type QuestionFormFactoryProps = {
   question?: LensPillarQuestion
   workloadId: string
   lensPillarQuestionId: string
-  answer: WorkloadLensesAnswer | null
+  answer: WorkloadLensAnswer | null
 }
 
 export function QuestionFormFactory({

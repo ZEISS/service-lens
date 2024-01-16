@@ -14,9 +14,11 @@ import {
   Default,
   AllowNull,
   BelongsToMany,
+  NotEmpty,
   Unique
 } from 'sequelize-typescript'
 import { Workload } from './workload'
+import { QuestionRisk } from './lens-pillar-risks'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { WorkloadLensesAnswerChoice } from './workload-lenses-answers-choices'
@@ -29,6 +31,7 @@ export interface WorkloadLensAnswerAttributes {
   lensChoices?: LensPillarChoice[]
   doesNotApply?: boolean
   doesNotApplyReason?: string
+  risk: QuestionRisk
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -82,6 +85,11 @@ export class WorkloadLensAnswer extends Model<
     'choiceId'
   )
   lensChoices?: LensPillarChoice[]
+
+  @NotEmpty
+  @Default(QuestionRisk.Unanswered)
+  @Column(DataType.ENUM(...Object.values(QuestionRisk)))
+  risk!: QuestionRisk
 
   @CreatedAt
   @Column

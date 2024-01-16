@@ -10,7 +10,7 @@ import {
   AutoIncrement,
   Unique
 } from 'sequelize-typescript'
-import { WorkloadLensesAnswer } from '@/db/models/workload-lenses-answers'
+import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 
 export interface WorkloadLensesAnswerChoiceAttributes {
@@ -39,7 +39,7 @@ export class WorkloadLensesAnswerChoice extends Model<
   @Column
   id!: string
 
-  @ForeignKey(() => WorkloadLensesAnswer)
+  @ForeignKey(() => WorkloadLensAnswer)
   @Unique('workload-lens-pillar-answer')
   @Column
   answerId?: string

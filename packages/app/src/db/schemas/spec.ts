@@ -12,7 +12,8 @@ export const Risk = z.object({
     z.literal('HIGH_RISK'),
     z.literal('MEDIUM_RISK'),
     z.literal('LOW_RISK'),
-    z.literal('NO_RISK')
+    z.literal('NO_RISK'),
+    z.literal('UNANSWERED')
   ]),
   condition: z.string()
 })

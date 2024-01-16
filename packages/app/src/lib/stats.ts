@@ -1,5 +1,14 @@
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
-import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
+import type { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
+
+export type RiskCondition = string
+export enum Risk {
+  HIGH,
+  MEDIUM,
+  LOW,
+  NO,
+  UNKNOWN
+}
 
 export type Statistics = {
   totalQuestions?: number
@@ -15,3 +24,15 @@ export const generateStats = (
 
   return stats
 }
+
+export type QuestionRef = string
+export type QuestionId = bigint
+export const groupAnswers = (answers: WorkloadLensAnswer[] = []) =>
+  answers.reduce(
+    (group, answer) =>
+      group.set(
+        answer.lensPillarQuestionId,
+        answer.lensChoices?.flatMap(choice => choice.ref)
+      ),
+    new Map<QuestionId | undefined, QuestionRef[] | undefined>()
+  )

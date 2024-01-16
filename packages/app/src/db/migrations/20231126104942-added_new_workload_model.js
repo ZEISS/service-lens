@@ -1,5 +1,7 @@
 'use strict'
 
+const { DataTypes } = require('sequelize')
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -98,6 +100,17 @@ module.exports = {
           },
           onUpdate: 'CASCADE',
           onDelete: 'CASCADE'
+        },
+        risk: {
+          type: DataTypes.ENUM,
+          values: [
+            'UNANSWERED',
+            'HIGH_RISK',
+            'MEDIUM_RISK',
+            'LOW_RISK',
+            'NO_RISK'
+          ],
+          defaultValue: 'UNANSWERED'
         },
         notes: {
           type: Sequelize.TEXT
