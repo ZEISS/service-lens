@@ -22,7 +22,10 @@ import { WorkloadLens } from '../models/workload-lens'
 import { WorkloadLensAnswer } from '../models/workload-lenses-answers'
 import { WorkloadLensesAnswerChoice } from '../models/workload-lenses-answers-choices'
 import { Team } from '../models/teams'
-import { TeamMembers } from '../models/team-members'
+import { Role } from '../models/roles'
+import { Permission } from '../models/permissions'
+import { RolePermission } from '../models/roles-permissions'
+import { UserRole } from '../models/users-roles'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
@@ -32,26 +35,29 @@ const models = [
   Lens,
   LensPillar,
   LensPillarChoice,
+  LensPillarChoiceResource,
   LensPillarQuestion,
+  LensPillarQuestionResource,
   LensPillarQuestionRisk,
+  LensPillarResource,
+  Permission,
   Profile,
   ProfileQuestion,
+  ProfileQuestionAnswer,
   ProfileQuestionChoice,
+  Role,
+  RolePermission,
   Solution,
+  SolutionComment,
+  SolutionTemplate,
+  Team,
+  User,
+  UserRole,
   Workload,
   WorkloadEnvironment,
   WorkloadLens,
   WorkloadLensAnswer,
-  WorkloadLensesAnswerChoice,
-  SolutionComment,
-  SolutionTemplate,
-  LensPillarResource,
-  LensPillarChoiceResource,
-  LensPillarQuestionResource,
-  ProfileQuestionAnswer,
-  User,
-  Team,
-  TeamMembers
+  WorkloadLensesAnswerChoice
 ]
 
 export interface Config {
