@@ -1,6 +1,6 @@
 'use client'
 
-import { PropsWithChildren, useDeferredValue, useMemo, useState } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import {
   Form,
   FormControl,
@@ -20,13 +20,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { rhfActionSchema } from './new-form.schema'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { ProfileQuestion } from '@/db/models/profile-question'
 import { Checkbox } from '@/components/ui/checkbox'
-import { defaultValues } from './new-form.schema'
 import { Profile } from '@/db/models/profile'
+import {
+  EditProfileFormValues,
+  rhfEditProfileActionSchema,
+  defaultValues
+} from './edit-form.schema'
 
 export type EditProfileFormProps = {
   editable?: boolean
@@ -41,39 +43,42 @@ export function EditProfileForm({
 }: PropsWithChildren<EditProfileFormProps>) {
   const [isEditable, setIsEditable] = useState(editable)
   const selectedChoices = useMemo(() => {
-    const selected = profile?.answers?.reduce<Record<string, string[]>>(
-      (prev, curr) => {
-        if (curr?.question?.ref && curr?.question?.ref in prev) {
-          return {
-            ...prev,
-            [curr.question.ref]: [...prev[curr.question.ref], curr.id]
-          }
-        }
-
-        return {
-          ...prev,
-          [curr?.question?.ref ?? '']: [curr.id]
-        }
-      },
-      {}
+    const question = questions?.reduce(
+      (questions, question) => ({
+        ...questions,
+        [question.ref]: []
+      }),
+      {} as Record<string, string[]>
     )
 
-    return selected
-  }, [profile])
+    profile?.answers?.forEach(
+      answer =>
+        question &&
+        answer?.question &&
+        question[answer.question.ref].push(answer.id)
+    )
 
-  const form = useForm<z.infer<typeof rhfActionSchema>>({
-    resolver: zodResolver(rhfActionSchema),
-    defaultValues: {
-      ...defaultValues,
-      selectedChoices
-    },
+    return question
+  }, [profile?.answers, questions])
+
+  const form = useForm<EditProfileFormValues>({
+    resolver: zodResolver(rhfEditProfileActionSchema),
+    defaultValues: selectedChoices,
     mode: 'onChange'
   })
+
+  async function onSubmit(data: EditProfileFormValues) {
+    console.log(data)
+  }
 
   return (
     <>
       <Form {...form}>
-        <form className="space-y-8" autoComplete="off">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+          autoComplete="off"
+        >
           {questions?.map((question, idx) => (
             <Card key={idx}>
               <CardHeader>
@@ -87,7 +92,7 @@ export function EditProfileForm({
                         key={choice.id}
                         disabled={!isEditable}
                         control={form.control}
-                        name={`selectedChoices.${question.ref}`}
+                        name={question.ref}
                         render={({ field, ...rest }) => {
                           return (
                             <FormItem
@@ -102,20 +107,21 @@ export function EditProfileForm({
                                   onCheckedChange={checked => {
                                     return checked
                                       ? field.onChange([
-                                          ...field.value,
-                                          choice.id
-                                        ])
+                                        ...field.value,
+                                        choice.id
+                                      ])
                                       : field.onChange(
-                                          field.value?.filter(
-                                            value => value !== choice.id
-                                          )
+                                        field.value?.filter(
+                                          value => value !== choice.id
                                         )
+                                      )
                                   }}
                                 />
                               </FormControl>
                               <FormLabel className="font-normal">
                                 {choice.name}
                               </FormLabel>
+                              <FormMessage />
                             </FormItem>
                           )
                         }}
@@ -126,7 +132,7 @@ export function EditProfileForm({
                   <FormField
                     key={idx}
                     control={form.control}
-                    name={`selectedChoices.${question.ref}`}
+                    name={question.ref}
                     render={({ field }) => (
                       <div className="grid w-full">
                         <FormControl>
@@ -163,12 +169,11 @@ export function EditProfileForm({
             </Card>
           ))}
 
-          <Button
-            type="submit"
-            disabled={form.formState.isSubmitting || !form.formState.isValid}
-          >
-            Add Profile
-          </Button>
+          {isEditable && (
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              Update Profile
+            </Button>
+          )}
           <input
             autoComplete="false"
             name="hidden"

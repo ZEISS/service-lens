@@ -4,22 +4,28 @@ import {
   SubNavSubtitle,
   SubNavActions
 } from '@/components/sub-nav'
+import type { PropsWithChildren } from 'react'
 import { Section } from '@/components/section'
 import { api } from '@/trpc/server-http'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DateFormat from '@/components/date-format'
-import { ActionsDropdown } from './components/actions-dropdown'
+import { ActionsDropdown } from '@/components/dashboard/profiles/actions-dropdown'
 import { EditProfileForm } from '@/components/dashboard/profiles/edit-form'
 
-export type PageProps = {
-  params: { id: string }
+export interface NextPageProps<IdType = string> {
+  params: { id: IdType }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({
+  params,
+  searchParams
+}: PropsWithChildren<NextPageProps>) {
   const profile = await api.getProfile.query(params?.id)
   const questions = await api.listProfilesQuestions.query()
+  const editable = searchParams && searchParams['editable'] !== undefined
 
   return (
     <>
@@ -68,7 +74,11 @@ export default async function Page({ params }: PageProps) {
                 </CardContent>
               </Card>
               {profile && (
-                <EditProfileForm profile={profile} questions={questions} />
+                <EditProfileForm
+                  profile={profile}
+                  questions={questions}
+                  editable={editable}
+                />
               )}
             </div>
           </TabsContent>
