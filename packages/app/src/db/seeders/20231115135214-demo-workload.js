@@ -5,6 +5,47 @@ const crypto = require('crypto')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const team = await queryInterface.bulkInsert('teams', [
+      {
+        id: crypto.randomUUID(),
+        name: 'default'
+      }
+    ])
+
+    const roles = await queryInterface.bulkInsert('roles', [
+      {
+        id: 1,
+        name: 'admin'
+      }
+    ])
+
+    const permissions = await queryInterface.bulkInsert('permissions', [
+      {
+        slug: 'admin'
+      },
+      {
+        slug: 'read'
+      },
+      {
+        slug: 'write'
+      }
+    ])
+
+    await queryInterface.bulkInsert('roles-permissions', [
+      {
+        permissionId: 1,
+        roleId: 1
+      },
+      {
+        permissionId: 2,
+        roleId: 1
+      },
+      {
+        permissionId: 3,
+        roleId: 1
+      }
+    ])
+
     const profileId = crypto.randomUUID()
     await queryInterface.bulkInsert('profiles', [
       {

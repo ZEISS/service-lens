@@ -21,7 +21,7 @@ import { WorkloadEnvironment } from '../models/workload-environment'
 import { WorkloadLens } from '../models/workload-lens'
 import { WorkloadLensAnswer } from '../models/workload-lenses-answers'
 import { WorkloadLensesAnswerChoice } from '../models/workload-lenses-answers-choices'
-import { Team } from '../models/team'
+import { Team } from '../models/teams'
 import { TeamMembers } from '../models/team-members'
 
 const env = process.env.NODE_ENV || 'development'

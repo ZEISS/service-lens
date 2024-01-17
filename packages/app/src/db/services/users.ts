@@ -1,4 +1,4 @@
-import { Team } from '@/db/models/team'
+import { Team } from '@/db/models/teams'
 import { User } from '@/db/models/users'
 import type { FindOneUserSchema } from '../schemas/users'
 
