@@ -13,6 +13,7 @@ import { z } from 'zod'
 import { Tag } from '@/db/models/tags'
 import { createContext, evalInScope } from '@/lib/eval'
 import type { WorkloadCreationAttributes } from '../models/workload'
+import { User } from '@/db/models/users'
 import sequelize from '../config/config'
 import {
   WorkloadLensQuestionSchema,

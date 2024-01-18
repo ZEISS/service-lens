@@ -15,8 +15,7 @@ import {
   UpdatedAt,
   HasMany,
   AllowNull,
-  Default,
-  HasOne
+  Default
 } from 'sequelize-typescript'
 import { Profile } from './profile'
 import { Lens } from './lens'
@@ -62,8 +61,8 @@ export class Workload extends Model<
   @NotEmpty
   @Min(3)
   @Max(256)
-  @Column
-  name!: string
+  @Column(DataType.STRING)
+  declare name: string
 
   @NotEmpty
   @Min(12)
@@ -93,7 +92,7 @@ export class Workload extends Model<
     foreignKey: 'taggableId',
     constraints: false
   })
-  declare tags?: Tag[]
+  declare tags: Tag[]
 
   @BelongsToMany(
     () => Environment,
@@ -107,14 +106,14 @@ export class Workload extends Model<
   answers?: WorkloadLensAnswer[]
 
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

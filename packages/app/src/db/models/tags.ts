@@ -48,10 +48,10 @@ export class Tag extends Model<TagAttributes, TagCreationAttributes> {
       unique: false
     },
     foreignKey: 'tagId',
-    otherKey: 'id',
+    otherKey: 'taggableId',
     constraints: false
   })
-  declare workloads?: Workload[]
+  declare workloads: Workload[]
 
   @CreatedAt
   @Column(DataType.DATE)

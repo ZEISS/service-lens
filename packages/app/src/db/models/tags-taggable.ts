@@ -10,8 +10,12 @@ import {
   Unique
 } from 'sequelize-typescript'
 
+export type TaggableType = 'workload' | 'solution' | 'lens' | 'profile'
+
 export type TagTaggableAttributes = {
   id: bigint
+  taggableId: string
+  taggableType: TaggableType
   createdAt?: Date
   updatedAt?: Date
   deletedAt?: Date
@@ -37,7 +41,7 @@ export class TagTaggable extends Model<
 
   @Unique('tt_unique_constraint')
   @Column(DataType.STRING)
-  declare taggableType: string
+  declare taggableType: TaggableType
 
   @CreatedAt
   @Column(DataType.DATE)

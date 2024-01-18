@@ -30,6 +30,7 @@ import { UserTeam } from '../models/users-teams'
 import { UserPermission } from '../models/users-permissions'
 import { Tag } from '@/db/models/tags'
 import { TagTaggable } from '@/db/models/tags-taggable'
+import { Ownership } from '@/db/models/ownership'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
@@ -44,6 +45,7 @@ const models = [
   LensPillarQuestionResource,
   LensPillarQuestionRisk,
   LensPillarResource,
+  Ownership,
   Permission,
   Profile,
   ProfileQuestion,
@@ -54,9 +56,9 @@ const models = [
   Solution,
   SolutionComment,
   SolutionTemplate,
-  Team,
   Tag,
   TagTaggable,
+  Team,
   User,
   UserPermission,
   UserRole,
