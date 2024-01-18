@@ -28,6 +28,8 @@ import { RolePermission } from '../models/roles-permissions'
 import { UserRole } from '../models/users-roles'
 import { UserTeam } from '../models/users-teams'
 import { UserPermission } from '../models/users-permissions'
+import { Tag } from '@/db/models/tags'
+import { TagTaggable } from '@/db/models/tags-taggable'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
@@ -53,6 +55,8 @@ const models = [
   SolutionComment,
   SolutionTemplate,
   Team,
+  Tag,
+  TagTaggable,
   User,
   UserPermission,
   UserRole,

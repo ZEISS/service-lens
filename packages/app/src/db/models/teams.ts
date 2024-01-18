@@ -10,7 +10,6 @@ import {
   NotEmpty,
   Min,
   Max,
-  BelongsToMany,
   AllowNull,
   Default
 } from 'sequelize-typescript'

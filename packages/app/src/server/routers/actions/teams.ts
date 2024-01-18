@@ -4,7 +4,7 @@ import {
   TeamsGetSchema,
   TeamsListSchema
 } from '../schemas/teams'
-import { findAndCountTeams, createTeam, findOneTeam } from '@/db/services/teams'
+import { findAndCountTeams, findOneTeam } from '@/db/services/teams'
 import { router } from '@/server/trpc'
 
 export const listTeams = protectedProcedure
@@ -15,12 +15,10 @@ export const getTeam = protectedProcedure
   .input(TeamsGetSchema)
   .query(async opts => await findOneTeam(opts.input))
 
-export const addTeam = protectedProcedure
-  .input(TeamsCreateSchema)
-  .mutation(
-    async opts =>
-      await createTeam({ ...opts.input, userId: opts.ctx.session.user.id })
-  )
+export const addTeam = protectedProcedure.input(TeamsCreateSchema).mutation(
+  async opts => {}
+  // await createTeam({ ...opts.input, userId: opts.ctx.session.user.id })
+)
 
 export const teamsRouter = router({
   list: listTeams,

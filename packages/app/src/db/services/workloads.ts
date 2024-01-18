@@ -10,6 +10,7 @@ import { LensPillar } from '@/db/models/lens-pillars'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { WorkloadLensesAnswerChoice } from '@/db/models/workload-lenses-answers-choices'
 import { z } from 'zod'
+import { Tag } from '@/db/models/tags'
 import { createContext, evalInScope } from '@/lib/eval'
 import type { WorkloadCreationAttributes } from '../models/workload'
 import sequelize from '../config/config'
@@ -191,7 +192,7 @@ export async function findAndCountWorkloads({
   limit = 10
 }: Pagination) {
   const workloads = await Workload.findAndCountAll({
-    include: [Profile, Environment],
+    include: [Profile, Environment, Tag],
     order: [['name', 'DESC']],
     offset,
     limit

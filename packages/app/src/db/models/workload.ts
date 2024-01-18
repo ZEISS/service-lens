@@ -15,7 +15,8 @@ import {
   UpdatedAt,
   HasMany,
   AllowNull,
-  Default
+  Default,
+  HasOne
 } from 'sequelize-typescript'
 import { Profile } from './profile'
 import { Lens } from './lens'
@@ -23,6 +24,8 @@ import { WorkloadLens } from './workload-lens'
 import { WorkloadEnvironment } from './workload-environment'
 import { WorkloadLensAnswer } from './workload-lenses-answers'
 import { Environment } from './environment'
+import { Tag } from '@/db/models/tags'
+import { TagTaggable } from './tags-taggable'
 
 export interface WorkloadAttributes {
   id: string
@@ -77,6 +80,20 @@ export class Workload extends Model<
 
   @BelongsToMany(() => Lens, () => WorkloadLens, 'workloadId', 'lensId')
   lenses?: Lens[]
+
+  @BelongsToMany(() => Tag, {
+    through: {
+      model: () => TagTaggable,
+      unique: false,
+      scope: {
+        taggableType: 'workload'
+      }
+    },
+    otherKey: 'tagId',
+    foreignKey: 'taggableId',
+    constraints: false
+  })
+  declare tags?: Tag[]
 
   @BelongsToMany(
     () => Environment,
