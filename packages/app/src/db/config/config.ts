@@ -26,6 +26,8 @@ import { Role } from '../models/roles'
 import { Permission } from '../models/permissions'
 import { RolePermission } from '../models/roles-permissions'
 import { UserRole } from '../models/users-roles'
+import { UserTeam } from '../models/users-teams'
+import { UserPermission } from '../models/users-permissions'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
@@ -52,7 +54,9 @@ const models = [
   SolutionTemplate,
   Team,
   User,
+  UserPermission,
   UserRole,
+  UserTeam,
   Workload,
   WorkloadEnvironment,
   WorkloadLens,

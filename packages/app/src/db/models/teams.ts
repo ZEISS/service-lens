@@ -14,8 +14,6 @@ import {
   AllowNull,
   Default
 } from 'sequelize-typescript'
-import { User } from './users'
-import { TeamMembers } from './team-members'
 
 export interface TeamAttributes {
   id: string
@@ -53,9 +51,6 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
   @Max(2048)
   @Column
   description?: string
-
-  @BelongsToMany(() => User, () => TeamMembers, 'teamId', 'userId')
-  members?: User[]
 
   @CreatedAt
   @Column

@@ -23,6 +23,7 @@ import {
   totalSolutions,
   deleteSolutionTemplate
 } from './actions/solutions'
+import { checkPermission } from './actions/permissions'
 import { lensRouter } from '@/server/routers/actions/lenses'
 import { solutionsRouter } from './actions/solutions'
 import { profilesRouter } from './actions/profiles'
@@ -40,6 +41,8 @@ export const appRouter = router({
       console.log('request from', opts.ctx.headers?.['x-trpc-source'])
       return `hello ${opts.input.text} - ${Math.random()}`
     }),
+
+  checkPermission: checkPermission,
 
   secret: publicProcedure.query(async opts => {
     if (!opts.ctx.session) {

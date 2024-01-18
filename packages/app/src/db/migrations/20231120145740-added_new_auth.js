@@ -102,13 +102,13 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      createdAt: {
+      created_at: {
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE
       },
-      deletedAt: {
+      deleted_at: {
         type: Sequelize.DATE
       }
     })
@@ -237,19 +237,19 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      teamId: {
-        type: Sequelize.UUID,
+      roleId: {
+        type: Sequelize.BIGINT,
         references: {
-          model: 'teams',
+          model: 'roles',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      roleId: {
-        type: Sequelize.BIGINT,
+      teamId: {
+        type: Sequelize.UUID,
         references: {
-          model: 'roles',
+          model: 'teams',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -265,13 +265,57 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
+
+    await queryInterface.createTable('users-teams', {
+      id: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+      },
+      userId: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      teamId: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'teams',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      createdAt: {
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        type: Sequelize.DATE
+      },
+      deletedAt: {
+        type: Sequelize.DATE
+      }
+    })
+
+    await queryInterface.sequelize.query(
+      'CREATE VIEW vw_user_teams_permissions AS SELECT A."userId", A."teamId", C.slug as permission FROM "users-roles" AS A LEFT JOIN "roles-permissions" AS B ON A."roleId" = B."roleId" LEFT JOIN "permissions" AS C on B."permissionId" = C.id;'
+    )
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('verification_token')
     await queryInterface.dropTable('accounts')
     await queryInterface.dropTable('sessions')
+    await queryInterface.sequelize.query(
+      'DROP VIEW IF EXISTS vw_user_teams_permissions'
+    )
     await queryInterface.dropTable('users-roles', { cascade: true })
+    await queryInterface.dropTable('users-teams', { cascade: true })
     await queryInterface.dropTable('roles-permissions', { cascade: true })
     await queryInterface.dropTable('permissions', { cascade: true })
     await queryInterface.dropTable('roles', { cascade: true })

@@ -13,6 +13,7 @@ import TotalSolutionsCard from './components/total-solutions-card'
 import LoadingCard from './components/loading-card'
 import { Main } from '@/components/main'
 import WorkloadsListCard from '@/components/dashboard/workloads-card'
+import { api } from '@/trpc/server-http'
 
 export const metadata: Metadata = {
   title: 'Dashboard',

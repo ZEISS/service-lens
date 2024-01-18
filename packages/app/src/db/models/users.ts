@@ -9,8 +9,11 @@ import {
   Default,
   CreatedAt,
   DeletedAt,
-  UpdatedAt
+  UpdatedAt,
+  BelongsToMany
 } from 'sequelize-typescript'
+import { UserTeam } from './users-teams'
+import { Team } from './teams'
 
 export interface UserAttributes {
   id: string
@@ -46,6 +49,9 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @Column
   image?: string
+
+  @BelongsToMany(() => Team, () => UserTeam, 'userId', 'teamId')
+  teams?: Team[]
 
   @CreatedAt
   @Column
