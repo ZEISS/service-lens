@@ -11,6 +11,7 @@ import {
   Min,
   Max,
   AllowNull,
+  Unique,
   Default
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
@@ -18,6 +19,7 @@ import { Optional } from 'sequelize'
 export interface TeamAttributes {
   id: string
   name: string
+  slug: string
   description?: string
   createdAt?: Date
   updatedAt?: Date
@@ -39,9 +41,16 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
 
   @NotEmpty
   @Min(3)
-  @Max(256)
+  @Max(128)
   @Column
   declare name: string
+
+  @NotEmpty
+  @Unique
+  @Min(3)
+  @Max(128)
+  @Column
+  declare slug: string
 
   @NotEmpty
   @Min(12)

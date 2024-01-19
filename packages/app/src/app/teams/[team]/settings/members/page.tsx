@@ -12,8 +12,10 @@ export default function Page({ params }: PropsWithChildren<NextPageProps>) {
   return (
     <>
       <div>
-        <h3 className="text-lg font-medium">General</h3>
-        <p className="text-sm text-muted-foreground">Team Settings</p>
+        <h3 className="text-lg font-medium">Members</h3>
+        <p className="text-sm text-muted-foreground">
+          Manage the members of your team.
+        </p>
       </div>
       <Separator />
       <Suspense fallback={<LoadingSpinner />}>

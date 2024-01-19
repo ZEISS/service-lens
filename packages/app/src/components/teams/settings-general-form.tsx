@@ -13,7 +13,6 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/use-toast'
 import { use } from 'react'
 import {
   SettingGeneralFormValues,
@@ -22,31 +21,21 @@ import {
 import { api } from '@/trpc/client'
 
 export function SettingsGeneralForm({ teamId }: { teamId: string }) {
-  const team = use(api.teams.get.query(teamId))
+  const team = use(api.teams.getByName.query(teamId))
 
   const form = useForm<SettingGeneralFormValues>({
     resolver: zodResolver(settingsGeneralFormSchema),
     defaultValues: {
       name: team?.name,
+      slug: team?.slug,
       description: team?.description
     },
     mode: 'onChange'
   })
 
-  function onSubmit(data: SettingGeneralFormValues) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    })
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8">
         <FormField
           control={form.control}
           name="name"
@@ -54,9 +43,26 @@ export function SettingsGeneralForm({ teamId }: { teamId: string }) {
             <FormItem>
               <FormLabel className="sr-only">Name</FormLabel>
               <FormControl>
-                <Input placeholder="Name ..." {...field} />
+                <Input disabled={true} placeholder="Name ..." {...field} />
               </FormControl>
               <FormDescription>This is the name of the team.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="sr-only">Slug</FormLabel>
+              <FormControl>
+                <Input disabled={true} placeholder="Slug ..." {...field} />
+              </FormControl>
+              <FormDescription>
+                {`This is the short name used for URLs (e.g.
+                'solution-architects', 'order-service')`}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -68,7 +74,11 @@ export function SettingsGeneralForm({ teamId }: { teamId: string }) {
             <FormItem>
               <FormLabel className="sr-only">Description</FormLabel>
               <FormControl>
-                <Input placeholder="Description ..." {...field} />
+                <Input
+                  disabled={true}
+                  placeholder="Description ..."
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 This a brief description of the application instance.
@@ -77,7 +87,9 @@ export function SettingsGeneralForm({ teamId }: { teamId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Update settings</Button>
+        <Button disabled={true} type="submit">
+          Update settings
+        </Button>
       </form>
     </Form>
   )

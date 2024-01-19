@@ -123,6 +123,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      slug: {
+        type: Sequelize.STRING,
+        unique: true
+      },
       description: {
         type: Sequelize.STRING
       },

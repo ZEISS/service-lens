@@ -8,8 +8,8 @@ import { PropsWithChildren } from 'react'
 import { SidebarNav } from '@/components/sidebar-nav'
 import { Main } from '@/components/main'
 
-export interface NextPageProps<Team = string> {
-  params: { team: Team }
+export interface NextPageProps<TeamSlug = string> {
+  params: { team: TeamSlug }
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
@@ -24,7 +24,7 @@ export default function Layout({
     },
     {
       title: 'Members',
-      href: `/teams/${params.team}/members`
+      href: `/teams/${params.team}/settings/members`
     }
   ]
 

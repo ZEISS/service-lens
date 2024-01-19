@@ -80,7 +80,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
 
   React.useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/teams/${mutation.data.id}/settings`)
+      router.push(`/teams/${mutation.data.slug}/settings`)
     }
   }, [router, mutation.status, mutation.data])
 
@@ -210,13 +210,31 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="sr-only">
                     <h1>Name</h1>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Team name ..." {...field} />
+                    <Input placeholder="Name ..." {...field} />
                   </FormControl>
                   <FormDescription>Give it a great name.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="sr-only">Slug</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Slug ..." {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    {`This is the short name used for URLs (e.g.
+                'solution-architects', 'order-service')`}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -227,7 +245,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               name="contactEmail"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="sr-only">
                     <h1>Contact email</h1>
                   </FormLabel>
                   <FormControl>
@@ -247,7 +265,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               render={({ field }) => (
                 <div className="grid w-full">
                   <FormItem>
-                    <FormLabel>
+                    <FormLabel className="sr-only">
                       <h1>Description</h1>
                     </FormLabel>
                     <FormControl>

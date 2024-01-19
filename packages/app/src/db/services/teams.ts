@@ -1,6 +1,7 @@
 import { Team } from '@/db/models/teams'
 import { User } from '@/db/models/users'
 import { FindAndCountTeamsSchema, FindOneTeamSchema } from '../schemas/teams'
+import type { FindOneTeamByNameSlug } from '../schemas/teams'
 import type { CreateTeamSchema } from '../schemas/teams'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
@@ -25,6 +26,11 @@ export const createTeam = async (opts: CreateTeamSchema) =>
 export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
   await Team.findOne({
     where: { id: opts }
+  })
+
+export const findOneTeamBySlug = async (opts: FindOneTeamByNameSlug) =>
+  await Team.findOne({
+    where: { slug: opts }
   })
 
 export const findAndCountTeams = async (

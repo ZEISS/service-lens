@@ -5,6 +5,16 @@ export const TeamsListSchema = PaginationSchema
 export const TeamsGetSchema = z.string().uuid()
 export const TeamsCreateSchema = z.object({
   name: z.string().min(3).max(128),
+  slug: z.string().trim().toLowerCase().min(3).max(128).default(''),
   description: z.string().min(10).max(256).optional(),
   contactEmail: z.string().email().optional()
 })
+
+export const TeamsGetBySlugSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(3)
+  .max(128)
+  .default('')
+export type TeamsGetBySlugSchema = z.infer<typeof TeamsGetBySlugSchema>
