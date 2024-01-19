@@ -47,25 +47,44 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { api } from '@/trpc/client'
-import { useRouter } from 'next/navigation'
-
-type Team = (typeof groups)[number]['teams'][number]
+import { usePathname, useRouter } from 'next/navigation'
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface TeamSwitcherProps extends PopoverTriggerProps { }
 
 export default function TeamSwitcher({ className }: TeamSwitcherProps) {
-  const me = React.use(api.me.query())
   const user = React.use(api.users.get.query())
-  const teams = React.useMemo(
-    () => user?.teams?.map(team => ({ label: team.name, value: team.slug })),
-    [user?.teams]
+  const groups = React.useMemo(
+    () => [
+      {
+        label: 'Personal Acount',
+        teams: [
+          { label: user?.name, value: 'personal', pathname: '/dashboard' }
+        ]
+      },
+      {
+        label: 'Teams',
+        teams: user?.teams?.map(team => ({
+          label: team.name,
+          value: team.slug,
+          pathname: `/teams/${team.slug}`
+        }))
+      }
+    ],
+    [user]
+  )
+  const pathname = usePathname()
+  const selectedTeam = React.useMemo(
+    () =>
+      groups
+        .flatMap(group => group.teams)
+        .find(team => team?.pathname === pathname),
+    [groups, pathname]
   )
 
   const [open, setOpen] = React.useState(false)
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
-  const [selectedTeam, setSelectedTeam] = React.useState<Team>(teams[0])
   const router = useRouter()
 
   const form = useForm<NewTeamFormValues>({
@@ -95,13 +114,6 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             aria-label="Select a team"
             className={cn('w-[200px] justify-between', className)}
           >
-            <Avatar className="mr-2 h-5 w-5">
-              <AvatarImage
-                src={me?.user.image ?? ''}
-                alt={me?.user.name ?? ''}
-              />
-              <AvatarFallback>SC</AvatarFallback>
-            </Avatar>
             {selectedTeam?.label}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -111,12 +123,38 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
             <CommandList>
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
-              <CommandGroup heading="Personal Account">
+              {groups.map(group => (
+                <CommandGroup key={group.label} heading={group.label}>
+                  {group?.teams?.map(team => (
+                    <CommandItem
+                      key={team.value}
+                      onSelect={() => router.push(team.pathname)}
+                      className="text-sm"
+                    >
+                      <Avatar className="mr-2 h-5 w-5">
+                        <AvatarImage
+                          src={`https://avatar.vercel.sh/${team.value}.png`}
+                          alt={team.label}
+                          className="grayscale"
+                        />
+                        <AvatarFallback>SC</AvatarFallback>
+                      </Avatar>
+                      {team.label}
+                      <CheckIcon
+                        className={cn(
+                          'ml-auto h-4 w-4',
+                          pathname.startsWith(team.pathname)
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              ))}
+              {/* <CommandGroup heading="Personal Account">
                 <CommandItem
-                  onSelect={() => {
-                    setOpen(false)
-                    router.push('/dashboard')
-                  }}
+                  onSelect={() => router.push('/dashboard')}
                   className="text-sm"
                 >
                   <Avatar className="mr-2 h-5 w-5">
@@ -136,46 +174,14 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     key={team.value}
                     className="text-sm"
                     onSelect={() => {
-                      setOpen(false)
+                      rhfActionSetScope(team.value)
                       router.push(`/teams/${team.value}`)
                     }}
                   >
                     {team.label}
                   </CommandItem>
                 ))}
-              </CommandGroup>
-              {/* {groups.map(group => (
-                <CommandGroup key={group.label} heading={group.label}>
-                  {group.teams.map(team => (
-                    <CommandItem
-                      key={team.value}
-                      onSelect={() => {
-                        setSelectedTeam(team)
-                        setOpen(false)
-                      }}
-                      className="text-sm"
-                    >
-                      <Avatar className="mr-2 h-5 w-5">
-                        <AvatarImage
-                          src={`https://avatar.vercel.sh/${team.value}.png`}
-                          alt={team.label}
-                          className="grayscale"
-                        />
-                        <AvatarFallback>SC</AvatarFallback>
-                      </Avatar>
-                      {team.label}
-                      <CheckIcon
-                        className={cn(
-                          'ml-auto h-4 w-4',
-                          selectedTeam.value === team.value
-                            ? 'opacity-100'
-                            : 'opacity-0'
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ))} */}
+              </CommandGroup> */}
             </CommandList>
             <CommandSeparator />
             <CommandList>
