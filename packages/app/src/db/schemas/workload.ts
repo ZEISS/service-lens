@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { FindOneTeamByNameSlug } from './teams'
+import { PaginationSchema } from './pagination'
 
 export const WorkloadLensQuestionSchema = z.object({
   workloadId: z.string().uuid(),
@@ -19,3 +21,7 @@ export const WorkloadLensAnswerAddSchema = z.object({
   doesNotApplyReason: z.string().optional(),
   notes: z.string().optional()
 })
+
+export const ListWorkloadsByTeamSlug =
+  FindOneTeamByNameSlug.and(PaginationSchema)
+export type ListWorkloadsByTeamSlug = z.infer<typeof ListWorkloadsByTeamSlug>

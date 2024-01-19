@@ -12,9 +12,12 @@ import {
   Max,
   AllowNull,
   Unique,
-  Default
+  Default,
+  BelongsToMany
 } from 'sequelize-typescript'
 import { Optional } from 'sequelize'
+import { Workload } from '@/db/models/workload'
+import { Ownership } from '@/db/models/ownership'
 
 export interface TeamAttributes {
   id: string
@@ -57,6 +60,20 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
   @Max(2048)
   @Column
   declare description?: string
+
+  @BelongsToMany(() => Workload, {
+    through: {
+      model: () => Ownership,
+      unique: false,
+      scope: {
+        resourceType: 'workload'
+      }
+    },
+    foreignKey: 'ownerId',
+    otherKey: 'resourceId',
+    constraints: false
+  })
+  declare workloads: Workload[]
 
   @CreatedAt
   @Column(DataType.DATE)

@@ -59,7 +59,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const me = React.use(api.me.query())
   const user = React.use(api.users.get.query())
   const teams = React.useMemo(
-    () => user?.teams?.map(team => ({ label: team.name, value: team.id })),
+    () => user?.teams?.map(team => ({ label: team.name, value: team.slug })),
     [user?.teams]
   )
 
@@ -112,7 +112,13 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
               <CommandGroup heading="Personal Account">
-                <CommandItem className="text-sm">
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false)
+                    router.push('/dashboard')
+                  }}
+                  className="text-sm"
+                >
                   <Avatar className="mr-2 h-5 w-5">
                     <AvatarImage
                       src={me?.user.image ?? ''}
@@ -130,8 +136,8 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                     key={team.value}
                     className="text-sm"
                     onSelect={() => {
-                      setSelectedTeam(team)
                       setOpen(false)
+                      router.push(`/teams/${team.value}`)
                     }}
                   >
                     {team.label}

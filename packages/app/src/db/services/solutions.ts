@@ -14,9 +14,11 @@ import {
   DestroySolutionSchema,
   DestroySolutionTemplateSchema,
   MakeCopySolutionTemplateSchema,
-  MakeCopySolutionSchema
+  MakeCopySolutionSchema,
+  ListSolutionByTeamSlug
 } from '../schemas/solutions'
 import { z } from 'zod'
+import { Team } from '../models/teams'
 
 export const countSolutions = async () => await Solution.count()
 
@@ -110,4 +112,11 @@ export const makeCopySolutionTemplate = async (
       },
       { transaction }
     )
+  })
+
+export const listSolutionByTeamSlug = async (opts: ListSolutionByTeamSlug) =>
+  await Solution.findAndCountAll({
+    offset: opts.offset,
+    limit: opts.limit,
+    include: [{ model: Team, where: { slug: opts.slug } }]
   })

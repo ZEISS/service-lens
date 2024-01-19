@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PaginationSchema } from './pagination'
 
 const reservedSlugs = ['app', 'admin', 'www', 'admin']
 
@@ -22,10 +23,12 @@ export const CreateTeamSchema = z.object({
 })
 export type CreateTeamSchema = z.infer<typeof CreateTeamSchema>
 
-export const FindOneTeamByNameSlug = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .min(3)
-  .max(128)
+export const FindOneTeamByNameSlug = z.object({
+  slug: z.string().trim().toLowerCase().min(3).max(128)
+})
+
 export type FindOneTeamByNameSlug = z.infer<typeof FindOneTeamByNameSlug>
+
+export const ListWorkloadsByTeamSlug =
+  FindOneTeamByNameSlug.and(PaginationSchema)
+export type ListWorkloadsByTeamSlug = z.infer<typeof ListWorkloadsByTeamSlug>

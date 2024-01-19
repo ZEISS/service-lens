@@ -11,10 +11,12 @@ import {
   LensesGetQuestionSchema,
   LensesAddSchema
 } from '../schemas/lenses'
+import { Team } from '../models/teams'
 import sequelize from '@/db/config/config'
 import { z } from 'zod'
 import { LensPillarResource } from '../models/lens-pillar-resources'
 import { LensPillarQuestionRisk } from '../models/lens-pillar-risks'
+import { ListLensByTeamSlug } from '../schemas/lenses'
 
 export type Pagination = {
   offset?: number
@@ -175,3 +177,10 @@ export async function findAndCountLenses({
 
   return lenses
 }
+
+export const listLensByTeamSlug = async (opts: ListLensByTeamSlug) =>
+  await Lens.findAndCountAll({
+    offset: opts.offset,
+    limit: opts.limit,
+    include: [{ model: Team, where: { slug: opts.slug } }]
+  })

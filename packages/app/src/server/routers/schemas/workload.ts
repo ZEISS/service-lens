@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PaginationSchema } from './pagination'
+import { TeamsGetBySlugSchema } from '../schemas/teams'
 
 export const WorkloadDeleteSchema = z.string().uuid()
 export const WorkloadGetSchema = z.string().uuid()
@@ -22,3 +23,6 @@ export const WorkloadGetAnswerSchema = z.object({
   workloadId: z.string().uuid(),
   lensPillarQuestionId: z.string()
 })
+
+export const ListWorkloadByTeamSlug = TeamsGetBySlugSchema.and(PaginationSchema)
+export type ListWorkloadByTeamSlug = z.infer<typeof ListWorkloadByTeamSlug>

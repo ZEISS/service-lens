@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { FindOneTeamByNameSlug } from './teams'
+import { PaginationSchema } from './pagination'
 
 export const FindAndCountProfilesSchema = z.object({
   limit: z.number().min(0).max(100).default(10),
@@ -13,3 +15,6 @@ export const CreateProfileSchema = z.object({
   selectedChoices: z.record(z.string(), z.array(z.string()).min(1))
 })
 export const MakeCopyProfileSchema = z.string().uuid()
+
+export const ListProfileByTeamSlug = FindOneTeamByNameSlug.and(PaginationSchema)
+export type ListProfileByTeamSlug = z.infer<typeof ListProfileByTeamSlug>

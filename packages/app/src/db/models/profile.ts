@@ -10,17 +10,23 @@ import {
   NotEmpty,
   Min,
   Max,
-  BelongsToMany,
   AllowNull,
-  Default
+  Default,
+  BelongsToMany
 } from 'sequelize-typescript'
 import { ProfileQuestionAnswer } from '@/db/models/profile-question-answers'
 import { ProfileQuestionChoice } from '@/db/models/profile-question-choice'
+import { Tag } from './tags'
+import { TagTaggable } from './tags-taggable'
+import { Team } from './teams'
+import { Ownership } from './ownership'
 
 export interface ProfileAttributes {
   id: string
   name: string
   description?: string
+  tags: Tag[]
+  teams: Team[]
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -43,19 +49,19 @@ export class Profile extends Model<
   @Default(DataType.UUIDV4)
   @AllowNull(false)
   @Column(DataType.UUIDV4)
-  id!: string
+  declare id: string
 
   @NotEmpty
   @Min(3)
   @Max(256)
-  @Column
-  name!: string
+  @Column(DataType.STRING)
+  declare name: string
 
   @NotEmpty
   @Min(12)
   @Max(2048)
-  @Column
-  description?: string
+  @Column(DataType.STRING)
+  declare description: string
 
   @BelongsToMany(
     () => ProfileQuestionChoice,
@@ -65,15 +71,43 @@ export class Profile extends Model<
   )
   answers?: ProfileQuestionChoice[]
 
+  @BelongsToMany(() => Tag, {
+    through: {
+      model: () => TagTaggable,
+      unique: false,
+      scope: {
+        taggableType: 'profile'
+      }
+    },
+    otherKey: 'tagId',
+    foreignKey: 'taggableId',
+    constraints: false
+  })
+  declare tags: Tag[]
+
+  @BelongsToMany(() => Team, {
+    through: {
+      model: () => Ownership,
+      unique: false,
+      scope: {
+        resourceType: 'profile'
+      }
+    },
+    foreignKey: 'resourceId',
+    otherKey: 'ownerId',
+    constraints: false
+  })
+  declare teams: Team[]
+
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

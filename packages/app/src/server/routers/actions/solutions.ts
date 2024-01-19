@@ -8,7 +8,8 @@ import {
   findOneSolutionTemplate,
   countSolutions,
   destroySolutionTemplate,
-  makeCopySolution
+  makeCopySolution,
+  listSolutionByTeamSlug
 } from '@/db/services/solutions'
 import {
   SolutionListSchema,
@@ -19,7 +20,8 @@ import {
   SolutionTemplateGetSchema,
   SolutionDeleteSchema,
   SolutionTemplateDeleteSchema,
-  SolutionMakeCopySchema
+  SolutionMakeCopySchema,
+  ListSolutionByTeamSlug
 } from '../schemas/solution'
 import { router } from '@/server/trpc'
 import { revalidatePath } from 'next/cache'
@@ -63,6 +65,10 @@ export const makeCopySolutionTemplate = protectedProcedure
     return await makeCopySolution(opts.input)
   })
 
+export const listByTeam = protectedProcedure
+  .input(ListSolutionByTeamSlug)
+  .query(async opts => await listSolutionByTeamSlug({ ...opts.input }))
+
 export const solutionsRouter = router({
   add: addSolution,
   makeCopy: makeCopySolutionTemplate,
@@ -74,5 +80,6 @@ export const solutionsRouter = router({
   getSolutionTemplate,
   list: listSolutions,
   listSolutionTemplates: findSolutionTemplates,
+  listByTeam: listByTeam,
   total: totalSolutions
 })

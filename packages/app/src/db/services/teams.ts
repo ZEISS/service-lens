@@ -1,11 +1,15 @@
 import { Team } from '@/db/models/teams'
 import { User } from '@/db/models/users'
 import { FindAndCountTeamsSchema, FindOneTeamSchema } from '../schemas/teams'
-import type { FindOneTeamByNameSlug } from '../schemas/teams'
+import type {
+  FindOneTeamByNameSlug,
+  ListWorkloadsByTeamSlug
+} from '../schemas/teams'
 import type { CreateTeamSchema } from '../schemas/teams'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
 import { UserTeam } from '../models/users-teams'
+import { Workload } from '../models/workload'
 
 export type Pagination = {
   offset?: number
@@ -31,6 +35,12 @@ export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
 export const findOneTeamBySlug = async (opts: FindOneTeamByNameSlug) =>
   await Team.findOne({
     where: { slug: opts }
+  })
+
+export const listWorkloadsByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
+  await Team.findOne({
+    where: { slug: opts.slug },
+    include: [{ model: Workload }]
   })
 
 export const findAndCountTeams = async (

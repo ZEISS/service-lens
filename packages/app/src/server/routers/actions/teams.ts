@@ -2,12 +2,14 @@ import { protectedProcedure } from '../../trpc'
 import {
   TeamsGetSchema,
   TeamsListSchema,
-  TeamsGetBySlugSchema
+  TeamsGetBySlugSchema,
+  ListWorkloadByTeamSlug
 } from '../schemas/teams'
 import {
   findAndCountTeams,
   findOneTeam,
-  findOneTeamBySlug
+  findOneTeamBySlug,
+  listWorkloadsByTeamSlug
 } from '@/db/services/teams'
 import { router } from '@/server/trpc'
 
@@ -21,7 +23,11 @@ export const getTeam = protectedProcedure
 
 export const getTeamBySlug = protectedProcedure
   .input(TeamsGetBySlugSchema)
-  .query(async opts => await findOneTeamBySlug(opts.input))
+  .query(async opts => await findOneTeamBySlug({ ...opts.input }))
+
+export const listWorkloads = protectedProcedure
+  .input(ListWorkloadByTeamSlug)
+  .query(async opts => await listWorkloadsByTeamSlug({ ...opts.input }))
 
 // export const addTeam = protectedProcedure
 //   .input(TeamsCreateSchema)
@@ -31,5 +37,6 @@ export const teamsRouter = router({
   list: listTeams,
   // add: addTeam,
   get: getTeam,
-  getByName: getTeamBySlug
+  getByName: getTeamBySlug,
+  listWorkloads: listWorkloads
 })

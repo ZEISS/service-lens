@@ -4,7 +4,8 @@ import {
   WorkloadListSchema,
   WorkloadDeleteSchema,
   WorkloadGetLensQuestionSchema,
-  WorkloadGetAnswerSchema
+  WorkloadGetAnswerSchema,
+  ListWorkloadByTeamSlug
 } from '../schemas/workload'
 import {
   getWorkload as gw,
@@ -12,7 +13,8 @@ import {
   findAndCountWorkloads,
   deleteWorkload as dt,
   getWorkloadLensQuestion,
-  countWorkloads
+  countWorkloads,
+  listWorkloadByTeamSlug
 } from '@/db/services/workloads'
 import { router } from '@/server/trpc'
 
@@ -40,8 +42,13 @@ export const totalWorkloads = protectedProcedure.query(
   async _ => await countWorkloads()
 )
 
+export const listByTeam = protectedProcedure
+  .input(ListWorkloadByTeamSlug)
+  .query(async opts => await listWorkloadByTeamSlug({ ...opts.input }))
+
 export const workloadsRouter = router({
   get: getWorkload,
   list: listWorkloads,
+  listByTeam: listByTeam,
   delete: deleteWorkload
 })

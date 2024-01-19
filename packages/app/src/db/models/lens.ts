@@ -12,10 +12,15 @@ import {
   Max,
   HasMany,
   Default,
-  AllowNull
+  AllowNull,
+  BelongsToMany
 } from 'sequelize-typescript'
 import { LensPillar } from './lens-pillars'
 import type { Spec } from '../schemas/spec'
+import { Tag } from './tags'
+import { TagTaggable } from './tags-taggable'
+import { Team } from './teams'
+import { Ownership } from './ownership'
 
 export interface LensAttributes {
   id: string
@@ -25,6 +30,8 @@ export interface LensAttributes {
   isDraft: boolean
   description?: string
   pillars?: LensPillar[]
+  tags: Tag[]
+  teams: Team[]
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -72,6 +79,34 @@ export class Lens extends Model<LensAttributes, LensCreationAttributes> {
 
   @HasMany(() => LensPillar, 'lensId')
   pillars?: LensPillar[]
+
+  @BelongsToMany(() => Tag, {
+    through: {
+      model: () => TagTaggable,
+      unique: false,
+      scope: {
+        taggableType: 'lens'
+      }
+    },
+    otherKey: 'tagId',
+    foreignKey: 'taggableId',
+    constraints: false
+  })
+  declare tags: Tag[]
+
+  @BelongsToMany(() => Team, {
+    through: {
+      model: () => Ownership,
+      unique: false,
+      scope: {
+        resourceType: 'lens'
+      }
+    },
+    foreignKey: 'resourceId',
+    otherKey: 'ownerId',
+    constraints: false
+  })
+  declare teams: Team[]
 
   @CreatedAt
   @Column

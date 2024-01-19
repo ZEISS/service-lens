@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { FindOneTeamByNameSlug } from './teams'
+import { PaginationSchema } from './pagination'
 
 export const LensesGetSchema = z.string().uuid()
 export const LensesDeleteSchema = z.string().uuid()
@@ -9,3 +11,6 @@ export const LensesAddSchema = z.object({
   description: z.string().min(10).max(2048),
   spec: z.string()
 })
+
+export const ListLensByTeamSlug = FindOneTeamByNameSlug.and(PaginationSchema)
+export type ListLensByTeamSlug = z.infer<typeof ListLensByTeamSlug>

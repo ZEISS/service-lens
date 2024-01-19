@@ -1,6 +1,14 @@
 'use client'
 
-import { useMemo, useState, use, useDeferredValue, useTransition } from 'react'
+import {
+  useMemo,
+  useState,
+  useEffect,
+  use,
+  useDeferredValue,
+  useTransition,
+  useCallback
+} from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,10 +22,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  OnChangeFn,
   PaginationState
 } from '@tanstack/react-table'
-
+import { useRouter, usePathname } from 'next/navigation'
 import {
   Table,
   TableBody,
@@ -37,59 +44,79 @@ export type DataTableOptions = {
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  query: Query<TData>
+  data: TData[]
+  pageCount: number
+  pageSize: number
+  pageIndex: number
   options?: DataTableOptions
 }
 
-const defaultPagination = {
-  pageSize: 10,
-  pageIndex: 0
-}
-
-export type Query<T> = (
-  pagination: PaginationState
-) => Promise<{ rows: T[]; count: number }>
-
 export function DataTable<TData, TValue = unknown>({
   columns,
-  query,
+  data,
+  pageCount,
+  pageSize,
+  pageIndex,
   options
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter()
+  const pathname = usePathname()
+
   const cols = useMemo(() => columns, [columns])
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [pagination, setPagination] =
-    useState<PaginationState>(defaultPagination)
-  const [isFetching, startTransition] = useTransition()
 
-  const onPaginationChange: OnChangeFn<PaginationState> = pagination => {
-    startTransition(() => {
-      setPagination(pagination)
-    })
-  }
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex,
+    pageSize
+  })
 
-  const { rows, count } = use(query(pagination))
-  const deferredRows = useDeferredValue(rows)
-  const deferredCount = useDeferredValue(count)
+  const createQueryString = useCallback(
+    (params: Record<string, string | number | null>) => {
+      const newSearchParams = new URLSearchParams({})
+
+      for (const [key, value] of Object.entries(params)) {
+        if (value === null) {
+          newSearchParams.delete(key)
+        } else {
+          newSearchParams.set(key, String(value))
+        }
+      }
+
+      return newSearchParams.toString()
+    },
+    []
+  )
+
+  useEffect(() => {
+    router.push(
+      `${pathname}?${createQueryString({
+        page: pagination.pageIndex,
+        per_page: pagination.pageSize
+      })}`
+    )
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    pathname,
+    router,
+    createQueryString
+  ])
 
   const table = useReactTable({
-    data: deferredRows,
-    columns: cols,
+    data,
+    columns,
     state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
       pagination
     },
-    pageCount: Math.ceil(count / pagination.pageSize),
+    pageCount: pageCount ?? -1,
     enableRowSelection: true,
     manualPagination: true,
+    onPaginationChange: setPagination,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    onPaginationChange: onPaginationChange,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
@@ -102,11 +129,7 @@ export function DataTable<TData, TValue = unknown>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        isFetching={isFetching}
-        options={options?.toolbar}
-      />
+      <DataTableToolbar table={table} options={options?.toolbar} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -118,9 +141,9 @@ export function DataTable<TData, TValue = unknown>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -157,7 +180,7 @@ export function DataTable<TData, TValue = unknown>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} isFetching={isFetching} />
+      <DataTablePagination table={table} />
     </div>
   )
 }

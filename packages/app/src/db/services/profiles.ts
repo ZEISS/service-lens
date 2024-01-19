@@ -8,10 +8,12 @@ import {
   CreateProfileSchema,
   FindAllProfilesQuestionsSchema,
   DestroyProfileSchema,
-  MakeCopyProfileSchema
+  MakeCopyProfileSchema,
+  ListProfileByTeamSlug
 } from '../schemas/profiles'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
+import { Team } from '@/db/models/teams'
 
 export type Pagination = {
   offset?: number
@@ -69,4 +71,11 @@ export const findAllProfilesQuestions = async (
     order: [['name', 'DESC']],
     include: [ProfileQuestionChoice],
     ...opts
+  })
+
+export const listProfileByTeamSlug = async (opts: ListProfileByTeamSlug) =>
+  await Profile.findAndCountAll({
+    offset: opts.offset,
+    limit: opts.limit,
+    include: [{ model: Team, where: { slug: opts.slug } }]
   })

@@ -3,9 +3,10 @@ import {
   LensDeleteSchema,
   LensGetSchema,
   LensGetQuestionSchema,
-  LensListSchema
+  LensListSchema,
+  ListLensByTeamSlug
 } from '../schemas/lens'
-import { deleteLens as dl } from '@/db/services/lenses'
+import { deleteLens as dl, listLensByTeamSlug } from '@/db/services/lenses'
 import { getLens as gl } from '@/db/services/lenses'
 import {
   findOneLensPillarQuestion,
@@ -29,9 +30,14 @@ export const listLenses = protectedProcedure
   .input(LensListSchema)
   .query(async opts => await findAndCountLenses({ ...opts.input }))
 
+export const listByTeam = protectedProcedure
+  .input(ListLensByTeamSlug)
+  .query(async opts => await listLensByTeamSlug({ ...opts.input }))
+
 export const lensRouter = router({
   delete: deleteLens,
   get: getLens,
   getQuestion: getLensQuestion,
-  list: listLenses
+  list: listLenses,
+  listByTeam: listByTeam
 })

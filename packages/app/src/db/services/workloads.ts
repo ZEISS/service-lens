@@ -12,8 +12,8 @@ import { WorkloadLensesAnswerChoice } from '@/db/models/workload-lenses-answers-
 import { z } from 'zod'
 import { Tag } from '@/db/models/tags'
 import { createContext, evalInScope } from '@/lib/eval'
+import { Team } from '@/db/models/teams'
 import type { WorkloadCreationAttributes } from '../models/workload'
-import { User } from '@/db/models/users'
 import sequelize from '../config/config'
 import {
   WorkloadLensQuestionSchema,
@@ -25,6 +25,7 @@ import {
   LensPillarQuestionRisk,
   QuestionRisk
 } from '../models/lens-pillar-risks'
+import type { ListWorkloadsByTeamSlug } from '../schemas/workload'
 
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
@@ -201,3 +202,10 @@ export async function findAndCountWorkloads({
 
   return workloads
 }
+
+export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
+  await Workload.findAndCountAll({
+    offset: opts.offset,
+    limit: opts.limit,
+    include: [{ model: Team, where: { slug: opts.slug } }]
+  })

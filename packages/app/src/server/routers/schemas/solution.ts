@@ -1,5 +1,6 @@
-import { PaginationSchema } from './pagination'
 import { z } from 'zod'
+import { PaginationSchema } from './pagination'
+import { TeamsGetBySlugSchema } from '../schemas/teams'
 
 export const SolutionListSchema = PaginationSchema
 export const SolutionAddSchema = z.object({
@@ -14,3 +15,6 @@ export const SolutionTemplateListSchema = PaginationSchema
 export const SolutionTemplateGetSchema = z.string()
 export const SolutionTemplateDeleteSchema = z.bigint()
 export const SolutionMakeCopySchema = z.string().uuid()
+
+export const ListSolutionByTeamSlug = TeamsGetBySlugSchema.and(PaginationSchema)
+export type ListSolutionByTeamSlug = z.infer<typeof ListSolutionByTeamSlug>

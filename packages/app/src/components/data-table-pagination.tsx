@@ -16,12 +16,12 @@ import {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
-  isFetching?: boolean
+  pageSizeOptions?: number[]
 }
 
 export function DataTablePagination<TData>({
   table,
-  isFetching
+  pageSizeOptions = [10, 20, 30, 40, 50]
 }: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
@@ -33,7 +33,6 @@ export function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select
-            disabled={isFetching}
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={value => table.setPageSize(Number(value))}
           >

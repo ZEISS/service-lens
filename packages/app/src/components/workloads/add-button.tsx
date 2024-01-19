@@ -1,15 +1,17 @@
 import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
+import { PropsWithChildren } from 'react'
 
-interface AddWorkloadButtonProps {}
+export interface AddWorkloadButtonProp {
+  teamSlug: string
+}
 
-export function AddWorkloadButton({}: AddWorkloadButtonProps) {
+export function AddWorkloadButton({
+  teamSlug
+}: PropsWithChildren<AddWorkloadButtonProp>) {
   return (
-    <Link href="/dashboard/workloads/new" passHref>
-      <Button variant={'outline'}>
-        <PlusIcon />
-      </Button>
+    <Link href={`/teams/${teamSlug}/workloads/new`} passHref>
+      <Button variant={'outline'}>Add Workload</Button>
     </Link>
   )
 }

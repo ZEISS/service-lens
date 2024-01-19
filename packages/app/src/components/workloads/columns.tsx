@@ -70,64 +70,64 @@ export const columns: ColumnDef<Workload>[] = [
       )
     }
   },
-  {
-    accessorKey: 'profile',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Profile" />
-    ),
-    cell: ({ row }) => {
-      //   const label = labels.find(label => label.value === row.original.)
-      const profile: Profile = row.getValue('profile')
+  // {
+  //   accessorKey: 'profile',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Profile" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     //   const label = labels.find(label => label.value === row.original.)
+  //     const profile: Profile = row.getValue('profile')
 
-      return (
-        <Link
-          href={`/dashboard/profiles/${profile.id}`}
-          className={cn(
-            buttonVariants({ variant: 'ghost' }),
-            'hover:bg-transparent hover:underline',
-            'px-0',
-            'justify-start'
-          )}
-          passHref
-        >
-          <div className="flex space-x-2">
-            {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
-            <span className="max-w-[500px] truncate font-medium">
-              {row.original?.profile?.name}
-            </span>
-          </div>
-        </Link>
-      )
-    }
-  },
-  {
-    accessorKey: 'environment',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Environment" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <div className="flex space-x-2 items-center">
-          {/* {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )} */}
-          {row.original?.environments?.map(env => (
-            <Button
-              key={env.id}
-              variant="outline"
-              size="sm"
-              className="h-8 border-dashed"
-            >
-              {env.name}
-            </Button>
-          ))}
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    }
-  },
+  //     return (
+  //       <Link
+  //         href={`/dashboard/profiles/${profile.id}`}
+  //         className={cn(
+  //           buttonVariants({ variant: 'ghost' }),
+  //           'hover:bg-transparent hover:underline',
+  //           'px-0',
+  //           'justify-start'
+  //         )}
+  //         passHref
+  //       >
+  //         <div className="flex space-x-2">
+  //           {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
+  //           <span className="max-w-[500px] truncate font-medium">
+  //             {row.original?.profile?.name}
+  //           </span>
+  //         </div>
+  //       </Link>
+  //     )
+  //   }
+  // },
+  // {
+  //   accessorKey: 'environment',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Environment" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <div className="flex space-x-2 items-center">
+  //         {/* {status.icon && (
+  //           <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+  //         )} */}
+  //         {row.original?.environments?.map(env => (
+  //           <Button
+  //             key={env.id}
+  //             variant="outline"
+  //             size="sm"
+  //             className="h-8 border-dashed"
+  //           >
+  //             {env.name}
+  //           </Button>
+  //         ))}
+  //       </div>
+  //     )
+  //   },
+  //   filterFn: (row, id, value) => {
+  //     return value.includes(row.getValue(id))
+  //   }
+  // },
   {
     id: 'actions',
     cell: ({ row }) => <DataTableRowActions row={row} />

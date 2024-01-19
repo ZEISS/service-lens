@@ -6,13 +6,10 @@ import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/data-table-view-options'
-
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
-import { DataTableLoading } from './data-table-loading'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
-  isFetching: boolean
   options?: DataTableToolbarOptions
 }
 
@@ -34,7 +31,6 @@ export type DataTableToolbarOptions = {
 
 export function DataTableToolbar<TData>({
   table,
-  isFetching,
   options
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -72,8 +68,6 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      {isFetching && <DataTableLoading />}
-
       <DataTableViewOptions table={table} />
     </div>
   )

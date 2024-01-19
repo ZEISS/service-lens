@@ -4,6 +4,7 @@ import { columns } from './columns'
 import { DataTable } from '@/components/data-table'
 import { useQuery } from '@/lib/api'
 import { api } from '@/trpc/client'
+import { Workload } from '@/db/models/workload'
 import type { DataTableOptions } from '@/components/data-table'
 
 const options = {
@@ -21,9 +22,12 @@ const options = {
   }
 } satisfies DataTableOptions
 
-export function WorkloadDataTable() {
-  const query = useQuery(({ pageIndex: offset, pageSize: limit }) =>
-    api.listWorkloads.query({ offset, limit })
+export function WorkloadDataTable({ teamSlug }: { teamSlug: string }) {
+  const query = useQuery<Workload>(({ pageIndex: offset, pageSize: limit }) =>
+    api.teams.listWorkloads.query(teamSlug).then(team => ({
+      count: team?.workloads.length ?? 0,
+      rows: team?.workloads ?? []
+    }))
   )
 
   return (

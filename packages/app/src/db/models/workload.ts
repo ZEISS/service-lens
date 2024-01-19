@@ -25,6 +25,8 @@ import { WorkloadLensAnswer } from './workload-lenses-answers'
 import { Environment } from './environment'
 import { Tag } from '@/db/models/tags'
 import { TagTaggable } from './tags-taggable'
+import { Ownership } from './ownership'
+import { Team } from './teams'
 
 export interface WorkloadAttributes {
   id: string
@@ -93,6 +95,20 @@ export class Workload extends Model<
     constraints: false
   })
   declare tags: Tag[]
+
+  @BelongsToMany(() => Team, {
+    through: {
+      model: () => Ownership,
+      unique: false,
+      scope: {
+        resourceType: 'workload'
+      }
+    },
+    foreignKey: 'resourceId',
+    otherKey: 'ownerId',
+    constraints: false
+  })
+  declare teams: Team[]
 
   @BelongsToMany(
     () => Environment,

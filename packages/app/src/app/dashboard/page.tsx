@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import {
   SubNav,
   SubNavTitle,
@@ -8,12 +7,7 @@ import {
 } from '@/components/sub-nav'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ActionButton } from '@/app/dashboard/components/add-button'
-import TotalWorkloadsCard from './components/total-workloads-card'
-import TotalSolutionsCard from './components/total-solutions-card'
-import LoadingCard from './components/loading-card'
 import { Main } from '@/components/main'
-import WorkloadsListCard from '@/components/dashboard/workloads-card'
-import { api } from '@/trpc/server-http'
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -49,7 +43,7 @@ export default async function Page() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Suspense fallback={<LoadingCard />}>
                   <TotalWorkloadsCard />
                 </Suspense>
@@ -61,7 +55,7 @@ export default async function Page() {
                 <Suspense fallback={<LoadingCard />}>
                   <WorkloadsListCard />
                 </Suspense>
-              </div>
+              </div> */}
             </TabsContent>
           </Tabs>
         </div>

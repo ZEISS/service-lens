@@ -14,10 +14,15 @@ import {
   ForeignKey,
   BelongsTo,
   Default,
-  AllowNull
+  AllowNull,
+  BelongsToMany
 } from 'sequelize-typescript'
 import { SolutionComment } from './solution-comments'
 import { User } from './users'
+import { Team } from './teams'
+import { TagTaggable } from './tags-taggable'
+import { Tag } from './tags'
+import { Ownership } from './ownership'
 
 export interface SolutionAttributes {
   id: string
@@ -27,6 +32,8 @@ export interface SolutionAttributes {
   userId?: string
   description?: string
   comments?: SolutionComment[]
+  tags: Tag[]
+  teams: Team[]
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -70,6 +77,34 @@ export class Solution extends Model<
 
   @BelongsTo(() => User)
   user?: User
+
+  @BelongsToMany(() => Tag, {
+    through: {
+      model: () => TagTaggable,
+      unique: false,
+      scope: {
+        taggableType: 'solution'
+      }
+    },
+    otherKey: 'tagId',
+    foreignKey: 'taggableId',
+    constraints: false
+  })
+  declare tags: Tag[]
+
+  @BelongsToMany(() => Team, {
+    through: {
+      model: () => Ownership,
+      unique: false,
+      scope: {
+        resourceType: 'solution'
+      }
+    },
+    foreignKey: 'resourceId',
+    otherKey: 'ownerId',
+    constraints: false
+  })
+  declare teams: Team[]
 
   @NotEmpty
   @Min(12)
