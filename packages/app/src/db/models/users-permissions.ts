@@ -1,16 +1,7 @@
-import {
-  Table,
-  Model,
-  Column,
-  PrimaryKey,
-  DataType,
-  AutoIncrement,
-  ForeignKey,
-  Unique,
-  Default,
-  BelongsToMany,
-  AllowNull
-} from 'sequelize-typescript'
+import { Table, Model, Column, DataType, AllowNull } from 'sequelize-typescript'
+import { Optional } from 'sequelize'
+
+export type UserPermissions = 'read' | 'write' | 'admin' | 'superadmin'
 
 export interface UserPermissionAttributes {
   id: bigint
@@ -19,7 +10,7 @@ export interface UserPermissionAttributes {
   permission: string
 }
 
-export type UserPermissionCreationAttributes = Omit<
+export type UserPermissionCreationAttributes = Optional<
   UserPermissionAttributes,
   'id'
 >
@@ -33,12 +24,12 @@ export class UserPermission extends Model<
 > {
   @AllowNull(false)
   @Column(DataType.UUIDV4)
-  userId?: string
+  declare userId: string
 
   @AllowNull(false)
   @Column(DataType.UUIDV4)
-  teamId?: bigint
+  declare teamId: bigint
 
-  @Column
-  permission?: string
+  @Column(DataType.STRING)
+  declare permission: UserPermissions
 }

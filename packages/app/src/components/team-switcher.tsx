@@ -46,8 +46,8 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { useRouter } from 'next/navigation'
 import { api } from '@/trpc/client'
+import { useRouter } from 'next/navigation'
 
 type Team = (typeof groups)[number]['teams'][number]
 
@@ -80,9 +80,9 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
 
   React.useEffect(() => {
     if (mutation.status === 'success') {
-      setShowNewTeamDialog(false)
+      router.push(`/teams/${mutation.data.id}/settings`)
     }
-  }, [showNewTeamDialog, mutation.status])
+  }, [router, mutation.status, mutation.data])
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>

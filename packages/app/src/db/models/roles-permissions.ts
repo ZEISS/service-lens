@@ -11,8 +11,10 @@ import {
   Min,
   Max,
   AutoIncrement,
-  ForeignKey
+  ForeignKey,
+  AllowNull
 } from 'sequelize-typescript'
+import { Optional } from 'sequelize'
 import { Permission } from '@/db/models/permissions'
 import { Role } from '@/db/models/roles'
 
@@ -20,14 +22,14 @@ export interface RolePermissionAttributes {
   id: bigint
   slug: string
   description?: string
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
-export type RolePermissionCreationAttributes = Omit<
+export type RolePermissionCreationAttributes = Optional<
   RolePermissionAttributes,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
+  'id'
 >
 
 @Table({
@@ -39,27 +41,28 @@ export class RolePermission extends Model<
   RolePermissionCreationAttributes
 > {
   @PrimaryKey
+  @AllowNull(false)
   @AutoIncrement
   @Column(DataType.BIGINT)
-  id!: bigint
+  declare id: bigint
 
   @ForeignKey(() => Role)
   @Column(DataType.BIGINT)
-  roleId?: bigint
+  declare roleId: bigint
 
   @ForeignKey(() => Permission)
   @Column(DataType.BIGINT)
-  userId?: string
+  declare userId: string
 
   @CreatedAt
   @Column
-  createdAt?: Date
+  declare createdAt?: Date
 
   @UpdatedAt
   @Column
-  updatedAt?: Date
+  declare updatedAt?: Date
 
   @DeletedAt
   @Column
-  deletedAt?: Date
+  declare deletedAt?: Date
 }

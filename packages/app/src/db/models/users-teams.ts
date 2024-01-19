@@ -11,7 +11,9 @@ import { User } from './users'
 import { Team } from './teams'
 
 export interface UserTeamAttributes {
-  id: string
+  id: bigint
+  userId: string
+  teamId: string
 }
 
 export type UserRoleCreationAttributes = Omit<UserTeamAttributes, 'id'>
@@ -34,5 +36,5 @@ export class UserTeam extends Model<
 
   @ForeignKey(() => Team)
   @Column(DataType.UUIDV4)
-  teamId?: bigint
+  teamId?: string
 }

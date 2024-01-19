@@ -11,3 +11,5 @@ export const CreateTeamSchema = z.object({
   description: z.string().min(3).max(255).optional(),
   contactEmail: z.string().email().optional()
 })
+
+export type CreateTeamSchema = z.infer<typeof CreateTeamSchema>
