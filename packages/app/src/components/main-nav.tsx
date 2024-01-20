@@ -16,7 +16,6 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement>) {
   const headerList = headers()
   const pathname = headerList.get('x-pathname')
-  console.log(pathname)
 
   return (
     <nav

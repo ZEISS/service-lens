@@ -1,36 +1,41 @@
 import Link from 'next/link'
-import { headers } from 'next/headers'
+import { headers, cookies } from 'next/headers'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
+import { PropsWithChildren } from 'react'
 
 export interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
-  teamId: string
+  scope?: string
 }
 
-export function MainNav({ className, teamId, ...props }: MainNavProps) {
+export function MainNav({
+  className,
+  scope,
+  ...props
+}: PropsWithChildren<MainNavProps>) {
   const headerList = headers()
   const pathname = headerList.get('x-pathname')
 
   const nav = [
     {
       name: 'Dashboard',
-      link: `/team/${teamId}/dashboard`
+      link: `/teams/${scope}/dashboard`
     },
     {
       name: 'Workloads',
-      link: `/team/${teamId}/workloads`
+      link: `/teams/${scope}/workloads`
     },
     {
       name: 'Solutions',
-      link: `/team/${teamId}/solutions`
+      link: `/teams/${scope}/solutions`
     },
     {
       name: 'Lenses',
-      link: `/team/${teamId}/lenses`
+      link: `/teams/${scope}/lenses`
     },
     {
       name: 'Profiles',
-      link: `/team/${teamId}/profiles`
+      link: `/teams/${scope}/profiles`
     }
   ]
 

@@ -12,6 +12,8 @@ import { TeamsCreateSchema } from '@/server/routers/schemas/teams'
 import { useAction } from '@/trpc/client'
 import { rhfAction } from '@/components/teams/new-form.action'
 import { Textarea } from '@/components/ui/textarea'
+import { rhfActionSetScopeSchema } from '@/actions/teams-switcher.schema'
+import { rhfActionSetScope } from '@/actions/team-switcher.action'
 import {
   Form,
   FormControl,
@@ -51,26 +53,26 @@ import { usePathname, useRouter } from 'next/navigation'
 
 export type TeamSwitcherProps = {
   className?: string
+  scope?: string
 }
 
 export default function TeamSwitcher({
-  className
+  className,
+  scope = 'personal'
 }: React.PropsWithChildren<TeamSwitcherProps>) {
   const user = React.use(api.users.get.query())
+
   const groups = React.useMemo(
     () => [
       {
         label: 'Personal Acount',
-        teams: [
-          { label: user?.name, value: 'personal', pathname: '/dashboard' }
-        ]
+        teams: [{ label: user?.name, value: 'personal' }]
       },
       {
         label: 'Teams',
         teams: user?.teams?.map(team => ({
           label: team.name,
-          value: team.slug,
-          pathname: `/teams/${team.slug}`
+          value: team.slug
         }))
       }
     ],
@@ -79,10 +81,8 @@ export default function TeamSwitcher({
   const pathname = usePathname()
   const selectedTeam = React.useMemo(
     () =>
-      groups
-        .flatMap(group => group.teams)
-        .find(team => team?.pathname === pathname),
-    [groups, pathname]
+      groups.flatMap(group => group.teams).find(team => scope === team?.value),
+    [groups, scope]
   )
 
   const [open, setOpen] = React.useState(false)
@@ -94,6 +94,12 @@ export default function TeamSwitcher({
     defaultValues,
     mode: 'onChange'
   })
+
+  const updateScope = (opts: rhfActionSetScopeSchema) => {
+    React.startTransition(() => {
+      rhfActionSetScope(opts)
+    })
+  }
 
   const mutation = useAction(rhfAction)
   const handleSubmit = async (data: NewTeamFormValues) =>
@@ -130,7 +136,7 @@ export default function TeamSwitcher({
                   {group?.teams?.map(team => (
                     <CommandItem
                       key={team.value}
-                      onSelect={() => router.push(team.pathname)}
+                      onSelect={() => updateScope(team.value)}
                       className="text-sm"
                     >
                       <Avatar className="mr-2 h-5 w-5">
@@ -145,9 +151,7 @@ export default function TeamSwitcher({
                       <CheckIcon
                         className={cn(
                           'ml-auto h-4 w-4',
-                          pathname.startsWith(team.pathname)
-                            ? 'opacity-100'
-                            : 'opacity-0'
+                          scope === team.value ? 'opacity-100' : 'opacity-0'
                         )}
                       />
                     </CommandItem>
