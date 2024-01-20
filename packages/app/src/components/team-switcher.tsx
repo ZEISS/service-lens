@@ -49,11 +49,13 @@ import {
 import { api } from '@/trpc/client'
 import { usePathname, useRouter } from 'next/navigation'
 
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
+export type TeamSwitcherProps = {
+  className?: string
+}
 
-interface TeamSwitcherProps extends PopoverTriggerProps { }
-
-export default function TeamSwitcher({ className }: TeamSwitcherProps) {
+export default function TeamSwitcher({
+  className
+}: React.PropsWithChildren<TeamSwitcherProps>) {
   const user = React.use(api.users.get.query())
   const groups = React.useMemo(
     () => [

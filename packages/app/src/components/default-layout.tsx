@@ -1,5 +1,5 @@
 import '@/styles/globals.css'
-import React from 'react'
+import type { ReactNode } from 'react'
 
 import { MainNav } from '@/components/main-nav'
 import { Search } from '@/components/search'
@@ -9,18 +9,24 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
 import Footer from '@/components/footer'
 
+interface DefaultLayoutProps {
+  children?: ReactNode | undefined
+
+  /** A fallback react tree to show when a Suspense child (like React.lazy) suspends */
+  fallback?: ReactNode
+}
+
 export default function DefaultLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+  children,
+  fallback = <MainNav className="mx-6" />
+}: DefaultLayoutProps) {
   return (
     <>
       <div className="flex-col">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <TeamSwitcher />
-            <MainNav className="mx-6" />
+            {fallback}
             <div className="ml-auto flex items-center space-x-4">
               <Search />
               <ThemeToggle />

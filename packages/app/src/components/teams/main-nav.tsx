@@ -3,20 +3,36 @@ import { headers } from 'next/headers'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
-const nav = [
-  {
-    name: 'Dashboard',
-    link: '/dashboard'
-  }
-]
+export interface MainNavProps extends React.HTMLAttributes<HTMLElement> {
+  teamId: string
+}
 
-export function MainNav({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
+export function MainNav({ className, teamId, ...props }: MainNavProps) {
   const headerList = headers()
   const pathname = headerList.get('x-pathname')
-  console.log(pathname)
+
+  const nav = [
+    {
+      name: 'Dashboard',
+      link: `/team/${teamId}/dashboard`
+    },
+    {
+      name: 'Workloads',
+      link: `/team/${teamId}/workloads`
+    },
+    {
+      name: 'Solutions',
+      link: `/team/${teamId}/solutions`
+    },
+    {
+      name: 'Lenses',
+      link: `/team/${teamId}/lenses`
+    },
+    {
+      name: 'Profiles',
+      link: `/team/${teamId}/profiles`
+    }
+  ]
 
   return (
     <nav

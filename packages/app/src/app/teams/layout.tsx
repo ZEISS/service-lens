@@ -1,21 +1,23 @@
-import {
-  SubNav,
-  SubNavTitle,
-  SubNavActions,
-  SubNavSubtitle
-} from '@/components/sub-nav'
-import { SidebarNav } from '@/components/sidebar-nav'
-import { Main } from '@/components/main'
+import type { PropsWithChildren } from 'react'
+import { MainNav } from '@/components/teams/main-nav'
 import DefaultLayout from '@/components/default-layout'
 
-type PageProps = {
-  children?: React.ReactNode
+export interface NextPageProps<TeamSlug = string> {
+  params: { team: TeamSlug }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default function Layout({ children }: PageProps) {
+export default function Layout({
+  params,
+  children
+}: PropsWithChildren<NextPageProps>) {
   return (
     <>
-      <DefaultLayout>{children}</DefaultLayout>
+      <DefaultLayout
+        fallback={<MainNav teamId={params.team} className="mx-6" />}
+      >
+        {children}
+      </DefaultLayout>
     </>
   )
 }
