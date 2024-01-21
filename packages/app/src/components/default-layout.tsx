@@ -34,7 +34,7 @@ export default async function DefaultLayout({
             <div className="ml-auto flex items-center space-x-4">
               <Search />
               <ThemeToggle />
-              <UserNav />
+              <UserNav user={user} />
             </div>
           </div>
         </div>
