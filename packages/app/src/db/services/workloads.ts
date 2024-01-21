@@ -26,6 +26,10 @@ import {
   QuestionRisk
 } from '../models/lens-pillar-risks'
 import type { ListWorkloadsByTeamSlug } from '../schemas/workload'
+import type { WorkloadCreate } from '../schemas/workload'
+import { WorkloadCreateSchema } from '../schemas/workload'
+import { Ownership } from '../models/ownership'
+import { Scope } from 'ajv/dist/compile/codegen'
 
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
@@ -123,19 +127,16 @@ export const addLensAnswer = async (
     )
 
     const risk =
-      question?.risks?.reduce(
-        (prev, curr) => {
-          try {
-            const truthy = evalInScope(curr.condition, ctx)
-            console.log(curr.condition, truthy, curr.risk)
-            return truthy ? curr.risk ?? QuestionRisk.Unanswered : prev
-          } catch (error) {
-            console.error(error)
-            return prev
-          }
-        },
-        defaultCondition?.risk
-      ) ?? QuestionRisk.Unanswered
+      question?.risks?.reduce((prev, curr) => {
+        try {
+          const truthy = evalInScope(curr.condition, ctx)
+          console.log(curr.condition, truthy, curr.risk)
+          return truthy ? curr.risk ?? QuestionRisk.Unanswered : prev
+        } catch (error) {
+          console.error(error)
+          return prev
+        }
+      }, defaultCondition?.risk) ?? QuestionRisk.Unanswered
 
     const [answer] = await WorkloadLensAnswer.upsert(
       {
@@ -208,4 +209,23 @@ export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
     offset: opts.offset,
     limit: opts.limit,
     include: [{ model: Team, where: { slug: opts.slug } }]
+  })
+
+export const createWorkload2 = async (opts: WorkloadCreate) =>
+  await sequelize.transaction(async transaction => {
+    const workload = await Workload.create(
+      { name: opts.name, description: opts.description },
+      { transaction }
+    )
+
+    const _ = await Ownership.create(
+      {
+        ownerId: opts.scope.ownerId,
+        resourceId: workload.id,
+        resourceType: 'workload'
+      },
+      { transaction }
+    )
+
+    return workload
   })

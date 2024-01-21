@@ -14,8 +14,19 @@ module.exports = {
 
     const roles = await queryInterface.bulkInsert('roles', [
       {
-        id: 1,
-        name: 'admin'
+        name: 'superadmin'
+      },
+      {
+        name: 'owner'
+      },
+      {
+        name: 'member'
+      },
+      {
+        name: 'developer'
+      },
+      {
+        name: 'viewer'
       }
     ])
 

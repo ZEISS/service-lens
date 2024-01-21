@@ -4,11 +4,11 @@ import type { ReactNode } from 'react'
 import { cookies } from 'next/headers'
 import { MainNav } from '@/components/main-nav'
 import { Search } from '@/components/search'
-import TeamSwitcher from '@/components/team-switcher'
-import { UserNav } from '@/components/user-nav'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Toaster } from '@/components/ui/toaster'
+import { UserNav } from '@/components/user-nav'
 import Footer from '@/components/footer'
+import TeamSwitcher from '@/components/team-switcher'
 
 interface DefaultLayoutProps {
   children?: ReactNode | undefined

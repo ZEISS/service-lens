@@ -14,7 +14,7 @@ export type ResourceType = 'workload' | 'solution' | 'lens' | 'profile'
 
 export type OwnershipAttributes = {
   id: bigint
-  resourceID: string
+  resourceId: string
   resourceType: ResourceType
   ownerId: string
   createdAt?: Date

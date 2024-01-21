@@ -16,7 +16,7 @@ import {
   countWorkloads,
   listWorkloadByTeamSlug
 } from '@/db/services/workloads'
-import { router } from '@/server/trpc'
+import { router, isAllowed } from '@/server/trpc'
 
 export const getWorkload = protectedProcedure
   .input(WorkloadGetSchema)
@@ -43,6 +43,7 @@ export const totalWorkloads = protectedProcedure.query(
 )
 
 export const listByTeam = protectedProcedure
+  .use(isAllowed('read'))
   .input(ListWorkloadByTeamSlug)
   .query(async opts => await listWorkloadByTeamSlug({ ...opts.input }))
 

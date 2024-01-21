@@ -17,15 +17,17 @@ export interface PermissionAttributes {
   id: bigint
   slug: string
   description?: string
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
 export type PermissionCreationAttributes = Omit<
   PermissionAttributes,
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
+
+export type Permissions = 'admin' | 'write' | 'read'
 
 @Table({
   tableName: 'permissions',
@@ -38,29 +40,29 @@ export class Permission extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)
-  id!: bigint
+  declare id: bigint
 
   @NotEmpty
   @Min(3)
   @Max(256)
   @Column
-  slug!: string
+  declare slug: string
 
   @NotEmpty
   @Min(12)
   @Max(2048)
   @Column
-  description?: string
+  declare description: string
 
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

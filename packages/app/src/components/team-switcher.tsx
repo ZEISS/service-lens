@@ -136,7 +136,10 @@ export default function TeamSwitcher({
                   {group?.teams?.map(team => (
                     <CommandItem
                       key={team.value}
-                      onSelect={() => updateScope(team.value)}
+                      onSelect={() => {
+                        setOpen(false)
+                        updateScope(team.value)
+                      }}
                       className="text-sm"
                     >
                       <Avatar className="mr-2 h-5 w-5">

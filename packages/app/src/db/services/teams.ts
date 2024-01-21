@@ -34,7 +34,7 @@ export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
 
 export const findOneTeamBySlug = async (opts: FindOneTeamByNameSlug) =>
   await Team.findOne({
-    where: { slug: opts }
+    where: { slug: opts.slug }
   })
 
 export const listWorkloadsByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>

@@ -35,7 +35,7 @@ export interface WorkloadAttributes {
   environments?: Environment[]
   answers?: WorkloadLens[]
   lenses?: Lens[]
-  profilesId: string
+  profilesId?: string
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
