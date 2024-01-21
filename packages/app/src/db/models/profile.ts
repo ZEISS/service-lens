@@ -25,11 +25,12 @@ export interface ProfileAttributes {
   id: string
   name: string
   description?: string
-  tags: Tag[]
-  teams: Team[]
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  tags?: Tag[]
+  teams?: Team[]
+  answers?: ProfileQuestionChoice[]
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
 export type ProfileCreationAttributes = Omit<
@@ -69,7 +70,7 @@ export class Profile extends Model<
     'profileId',
     'choiceId'
   )
-  answers?: ProfileQuestionChoice[]
+  declare answers: ProfileQuestionChoice[]
 
   @BelongsToMany(() => Tag, {
     through: {

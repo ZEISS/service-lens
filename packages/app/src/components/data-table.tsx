@@ -93,8 +93,8 @@ export function DataTable<TData, TValue = unknown>({
   useEffect(() => {
     router.push(
       `${pathname}?${createQueryString({
-        page: pagination.pageIndex,
-        per_page: pagination.pageSize
+        offset: pagination.pageIndex,
+        limit: pagination.pageSize
       })}`
     )
   }, [

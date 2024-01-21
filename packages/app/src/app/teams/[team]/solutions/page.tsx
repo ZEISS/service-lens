@@ -7,11 +7,11 @@ import {
 } from '@/components/sub-nav'
 import { PropsWithChildren } from 'react'
 import { Main } from '@/components/main'
-import { z } from 'zod'
 import { api } from '@/trpc/server-http'
 import { DataTable } from '@/components/data-table'
 import { columns } from '@/components/solutions/data-columns'
 import type { DataTableOptions } from '@/components/data-table'
+import { ListSolutionByTeamSlug } from '@/server/routers/schemas/solution'
 
 const options = {
   toolbar: {}
@@ -24,19 +24,13 @@ export interface NextPageProps<TeamSlug = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-const searchParamsSchema = z.object({
-  per_page: z.coerce.number().default(10),
-  page: z.coerce.number().default(0)
-})
-
 export default async function Page(props: PropsWithChildren<NextPageProps>) {
-  const searchParams = searchParamsSchema.parse(props.searchParams)
-  const { rows, count } = await api.solutions.listByTeam.query({
-    slug: props.params.team,
-    ...searchParams
+  const searchParams = ListSolutionByTeamSlug.parse({
+    ...props.searchParams,
+    slug: props.params.team
   })
-
-  const pageCount = Math.ceil(count / searchParams.per_page)
+  const { rows, count } = await api.solutions.listByTeam.query(searchParams)
+  const pageCount = Math.ceil(count / searchParams.limit)
 
   return (
     <>
@@ -54,8 +48,8 @@ export default async function Page(props: PropsWithChildren<NextPageProps>) {
           columns={columns}
           data={rows}
           pageCount={pageCount}
-          pageSize={searchParams.per_page}
-          pageIndex={searchParams.page}
+          pageSize={searchParams.limit}
+          pageIndex={searchParams.offset}
           options={options}
         />
       </Main>

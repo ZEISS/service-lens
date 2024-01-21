@@ -8,12 +8,12 @@ import {
   CreateProfileSchema,
   FindAllProfilesQuestionsSchema,
   DestroyProfileSchema,
-  MakeCopyProfileSchema,
   ListProfileByTeamSlug
 } from '../schemas/profiles'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
 import { Team } from '@/db/models/teams'
+import { Ownership } from '../models/ownership'
 
 export type Pagination = {
   offset?: number
@@ -25,6 +25,13 @@ export const createProfile = async (
 ) =>
   sequelize.transaction(async transaction => {
     const profile = await Profile.create({ ...opts }, { transaction })
+    const ownership = await Ownership.create(
+      {
+        ...opts.scope,
+        resourceId: profile.id
+      },
+      { transaction }
+    )
 
     await ProfileQuestionAnswer.bulkCreate(
       Object.values(opts.selectedChoices)
@@ -36,7 +43,7 @@ export const createProfile = async (
       { transaction }
     )
 
-    return profile
+    return profile.dataValues
   })
 
 export const destroyProfile = async (

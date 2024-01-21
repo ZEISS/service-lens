@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { FindOneTeamByNameSlug } from './teams'
 import { PaginationSchema } from './pagination'
+import { ScopeSchema } from './scope'
 
 export const FindAndCountProfilesSchema = z.object({
   limit: z.number().min(0).max(100).default(10),
@@ -12,7 +13,8 @@ export const DestroyProfileSchema = z.string().uuid()
 export const CreateProfileSchema = z.object({
   name: z.string().min(3).max(255),
   description: z.string().min(3).max(255),
-  selectedChoices: z.record(z.string(), z.array(z.string()).min(1))
+  selectedChoices: z.record(z.string(), z.array(z.string()).min(1)),
+  scope: ScopeSchema
 })
 export const MakeCopyProfileSchema = z.string().uuid()
 

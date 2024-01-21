@@ -32,13 +32,16 @@ import { useRouter } from 'next/navigation'
 import { ProfileQuestion } from '@/db/models/profile-question'
 import { Checkbox } from '@/components/ui/checkbox'
 import { defaultValues } from './new-form.schema'
+import { usePathname } from 'next/navigation'
 
 export type NewProfileFormProps = {
+  teamId: string
   questions?: ProfileQuestion[]
   selectedChoices?: Record<string, string[]>
 }
 
 export function NewProfileForm({
+  teamId,
   questions,
   selectedChoices
 }: PropsWithChildren<NewProfileFormProps>) {
@@ -59,7 +62,7 @@ export function NewProfileForm({
 
   useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/dashboard/profiles/${mutation.data?.id}`)
+      router.push(`/teams/${teamId}/profiles/${mutation.data?.id}`)
     }
   })
 
@@ -142,14 +145,14 @@ export function NewProfileForm({
                                   onCheckedChange={checked => {
                                     return checked
                                       ? field.onChange([
-                                          ...field.value,
-                                          choice.id
-                                        ])
+                                        ...field.value,
+                                        choice.id
+                                      ])
                                       : field.onChange(
-                                          field.value?.filter(
-                                            value => value !== choice.id
-                                          )
+                                        field.value?.filter(
+                                          value => value !== choice.id
                                         )
+                                      )
                                   }}
                                 />
                               </FormControl>

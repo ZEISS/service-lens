@@ -1,4 +1,4 @@
-import { protectedProcedure } from '../../trpc'
+import { isAllowed, protectedProcedure } from '../../trpc'
 import {
   ProfileListSchema,
   ProfileGetSchema,
@@ -16,16 +16,23 @@ import {
 export const listProfiles = protectedProcedure
   .input(ProfileListSchema)
   .query(async opts => await findAndCountProfiles({ ...opts.input }))
+
 export const getProfile = protectedProcedure
   .input(ProfileGetSchema)
   .query(async opts => await findOneProfile(opts.input))
+
 export const listProfilesQuestions = protectedProcedure.query(
   async opts => await findAllProfilesQuestions(opts)
 )
 
 export const listByTeam = protectedProcedure
+  .use(isAllowed('read'))
   .input(ListProfileByTeamSlug)
-  .query(async opts => await listProfileByTeamSlug({ ...opts.input }))
+  .query(async opts => {
+    console.log(opts)
+
+    return await listProfileByTeamSlug({ ...opts.input })
+  })
 
 export const profilesRouter = router({
   list: listProfiles,
