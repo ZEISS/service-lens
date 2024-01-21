@@ -28,11 +28,7 @@ export const listProfilesQuestions = protectedProcedure.query(
 export const listByTeam = protectedProcedure
   .use(isAllowed('read'))
   .input(ListProfileByTeamSlug)
-  .query(async opts => {
-    console.log(opts)
-
-    return await listProfileByTeamSlug({ ...opts.input })
-  })
+  .query(async opts => await listProfileByTeamSlug({ ...opts.input }))
 
 export const profilesRouter = router({
   list: listProfiles,

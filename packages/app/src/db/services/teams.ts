@@ -10,6 +10,7 @@ import { z } from 'zod'
 import sequelize from '@/db/config/config'
 import { UserTeam } from '../models/users-teams'
 import { Workload } from '../models/workload'
+import { UserRole } from '../models/users-roles'
 
 export type Pagination = {
   offset?: number
@@ -21,6 +22,14 @@ export const createTeam = async (opts: CreateTeamSchema) =>
     const team = await Team.create({ ...opts }, { transaction })
     await UserTeam.create(
       { userId: opts.userId, teamId: team.id },
+      { transaction }
+    )
+    await UserRole.create(
+      {
+        userId: opts.userId,
+        teamId: team.id,
+        roleId: BigInt(1)
+      },
       { transaction }
     )
 

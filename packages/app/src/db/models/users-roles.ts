@@ -5,21 +5,17 @@ import {
   PrimaryKey,
   DataType,
   AutoIncrement,
-  ForeignKey,
-  Unique,
-  Default,
-  BelongsToMany
+  ForeignKey
 } from 'sequelize-typescript'
 import { User } from './users'
 import { Role } from './roles'
 import { Team } from './teams'
 
 export interface UserRoleAttributes {
-  id: string
-  email: string
-  name: string
-  emailVerified: string
-  image?: string
+  id: bigint
+  userId: string
+  roleId: bigint
+  teamId: string
 }
 
 export type UserRoleCreationAttributes = Omit<UserRoleAttributes, 'id'>
@@ -34,17 +30,17 @@ export class UserRole extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)
-  id!: bigint
+  declare id: bigint
 
   @ForeignKey(() => User)
   @Column(DataType.UUIDV4)
-  userId?: string
+  declare userId: string
 
   @ForeignKey(() => Role)
   @Column(DataType.BIGINT)
-  roleId?: bigint
+  declare roleId: bigint
 
   @ForeignKey(() => Team)
   @Column(DataType.UUIDV4)
-  teamId?: bigint
+  declare teamId: string
 }

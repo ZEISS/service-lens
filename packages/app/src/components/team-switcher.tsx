@@ -48,20 +48,20 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { api } from '@/trpc/client'
-import { usePathname, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { type User } from '@/db/models/users'
 
 export type TeamSwitcherProps = {
+  user: User | null
   className?: string
   scope?: string
 }
 
 export default function TeamSwitcher({
+  user,
   className,
   scope = 'personal'
 }: React.PropsWithChildren<TeamSwitcherProps>) {
-  const user = React.use(api.users.get.query())
-
   const groups = React.useMemo(
     () => [
       {
@@ -78,7 +78,6 @@ export default function TeamSwitcher({
     ],
     [user]
   )
-  const pathname = usePathname()
   const selectedTeam = React.useMemo(
     () =>
       groups.flatMap(group => group.teams).find(team => scope === team?.value),
@@ -107,7 +106,8 @@ export default function TeamSwitcher({
 
   React.useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/teams/${mutation.data.slug}/settings`)
+      setShowNewTeamDialog(false)
+      updateScope(mutation.data.slug)
     }
   }, [router, mutation.status, mutation.data])
 

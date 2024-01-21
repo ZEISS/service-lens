@@ -29,10 +29,6 @@ export const listWorkloads = protectedProcedure
   .input(ListWorkloadByTeamSlug)
   .query(async opts => await listWorkloadsByTeamSlug({ ...opts.input }))
 
-// export const addTeam = protectedProcedure
-//   .input(TeamsCreateSchema)
-//   .mutation(async opts => await createTeam({}))
-
 export const teamsRouter = router({
   list: listTeams,
   // add: addTeam,
