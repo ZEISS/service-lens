@@ -15,6 +15,7 @@ import {
   ForeignKey
 } from 'sequelize-typescript'
 import { LensPillarQuestion } from './lens-pillar-questions'
+import { Risk } from '../schemas/spec'
 
 export enum QuestionRisk {
   Unanswered = 'UNANSWERED',
@@ -58,8 +59,8 @@ export class LensPillarQuestionRisk extends Model<
 
   @NotEmpty
   @Default(QuestionRisk.Unanswered)
-  @Column(DataType.ENUM(...Object.values(QuestionRisk)))
-  risk!: QuestionRisk
+  @Column(DataType.ENUM(...Object.values(Risk)))
+  risk!: Risk
 
   @NotEmpty
   @Min(3)

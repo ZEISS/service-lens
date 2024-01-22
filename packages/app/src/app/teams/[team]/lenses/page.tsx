@@ -43,7 +43,7 @@ export default async function Page(props: PropsWithChildren<NextPageProps>) {
           </SubNavSubtitle>
         </SubNavTitle>
         <SubNavActions>
-          <AddLensButton />
+          <AddLensButton teamSlug={searchParams.slug} />
         </SubNavActions>
       </SubNav>
       <Main className="space-y-8 p-8">

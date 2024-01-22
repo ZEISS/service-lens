@@ -30,11 +30,11 @@ export interface LensAttributes {
   isDraft: boolean
   description?: string
   pillars?: LensPillar[]
-  tags: Tag[]
-  teams: Team[]
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  tags?: Tag[]
+  teams?: Team[]
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
 export type LensCreationAttributes = Omit<
@@ -51,34 +51,34 @@ export class Lens extends Model<LensAttributes, LensCreationAttributes> {
   @AllowNull(false)
   @Default(DataType.UUIDV4)
   @Column(DataType.UUIDV4)
-  id!: string
+  declare id: string
 
   @NotEmpty
   @Min(3)
   @Max(256)
-  @Column
-  name!: string
+  @Column(DataType.STRING)
+  declare name: string
 
   @NotEmpty
-  @Column
-  version!: string
+  @Column(DataType.STRING)
+  declare version: string
 
   @NotEmpty
   @Column(DataType.JSONB)
-  spec!: Spec
+  declare spec: Spec
 
   @Default(true)
-  @Column
-  isDraft?: boolean
+  @Column(DataType.BOOLEAN)
+  declare isDraft: boolean
 
   @NotEmpty
   @Min(12)
   @Max(2048)
-  @Column
-  description?: string
+  @Column(DataType.STRING)
+  declare description?: string
 
   @HasMany(() => LensPillar, 'lensId')
-  pillars?: LensPillar[]
+  declare pillars?: LensPillar[]
 
   @BelongsToMany(() => Tag, {
     through: {
@@ -109,14 +109,14 @@ export class Lens extends Model<LensAttributes, LensCreationAttributes> {
   declare teams: Team[]
 
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

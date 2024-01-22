@@ -9,7 +9,7 @@ const readJSONFile = async (file: File) =>
   })
 
 export const rhfActionSchema = z.object({
-  name: z.string().min(3).max(256).default(''),
+  name: z.string().trim().min(3).max(256).default(''),
   spec: z
     .union([
       z

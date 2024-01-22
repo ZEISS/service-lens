@@ -8,15 +8,18 @@ import {
   LensesGetSchema,
   LensesDeleteSchema,
   LensesPublishSchema,
-  LensesGetQuestionSchema,
-  LensesAddSchema
+  LensesGetQuestionSchema
 } from '../schemas/lenses'
 import { Team } from '../models/teams'
 import sequelize from '@/db/config/config'
 import { z } from 'zod'
 import { LensPillarResource } from '../models/lens-pillar-resources'
-import { LensPillarQuestionRisk } from '../models/lens-pillar-risks'
-import { ListLensByTeamSlug } from '../schemas/lenses'
+import {
+  LensPillarQuestionRisk,
+  QuestionRisk
+} from '../models/lens-pillar-risks'
+import { ListLensByTeamSlug, CreateLens } from '../schemas/lenses'
+import { Ownership } from '../models/ownership'
 
 export type Pagination = {
   offset?: number
@@ -47,7 +50,7 @@ export const deleteLens = async (opts: z.infer<typeof LensesDeleteSchema>) =>
 export const publishLens = async (opts: z.infer<typeof LensesPublishSchema>) =>
   await Lens.update({ isDraft: false }, { where: { id: opts } })
 
-export const createLens = async (opts: z.infer<typeof LensesAddSchema>) =>
+export const createLens = async (opts: CreateLens) =>
   await sequelize.transaction(async transaction => {
     const spec = await Spec.parseAsync(JSON.parse(opts.spec))
 
@@ -61,6 +64,15 @@ export const createLens = async (opts: z.infer<typeof LensesAddSchema>) =>
       {
         transaction
       }
+    )
+
+    const ownership = await Ownership.create(
+      {
+        ...opts,
+        resourceId: lens.id,
+        resourceType: 'lens'
+      },
+      { transaction }
     )
 
     const pillars = await LensPillar.bulkCreate(
@@ -112,7 +124,7 @@ export const createLens = async (opts: z.infer<typeof LensesAddSchema>) =>
           ...(spec.pillars[a].questions[b]?.risks?.map(risk => {
             return {
               questionId: question.id,
-              risk: risk.risk,
+              risk: QuestionRisk[risk.risk as keyof typeof QuestionRisk],
               condition: risk.condition
             }
           }) ?? [])

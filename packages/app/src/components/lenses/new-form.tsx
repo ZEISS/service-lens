@@ -22,9 +22,14 @@ import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 
-export type NewLensFormProps = {}
+export type NewLensFormProps = {
+  teamSlug: string
+}
 
-export function NewLensForm({ ...props }: PropsWithChildren<NewLensFormProps>) {
+export function NewLensForm({
+  teamSlug,
+  ...props
+}: PropsWithChildren<NewLensFormProps>) {
   const form = useForm<z.infer<typeof rhfActionSchema>>({
     resolver: zodResolver(rhfActionSchema),
     defaultValues: {
@@ -47,7 +52,7 @@ export function NewLensForm({ ...props }: PropsWithChildren<NewLensFormProps>) {
 
   useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/dashboard/lenses/${mutation.data?.id}`)
+      router.push(`/teams/${teamSlug}/profiles/${mutation.data?.id}`)
     }
   }, [mutation.status, mutation.data?.id, router])
 

@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
+import { PropsWithChildren } from 'react'
 
-interface AddLensButtonProps {}
+export interface AddLensButton {
+  teamSlug: string
+}
 
-export function AddLensButton({}: AddLensButtonProps) {
+export function AddLensButton({ teamSlug }: PropsWithChildren<AddLensButton>) {
   return (
-    <Link href="/dashboard/lenses/new" passHref>
-      <Button variant={'outline'}>
-        <PlusIcon />
-      </Button>
+    <Link href={`/teams/${teamSlug}/lenses/new`} passHref>
+      <Button variant={'outline'}>Add Lens</Button>
     </Link>
   )
 }

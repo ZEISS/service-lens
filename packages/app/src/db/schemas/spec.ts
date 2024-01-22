@@ -17,7 +17,6 @@ export const Risk = z.object({
   ]),
   condition: z.string()
 })
-
 export type Risk = z.infer<typeof Risk>
 
 export const Improvement = z.object({

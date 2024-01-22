@@ -12,17 +12,17 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card'
-import DateFormat from '@/components/date-format'
-import { Section } from '@/components/section'
+import { ActionsMenu } from './components/actions-menu'
 import { api } from '@/trpc/server-http'
-import { CommentForm } from './components/comment-form'
-import { CommentActions } from './components/comment-actions'
-import { remark } from 'remark'
-import html from 'remark-html'
-import Markdown from 'react-markdown'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { ActionsMenu } from './components/actions-menu'
+import { CommentActions } from './components/comment-actions'
+import { CommentForm } from './components/comment-form'
+import { remark } from 'remark'
+import { Section } from '@/components/section'
+import DateFormat from '@/components/date-format'
+import html from 'remark-html'
+import Markdown from 'react-markdown'
 
 export type PageProps = {
   params: { id: string }
@@ -56,7 +56,7 @@ export default async function Page({ params }: PageProps) {
                     src={solution?.user?.image}
                     alt={solution?.user?.name}
                   />
-                  <AvatarFallback>{}</AvatarFallback>
+                  <AvatarFallback>{ }</AvatarFallback>
                 </Avatar>
               </Button>
             </CardTitle>
@@ -116,7 +116,7 @@ export default async function Page({ params }: PageProps) {
                       src={comment.user?.image}
                       alt={comment.user?.name}
                     />
-                    <AvatarFallback>{}</AvatarFallback>
+                    <AvatarFallback>{ }</AvatarFallback>
                   </Avatar>
                 </Button>
                 <CommentActions comment={comment} />
