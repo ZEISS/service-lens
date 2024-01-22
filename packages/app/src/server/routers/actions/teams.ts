@@ -3,11 +3,13 @@ import {
   TeamsGetSchema,
   TeamsListSchema,
   TeamsGetBySlugSchema,
-  ListWorkloadByTeamSlug
+  ListWorkloadByTeamSlug,
+  GetTeamAndUsersByTeamSlug
 } from '../schemas/teams'
 import {
   findAndCountTeams,
   findOneTeam,
+  findOneTeamAndMembersBySlug,
   findOneTeamBySlug,
   listWorkloadsByTeamSlug
 } from '@/db/services/teams'
@@ -29,10 +31,15 @@ export const listWorkloads = protectedProcedure
   .input(ListWorkloadByTeamSlug)
   .query(async opts => await listWorkloadsByTeamSlug({ ...opts.input }))
 
+export const getTeamAndUsersBySlug = protectedProcedure
+  .input(GetTeamAndUsersByTeamSlug)
+  .query(async opts => await findOneTeamAndMembersBySlug({ ...opts.input }))
+
 export const teamsRouter = router({
   list: listTeams,
   // add: addTeam,
   get: getTeam,
   getByName: getTeamBySlug,
+  getUsersByName: getTeamAndUsersBySlug,
   listWorkloads: listWorkloads
 })

@@ -26,8 +26,13 @@ export type CreateTeamSchema = z.infer<typeof CreateTeamSchema>
 export const FindOneTeamByNameSlug = z.object({
   slug: z.string().trim().toLowerCase().min(3).max(128)
 })
-
 export type FindOneTeamByNameSlug = z.infer<typeof FindOneTeamByNameSlug>
+
+export const FineOneTeamAndUsersByNameSlugSchema =
+  FindOneTeamByNameSlug.and(PaginationSchema)
+export type FineOneTeamAndUsersByNameSlug = z.infer<
+  typeof FineOneTeamAndUsersByNameSlugSchema
+>
 
 export const ListWorkloadsByTeamSlug =
   FindOneTeamByNameSlug.and(PaginationSchema)

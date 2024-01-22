@@ -130,7 +130,6 @@ export const addLensAnswer = async (
       question?.risks?.reduce((prev, curr) => {
         try {
           const truthy = evalInScope(curr.condition, ctx)
-          console.log(curr.condition, truthy, curr.risk)
           return truthy ? curr.risk ?? QuestionRisk.Unanswered : prev
         } catch (error) {
           console.error(error)

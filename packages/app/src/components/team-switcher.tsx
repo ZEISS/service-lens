@@ -161,36 +161,6 @@ export default function TeamSwitcher({
                   ))}
                 </CommandGroup>
               ))}
-              {/* <CommandGroup heading="Personal Account">
-                <CommandItem
-                  onSelect={() => router.push('/dashboard')}
-                  className="text-sm"
-                >
-                  <Avatar className="mr-2 h-5 w-5">
-                    <AvatarImage
-                      src={me?.user.image ?? ''}
-                      alt={me?.user.name ?? ''}
-                      className="grayscale"
-                    />
-                    <AvatarFallback>SC</AvatarFallback>
-                  </Avatar>
-                  {me?.user.name}
-                </CommandItem>
-              </CommandGroup>
-              <CommandGroup heading="Teams">
-                {teams?.map(team => (
-                  <CommandItem
-                    key={team.value}
-                    className="text-sm"
-                    onSelect={() => {
-                      rhfActionSetScope(team.value)
-                      router.push(`/teams/${team.value}`)
-                    }}
-                  >
-                    {team.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup> */}
             </CommandList>
             <CommandSeparator />
             <CommandList>
@@ -205,8 +175,10 @@ export default function TeamSwitcher({
                     Create Team
                   </CommandItem>
                 </DialogTrigger>
-                <CommandItem onSelect={() => router.push('/account/teams')}>
-                  Manage Teams
+                <CommandItem
+                  onSelect={() => router.push(`/teams/${scope}/settings`)}
+                >
+                  Manage Team
                 </CommandItem>
               </CommandGroup>
             </CommandList>

@@ -13,15 +13,21 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { use } from 'react'
+import { PropsWithChildren, use } from 'react'
 import {
   SettingGeneralFormValues,
   settingsGeneralFormSchema
 } from './settings-general-form.schema'
 import { api } from '@/trpc/client'
 
-export function SettingsGeneralForm({ teamId }: { teamId: string }) {
-  const team = use(api.teams.getByName.query(teamId))
+export type SettingsGeneralFormProps = {
+  teamId: string
+}
+
+export function SettingsGeneralForm({
+  teamId = ''
+}: PropsWithChildren<SettingsGeneralFormProps>) {
+  const team = use(api.teams.getByName.query({ slug: teamId }))
 
   const form = useForm<SettingGeneralFormValues>({
     resolver: zodResolver(settingsGeneralFormSchema),

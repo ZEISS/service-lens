@@ -17,3 +17,9 @@ export type TeamsGetBySlugSchema = z.infer<typeof TeamsGetBySlugSchema>
 
 export const ListWorkloadByTeamSlug = TeamsGetBySlugSchema.and(PaginationSchema)
 export type ListWorkloadByTeamSlug = z.infer<typeof ListWorkloadByTeamSlug>
+
+export const GetTeamAndUsersByTeamSlug =
+  TeamsGetBySlugSchema.and(PaginationSchema)
+export type GetTeamAndUsersByTeamSlug = z.infer<
+  typeof GetTeamAndUsersByTeamSlug
+>

@@ -28,13 +28,13 @@ export class UserTeam extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)
-  id!: bigint
+  declare id: bigint
 
   @ForeignKey(() => User)
   @Column(DataType.UUIDV4)
-  userId?: string
+  declare userId: string
 
   @ForeignKey(() => Team)
   @Column(DataType.UUIDV4)
-  teamId?: string
+  declare teamId: string
 }

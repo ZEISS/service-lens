@@ -1,6 +1,10 @@
 import { Team } from '@/db/models/teams'
 import { User } from '@/db/models/users'
-import { FindAndCountTeamsSchema, FindOneTeamSchema } from '../schemas/teams'
+import {
+  FindAndCountTeamsSchema,
+  FindOneTeamSchema,
+  type FineOneTeamAndUsersByNameSlug
+} from '../schemas/teams'
 import type {
   FindOneTeamByNameSlug,
   ListWorkloadsByTeamSlug
@@ -44,6 +48,14 @@ export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
 export const findOneTeamBySlug = async (opts: FindOneTeamByNameSlug) =>
   await Team.findOne({
     where: { slug: opts.slug }
+  })
+
+export const findOneTeamAndMembersBySlug = async (
+  opts: FineOneTeamAndUsersByNameSlug
+) =>
+  await Team.findOne({
+    where: { slug: opts.slug },
+    include: [{ model: User }]
   })
 
 export const listWorkloadsByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>

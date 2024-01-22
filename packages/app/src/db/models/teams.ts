@@ -18,6 +18,8 @@ import {
 import { Optional } from 'sequelize'
 import { Workload } from '@/db/models/workload'
 import { Ownership } from '@/db/models/ownership'
+import { User } from '@/db/models/users'
+import { UserTeam } from '@/db/models/users-teams'
 
 export interface TeamAttributes {
   id: string
@@ -74,6 +76,17 @@ export class Team extends Model<TeamAttributes, TeamCreationAttributes> {
     constraints: false
   })
   declare workloads: Workload[]
+
+  @BelongsToMany(() => User, {
+    through: {
+      model: () => UserTeam,
+      unique: false
+    },
+    foreignKey: 'teamId',
+    otherKey: 'userId',
+    constraints: false
+  })
+  declare users: User[]
 
   @CreatedAt
   @Column(DataType.DATE)
