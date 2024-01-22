@@ -1,7 +1,8 @@
-import { Separator } from '@/components/ui/separator'
 import { SettingsGeneralForm } from '@/components/teams/settings-general-form'
 import { PropsWithChildren, Suspense } from 'react'
 import { LoadingSpinner } from '@/components/loading-spinner'
+import { Separator } from '@/components/ui/separator'
+import { DeleteTeamDialog } from '@/components/teams/delete-team-dialog'
 
 export interface NextPageProps<Team = string> {
   params: { team: Team }
@@ -19,6 +20,8 @@ export default function Page({ params }: PropsWithChildren<NextPageProps>) {
       <Suspense fallback={<LoadingSpinner />}>
         <SettingsGeneralForm teamId={params.team} />
       </Suspense>
+      <Separator />
+      <DeleteTeamDialog />
     </>
   )
 }

@@ -9,14 +9,14 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { useAction } from '@/trpc/client'
-import { rhfActionDeleteLens } from '@/actions/lens.action'
+import {
+  rhfActionDeleteLens,
+  rhfActionPushlishLens
+} from '@/actions/lens.action'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -29,6 +29,10 @@ export function DataTableRowActions<TData>({
   const mutation = useAction(rhfActionDeleteLens)
   const deleteLens = async (lensId: string) => {
     await mutation.mutate(lensId)
+  }
+  const publishAction = useAction(rhfActionPushlishLens)
+  const publishLens = async (lensId: string) => {
+    await publishAction.mutate(lensId)
   }
 
   return (
@@ -46,6 +50,9 @@ export function DataTableRowActions<TData>({
         <Link href={`/dashboard/lenses/${id}`} passHref>
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
+        <DropdownMenuItem onClick={() => publishLens(id)}>
+          Publish
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => deleteLens(id)}>
           Delete

@@ -8,7 +8,8 @@ import {
   LensesGetSchema,
   LensesDeleteSchema,
   LensesPublishSchema,
-  LensesGetQuestionSchema
+  LensesGetQuestionSchema,
+  type LensDelete
 } from '../schemas/lenses'
 import { Team } from '../models/teams'
 import sequelize from '@/db/config/config'
@@ -42,13 +43,13 @@ export const getLens = async (opts: z.infer<typeof LensesGetSchema>) =>
     ]
   })
 
-export const deleteLens = async (opts: z.infer<typeof LensesDeleteSchema>) =>
+export const deleteLens = async (opts: LensDelete) =>
   await Lens.destroy({
-    where: { id: opts }
+    where: { id: opts.lensId }
   })
 
 export const publishLens = async (opts: z.infer<typeof LensesPublishSchema>) =>
-  await Lens.update({ isDraft: false }, { where: { id: opts } })
+  await Lens.update({ isDraft: false }, { where: { id: opts.lensId } })
 
 export const createLens = async (opts: CreateLens) =>
   await sequelize.transaction(async transaction => {

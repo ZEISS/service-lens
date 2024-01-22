@@ -8,17 +8,32 @@ import {
 } from './lens.schema'
 import { deleteLens, publishLens } from '@/db/services/lenses'
 import { revalidatePath } from 'next/cache'
+import { isAllowed } from '@/server/trpc'
 
 export const rhfActionDeleteLens = createAction(
-  protectedProcedure.input(rhfActionDeleteLensSchema).mutation(async opts => {
-    await deleteLens(opts.input)
-    revalidatePath('/dashboard/lenses')
-  })
+  protectedProcedure
+    .use(isAllowed('write'))
+    .input(rhfActionDeleteLensSchema)
+    .mutation(async opts => {
+      await deleteLens({
+        lensId: opts.input,
+        resourceType: 'lens',
+        ownerId: opts.ctx.meta.ownerId
+      })
+      revalidatePath('/teams/[id]/lenses', 'page')
+    })
 )
 
 export const rhfActionPushlishLens = createAction(
-  protectedProcedure.input(rhfActionPublishLensSchema).mutation(async opts => {
-    await publishLens(opts.input)
-    revalidatePath(`/dashboard/lenses/${opts.input}`)
-  })
+  protectedProcedure
+    .use(isAllowed('write'))
+    .input(rhfActionPublishLensSchema)
+    .mutation(async opts => {
+      await publishLens({
+        lensId: opts.input,
+        resourceType: 'lens',
+        ownerId: opts.ctx.meta.ownerId
+      })
+      revalidatePath('/teams/[id]/lenses', 'page')
+    })
 )

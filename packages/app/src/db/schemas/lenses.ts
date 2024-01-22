@@ -4,8 +4,21 @@ import { PaginationSchema } from './pagination'
 import { ScopeSchema } from './scope'
 
 export const LensesGetSchema = z.string().uuid()
-export const LensesDeleteSchema = z.string().uuid()
-export const LensesPublishSchema = z.string().uuid()
+
+export const LensesDeleteSchema = z
+  .object({
+    lensId: z.string().trim().uuid()
+  })
+  .and(ScopeSchema)
+export type LensDelete = z.infer<typeof LensesDeleteSchema>
+
+export const LensesPublishSchema = z
+  .object({
+    lensId: z.string().trim().uuid()
+  })
+  .and(ScopeSchema)
+export type LensPublish = z.infer<typeof LensesPublishSchema>
+
 export const LensesGetQuestionSchema = z.string()
 
 export const LensesAddSchema = z

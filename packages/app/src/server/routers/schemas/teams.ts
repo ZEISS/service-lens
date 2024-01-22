@@ -10,6 +10,9 @@ export const TeamsCreateSchema = z.object({
   contactEmail: z.string().email().optional()
 })
 
+export const TeamsDestroySlugSchema = z.string()
+export type TeamsDestroySlug = z.infer<typeof TeamsDestroySlugSchema>
+
 export const TeamsGetBySlugSchema = z.object({
   slug: z.string().trim().toLowerCase().min(3).max(128).default('')
 })

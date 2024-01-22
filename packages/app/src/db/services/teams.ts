@@ -3,13 +3,14 @@ import { User } from '@/db/models/users'
 import {
   FindAndCountTeamsSchema,
   FindOneTeamSchema,
-  type FineOneTeamAndUsersByNameSlug
+  type FineOneTeamAndUsersByNameSlug,
+  type CreateTeamSchema
 } from '../schemas/teams'
 import type {
   FindOneTeamByNameSlug,
-  ListWorkloadsByTeamSlug
+  ListWorkloadsByTeamSlug,
+  DestroyTeam
 } from '../schemas/teams'
-import type { CreateTeamSchema } from '../schemas/teams'
 import { z } from 'zod'
 import sequelize from '@/db/config/config'
 import { UserTeam } from '../models/users-teams'
@@ -39,6 +40,12 @@ export const createTeam = async (opts: CreateTeamSchema) =>
 
     return team.dataValues
   })
+
+export const destroyTeam = async (opts: DestroyTeam) =>
+  sequelize.transaction(
+    async transaction =>
+      await Team.destroy({ where: { id: opts }, transaction })
+  )
 
 export const findOneTeam = async (opts: z.infer<typeof FindOneTeamSchema>) =>
   await Team.findOne({

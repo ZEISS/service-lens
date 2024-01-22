@@ -52,9 +52,9 @@ export function NewLensForm({
 
   useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/teams/${teamSlug}/profiles/${mutation.data?.id}`)
+      router.push(`/teams/${teamSlug}/lenses/${mutation.data?.id}`)
     }
-  }, [mutation.status, mutation.data?.id, router])
+  }, [mutation.status, mutation.data?.id, teamSlug, router])
 
   const fileRef = form.register('spec', { required: true })
 

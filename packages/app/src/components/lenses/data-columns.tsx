@@ -47,7 +47,7 @@ export const columns: ColumnDef<Lens>[] = [
     cell: ({ row }) => {
       return (
         <Link
-          href={`/dashboard/lenses/${row.getValue('id')}`}
+          href={`/teams/${row.original.teams[0].slug}/lenses/${row.getValue('id')}`}
           className={cn(
             buttonVariants({ variant: 'ghost' }),
             'hover:bg-transparent hover:underline',

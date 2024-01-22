@@ -23,6 +23,9 @@ export const CreateTeamSchema = z.object({
 })
 export type CreateTeamSchema = z.infer<typeof CreateTeamSchema>
 
+export const DestroyTeamSchema = z.string().uuid()
+export type DestroyTeam = z.infer<typeof DestroyTeamSchema>
+
 export const FindOneTeamByNameSlug = z.object({
   slug: z.string().trim().toLowerCase().min(3).max(128)
 })
