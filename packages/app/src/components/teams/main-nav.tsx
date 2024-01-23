@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { headers, cookies } from 'next/headers'
+import { headers } from 'next/headers'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { PropsWithChildren } from 'react'

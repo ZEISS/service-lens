@@ -1,8 +1,10 @@
-import Link from 'next/link'
+'use client'
 
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { headers } from 'next/headers'
+import { usePathname } from 'next/navigation'
 
 export type SidebarItem = {
   href: string
@@ -14,8 +16,7 @@ export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
-  const headerList = headers()
-  const pathname = headerList.get('x-pathname')
+  const pathname = usePathname()
 
   return (
     <aside

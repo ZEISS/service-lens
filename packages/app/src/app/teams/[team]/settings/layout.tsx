@@ -17,6 +17,7 @@ export default function Layout({
   children,
   params
 }: PropsWithChildren<NextPageProps>) {
+  console.log(params)
   const sidebarNavItems = [
     {
       title: 'General',
