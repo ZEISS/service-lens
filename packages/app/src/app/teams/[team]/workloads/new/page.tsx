@@ -1,9 +1,14 @@
 import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
 import { NewWorkloadForm } from '@/components/workloads/new-form'
-import { Suspense } from 'react'
+import { Suspense, type PropsWithChildren } from 'react'
 
-export default function Page() {
+export interface NextPageProps<TeamSlug = string> {
+  params: { team: TeamSlug }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+export default function Page({ params }: PropsWithChildren<NextPageProps>) {
   return (
     <>
       <SubNav>
@@ -17,7 +22,7 @@ export default function Page() {
       </SubNav>
       <Section>
         <Suspense>
-          <NewWorkloadForm />
+          <NewWorkloadForm teamSlug={params.team} />
         </Suspense>
       </Section>
     </>

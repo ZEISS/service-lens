@@ -10,5 +10,5 @@ export const rhfActionDeleteTeam = createAction(
   protectedProcedure.use(isAllowed('write')).mutation(async opts => {
     await destroyTeam(opts.ctx.meta.ownerId)
     cookies().set('scope', 'personal')
-  })
+  })cd
 )

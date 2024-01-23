@@ -13,7 +13,7 @@ import {
   findOneTeamAndMembersBySlug,
   findOneTeamBySlug,
   listWorkloadsByTeamSlug,
-  destroyTeamBySlug
+  destroyTeam
 } from '@/db/services/teams'
 import { router } from '@/server/trpc'
 
@@ -37,10 +37,10 @@ export const getTeamAndUsersBySlug = protectedProcedure
   .input(GetTeamAndUsersByTeamSlug)
   .query(async opts => await findOneTeamAndMembersBySlug({ ...opts.input }))
 
-export const deleteTeamBySlug = protectedProcedure
+export const deleteTeam = protectedProcedure
   .use(isAllowed('write'))
   .input(TeamsDestroySlugSchema)
-  .query(async opts => await destroyTeamBySlug(opts.input))
+  .query(async opts => await destroyTeam(opts.input))
 
 export const teamsRouter = router({
   list: listTeams,
@@ -49,5 +49,5 @@ export const teamsRouter = router({
   getByName: getTeamBySlug,
   getUsersByName: getTeamAndUsersBySlug,
   listWorkloads: listWorkloads,
-  deleteBySlug: deleteTeamBySlug
+  delete: deleteTeam
 })

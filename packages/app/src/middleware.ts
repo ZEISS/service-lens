@@ -2,6 +2,7 @@ import { Session } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
+import { cookies } from 'next/headers'
 
 export const middleware = async (request: NextRequest) => {
   const { origin, protocol, host } = request.nextUrl
@@ -23,8 +24,18 @@ export const middleware = async (request: NextRequest) => {
   const session: Session = await res.json()
   const isLoggedIn = session !== null
   const pathname = request.nextUrl.pathname
+  const cookiesList = cookies()
+  const scope = cookiesList.get('scope')
 
-  if (pathname != '/login' && !isLoggedIn) {
+  if (scope?.value !== 'personal' && pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
+  }
+
+  if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
+    return NextResponse.redirect(new URL(`/dashboard`, origin))
+  }
+
+  if (!pathname.startsWith('/login') && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', origin))
   }
 

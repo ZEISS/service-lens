@@ -33,14 +33,19 @@ import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 import type { PropsWithChildren } from 'react'
 
-export type NewWorkloadFormProps = {}
+export type NewWorkloadFormProps = {
+  teamSlug: string
+}
 
 export function NewWorkloadForm({
+  teamSlug,
   ...props
 }: PropsWithChildren<NewWorkloadFormProps>) {
-  const profiles = use(api.listProfiles.query({}))
+  const profiles = use(api.profiles.listByTeam.query({ slug: teamSlug }))
   const environments = use(api.listEnvironments.query({}))
-  const lenses = use(api.listLenses.query({}))
+  const lenses = use(api.lenses.listByTeam.query({ slug: teamSlug }))
+
+  // const { rows, count } = await api.workloads.listByTeam.query(searchParams)
 
   const form = useForm<z.infer<typeof rhfActionSchema>>({
     resolver: zodResolver(rhfActionSchema),
@@ -58,7 +63,7 @@ export function NewWorkloadForm({
 
   useEffect(() => {
     if (mutation.status === 'success') {
-      router.push(`/dashboard/workloads/${mutation.data?.id}`)
+      router.push(`/teams/${teamSlug}/workloads/${mutation.data?.id}`)
     }
   })
 
