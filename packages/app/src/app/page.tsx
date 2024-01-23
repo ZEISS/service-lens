@@ -13,7 +13,7 @@ export default async function Root() {
   const session = await auth()
 
   if (session !== null) {
-    redirect('/dashboard')
+    redirect('/home')
   }
 
   return (

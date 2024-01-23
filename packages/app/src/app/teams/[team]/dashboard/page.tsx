@@ -21,7 +21,7 @@ export default async function Page({
   return (
     <>
       <SubNav>
-        <SubNavTitle>Dashboard</SubNavTitle>
+        <SubNavTitle>Home</SubNavTitle>
       </SubNav>
       <Main className="space-y-8 p-8">
         <div className="flex-1 space-y-4">

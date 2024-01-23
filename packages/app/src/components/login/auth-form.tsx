@@ -75,7 +75,7 @@ export function UserAuthForm({
               type="button"
               disabled={isLoading}
               className="w-full"
-              onClick={() => signIn(provider.id, { callbackUrl: '/dashboard' })}
+              onClick={() => signIn(provider.id, { callbackUrl: '/home' })}
             >
               {isLoading ? (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

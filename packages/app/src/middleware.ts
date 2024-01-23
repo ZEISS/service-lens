@@ -27,12 +27,12 @@ export const middleware = async (request: NextRequest) => {
   const cookiesList = cookies()
   const scope = cookiesList.get('scope')
 
-  if (scope?.value !== 'personal' && pathname.startsWith('/dashboard')) {
+  if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
     return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
   }
 
   if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
-    return NextResponse.redirect(new URL(`/dashboard`, origin))
+    return NextResponse.redirect(new URL(`/home`, origin))
   }
 
   if (!pathname.startsWith('/login') && !isLoggedIn) {
@@ -56,7 +56,8 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    '/dashboard/:path*',
+    '/teams/:path*',
+    '/home/:path*',
     '/account/:path*'
   ]
 }

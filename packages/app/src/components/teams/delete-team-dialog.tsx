@@ -27,7 +27,7 @@ export const DeleteTeamDialog = (props: DeleteTeamDialogProps) => {
   const handleOnClickDelete = async () => {
     await mutation.mutate()
     setOpen(false)
-    router.replace('/dashboard')
+    router.replace('/home')
   }
 
   return (
@@ -49,7 +49,7 @@ export const DeleteTeamDialog = (props: DeleteTeamDialogProps) => {
             <form
               action={handleOnClickDelete}
               onSubmit={event => {
-                mutation.mutateAsync().then(() => router.replace('/dashboard'))
+                mutation.mutateAsync().then(() => router.replace('/home'))
                 event.preventDefault()
               }}
             >

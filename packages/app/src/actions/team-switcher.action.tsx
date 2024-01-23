@@ -11,6 +11,6 @@ export async function rhfActionSetScope(
   opts: z.infer<typeof rhfActionSetScopeSchema>
 ) {
   cookies().set('scope', opts)
-  revalidatePath(opts !== 'personal' ? `/teams/${opts}` : `/dashboard`)
-  redirect(opts !== 'personal' ? `/teams/${opts}` : `/dashboard`)
+  revalidatePath(opts !== 'personal' ? `/teams/${opts}` : `/home`)
+  redirect(opts !== 'personal' ? `/teams/${opts}` : `/home`)
 }

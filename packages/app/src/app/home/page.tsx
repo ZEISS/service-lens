@@ -1,12 +1,6 @@
 import { Metadata } from 'next'
-import {
-  SubNav,
-  SubNavTitle,
-  SubNavActions,
-  SubNavSubtitle
-} from '@/components/sub-nav'
+import { SubNav, SubNavTitle, SubNavActions } from '@/components/sub-nav'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ActionButton } from '@/app/dashboard/components/add-button'
 import { Main } from '@/components/main'
 
 export const metadata: Metadata = {
@@ -18,13 +12,7 @@ export default async function Page() {
   return (
     <>
       <SubNav>
-        <SubNavTitle>
-          Dashboard
-          <SubNavSubtitle>Manage and review workflows</SubNavSubtitle>
-        </SubNavTitle>
-        <SubNavActions>
-          <ActionButton />
-        </SubNavActions>
+        <SubNavTitle>Home</SubNavTitle>
       </SubNav>
       <Main className="space-y-8 p-8">
         <div className="flex-1 space-y-4">
@@ -42,21 +30,7 @@ export default async function Page() {
                 Notifications
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="overview" className="space-y-4">
-              {/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Suspense fallback={<LoadingCard />}>
-                  <TotalWorkloadsCard />
-                </Suspense>
-                <Suspense fallback={<LoadingCard />}>
-                  <TotalSolutionsCard />
-                </Suspense>
-              </div>
-              <div className="grid gap-4">
-                <Suspense fallback={<LoadingCard />}>
-                  <WorkloadsListCard />
-                </Suspense>
-              </div> */}
-            </TabsContent>
+            <TabsContent value="overview" className="space-y-4"></TabsContent>
           </Tabs>
         </div>
       </Main>
