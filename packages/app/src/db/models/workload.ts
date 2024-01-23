@@ -36,6 +36,7 @@ export interface WorkloadAttributes {
   answers?: WorkloadLens[]
   lenses?: Lens[]
   profilesId?: string
+  profile?: Profile
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -70,17 +71,17 @@ export class Workload extends Model<
   @Min(12)
   @Max(2048)
   @Column
-  description?: string
+  declare description?: string
 
   @ForeignKey(() => Profile)
   @Column
-  profilesId?: number
+  declare profilesId?: number
 
   @BelongsTo(() => Profile)
-  profile?: Profile
+  declare profile: Profile
 
   @BelongsToMany(() => Lens, () => WorkloadLens, 'workloadId', 'lensId')
-  lenses?: Lens[]
+  declare lenses: Lens[]
 
   @BelongsToMany(() => Tag, {
     through: {

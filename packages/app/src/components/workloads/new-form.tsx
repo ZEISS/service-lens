@@ -45,8 +45,6 @@ export function NewWorkloadForm({
   const environments = use(api.listEnvironments.query({}))
   const lenses = use(api.lenses.listByTeam.query({ slug: teamSlug }))
 
-  // const { rows, count } = await api.workloads.listByTeam.query(searchParams)
-
   const form = useForm<z.infer<typeof rhfActionSchema>>({
     resolver: zodResolver(rhfActionSchema),
     defaultValues: {

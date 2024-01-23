@@ -13,11 +13,13 @@ import React from 'react'
 
 export type LensesCardProps = {
   workloadId?: string
+  teamId: string
   lenses?: Lens[]
 }
 
 export function LensesCard({
   workloadId,
+  teamId,
   lenses,
   ...props
 }: LensesCardProps & React.HTMLAttributes<HTMLDivElement>) {
@@ -40,7 +42,7 @@ export function LensesCard({
                 <TableRow key={idx}>
                   <TableCell className="font-medium">
                     <Link
-                      href={`/dashboard/workloads/${workloadId}/lenses/${lens.id}`}
+                      href={`/teams/${teamId}/workloads/${workloadId}/lenses/${lens.id}`}
                     >
                       {lens.name}
                     </Link>

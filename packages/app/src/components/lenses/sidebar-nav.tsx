@@ -1,9 +1,5 @@
-'use client'
-
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { Lens } from '@/db/models/lens'
-import { usePathname } from 'next/navigation'
 import {
   Accordion,
   AccordionContent,
@@ -11,28 +7,22 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion'
 import { PropsWithChildren } from 'react'
+import { api } from '@/trpc/server-invoker'
 import { buttonVariants } from '@/components/ui/button'
 
 export type SidebarNavProps = {
-  params: { lensId: string; id: string }
-  lens?: Lens
-  className?: string
+  params: { team: string; lensId: string; id: string }
 }
 
-export function SidebarNav({
-  className,
-  lens,
+export async function SidebarNav({
   params,
   ...props
 }: PropsWithChildren<SidebarNavProps>) {
-  const pathname = usePathname()
+  const lens = await api.getLens.query(params.lensId)
 
   return (
     <nav
-      className={cn(
-        'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1',
-        className
-      )}
+      className={'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1'}
       {...props}
     >
       <Accordion type="single" collapsible className="w-full">
@@ -43,12 +33,10 @@ export function SidebarNav({
               {pillar.questions?.map(question => (
                 <Link
                   key={question.ref}
-                  href={`/dashboard/workloads/${params.id}/lenses/${params.lensId}/question/${question.id}`}
+                  href={`/teams/${params.team}/workloads/${params.id}/lenses/${params.lensId}/question/${question.id}`}
                   className={cn(
                     buttonVariants({ variant: 'outline' }),
-                    pathname === question.ref
-                      ? 'bg-muted hover:bg-muted'
-                      : 'hover:bg-transparent hover:bg-muted hover:rounded',
+                    'hover:bg-transparent hover:bg-muted hover:rounded',
                     'whitespace-normal p-4 justify-start h-full'
                   )}
                 >

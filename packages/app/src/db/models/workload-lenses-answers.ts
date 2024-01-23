@@ -18,13 +18,12 @@ import {
   Unique
 } from 'sequelize-typescript'
 import { Workload } from './workload'
-import { QuestionRisk } from './lens-pillar-risks'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { WorkloadLensesAnswerChoice } from './workload-lenses-answers-choices'
 
 export interface WorkloadLensAnswerAttributes {
-  id: string
+  id: bigint
   workloadId: string
   lensPillarQuestionId: string
   notes?: string
@@ -32,15 +31,24 @@ export interface WorkloadLensAnswerAttributes {
   doesNotApply?: boolean
   doesNotApplyReason?: string
   risk: QuestionRisk
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
 export type WorkloadLensAnswerCreationAttributes = Omit<
   WorkloadLensAnswerAttributes,
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
+
+export const questionRisk = DataType.ENUM(
+  'UNANSWERED',
+  'HIGH_RISK',
+  'MEDIUM_RISK',
+  'LOW_RISK',
+  'NO_RISK'
+)
+export type QuestionRisk = NonNullable<typeof questionRisk>
 
 @Table({
   modelName: 'WorkloadLensAnswer',
@@ -53,30 +61,30 @@ export class WorkloadLensAnswer extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)
-  id!: string
+  declare id: bigint
 
   @ForeignKey(() => Workload)
   @Unique('workload-lens-pillar-question')
   @Column(DataType.UUID)
-  workloadId!: string
+  declare workloadId: string
 
   @ForeignKey(() => LensPillarQuestion)
   @Unique('workload-lens-pillar-question')
-  @Column
-  lensPillarQuestionId!: bigint
+  @Column(DataType.BIGINT)
+  declare lensPillarQuestionId: bigint
 
   @AllowNull
   @Min(12)
   @Max(2048)
-  @Column
-  notes?: string
+  @Column(DataType.STRING)
+  declare notes?: string
 
   @Default(false)
-  @Column
-  doesNotApply?: boolean
+  @Column(DataType.BOOLEAN)
+  declare doesNotApply: boolean
 
-  @Column
-  doesNotApplyReason?: string
+  @Column(DataType.STRING)
+  declare doesNotApplyReason: string
 
   @BelongsToMany(
     () => LensPillarChoice,
@@ -84,22 +92,30 @@ export class WorkloadLensAnswer extends Model<
     'answerId',
     'choiceId'
   )
-  lensChoices?: LensPillarChoice[]
+  declare lensChoices?: LensPillarChoice[]
 
   @NotEmpty
-  @Default(QuestionRisk.Unanswered)
-  @Column(DataType.ENUM(...Object.values(QuestionRisk)))
-  risk!: QuestionRisk
+  @Default('UNANSWERED')
+  @Column(
+    DataType.ENUM(
+      'UNANSWERED',
+      'HIGH_RISK',
+      'MEDIUM_RISK',
+      'LOW_RISK',
+      'NO_RISK'
+    )
+  )
+  declare risk: QuestionRisk
 
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

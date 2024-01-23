@@ -12,12 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PropertiesCard } from './components/properties-card'
 import { MoreButton } from './components/more-button'
 import { LensesCard } from './components/lenses-card'
+import { type PropsWithChildren } from 'react'
 
-export type PageProps = {
-  params: { id: string }
+export interface NextPageProps<TeamSlug = string, WorkloadId = string> {
+  params: { team: TeamSlug; id: WorkloadId }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({
+  params
+}: PropsWithChildren<NextPageProps>) {
   const workload = await api.getWorkload.query(params?.id)
 
   return (
@@ -58,6 +62,7 @@ export default async function Page({ params }: PageProps) {
               )}
               {workload?.lenses && (
                 <LensesCard
+                  teamId={params.team}
                   workloadId={workload.id}
                   lenses={workload?.lenses}
                   className="col-span-7"

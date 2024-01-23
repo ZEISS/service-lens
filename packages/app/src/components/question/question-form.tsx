@@ -49,7 +49,7 @@ import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 
 export type QuestionFormFactoryProps = {
   className?: string
-  question?: LensPillarQuestion
+  question?: LensPillarQuestion | null
   workloadId: string
   lensPillarQuestionId: string
   answer: WorkloadLensAnswer | null
