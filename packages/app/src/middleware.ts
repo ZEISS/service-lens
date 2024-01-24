@@ -27,13 +27,13 @@ export const middleware = async (request: NextRequest) => {
   const cookiesList = cookies()
   const scope = cookiesList.get('scope')
 
-  if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
-    return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
-  }
+  // if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
+  //   return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
+  // }
 
-  if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
-    return NextResponse.redirect(new URL(`/home`, origin))
-  }
+  // if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
+  //   return NextResponse.redirect(new URL(`/home`, origin))
+  // }
 
   if (!pathname.startsWith('/login') && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', origin))

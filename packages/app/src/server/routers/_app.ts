@@ -16,7 +16,6 @@ import { listProfiles } from './actions/profiles'
 import { listEnvironments } from './actions/environments'
 import {
   listSolutions,
-  addSolution,
   getSolution,
   findSolutionTemplates,
   getSolutionTemplate,
@@ -54,7 +53,6 @@ export const appRouter = router({
 
   me: publicProcedure.query(opts => opts.ctx.session),
 
-  addSolution,
   deleteLens,
   deleteSolutionTemplate,
   deleteWorkload,

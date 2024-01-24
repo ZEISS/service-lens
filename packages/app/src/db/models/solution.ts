@@ -23,25 +23,26 @@ import { Team } from './teams'
 import { TagTaggable } from './tags-taggable'
 import { Tag } from './tags'
 import { Ownership } from './ownership'
+import { Optional } from 'sequelize'
 
 export interface SolutionAttributes {
   id: string
   title: string
   body: string
-  user?: User
-  userId?: string
+  user: User
+  userId: string
   description?: string
   comments?: SolutionComment[]
-  tags: Tag[]
-  teams: Team[]
-  createdAt: Date
-  updatedAt: Date
-  deletedAt: Date
+  tags?: Tag[]
+  teams?: Team[]
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
 }
 
-export type SolutionCreationAttributes = Omit<
+export type SolutionCreationAttributes = Optional<
   SolutionAttributes,
-  'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'user' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >
 
 @Table({
@@ -56,27 +57,33 @@ export class Solution extends Model<
   @AllowNull(false)
   @Default(DataType.UUIDV4)
   @Column(DataType.UUIDV4)
-  id?: string
+  declare id: string
 
   @NotEmpty
   @Min(3)
   @Max(256)
   @Column
-  title?: string
+  declare title: string
 
   @NotEmpty
   @Column(DataType.TEXT)
-  body?: string
+  declare body: string
+
+  @NotEmpty
+  @Min(12)
+  @Max(2048)
+  @Column(DataType.STRING)
+  declare description?: string
 
   @HasMany(() => SolutionComment, 'solutionId')
-  comments?: SolutionComment[]
+  declare comments?: SolutionComment[]
 
   @ForeignKey(() => User)
   @Column
-  userId?: string
+  declare userId: string
 
   @BelongsTo(() => User)
-  user?: User
+  declare user: User
 
   @BelongsToMany(() => Tag, {
     through: {
@@ -106,21 +113,15 @@ export class Solution extends Model<
   })
   declare teams: Team[]
 
-  @NotEmpty
-  @Min(12)
-  @Max(2048)
-  @Column
-  description?: string
-
   @CreatedAt
-  @Column
-  createdAt?: Date
+  @Column(DataType.DATE)
+  declare createdAt: Date
 
   @UpdatedAt
-  @Column
-  updatedAt?: Date
+  @Column(DataType.DATE)
+  declare updatedAt: Date
 
   @DeletedAt
-  @Column
-  deletedAt?: Date
+  @Column(DataType.DATE)
+  declare deletedAt: Date
 }

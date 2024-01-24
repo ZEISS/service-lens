@@ -1,7 +1,6 @@
 import { protectedProcedure } from '../../trpc'
 import {
   findAndCountSolutions,
-  addSolution as as,
   getSolution as gs,
   deleteSolutionComment as scd,
   findAndCountSolutionTemplates,
@@ -29,10 +28,6 @@ import { revalidatePath } from 'next/cache'
 export const listSolutions = protectedProcedure
   .input(SolutionListSchema)
   .query(async opts => findAndCountSolutions(opts.input))
-
-export const addSolution = protectedProcedure
-  .input(SolutionAddSchema)
-  .query(async opts => as({ ...opts.input }))
 
 export const getSolution = protectedProcedure
   .input(SolutionGetSchema)
@@ -70,7 +65,6 @@ export const listByTeam = protectedProcedure
   .query(async opts => await listSolutionByTeamSlug({ ...opts.input }))
 
 export const solutionsRouter = router({
-  add: addSolution,
   makeCopy: makeCopySolutionTemplate,
   delete: deleteSolutionComment,
   deleteSolution: protectedProcedure

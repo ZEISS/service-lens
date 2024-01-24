@@ -1,4 +1,4 @@
-import { AddWorkloadButton } from '@/components/workloads/add-button'
+import { AddSolutionButton } from '@/components/solutions/add-solution'
 import {
   SubNav,
   SubNavTitle,
@@ -40,7 +40,7 @@ export default async function Page(props: PropsWithChildren<NextPageProps>) {
           <SubNavSubtitle>Manage and discuss solutions</SubNavSubtitle>
         </SubNavTitle>
         <SubNavActions>
-          <AddWorkloadButton teamSlug={props.params.team} />
+          <AddSolutionButton teamSlug={props.params.team} />
         </SubNavActions>
       </SubNav>
       <Main className="space-y-8 p-8">

@@ -1,8 +1,8 @@
-import { Solution } from '@/db/models/solution'
 import { SolutionComment } from '@/db/models/solution-comments'
 import { SolutionTemplate } from '@/db/models/solution-templates'
 import { User } from '@/db/models/users'
-import type { SolutionCreationAttributes } from '../models/solution'
+import { Solution } from '@/db/models/solution'
+import { type SolutionCreate } from '../schemas/solutions'
 import sequelize from '../config/config'
 import {
   SolutionCommentAddSchema,
@@ -19,22 +19,39 @@ import {
 } from '../schemas/solutions'
 import { z } from 'zod'
 import { Team } from '../models/teams'
+import { Ownership } from '../models/ownership'
 
 export const countSolutions = async () => await Solution.count()
 
-export async function addSolution({
-  userId,
-  title,
-  body,
-  description
-}: SolutionCreationAttributes) {
-  return await Solution.create({
-    title,
-    body,
-    description,
-    userId
+// export async function createSolution({
+//   userId,
+//   title,
+//   body,
+//   description
+// }: SolutionCreationAttributes) {
+//   return await Solution.create({
+//     title,
+//     body,
+//     description,
+//     userId
+//   })
+// }
+
+export const createSolution = async (opts: SolutionCreate) =>
+  await sequelize.transaction(async transaction => {
+    const workload = await Solution.create({ ...opts }, { transaction })
+
+    const _ = await Ownership.create(
+      {
+        ownerId: opts.ownerId,
+        resourceId: workload.id,
+        resourceType: 'solution'
+      },
+      { transaction }
+    )
+
+    return workload
   })
-}
 
 export const findAndCountSolutions = async (
   opts: z.infer<typeof FindAndCountSolutionsSchema>

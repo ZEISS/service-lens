@@ -14,10 +14,12 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { rhfActionSchema } from './new-form.schema'
-import { rhfAction } from './new-form.action'
+import {
+  rhfActionNewSolutionSchema,
+  type NewSolutionFormValues
+} from './new-form.schema'
+import { rhfActionCreateNewSolution } from './new-form.action'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { useAction } from '@/trpc/client'
 import { useRouter } from 'next/navigation'
 import { SolutionTemplate } from '@/db/models/solution-templates'
@@ -29,18 +31,18 @@ export type NewSolutionFormProps = {
   template?: SolutionTemplate
 }
 
-export function NewSolutionForm({ template, ...props }: NewSolutionFormProps) {
-  const form = useForm<z.infer<typeof rhfActionSchema>>({
-    resolver: zodResolver(rhfActionSchema),
+export function NewSolutionForm({ ...props }: NewSolutionFormProps) {
+  const form = useForm<NewSolutionFormValues>({
+    resolver: zodResolver(rhfActionNewSolutionSchema),
     defaultValues: {
-      title: template?.title,
-      body: template?.body
+      title: '',
+      body: ''
     }
   })
   const router = useRouter()
 
-  const mutation = useAction(rhfAction)
-  async function onSubmit(data: z.infer<typeof rhfActionSchema>) {
+  const mutation = useAction(rhfActionCreateNewSolution)
+  async function onSubmit(data: NewSolutionFormValues) {
     await mutation.mutateAsync({ ...data })
   }
 
@@ -54,7 +56,7 @@ export function NewSolutionForm({ template, ...props }: NewSolutionFormProps) {
     <>
       <Form {...form}>
         <form
-          action={rhfAction}
+          action={rhfActionCreateNewSolution}
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8"
         >
@@ -67,7 +69,7 @@ export function NewSolutionForm({ template, ...props }: NewSolutionFormProps) {
                   <h1>Title</h1>
                 </FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input placeholder="Title ..." {...field} />
                 </FormControl>
                 <FormDescription>Give it a great name.</FormDescription>
                 <FormMessage />

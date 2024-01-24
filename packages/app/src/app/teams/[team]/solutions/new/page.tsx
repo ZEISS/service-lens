@@ -1,29 +1,23 @@
-import { SubNav, SubNavTitle, SubNavSubtitle } from '@/components/sub-nav'
+import { SubNav, SubNavTitle } from '@/components/sub-nav'
 import { Section } from '@/components/section'
-import { NewSolutionForm } from './components/new-form'
-import { api } from '@/trpc/server-invoker'
-import { SolutionTemplate } from '@/db/models/solution-templates'
+import { NewSolutionForm } from '@/components/solutions/new-form'
+import { PropsWithChildren } from 'react'
 
-export type PageProps = {
-  searchParams: { template: string }
+export interface NextPageProps<TeamSlug = string> {
+  params: { team: TeamSlug }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({ searchParams }: PageProps) {
-  const template =
-    searchParams.template === '_blank'
-      ? new SolutionTemplate()
-      : await api.getSolutionTemplate.query(searchParams.template)
-
+export default async function Page({
+  searchParams
+}: PropsWithChildren<NextPageProps>) {
   return (
     <>
       <SubNav>
-        <SubNavTitle>
-          Solutions
-          <SubNavSubtitle>Design, discuss, review, and build.</SubNavSubtitle>
-        </SubNavTitle>
+        <SubNavTitle>New Solution</SubNavTitle>
       </SubNav>
       <Section>
-        <NewSolutionForm template={template ?? new SolutionTemplate()} />
+        <NewSolutionForm />
       </Section>
     </>
   )
