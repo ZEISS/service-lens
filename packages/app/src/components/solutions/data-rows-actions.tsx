@@ -3,30 +3,29 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { api } from '@/trpc/client'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import Link from 'next/link'
 import { useAction } from '@/trpc/client'
+import { rhfActionDeleteSolution } from '@/actions/solution.action'
+import { RHfActionDeleteSolution } from '@/actions/solution.schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
-}
-
-async function deleteWorkload(id: string): Promise<void> {
-  await api.workloads.delete.query(id)
 }
 
 export function DataTableRowActions<TData>({
   row
 }: DataTableRowActionsProps<TData>) {
   const id = row.getValue('id') as string
+  const mutation = useAction(rhfActionDeleteSolution)
+  const deleteSolution = async (data: RHfActionDeleteSolution) => {
+    await mutation.mutate(data)
+  }
 
   return (
     <DropdownMenu>
@@ -40,7 +39,7 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <Link href={`/dashboard/solutions/${id}`}>
+        {/* <Link href={`/dashboard/solutions/${id}`}>
           <DropdownMenuItem>View</DropdownMenuItem>
         </Link>
         <DropdownMenuItem
@@ -48,8 +47,8 @@ export function DataTableRowActions<TData>({
         >
           Make a copy
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => deleteWorkload(id)}>
+        <DropdownMenuSeparator /> */}
+        <DropdownMenuItem onClick={() => deleteSolution(id)}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

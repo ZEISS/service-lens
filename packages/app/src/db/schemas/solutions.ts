@@ -17,7 +17,6 @@ export const SolutionCommentAddSchema = z.object({
 export const SolutionCommentDeleteSchema = z.bigint()
 export const FindAndCountSolutionTemplates = PaginationSchema
 export const FindOneSolutionTemplate = z.string()
-export const DestroySolutionSchema = z.string()
 export const DestroySolutionTemplateSchema = z.bigint()
 export const MakeCopySolutionTemplateSchema = z.bigint()
 export const MakeCopySolutionSchema = z.string().uuid()
@@ -35,3 +34,6 @@ export const SolutionCreateSchema = z
   })
   .and(ScopeSchema)
 export type SolutionCreate = z.infer<typeof SolutionCreateSchema>
+
+export const DestroySolutionSchema = z.string().trim().uuid()
+export type DestroySolution = z.infer<typeof DestroySolutionSchema>

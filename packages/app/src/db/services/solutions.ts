@@ -2,7 +2,7 @@ import { SolutionComment } from '@/db/models/solution-comments'
 import { SolutionTemplate } from '@/db/models/solution-templates'
 import { User } from '@/db/models/users'
 import { Solution } from '@/db/models/solution'
-import { type SolutionCreate } from '../schemas/solutions'
+import { type SolutionCreate, type DestroySolution } from '../schemas/solutions'
 import sequelize from '../config/config'
 import {
   SolutionCommentAddSchema,
@@ -11,7 +11,6 @@ import {
   FindAndCountSolutionsSchema,
   FindAndCountSolutionTemplates,
   FindOneSolutionTemplate,
-  DestroySolutionSchema,
   DestroySolutionTemplateSchema,
   MakeCopySolutionTemplateSchema,
   MakeCopySolutionSchema,
@@ -22,20 +21,6 @@ import { Team } from '../models/teams'
 import { Ownership } from '../models/ownership'
 
 export const countSolutions = async () => await Solution.count()
-
-// export async function createSolution({
-//   userId,
-//   title,
-//   body,
-//   description
-// }: SolutionCreationAttributes) {
-//   return await Solution.create({
-//     title,
-//     body,
-//     description,
-//     userId
-//   })
-// }
 
 export const createSolution = async (opts: SolutionCreate) =>
   await sequelize.transaction(async transaction => {
@@ -57,11 +42,10 @@ export const findAndCountSolutions = async (
   opts: z.infer<typeof FindAndCountSolutionsSchema>
 ) => await Solution.findAndCountAll({ offset: opts.offset, limit: opts.limit })
 
-export async function deleteSolution(
-  opts: z.infer<typeof DestroySolutionSchema>
-) {
-  return await Solution.destroy({ where: { id: opts } })
-}
+export const destroySolution = async (opts: DestroySolution) =>
+  sequelize.transaction(
+    async transaction => await Solution.destroy({ where: { id: opts } })
+  )
 
 export const makeCopySolution = async (
   opts: z.infer<typeof MakeCopySolutionSchema>

@@ -12,26 +12,12 @@ import {
   DropdownMenuLabel
 } from '@/components/ui/dropdown-menu'
 import type { Solution } from '@/db/models/solution'
-import { rhfDeleteSolutionAction } from './actions-menu.action'
-import { rhfDeleteSolutionActionSchema } from './actions-menu.schema'
-import { z } from 'zod'
-import { useEffect } from 'react'
-import { redirect } from 'next/navigation'
 
 interface ActionsMenuProps {
   solution: Solution
 }
 
 export function ActionsMenu({ solution }: ActionsMenuProps) {
-  const deleteMutation = useAction(rhfDeleteSolutionAction)
-  const handleDelete = async (
-    solutionId: z.infer<typeof rhfDeleteSolutionActionSchema>
-  ) => await deleteMutation.mutateAsync(solutionId)
-
-  useEffect(() => {
-    deleteMutation.status === 'success' && redirect('/dashboard/solutions')
-  }, [deleteMutation.status])
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,12 +28,6 @@ export function ActionsMenu({ solution }: ActionsMenuProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => solution?.id && handleDelete(solution?.id)}
-        >
-          <span>Delete</span>
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

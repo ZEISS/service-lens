@@ -16,5 +16,8 @@ export const SolutionTemplateGetSchema = z.string()
 export const SolutionTemplateDeleteSchema = z.bigint()
 export const SolutionMakeCopySchema = z.string().uuid()
 
+export const DestroySolutionSchema = z.string().trim().uuid()
+export type DestroySolution = z.infer<typeof DestroySolutionSchema>
+
 export const ListSolutionByTeamSlug = TeamsGetBySlugSchema.and(PaginationSchema)
 export type ListSolutionByTeamSlug = z.infer<typeof ListSolutionByTeamSlug>

@@ -12,12 +12,12 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card'
-import { ActionsMenu } from './components/actions-menu'
+import { ActionsMenu } from '@/components/solutions/actions-menu'
 import { api } from '@/trpc/server-http'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { CommentActions } from './components/comment-actions'
-import { CommentForm } from './components/comment-form'
+import { CommentActions } from '@/components/solutions/comment-actions'
+import { CommentForm } from '@/components/solutions/comment-form'
 import { remark } from 'remark'
 import { Section } from '@/components/section'
 import DateFormat from '@/components/date-format'
@@ -38,10 +38,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <>
       <SubNav>
-        <SubNavTitle>
-          {solution?.title}
-          <SubNavSubtitle>Manage and review workflows</SubNavSubtitle>
-        </SubNavTitle>
+        <SubNavTitle>{solution?.title}</SubNavTitle>
         <SubNavActions>
           {solution && <ActionsMenu solution={solution} />}
         </SubNavActions>

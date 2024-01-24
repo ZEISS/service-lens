@@ -1,4 +1,4 @@
-import { protectedProcedure } from '../../trpc'
+import { isAllowed, protectedProcedure } from '../../trpc'
 import {
   findAndCountSolutions,
   getSolution as gs,
@@ -8,7 +8,8 @@ import {
   countSolutions,
   destroySolutionTemplate,
   makeCopySolution,
-  listSolutionByTeamSlug
+  listSolutionByTeamSlug,
+  destroySolution
 } from '@/db/services/solutions'
 import {
   SolutionListSchema,
@@ -20,7 +21,8 @@ import {
   SolutionDeleteSchema,
   SolutionTemplateDeleteSchema,
   SolutionMakeCopySchema,
-  ListSolutionByTeamSlug
+  ListSolutionByTeamSlug,
+  DestroySolutionSchema
 } from '../schemas/solution'
 import { router } from '@/server/trpc'
 import { revalidatePath } from 'next/cache'
@@ -64,9 +66,15 @@ export const listByTeam = protectedProcedure
   .input(ListSolutionByTeamSlug)
   .query(async opts => await listSolutionByTeamSlug({ ...opts.input }))
 
+export const deleteSolution = protectedProcedure
+  .use(isAllowed('write'))
+  .input(DestroySolutionSchema)
+  .query(async opts => destroySolution(opts.input))
+
 export const solutionsRouter = router({
   makeCopy: makeCopySolutionTemplate,
-  delete: deleteSolutionComment,
+  delete: deleteSolution,
+  deleteComment: deleteSolutionComment,
   deleteSolution: protectedProcedure
     .input(SolutionDeleteSchema)
     .query(async opts => await destroySolutionTemplate(opts.input)),
