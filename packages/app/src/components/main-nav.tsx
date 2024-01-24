@@ -3,12 +3,12 @@ import { headers } from 'next/headers'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
-const nav = [
-  {
-    name: 'Dashboard',
-    link: '/dashboard'
-  }
-]
+export type NavItem = {
+  link: string
+  name: string
+}
+
+const nav: NavItem[] = []
 
 export function MainNav({
   className,
@@ -22,7 +22,7 @@ export function MainNav({
       className={cn('flex items-center space-x-4 lg:space-x-6', className)}
       {...props}
     >
-      {nav.map((item, idx) => (
+      {nav?.map((item, idx) => (
         <Link
           key={idx}
           href={item.link}
