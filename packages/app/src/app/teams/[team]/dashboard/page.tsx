@@ -7,17 +7,32 @@ import { LoadingCard } from '@/components/dashboard/loading-card'
 import { TotalWorkloadsCard } from '@/components/dashboard/total-workloads-card'
 import { TotalLensesCard } from '@/components/dashboard/total-lenses-card'
 import { TotalProfilesCard } from '@/components/dashboard/total-profiles-card'
+import { ListWorkloadByTeamSlug } from '@/server/routers/schemas/workload'
+import { api } from '@/trpc/server-http'
+import { columns } from '@/components/workloads/columns'
+import { DataTable } from '@/components/data-table'
+import { type DataTableOptions } from '@/components/data-table'
 
 export const revalidate = 0 // no cache
+
+const options = {
+  toolbar: {}
+} satisfies DataTableOptions
 
 export interface NextPageProps<TeamSlug = string> {
   params: { team: TeamSlug }
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({
-  params
-}: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: PropsWithChildren<NextPageProps>) {
+  const searchParams = ListWorkloadByTeamSlug.parse({
+    ...props.searchParams,
+    slug: props.params.team
+  })
+  const { rows, count } = await api.workloads.listByTeam.query(searchParams)
+
+  const pageCount = Math.ceil(count / searchParams.limit)
+
   return (
     <>
       <SubNav>
@@ -42,23 +57,28 @@ export default async function Page({
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Suspense fallback={<LoadingCard />}>
-                  <TotalWorkloadsCard teamSlug={params.team} />
+                  <TotalWorkloadsCard teamSlug={props.params.team} />
                 </Suspense>
                 <Suspense fallback={<LoadingCard />}>
-                  <TotalSolutionsCard teamSlug={params.team} />
+                  <TotalSolutionsCard teamSlug={props.params.team} />
                 </Suspense>
                 <Suspense fallback={<LoadingCard />}>
-                  <TotalLensesCard teamSlug={params.team} />
+                  <TotalLensesCard teamSlug={props.params.team} />
                 </Suspense>
                 <Suspense fallback={<LoadingCard />}>
-                  <TotalProfilesCard teamSlug={params.team} />
+                  <TotalProfilesCard teamSlug={props.params.team} />
                 </Suspense>
               </div>
-              {/* <div className="grid gap-4">
-                <Suspense fallback={<LoadingCard />}>
-                  <WorkloadsListCard />
-                </Suspense>
-              </div>  */}
+              <div className="grid gap-4">
+                <DataTable
+                  columns={columns}
+                  data={rows}
+                  pageCount={pageCount}
+                  pageSize={searchParams.limit}
+                  pageIndex={searchParams.offset}
+                  options={options}
+                />
+              </div>
             </TabsContent>
           </Tabs>
         </div>

@@ -78,8 +78,8 @@ export function FancyMultiSelect<T>({
         <div className="flex gap-1 flex-wrap">
           {selected.map(select => {
             return (
-              <Badge key={select.label} variant="secondary">
-                {select.label}
+              <Badge key={select?.label} variant="secondary">
+                {select?.label}
                 <button
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={e => {

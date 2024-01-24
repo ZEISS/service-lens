@@ -28,9 +28,10 @@ export const ListWorkloadsByTeamSlug =
   FindOneTeamByNameSlug.and(PaginationSchema)
 export type ListWorkloadsByTeamSlug = z.infer<typeof ListWorkloadsByTeamSlug>
 
-export const WorkloadCreateSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  scope: ScopeSchema
-})
+export const WorkloadCreateSchema = z
+  .object({
+    name: z.string(),
+    description: z.string()
+  })
+  .and(ScopeSchema)
 export type WorkloadCreate = z.infer<typeof WorkloadCreateSchema>

@@ -41,44 +41,6 @@ export const findWorkloadLensAnswer = async (
 
 export const countWorkloads = async () => await Workload.count()
 
-export async function createWorkload({
-  name,
-  description,
-  profilesId,
-  environmentsIds,
-  lensesIds
-}: WorkloadCreationAttributes & {
-  environmentsIds: bigint[]
-  lensesIds: string[]
-}) {
-  return await sequelize.transaction(async transaction => {
-    const workload = await Workload.create(
-      {
-        profilesId,
-        name,
-        description
-      },
-      { transaction }
-    )
-
-    const items = Array.from(environmentsIds).map(id => ({
-      environmentId: id,
-      workloadId: workload.id
-    }))
-    await WorkloadEnvironment.bulkCreate(items, { transaction })
-
-    await WorkloadLens.bulkCreate(
-      Array.from(lensesIds).map(lensId => ({
-        workloadId: workload.id,
-        lensId
-      })),
-      { transaction }
-    )
-
-    return workload.dataValues
-  })
-}
-
 export const deleteWorkload = async (id: string) =>
   await Workload.update({ deletedAt: new Date(Date.now()) }, { where: { id } })
 
@@ -210,7 +172,7 @@ export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
     include: [{ model: Team, where: { slug: opts.slug } }]
   })
 
-export const createWorkload2 = async (opts: WorkloadCreate) =>
+export const createWorkload = async (opts: WorkloadCreate) =>
   await sequelize.transaction(async transaction => {
     const workload = await Workload.create(
       { name: opts.name, description: opts.description },
@@ -219,7 +181,7 @@ export const createWorkload2 = async (opts: WorkloadCreate) =>
 
     const _ = await Ownership.create(
       {
-        ownerId: opts.scope.ownerId,
+        ownerId: opts.ownerId,
         resourceId: workload.id,
         resourceType: 'workload'
       },
