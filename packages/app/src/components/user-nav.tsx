@@ -47,7 +47,7 @@ export async function UserNav({ user }: PropsWithChildren<UserNavProps>) {
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href={'/dashboard/settings'} scroll={true}>
+            <Link href={'/settings'} scroll={true}>
               Settings
             </Link>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
