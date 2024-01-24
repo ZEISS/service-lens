@@ -12,12 +12,11 @@ import { api } from '@/trpc/server-http'
 import { columns } from '@/components/workloads/columns'
 import { DataTable } from '@/components/data-table'
 import { type DataTableOptions } from '@/components/data-table'
+import { Button } from '@/components/ui/button'
+import { PlusIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
 
 export const revalidate = 0 // no cache
-
-const options = {
-  toolbar: {}
-} satisfies DataTableOptions
 
 export interface NextPageProps<TeamSlug = string> {
   params: { team: TeamSlug }
@@ -30,8 +29,23 @@ export default async function Page(props: PropsWithChildren<NextPageProps>) {
     slug: props.params.team
   })
   const { rows, count } = await api.workloads.listByTeam.query(searchParams)
-
   const pageCount = Math.ceil(count / searchParams.limit)
+
+  const options = {
+    toolbar: {
+      actions: [
+        <Link
+          href={`/teams/${props.params.team}/workloads/new`}
+          key="add"
+          passHref
+        >
+          <Button variant="outline" size="sm" className="mx-2">
+            <PlusIcon />
+          </Button>
+        </Link>
+      ]
+    }
+  } satisfies DataTableOptions
 
   return (
     <>

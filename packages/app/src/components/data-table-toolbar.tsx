@@ -26,6 +26,7 @@ export interface DataTableFacetedFilterCreationAttributes {
 export type DataTableToolbarOptions = {
   filterColumnName?: string
   filterColumnPlaceholder?: string
+  actions?: React.ReactNode[]
   facetFilters?: DataTableFacetedFilterCreationAttributes[]
 }
 
@@ -68,6 +69,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      {options?.actions?.map((action, idx) => <>{action}</>)}
       <DataTableViewOptions table={table} />
     </div>
   )

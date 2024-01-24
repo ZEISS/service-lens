@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -32,6 +32,7 @@ import type { DataTableToolbarOptions } from '../components/data-table-toolbar'
 
 export type DataTableOptions = {
   toolbar?: DataTableToolbarOptions
+  actions?: React.ReactNode[]
 }
 
 interface DataTableProps<TData, TValue> {
