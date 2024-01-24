@@ -1,4 +1,4 @@
-import { SubNavTitle, SubNav, SubNavActions } from '@/components/sub-nav'
+import { SubNavTitle, SubNav } from '@/components/sub-nav'
 import { SidebarNav } from '@/components/sidebar-nav'
 import { Main } from '@/components/main'
 import DefaultLayout from '@/components/default-layout'
@@ -17,6 +17,10 @@ const sidebarNavItems = [
   {
     title: 'Teams',
     href: '/settings/teams'
+  },
+  {
+    title: 'Users',
+    href: '/settings/users'
   }
 ]
 
@@ -30,7 +34,7 @@ export default function Layout({ children }: PropsWithChildren<NextPageProps>) {
         <Main className="p-8">
           <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
             <SidebarNav items={sidebarNavItems} />
-            <div className="flex-1 lg:max-w-2xl">
+            <div className="flex-1">
               <div className="space-y-6">{children}</div>
             </div>
           </div>
