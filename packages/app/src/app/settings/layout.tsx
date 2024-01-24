@@ -26,7 +26,6 @@ export default function Layout({ children }: PropsWithChildren<NextPageProps>) {
       <DefaultLayout>
         <SubNav>
           <SubNavTitle>Settings</SubNavTitle>
-          <SubNavActions></SubNavActions>
         </SubNav>
         <Main className="p-8">
           <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

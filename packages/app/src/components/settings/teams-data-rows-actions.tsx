@@ -8,23 +8,25 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import Link from 'next/link'
+import { useAction } from '@/trpc/client'
+import { rhfActionDeleteTeam } from '@/actions/settings-teams.action'
+import { RhfActionDelete } from '@/actions/settings-teams.schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
-async function deleteWorkload(id: string): Promise<void> {
-  await api.deleteWorkload.query(id)
-}
-
 export function DataTableRowActions<TData>({
   row
 }: DataTableRowActionsProps<TData>) {
+  const mutation = useAction(rhfActionDeleteTeam)
+  const handleOnClickDelete = async (id: RhfActionDelete) => {
+    await mutation.mutateAsync(id)
+  }
+
   const id = row.getValue('id') as string
 
   return (
@@ -39,12 +41,7 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <Link href={`/dashboard/profiles/${id}`}>
-          <DropdownMenuItem>View</DropdownMenuItem>
-        </Link>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => deleteWorkload(id)}>
+        <DropdownMenuItem onClick={() => handleOnClickDelete(id)}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
