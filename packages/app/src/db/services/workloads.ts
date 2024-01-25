@@ -18,7 +18,8 @@ import sequelize from '../config/config'
 import {
   WorkloadLensQuestionSchema,
   WorkloadGetLensAnswer,
-  WorkloadLensAnswerAddSchema
+  WorkloadLensAnswerAddSchema,
+  DestroyWorkload
 } from '../schemas/workload'
 import { Op } from 'sequelize'
 import {
@@ -39,8 +40,11 @@ export const findWorkloadLensAnswer = async (
 
 export const countWorkloads = async () => await Workload.count()
 
-export const deleteWorkload = async (id: string) =>
-  await Workload.update({ deletedAt: new Date(Date.now()) }, { where: { id } })
+export const destroyWorkload = async (opts: DestroyWorkload) =>
+  sequelize.transaction(
+    async transaction =>
+      await Workload.destroy({ where: { id: opts }, transaction })
+  )
 
 export const getWorkloadLensQuestion = async (
   opts: z.infer<typeof WorkloadLensQuestionSchema>

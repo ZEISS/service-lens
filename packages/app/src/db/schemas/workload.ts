@@ -36,3 +36,6 @@ export const WorkloadCreateSchema = z
   })
   .and(ScopeSchema)
 export type WorkloadCreate = z.infer<typeof WorkloadCreateSchema>
+
+export const DestroyWorkloadSchema = z.string().trim().uuid()
+export type DestroyWorkload = z.infer<typeof DestroyWorkloadSchema>
