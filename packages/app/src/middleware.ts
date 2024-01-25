@@ -3,6 +3,28 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
+import { URLPattern } from 'urlpattern-polyfill'
+
+const PATTERNS = [
+  {
+    pattern: new URLPattern({ pathname: '/teams/:team' }),
+    handler: ({ pathname }: { pathname: URLPatternComponentResult }) =>
+      pathname.groups
+  }
+]
+
+const params = (url: string) => {
+  const input = url.split('?')[0]
+
+  for (const { pattern, handler } of PATTERNS) {
+    const patternResult = pattern.exec(input)
+    if (patternResult !== null && 'pathname' in patternResult) {
+      return handler(patternResult)
+    }
+  }
+
+  return {}
+}
 
 export const middleware = async (request: NextRequest) => {
   const { origin, protocol, host } = request.nextUrl
@@ -24,19 +46,28 @@ export const middleware = async (request: NextRequest) => {
   const session: Session = await res.json()
   const isLoggedIn = session !== null
   const pathname = request.nextUrl.pathname
-  const cookiesList = cookies()
-  const scope = cookiesList.get('scope')
-
-  // if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
-  //   return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
-  // }
-
-  // if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
-  //   return NextResponse.redirect(new URL(`/home`, origin))
-  // }
 
   if (!pathname.startsWith('/login') && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', origin))
+  }
+
+  const cookiesList = cookies()
+  const hasScope = cookiesList.has('scope')
+  const scope = cookiesList.get('scope')
+
+  if (!hasScope) {
+    return NextResponse.redirect(new URL(`/home`, origin)).cookies.set(
+      'scope',
+      'personal'
+    )
+  }
+
+  if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
+    return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
+  }
+
+  if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
+    return NextResponse.redirect(new URL(`/home`, origin))
   }
 
   return NextResponse.next({
@@ -57,6 +88,7 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
     '/teams/:path*',
+    '/settings/:path*',
     '/home/:path*',
     '/account/:path*'
   ]
