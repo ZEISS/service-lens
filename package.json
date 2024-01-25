@@ -1,20 +1,13 @@
 {
-    "name": "root",
-    "private": true,
-    "engines": {
-        "npm": "10.2.3",
-        "node": "20.10.0"
-    },
-    "version": "0.0.1",
-    "workspaces": [
-        "./packages/*"
-    ],
-    "dependencies": {
-        "cookie": "^0.6.0",
-        "next": "^14.0.4",
-        "nextra": "^2.13.2",
-        "nextra-theme-docs": "^2.13.2",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
-    }
+  "name": "root",
+  "private": true,
+  "engines": {
+    "npm": "10.2.3",
+    "node": "20.10.0"
+  },
+  "version": "0.0.1",
+  "workspaces": [
+    "./packages/*"
+  ],
+  "dependencies": {}
 }
