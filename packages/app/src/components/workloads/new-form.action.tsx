@@ -15,6 +15,8 @@ export const rhfAction = createAction(
           name: opts.input.name,
           description: opts.input.description,
           ownerId: opts.ctx.meta.ownerId,
+          lenses: opts.input.lensesIds,
+          profile: opts.input.profilesId,
           resourceType: 'workload'
         })
     )

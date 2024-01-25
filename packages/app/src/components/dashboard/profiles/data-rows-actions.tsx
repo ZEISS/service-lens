@@ -4,6 +4,8 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/client'
+import { rhfActionDeleteProfile } from '@/actions/profile.action'
+import { useAction } from '@/trpc/client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +15,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
+import { useToast } from '@/components/ui/use-toast'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -26,6 +29,15 @@ export function DataTableRowActions<TData>({
   row
 }: DataTableRowActionsProps<TData>) {
   const id = row.getValue('id') as string
+  const mutation = useAction(rhfActionDeleteProfile)
+  const { toast } = useToast()
+
+  const handleOnClickDelete = async (id: string) => {
+    await mutation.mutateAsync(id)
+    toast({
+      title: 'Successfully deleted'
+    })
+  }
 
   return (
     <DropdownMenu>
@@ -44,7 +56,7 @@ export function DataTableRowActions<TData>({
         </Link>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => deleteWorkload(id)}>
+        <DropdownMenuItem onClick={() => handleOnClickDelete(id)}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

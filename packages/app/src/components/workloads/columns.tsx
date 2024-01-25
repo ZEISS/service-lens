@@ -1,15 +1,14 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { Workload } from '@/db/models/workload'
-import type { Profile } from '@/db/models/profile'
 import { DataTableColumnHeader } from '@/components/data-table-column-header'
 import { DataTableRowActions } from '@/components/workloads/data-rows-actions'
+import { getRouteAsPath, teamsWorkloadUrlPath } from '@/lib/utils'
 
 export const columns: ColumnDef<Workload>[] = [
   {
@@ -48,10 +47,16 @@ export const columns: ColumnDef<Workload>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
-      //   const label = labels.find(label => label.value === row.original.)
+      const team = row.original.teams[0].slug
+      const id: string = row.getValue('id')
+      const url = getRouteAsPath(teamsWorkloadUrlPath, {
+        id,
+        team
+      })
+
       return (
         <Link
-          href={`/dashboard/workloads/${row.getValue('id')}`}
+          href={url}
           className={cn(
             buttonVariants({ variant: 'ghost' }),
             'hover:bg-transparent hover:underline',

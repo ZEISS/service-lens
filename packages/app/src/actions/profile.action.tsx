@@ -11,6 +11,6 @@ export const rhfActionDeleteProfile = createAction(
     .input(rhfActionDeleteProfileSchema)
     .mutation(async opts => {
       await destroyProfile(opts.input)
-      revalidatePath('/dashboard/profiles')
+      revalidatePath('/teams/[id]/profiles', 'page')
     })
 )

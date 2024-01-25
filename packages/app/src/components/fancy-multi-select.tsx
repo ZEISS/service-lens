@@ -31,7 +31,7 @@ export function FancyMultiSelect<T>({
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    onValueChange?.(selected.map(s => s.value))
+    onValueChange?.(selected.map(s => s?.value))
   }, [selected, onValueChange])
 
   const handleSelect = useCallback((value: FancyMultiSelectValue<T>) => {

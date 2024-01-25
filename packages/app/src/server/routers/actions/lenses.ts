@@ -1,6 +1,5 @@
 import { protectedProcedure } from '../../trpc'
 import {
-  LensDeleteSchema,
   LensGetSchema,
   LensGetQuestionSchema,
   LensListSchema,
@@ -13,10 +12,6 @@ import {
   findAndCountLenses
 } from '@/db/services/lenses'
 import { router } from '@/server/trpc'
-
-export const deleteLens = protectedProcedure
-  .input(LensDeleteSchema)
-  .query(async opts => await dl(opts.input))
 
 export const getLens = protectedProcedure
   .input(LensGetSchema)
@@ -35,7 +30,6 @@ export const listByTeam = protectedProcedure
   .query(async opts => await listLensByTeamSlug({ ...opts.input }))
 
 export const lensRouter = router({
-  delete: deleteLens,
   get: getLens,
   getQuestion: getLensQuestion,
   list: listLenses,

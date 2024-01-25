@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure, router } from '../trpc'
-import { deleteLens, listLenses } from './actions/lenses'
+import { listLenses } from './actions/lenses'
 import {
   getWorkload,
   getWorkloadAnswer,
@@ -53,7 +53,6 @@ export const appRouter = router({
 
   me: publicProcedure.query(opts => opts.ctx.session),
 
-  deleteLens,
   deleteSolutionTemplate,
   deleteWorkload,
   findSolutionTemplates,

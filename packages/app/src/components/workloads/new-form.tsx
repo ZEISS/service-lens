@@ -49,7 +49,8 @@ export function NewWorkloadForm({
     resolver: zodResolver(rhfActionSchema),
     defaultValues: {
       name: '',
-      description: ''
+      description: '',
+      lensesIds: []
     },
     mode: 'onChange'
   })

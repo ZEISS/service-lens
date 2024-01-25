@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { FindOneTeamByNameSlug } from './teams'
 import { PaginationSchema } from './pagination'
-import { rhfActionSetScopeSchema } from '@/actions/teams-switcher.schema'
 import { ScopeSchema } from './scope'
 
 export const WorkloadLensQuestionSchema = z.object({
@@ -30,8 +29,10 @@ export type ListWorkloadsByTeamSlug = z.infer<typeof ListWorkloadsByTeamSlug>
 
 export const WorkloadCreateSchema = z
   .object({
-    name: z.string(),
-    description: z.string()
+    name: z.string().trim(),
+    description: z.string(),
+    profile: z.string().trim().uuid(),
+    lenses: z.array(z.string().trim().uuid())
   })
   .and(ScopeSchema)
 export type WorkloadCreate = z.infer<typeof WorkloadCreateSchema>

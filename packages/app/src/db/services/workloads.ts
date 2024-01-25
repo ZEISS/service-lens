@@ -27,9 +27,7 @@ import {
 } from '../models/lens-pillar-risks'
 import type { ListWorkloadsByTeamSlug } from '../schemas/workload'
 import type { WorkloadCreate } from '../schemas/workload'
-import { WorkloadCreateSchema } from '../schemas/workload'
 import { Ownership } from '../models/ownership'
-import { Scope } from 'ajv/dist/compile/codegen'
 
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
@@ -175,7 +173,16 @@ export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
 export const createWorkload = async (opts: WorkloadCreate) =>
   await sequelize.transaction(async transaction => {
     const workload = await Workload.create(
-      { name: opts.name, description: opts.description },
+      {
+        name: opts.name,
+        description: opts.description,
+        profilesId: opts.profile
+      },
+      { transaction }
+    )
+
+    await WorkloadLens.bulkCreate(
+      opts.lenses.map(lens => ({ workloadId: workload.id, lensId: lens })),
       { transaction }
     )
 

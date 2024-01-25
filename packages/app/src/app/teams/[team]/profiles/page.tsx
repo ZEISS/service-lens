@@ -10,7 +10,7 @@ import { Main } from '@/components/main'
 import { api } from '@/trpc/server-http'
 import { DataTable } from '@/components/data-table'
 import { columns } from '@/components/dashboard/profiles/data-columns'
-import type { DataTableOptions } from '@/components/data-table'
+import { type DataTableOptions } from '@/components/data-table'
 import { ListProfileByTeamSlug } from '@/server/routers/schemas/profile'
 
 const options = {
