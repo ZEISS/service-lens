@@ -2,7 +2,7 @@ import { protectedProcedure } from '../../trpc'
 import {
   WorkloadGetSchema,
   WorkloadListSchema,
-  WorkloadDeleteSchema,
+  ListWorkloadLensSchema,
   WorkloadGetLensQuestionSchema,
   WorkloadGetAnswerSchema,
   ListWorkloadByTeamSlug
@@ -11,10 +11,10 @@ import {
   getWorkload as gw,
   findWorkloadLensAnswer,
   findAndCountWorkloads,
-  deleteWorkload as dt,
   getWorkloadLensQuestion,
   countWorkloads,
-  listWorkloadByTeamSlug
+  listWorkloadByTeamSlug,
+  listWorkloadLens
 } from '@/db/services/workloads'
 import { router, isAllowed } from '@/server/trpc'
 
@@ -30,10 +30,6 @@ export const listWorkloads = protectedProcedure
   .input(WorkloadListSchema)
   .query(async opts => await findAndCountWorkloads({ ...opts.input }))
 
-export const deleteWorkload = protectedProcedure
-  .input(WorkloadDeleteSchema)
-  .query(async opts => await dt(opts.input))
-
 export const findWorkloadLensQuestion = protectedProcedure
   .input(WorkloadGetLensQuestionSchema)
   .query(async opts => await getWorkloadLensQuestion(opts.input))
@@ -47,9 +43,14 @@ export const listByTeam = protectedProcedure
   .input(ListWorkloadByTeamSlug)
   .query(async opts => await listWorkloadByTeamSlug({ ...opts.input }))
 
+export const listLensByWorkload = protectedProcedure
+  .use(isAllowed('read'))
+  .input(ListWorkloadLensSchema)
+  .query(async opts => await listWorkloadLens({ ...opts.input }))
+
 export const workloadsRouter = router({
   get: getWorkload,
   list: listWorkloads,
   listByTeam: listByTeam,
-  delete: deleteWorkload
+  listLens: listLensByWorkload
 })

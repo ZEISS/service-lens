@@ -5,7 +5,6 @@ import {
   getWorkload,
   getWorkloadAnswer,
   listWorkloads,
-  deleteWorkload,
   findWorkloadLensQuestion,
   totalWorkloads,
   workloadsRouter
@@ -54,7 +53,6 @@ export const appRouter = router({
   me: publicProcedure.query(opts => opts.ctx.session),
 
   deleteSolutionTemplate,
-  deleteWorkload,
   findSolutionTemplates,
   findWorkloadLensQuestion,
   getLens,

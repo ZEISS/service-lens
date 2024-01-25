@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 export const teamsWorkloadUrlPath = '/teams/[team]/workloads/[id]'
+export const teamsWorkloadLensPath =
+  '/teams/[team]/workloads/[id]/lenses/[lensId]'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

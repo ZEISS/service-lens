@@ -41,7 +41,6 @@ export default async function Page(props: PropsWithChildren<NextPageProps>) {
     slug: props.params.team
   })
   const { rows, count } = await api.workloads.listByTeam.query(searchParams)
-
   const pageCount = Math.ceil(count / searchParams.limit)
 
   return (

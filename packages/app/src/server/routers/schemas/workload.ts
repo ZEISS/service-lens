@@ -24,5 +24,10 @@ export const WorkloadGetAnswerSchema = z.object({
   lensPillarQuestionId: z.string()
 })
 
+export const ListWorkloadLensSchema = z
+  .object({ id: z.string().trim().uuid() })
+  .and(PaginationSchema)
+export type ListWorkloadLens = z.infer<typeof ListWorkloadLensSchema>
+
 export const ListWorkloadByTeamSlug = TeamsGetBySlugSchema.and(PaginationSchema)
 export type ListWorkloadByTeamSlug = z.infer<typeof ListWorkloadByTeamSlug>

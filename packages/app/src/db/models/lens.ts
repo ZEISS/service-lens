@@ -21,6 +21,8 @@ import { Tag } from './tags'
 import { TagTaggable } from './tags-taggable'
 import { Team } from './teams'
 import { Ownership } from './ownership'
+import { Workload } from '@/db/models/workload'
+import { WorkloadLens } from '@/db/models/workload-lens'
 
 export interface LensAttributes {
   id: string
@@ -30,6 +32,7 @@ export interface LensAttributes {
   isDraft: boolean
   description?: string
   pillars?: LensPillar[]
+  workloads?: Workload[]
   tags?: Tag[]
   teams?: Team[]
   createdAt?: Date
@@ -107,6 +110,15 @@ export class Lens extends Model<LensAttributes, LensCreationAttributes> {
     constraints: false
   })
   declare teams: Team[]
+
+  @BelongsToMany(() => Workload, {
+    through: {
+      model: () => WorkloadLens
+    },
+    otherKey: 'workloadId',
+    foreignKey: 'lensId'
+  })
+  declare workloads: Workload[]
 
   @CreatedAt
   @Column(DataType.DATE)

@@ -10,19 +10,32 @@ import { Section } from '@/components/section'
 import { api } from '@/trpc/server-http'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PropertiesCard } from './components/properties-card'
+import { columns } from '@/components/workloads/lenses-data-columns'
 import { MoreButton } from './components/more-button'
-import { LensesCard } from './components/lenses-card'
+import { DataTable } from '@/components/data-table'
+import type { DataTableOptions } from '@/components/data-table'
 import { type PropsWithChildren } from 'react'
+import { ListWorkloadLensSchema } from '@/server/routers/schemas/workload'
+
+const options = {
+  toolbar: {}
+} satisfies DataTableOptions
 
 export interface NextPageProps<TeamSlug = string, WorkloadId = string> {
   params: { team: TeamSlug; id: WorkloadId }
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({
-  params
-}: PropsWithChildren<NextPageProps>) {
-  const workload = await api.getWorkload.query(params?.id)
+export const revalidate = 0 // no cache
+
+export default async function Page(props: PropsWithChildren<NextPageProps>) {
+  const searchParams = ListWorkloadLensSchema.parse({
+    ...props.searchParams,
+    ...props.params
+  })
+  const { rows, count } = await api.workloads.listLens.query(searchParams)
+  const pageCount = Math.ceil(count / searchParams.limit)
+  const workload = await api.getWorkload.query(props.params.id)
 
   return (
     <>
@@ -60,14 +73,16 @@ export default async function Page({
                   className="col-span-3"
                 />
               )}
-              {workload?.lenses && (
-                <LensesCard
-                  teamId={params.team}
-                  workloadId={workload.id}
-                  lenses={workload?.lenses}
-                  className="col-span-7"
-                />
-              )}
+            </div>
+            <div className="grid gap-4 py-4">
+              <DataTable
+                columns={columns}
+                data={rows}
+                pageCount={pageCount}
+                pageSize={searchParams.limit}
+                pageIndex={searchParams.offset}
+                options={options}
+              />
             </div>
           </TabsContent>
           <TabsContent

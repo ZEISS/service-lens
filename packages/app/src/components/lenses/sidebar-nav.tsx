@@ -25,7 +25,7 @@ export async function SidebarNav({
       className={'flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1'}
       {...props}
     >
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion type="multiple" className="w-full">
         {lens?.pillars?.map((pillar, idx) => (
           <AccordionItem key={idx} value="item-1">
             <AccordionTrigger>{pillar.name}</AccordionTrigger>
@@ -35,9 +35,9 @@ export async function SidebarNav({
                   key={question.ref}
                   href={`/teams/${params.team}/workloads/${params.id}/lenses/${params.lensId}/question/${question.id}`}
                   className={cn(
-                    buttonVariants({ variant: 'outline' }),
+                    buttonVariants({ variant: 'outline', size: 'sm' }),
                     'hover:bg-transparent hover:bg-muted hover:rounded',
-                    'whitespace-normal p-4 justify-start h-full'
+                    'whitespace-normal p-4 justify-start h-full w-full'
                   )}
                 >
                   {question.name}

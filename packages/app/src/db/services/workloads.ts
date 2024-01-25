@@ -2,7 +2,6 @@ import { Profile } from '@/db/models/profile'
 import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { Workload } from '@/db/models/workload'
-import { WorkloadEnvironment } from '@/db/models/workload-environment'
 import { Lens } from '@/db/models/lens'
 import { WorkloadLens } from '@/db/models/workload-lens'
 import { Environment } from '@/db/models/environment'
@@ -13,7 +12,6 @@ import { z } from 'zod'
 import { Tag } from '@/db/models/tags'
 import { createContext, evalInScope } from '@/lib/eval'
 import { Team } from '@/db/models/teams'
-import type { WorkloadCreationAttributes } from '../models/workload'
 import sequelize from '../config/config'
 import {
   WorkloadLensQuestionSchema,
@@ -29,6 +27,7 @@ import {
 import type { ListWorkloadsByTeamSlug } from '../schemas/workload'
 import type { WorkloadCreate } from '../schemas/workload'
 import { Ownership } from '../models/ownership'
+import { type ListWorkloadLens } from '@/db/schemas/workload'
 
 export const findWorkloadLensAnswer = async (
   opts: z.infer<typeof WorkloadGetLensAnswer>
@@ -172,6 +171,13 @@ export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
     offset: opts.offset,
     limit: opts.limit,
     include: [{ model: Team, where: { slug: opts.slug } }]
+  })
+
+export const listWorkloadLens = async (opts: ListWorkloadLens) =>
+  await Lens.findAndCountAll({
+    offset: opts.offset,
+    limit: opts.limit,
+    include: [{ model: Workload, where: { id: opts.id }, include: [Team] }]
   })
 
 export const createWorkload = async (opts: WorkloadCreate) =>
