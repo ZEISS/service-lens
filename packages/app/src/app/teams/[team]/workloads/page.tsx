@@ -14,18 +14,7 @@ import type { DataTableOptions } from '@/components/data-table'
 import { ListWorkloadByTeamSlug } from '@/server/routers/schemas/workload'
 
 const options = {
-  toolbar: {
-    facetFilters: [
-      {
-        column: 'environment',
-        title: 'Environment',
-        options: [
-          { label: 'Active', value: 'active' },
-          { label: 'Inactive', value: 'inactive' }
-        ]
-      }
-    ]
-  }
+  toolbar: {}
 } satisfies DataTableOptions
 
 export const revalidate = 0 // no cache

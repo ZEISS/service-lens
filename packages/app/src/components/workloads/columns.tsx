@@ -9,6 +9,7 @@ import { Workload } from '@/db/models/workload'
 import { DataTableColumnHeader } from '@/components/data-table-column-header'
 import { DataTableRowActions } from '@/components/workloads/data-rows-actions'
 import { getRouteAsPath, teamsWorkloadUrlPath } from '@/lib/utils'
+import { type Profile } from '@/db/models/profile'
 
 export const columns: ColumnDef<Workload>[] = [
   {
@@ -75,36 +76,36 @@ export const columns: ColumnDef<Workload>[] = [
       )
     }
   },
-  // {
-  //   accessorKey: 'profile',
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Profile" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     //   const label = labels.find(label => label.value === row.original.)
-  //     const profile: Profile = row.getValue('profile')
+  {
+    accessorKey: 'profile',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Profile" />
+    ),
+    cell: ({ row }) => {
+      //   const label = labels.find(label => label.value === row.original.)
+      const profile: Profile = row.getValue('profile')
 
-  //     return (
-  //       <Link
-  //         href={`/dashboard/profiles/${profile.id}`}
-  //         className={cn(
-  //           buttonVariants({ variant: 'ghost' }),
-  //           'hover:bg-transparent hover:underline',
-  //           'px-0',
-  //           'justify-start'
-  //         )}
-  //         passHref
-  //       >
-  //         <div className="flex space-x-2">
-  //           {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
-  //           <span className="max-w-[500px] truncate font-medium">
-  //             {row.original?.profile?.name}
-  //           </span>
-  //         </div>
-  //       </Link>
-  //     )
-  //   }
-  // },
+      return (
+        <Link
+          href=""
+          className={cn(
+            buttonVariants({ variant: 'ghost' }),
+            'hover:bg-transparent hover:underline',
+            'px-0',
+            'justify-start'
+          )}
+          passHref
+        >
+          <div className="flex space-x-2">
+            {/* {label && <Badge variant="outline">{label.label}</Badge>} */}
+            <span className="max-w-[500px] truncate font-medium">
+              {row.original?.profile?.name}
+            </span>
+          </div>
+        </Link>
+      )
+    }
+  },
   // {
   //   accessorKey: 'environment',
   //   header: ({ column }) => (

@@ -170,7 +170,7 @@ export const listWorkloadByTeamSlug = async (opts: ListWorkloadsByTeamSlug) =>
   await Workload.findAndCountAll({
     offset: opts.offset,
     limit: opts.limit,
-    include: [{ model: Team, where: { slug: opts.slug } }]
+    include: [{ model: Team, where: { slug: opts.slug } }, Profile]
   })
 
 export const listWorkloadLens = async (opts: ListWorkloadLens) =>

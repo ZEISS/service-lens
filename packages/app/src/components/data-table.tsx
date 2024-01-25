@@ -102,6 +102,10 @@ export function DataTable<TData, TValue = unknown>({
     data,
     columns,
     state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
       pagination
     },
     pageCount: pageCount ?? -1,

@@ -3,7 +3,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { api } from '@/trpc/client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,10 +21,6 @@ import { rhfActionDeleteWorkload } from '@/actions/workload.action'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
-}
-
-async function deleteWorkload(id: string): Promise<void> {
-  await api.deleteWorkload.query(id)
 }
 
 export function DataTableRowActions<TData>({
