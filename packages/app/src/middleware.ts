@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { URLPattern } from 'urlpattern-polyfill'
+import { compileSchema } from 'ajv/dist/compile'
 
 const PATTERNS = [
   {
@@ -55,7 +56,7 @@ export const middleware = async (request: NextRequest) => {
   const hasScope = cookiesList.has('scope')
   const scope = cookiesList.get('scope')
 
-  if (!hasScope) {
+  if (!hasScope && isLoggedIn) {
     return NextResponse.redirect(new URL(`/home`, origin)).cookies.set(
       'scope',
       'personal'
