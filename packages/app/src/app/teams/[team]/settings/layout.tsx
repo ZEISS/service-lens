@@ -10,7 +10,6 @@ import { Main } from '@/components/main'
 
 export interface NextPageProps<TeamSlug = string> {
   params: { team: TeamSlug }
-  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
 export default function Layout({

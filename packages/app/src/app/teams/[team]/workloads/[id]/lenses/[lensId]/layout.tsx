@@ -1,9 +1,4 @@
-import {
-  SubNav,
-  SubNavTitle,
-  SubNavActions,
-  SubNavSubtitle
-} from '@/components/sub-nav'
+import { SubNav, SubNavTitle, SubNavActions } from '@/components/sub-nav'
 import { SidebarNav } from '@/components/lenses/sidebar-nav'
 import React from 'react'
 import { api } from '@/trpc/server-http'
@@ -14,7 +9,6 @@ export const dynamic = 'force-dynamic'
 
 export interface NextPageProps<TeamSlug = string, WorkloadId = string> {
   params: { team: TeamSlug; id: WorkloadId; questionId: string; lensId: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
 export default async function Layout({

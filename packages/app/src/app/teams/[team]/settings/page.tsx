@@ -1,15 +1,14 @@
 import { SettingsGeneralForm } from '@/components/teams/settings-general-form'
-import { PropsWithChildren, Suspense } from 'react'
+import { Suspense } from 'react'
 import { LoadingSpinner } from '@/components/loading-spinner'
 import { Separator } from '@/components/ui/separator'
 import { DeleteTeamDialog } from '@/components/teams/delete-team-dialog'
 
 export interface NextPageProps<Team = string> {
   params: { team: Team }
-  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default function Page({ params }: PropsWithChildren<NextPageProps>) {
+export default function Page({ params }: NextPageProps) {
   return (
     <>
       <div>

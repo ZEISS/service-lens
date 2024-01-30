@@ -24,7 +24,7 @@ export interface NextPageProps<TeamSlug = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = ListProfileByTeamSlug.parse({
     ...props.searchParams,
     slug: props.params.team

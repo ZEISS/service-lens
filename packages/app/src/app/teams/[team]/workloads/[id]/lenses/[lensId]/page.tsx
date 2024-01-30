@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { questionRisk } from '@/db/models/workload-lenses-answers'
 import DateFormat from '@/components/date-format'
 import { Separator } from '@/components/ui/separator'
 import { QuestionRisk } from '@/db/models/lens-pillar-risks'
@@ -29,8 +30,8 @@ export default async function Page({ params }: PageProps) {
   const stats: { [key: string]: number } =
     workload?.answers?.reduce(
       (answers, answer) => ({
-        ...answers,
-        [answer.risk]: answers[answer.risk] + 1
+        ...answers
+        // [answer.risk.toString()]: answers[answer.risk] + 1
       }),
       Object.values(QuestionRisk).reduce(
         (risks, risk) => ({ ...risks, [risk]: 0 }),

@@ -6,10 +6,9 @@ import { AddMemberForm } from '@/components/teams/add-member-form'
 
 export interface NextPageProps<Team = string> {
   params: { team: Team }
-  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default function Page({ params }: PropsWithChildren<NextPageProps>) {
+export default function Page({ params }: NextPageProps) {
   return (
     <>
       <div>

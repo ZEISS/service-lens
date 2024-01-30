@@ -14,7 +14,6 @@ import { columns } from '@/components/workloads/lenses-data-columns'
 import { MoreButton } from './components/more-button'
 import { DataTable } from '@/components/data-table'
 import type { DataTableOptions } from '@/components/data-table'
-import { type PropsWithChildren } from 'react'
 import { ListWorkloadLensSchema } from '@/server/routers/schemas/workload'
 
 const options = {
@@ -28,7 +27,7 @@ export interface NextPageProps<TeamSlug = string, WorkloadId = string> {
 
 export const revalidate = 0 // no cache
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = ListWorkloadLensSchema.parse({
     ...props.searchParams,
     ...props.params

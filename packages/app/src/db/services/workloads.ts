@@ -100,40 +100,40 @@ export const addLensAnswer = async (
         }
       }, defaultCondition?.risk) ?? QuestionRisk.Unanswered
 
-    const [answer] = await WorkloadLensAnswer.upsert(
-      {
-        ...opts,
-        risk
-      },
-      { transaction }
-    )
+    // const [answer] = await WorkloadLensAnswer.upsert(
+    //   {
+    //     ...opts,
+    //     risk: QuestionRisk.High
+    //   },
+    //   { transaction }
+    // )
 
-    await WorkloadLensesAnswerChoice.destroy({
-      where: {
-        [Op.and]: [
-          {
-            choiceId: { [Op.notIn]: opts.selectedChoices }
-          },
-          {
-            answerId: answer.id
-          }
-        ]
-      },
-      transaction
-    })
+    // await WorkloadLensesAnswerChoice.destroy({
+    //   where: {
+    //     [Op.and]: [
+    //       {
+    //         choiceId: { [Op.notIn]: opts.selectedChoices }
+    //       },
+    //       {
+    //         answerId: answer.id
+    //       }
+    //     ]
+    //   },
+    //   transaction
+    // })
 
-    await WorkloadLensesAnswerChoice.bulkCreate(
-      Array.from(opts.selectedChoices).map(id => ({
-        answerId: answer.id,
-        choiceId: id
-      })),
-      {
-        transaction,
-        updateOnDuplicate: ['answerId', 'choiceId', 'deletedAt', 'updatedAt']
-      }
-    )
+    // await WorkloadLensesAnswerChoice.bulkCreate(
+    //   Array.from(opts.selectedChoices).map(id => ({
+    //     answerId: answer.id,
+    //     choiceId: id
+    //   })),
+    //   {
+    //     transaction,
+    //     updateOnDuplicate: ['answerId', 'choiceId', 'deletedAt', 'updatedAt']
+    //   }
+    // )
 
-    return answer.dataValues
+    // return answer.dataValues
   })
 
 export const getWorkload = async (id: string) =>

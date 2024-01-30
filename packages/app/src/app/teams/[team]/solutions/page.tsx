@@ -5,7 +5,6 @@ import {
   SubNavActions,
   SubNavSubtitle
 } from '@/components/sub-nav'
-import { PropsWithChildren } from 'react'
 import { Main } from '@/components/main'
 import { api } from '@/trpc/server-http'
 import { DataTable } from '@/components/data-table'
@@ -24,7 +23,7 @@ export interface NextPageProps<TeamSlug = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = ListSolutionByTeamSlug.parse({
     ...props.searchParams,
     slug: props.params.team

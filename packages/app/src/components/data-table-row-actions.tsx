@@ -30,10 +30,6 @@ interface DataTableRowActionsProps<TData> {
 // RowBuilder is a function that takes a row and returns a ReactNode
 export type RowBuilder<TData> = (row: Row<TData>) => React.ReactNode
 
-async function deleteWorkload(id: string): Promise<void> {
-  await api.deleteWorkload.query(id)
-}
-
 export function DataTableRowActions<TData>({
   row
 }: DataTableRowActionsProps<TData>) {
@@ -68,7 +64,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => deleteWorkload(id)}>
+        <DropdownMenuItem>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

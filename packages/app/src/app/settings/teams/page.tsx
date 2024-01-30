@@ -10,12 +10,11 @@ const options = {
   toolbar: {}
 } satisfies DataTableOptions
 
-export interface NextPageProps<TeamSlug = string> {
-  params: { team: TeamSlug }
+export interface NextPageProps {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = TeamsListSchema.parse({
     ...props.searchParams
   })

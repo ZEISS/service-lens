@@ -19,10 +19,7 @@ export interface NextPageProps<IdType = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({
-  params,
-  searchParams
-}: PropsWithChildren<NextPageProps>) {
+export default async function Page({ params, searchParams }: NextPageProps) {
   const profile = await api.getProfile.query(params?.id)
   const questions = await api.listProfilesQuestions.query()
   const editable = searchParams && searchParams['editable'] !== undefined

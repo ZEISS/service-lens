@@ -30,7 +30,7 @@ export const options = {
     signIn: '/login'
   },
   callbacks: {
-    session: async ({ session, user }) => {
+    session: async ({ session, user }: any) => {
       if (user?.id) {
         session.user.id = user.id
       }

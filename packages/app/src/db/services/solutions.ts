@@ -56,6 +56,7 @@ export const makeCopySolution = async (
     return Solution.create(
       {
         title: `${solution?.title} (Copy)`,
+        userId: '',
         body: solution?.body ?? '',
         description: solution?.description
       },

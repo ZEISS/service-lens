@@ -7,7 +7,6 @@ import {
 } from '@/components/sub-nav'
 import { Main } from '@/components/main'
 import { api } from '@/trpc/server-http'
-import type { PropsWithChildren } from 'react'
 import { DataTable } from '@/components/data-table'
 import { columns } from '@/components/lenses/data-columns'
 import type { DataTableOptions } from '@/components/data-table'
@@ -24,7 +23,7 @@ export interface NextPageProps<TeamSlug = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = ListLensByTeamSlug.parse({
     ...props.searchParams,
     slug: props.params.team

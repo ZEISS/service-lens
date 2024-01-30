@@ -11,11 +11,10 @@ const options = {
 } satisfies DataTableOptions
 
 export interface NextPageProps<TeamSlug = string> {
-  params: { team: TeamSlug }
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page(props: PropsWithChildren<NextPageProps>) {
+export default async function Page(props: NextPageProps) {
   const searchParams = ListUsersSchema.parse({
     ...props.searchParams
   })

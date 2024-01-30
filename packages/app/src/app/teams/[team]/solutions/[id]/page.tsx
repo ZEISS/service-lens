@@ -53,7 +53,7 @@ export default async function Page({ params }: PageProps) {
                     src={solution?.user?.image}
                     alt={solution?.user?.name}
                   />
-                  <AvatarFallback>{ }</AvatarFallback>
+                  <AvatarFallback>{}</AvatarFallback>
                 </Avatar>
               </Button>
             </CardTitle>
@@ -113,7 +113,7 @@ export default async function Page({ params }: PageProps) {
                       src={comment.user?.image}
                       alt={comment.user?.name}
                     />
-                    <AvatarFallback>{ }</AvatarFallback>
+                    <AvatarFallback>{}</AvatarFallback>
                   </Avatar>
                 </Button>
                 <CommentActions comment={comment} />

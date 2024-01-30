@@ -10,9 +10,7 @@ export interface NextPageProps<TeamSlug = string> {
   searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function Page({
-  params
-}: PropsWithChildren<NextPageProps>) {
+export default async function Page({ params }: NextPageProps) {
   const questions = await api.listProfilesQuestions.query()
   const selectedChoices = questions?.reduce(
     (prev, curr) => ({ ...prev, [curr.ref]: [] }),

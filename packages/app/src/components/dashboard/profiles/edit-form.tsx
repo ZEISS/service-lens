@@ -107,14 +107,14 @@ export function EditProfileForm({
                                   onCheckedChange={checked => {
                                     return checked
                                       ? field.onChange([
-                                        ...field.value,
-                                        choice.id
-                                      ])
+                                          ...field.value,
+                                          choice.id
+                                        ])
                                       : field.onChange(
-                                        field.value?.filter(
-                                          value => value !== choice.id
+                                          field.value?.filter(
+                                            value => value !== choice.id
+                                          )
                                         )
-                                      )
                                   }}
                                 />
                               </FormControl>

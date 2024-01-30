@@ -4,11 +4,6 @@ import { Main } from '@/components/main'
 import DefaultLayout from '@/components/default-layout'
 import { PropsWithChildren } from 'react'
 
-export interface NextPageProps {
-  params: {}
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
-
 const sidebarNavItems = [
   {
     title: 'General',
@@ -24,7 +19,7 @@ const sidebarNavItems = [
   }
 ]
 
-export default function Layout({ children }: PropsWithChildren<NextPageProps>) {
+export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <DefaultLayout>
