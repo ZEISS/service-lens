@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { UserAuthForm } from '@/components/login/auth-form'
 import type { AppProvider } from 'next-auth/providers'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Authentication',
   description: 'Authentication forms built using the components.'
