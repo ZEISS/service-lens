@@ -42,6 +42,8 @@ jobs:
           DB_USER: example
           DB_PASS: example
           NEXTAUTH_SECRET: "MY_STRONG_SECRET"
+          NEXTAUTH_URL: http://localhost:3000
+
   lint:
     runs-on: ubuntu-latest
     steps:
