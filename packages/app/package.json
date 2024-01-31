@@ -6,6 +6,7 @@
     "clean": "rimraf node_modules docs",
     "dev": "next dev",
     "build": "next build",
+    "build:debug": "next build --debug",
     "start": "next start",
     "lint": "next lint",
     "fix": "next lint --fix",
