@@ -37,7 +37,7 @@ jobs:
       - run: npm ci
       - run: npm run build -w packages/app
         env:
-          DB_HOST: localhost
+          DB_HOST: postgres
           DB_NAME: example
           DB_USER: example
           DB_PASS: example
