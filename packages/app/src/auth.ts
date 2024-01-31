@@ -1,13 +1,15 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
-import SequelizeAdapter from '@auth/sequelize-adapter'
-import type { DefaultSession, NextAuthConfig } from 'next-auth'
+import SequelizeAdapter from '@/lib/adapter-sequelize'
+import { type DefaultSession, NextAuthConfig } from 'next-auth'
 import sequelize from '@/db/config/config'
 
 const env = process.env.NODE_ENV || 'development'
 const isProduction = env === 'production'
 
-const adapter = SequelizeAdapter(sequelize)
+const adapter = SequelizeAdapter(sequelize, {
+  synchronize: false
+})
 
 declare module 'next-auth' {
   interface Session {
@@ -24,6 +26,9 @@ export const options = {
       clientSecret: process.env.GITHUB_SECRET!
     })
   ],
+  session: {
+    generateSessionToken: () => crypto.randomUUID()
+  },
   adapter,
   debug: !isProduction,
   pages: {

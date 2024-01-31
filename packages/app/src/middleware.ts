@@ -54,21 +54,13 @@ export const middleware = async (request: NextRequest) => {
 
   const cookiesList = cookies()
   const hasScope = cookiesList.has('scope')
-  const scope = cookiesList.get('scope')
 
-  if (!hasScope && isLoggedIn) {
-    return NextResponse.redirect(new URL(`/home`, origin)).cookies.set(
-      'scope',
-      'personal'
-    )
-  }
+  console.log(hasScope)
 
-  if (scope?.value !== 'personal' && pathname.startsWith('/home')) {
-    return NextResponse.redirect(new URL(`/teams/${scope?.value}`, origin))
-  }
-
-  if (scope?.value === 'personal' && pathname.startsWith('/teams')) {
-    return NextResponse.redirect(new URL(`/home`, origin))
+  if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
+    return NextResponse.redirect(new URL(`/home`, origin), {
+      status: 302
+    })
   }
 
   return NextResponse.next({

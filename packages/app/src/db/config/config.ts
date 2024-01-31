@@ -33,7 +33,6 @@ import { TagTaggable } from '@/db/models/tags-taggable'
 import { Ownership } from '@/db/models/ownership'
 
 const env = process.env.NODE_ENV || 'development'
-const isProduction = env === 'production'
 
 const models = [
   Environment,
@@ -109,11 +108,6 @@ export const config: Config = {
 }
 
 const connection = new Sequelize({ ...config[env] })
-
-export const initDB = async () => {
-  await connection.authenticate()
-  !isProduction && (await connection.sync({ alter: true }))
-}
 
 export { Sequelize }
 export default connection
