@@ -16,14 +16,11 @@ import sequelize from '../config/config'
 import {
   WorkloadLensQuestionSchema,
   WorkloadGetLensAnswer,
-  WorkloadLensAnswerAddSchema,
+  AddWorkloadLens,
   DestroyWorkload
 } from '../schemas/workload'
 import { Op } from 'sequelize'
-import {
-  LensPillarQuestionRisk,
-  QuestionRisk
-} from '../models/lens-pillar-risks'
+import { LensPillarQuestionRisk } from '../models/lens-pillar-risks'
 import type { ListWorkloadsByTeamSlug } from '../schemas/workload'
 import type { WorkloadCreate } from '../schemas/workload'
 import { Ownership } from '../models/ownership'
@@ -68,9 +65,7 @@ export const getWorkloadLensQuestion = async (
     ]
   })
 
-export const addLensAnswer = async (
-  opts: z.infer<typeof WorkloadLensAnswerAddSchema>
-) =>
+export const addLensAnswer = async (opts: AddWorkloadLens) =>
   await sequelize.transaction(async transaction => {
     const question = await LensPillarQuestion.findOne({
       where: { id: opts.lensPillarQuestionId },
@@ -81,7 +76,7 @@ export const addLensAnswer = async (
     const ctx = {
       ...createContext(question?.questionAnswers),
       ...question?.questionAnswers
-        ?.filter(answer => opts.selectedChoices.includes(answer.id))
+        ?.filter(answer => opts.selectedChoices?.includes(answer.id))
         ?.reduce((answers, answer) => ({ ...answers, [answer.ref]: true }), {})
     }
 
@@ -91,49 +86,51 @@ export const addLensAnswer = async (
 
     const risk =
       question?.risks?.reduce((prev, curr) => {
+        if (curr.condition === 'default') return curr.risk
+
         try {
           const truthy = evalInScope(curr.condition, ctx)
-          return truthy ? curr.risk ?? QuestionRisk.Unanswered : prev
+          return truthy ? curr.risk ?? 'UNANSWERED' : prev
         } catch (error) {
           console.error(error)
           return prev
         }
-      }, defaultCondition?.risk) ?? QuestionRisk.Unanswered
+      }, defaultCondition?.risk) ?? 'UNANSWERED'
 
-    // const [answer] = await WorkloadLensAnswer.upsert(
-    //   {
-    //     ...opts,
-    //     risk: QuestionRisk.High
-    //   },
-    //   { transaction }
-    // )
+    const [answer] = await WorkloadLensAnswer.upsert(
+      {
+        ...opts,
+        risk: risk
+      },
+      { transaction }
+    )
 
-    // await WorkloadLensesAnswerChoice.destroy({
-    //   where: {
-    //     [Op.and]: [
-    //       {
-    //         choiceId: { [Op.notIn]: opts.selectedChoices }
-    //       },
-    //       {
-    //         answerId: answer.id
-    //       }
-    //     ]
-    //   },
-    //   transaction
-    // })
+    await WorkloadLensesAnswerChoice.destroy({
+      where: {
+        [Op.and]: [
+          {
+            choiceId: { [Op.notIn]: opts.selectedChoices }
+          },
+          {
+            answerId: answer.id
+          }
+        ]
+      },
+      transaction
+    })
 
-    // await WorkloadLensesAnswerChoice.bulkCreate(
-    //   Array.from(opts.selectedChoices).map(id => ({
-    //     answerId: answer.id,
-    //     choiceId: id
-    //   })),
-    //   {
-    //     transaction,
-    //     updateOnDuplicate: ['answerId', 'choiceId', 'deletedAt', 'updatedAt']
-    //   }
-    // )
+    await WorkloadLensesAnswerChoice.bulkCreate(
+      Array.from(opts.selectedChoices ?? []).map(id => ({
+        answerId: answer.id,
+        choiceId: id
+      })),
+      {
+        transaction,
+        updateOnDuplicate: ['answerId', 'choiceId', 'deletedAt', 'updatedAt']
+      }
+    )
 
-    // return answer.dataValues
+    return answer.dataValues
   })
 
 export const getWorkload = async (id: string) =>

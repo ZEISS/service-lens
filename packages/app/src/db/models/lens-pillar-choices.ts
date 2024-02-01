@@ -40,11 +40,11 @@ export class LensPillarChoice extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id!: string
+  declare id: bigint
 
   @ForeignKey(() => LensPillarQuestion)
   @Column
-  questionId?: bigint
+  declare questionId?: bigint
 
   @NotEmpty
   @Min(3)

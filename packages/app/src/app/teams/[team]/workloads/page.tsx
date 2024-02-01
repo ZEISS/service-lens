@@ -17,6 +17,7 @@ const options = {
 } satisfies DataTableOptions
 
 export const revalidate = 0 // no cache
+export const dynamic = 'force-dynamic'
 
 export interface NextPageProps<TeamSlug = string> {
   params: { team: TeamSlug }

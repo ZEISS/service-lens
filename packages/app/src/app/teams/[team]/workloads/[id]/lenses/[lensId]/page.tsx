@@ -18,7 +18,6 @@ import {
 import { questionRisk } from '@/db/models/workload-lenses-answers'
 import DateFormat from '@/components/date-format'
 import { Separator } from '@/components/ui/separator'
-import { QuestionRisk } from '@/db/models/lens-pillar-risks'
 
 export type PageProps = {
   params: { lensId: string; id: string }
@@ -27,17 +26,17 @@ export type PageProps = {
 export default async function Page({ params }: PageProps) {
   const lens = await api.getLens.query(params?.lensId)
   const workload = await api.workloads.get.query(params?.id)
-  const stats: { [key: string]: number } =
-    workload?.answers?.reduce(
-      (answers, answer) => ({
-        ...answers
-        // [answer.risk.toString()]: answers[answer.risk] + 1
-      }),
-      Object.values(QuestionRisk).reduce(
-        (risks, risk) => ({ ...risks, [risk]: 0 }),
-        {} as { [key: string]: number }
-      )
-    ) ?? {}
+  // const stats: { [key: string]: number } =
+  //   workload?.answers?.reduce(
+  //     (answers, answer) => ({
+  //       ...answers
+  //       // [answer.risk.toString()]: answers[answer.risk] + 1
+  //     }),
+  //     Object.values(QuestionRisk).reduce(
+  //       (risks, risk) => ({ ...risks, [risk]: 0 }),
+  //       {} as { [key: string]: number }
+  //     )
+  //   ) ?? {}
 
   return (
     <>
@@ -77,12 +76,12 @@ export default async function Page({ params }: PageProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Object?.entries(stats ?? {}).map(([k, v], n) => (
+              {/* {Object?.entries(stats ?? {}).map(([k, v], n) => (
                 <TableRow key={n}>
                   <TableCell className="font-medium">{k}</TableCell>
                   <TableCell>{v}</TableCell>
                 </TableRow>
-              ))}
+              ))} */}
             </TableBody>
           </Table>
         </CardContent>

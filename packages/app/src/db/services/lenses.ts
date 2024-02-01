@@ -3,7 +3,7 @@ import { LensPillar } from '@/db/models/lens-pillars'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 import { LensPillarQuestion } from '@/db/models/lens-pillar-questions'
 import { LensPillarQuestionResource } from '@/db/models/lens-pillar-questions-resources'
-import { Spec } from '@/db/schemas/spec'
+import { Question, Spec } from '@/db/schemas/spec'
 import {
   LensesGetSchema,
   LensesDeleteSchema,
@@ -15,12 +15,10 @@ import { Team } from '../models/teams'
 import sequelize from '@/db/config/config'
 import { z } from 'zod'
 import { LensPillarResource } from '../models/lens-pillar-resources'
-import {
-  LensPillarQuestionRisk,
-  QuestionRisk
-} from '../models/lens-pillar-risks'
+import { LensPillarQuestionRisk } from '../models/lens-pillar-risks'
 import { ListLensByTeamSlug, CreateLens } from '../schemas/lenses'
 import { Ownership } from '../models/ownership'
+import { QuestionRisk, questionRisk } from '../models/workload-lenses-answers'
 
 export type Pagination = {
   offset?: number
@@ -54,7 +52,6 @@ export const publishLens = async (opts: z.infer<typeof LensesPublishSchema>) =>
 export const createLens = async (opts: CreateLens) =>
   await sequelize.transaction(async transaction => {
     const spec = await Spec.parseAsync(JSON.parse(opts.spec))
-
     const lens = await Lens.create(
       {
         ...opts,
@@ -119,22 +116,20 @@ export const createLens = async (opts: CreateLens) =>
       { transaction }
     )
 
-    const questionRisks = await LensPillarQuestionRisk.bulkCreate(
+    await LensPillarQuestionRisk.bulkCreate(
       pillars.flatMap((pillar, a) => [
         ...questions.flatMap((question, b) => [
-          ...(spec.pillars[a].questions[b]?.risks?.map(risk => {
-            return {
-              questionId: question.id,
-              risk: QuestionRisk[risk.risk as keyof typeof QuestionRisk],
-              condition: risk.condition
-            }
-          }) ?? [])
+          ...(spec.pillars[a].questions[b]?.risks?.map(risk => ({
+            questionId: question.id,
+            risk: 'HIGH_RISK' as QuestionRisk,
+            condition: risk.condition
+          })) ?? [])
         ])
       ]),
       { transaction }
     )
 
-    const questionResources = await LensPillarQuestionResource.bulkCreate(
+    await LensPillarQuestionResource.bulkCreate(
       pillars.flatMap((pillar, a) => [
         ...questions.flatMap((question, b) => [
           ...(spec.pillars[a].questions[b]?.resources?.map(resource => {
@@ -149,7 +144,7 @@ export const createLens = async (opts: CreateLens) =>
       { transaction }
     )
 
-    const choices = await LensPillarChoice.bulkCreate(
+    await LensPillarChoice.bulkCreate(
       pillars.flatMap((pillar, a) => [
         ...questions.flatMap((question, b) => [
           ...spec.pillars[a].questions[b].choices.map(choice => {

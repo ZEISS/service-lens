@@ -48,7 +48,13 @@ export const questionRisk = DataType.ENUM(
   'LOW_RISK',
   'NO_RISK'
 )
-export type QuestionRisk = NonNullable<typeof questionRisk>
+
+export type QuestionRisk =
+  | 'UNANSWERED'
+  | 'HIGH_RISK'
+  | 'MEDIUM_RISK'
+  | 'LOW_RISK'
+  | 'NO_RISK'
 
 @Table({
   modelName: 'WorkloadLensAnswer',
@@ -96,15 +102,7 @@ export class WorkloadLensAnswer extends Model<
 
   @NotEmpty
   @Default('UNANSWERED')
-  @Column(
-    DataType.ENUM(
-      'UNANSWERED',
-      'HIGH_RISK',
-      'MEDIUM_RISK',
-      'LOW_RISK',
-      'NO_RISK'
-    )
-  )
+  @Column(questionRisk)
   declare risk: QuestionRisk
 
   @CreatedAt

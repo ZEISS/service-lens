@@ -1,7 +1,6 @@
 import {
   Column,
   CreatedAt,
-  DataType,
   DeletedAt,
   Model,
   PrimaryKey,
@@ -15,15 +14,7 @@ import {
   ForeignKey
 } from 'sequelize-typescript'
 import { LensPillarQuestion } from './lens-pillar-questions'
-import { Risk } from '../schemas/spec'
-
-export enum QuestionRisk {
-  Unanswered = 'UNANSWERED',
-  High = 'HIGH_RISK',
-  Medium = 'MEDIUM_RISK',
-  Low = 'LOW_RISK',
-  None = 'NO_RISK'
-}
+import { type QuestionRisk, questionRisk } from './workload-lenses-answers'
 
 export interface LensPillarQuestionRiskAttributes {
   id: bigint
@@ -51,22 +42,22 @@ export class LensPillarQuestionRisk extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column
-  id!: bigint
+  declare id: bigint
 
   @ForeignKey(() => LensPillarQuestion)
   @Column
-  questionId!: bigint
+  declare questionId: bigint
 
   @NotEmpty
-  @Default(QuestionRisk.Unanswered)
-  @Column(DataType.ENUM(...Object.values(Risk)))
-  risk!: Risk
+  @Default('UNANSWERED')
+  @Column(questionRisk)
+  declare risk: QuestionRisk
 
   @NotEmpty
   @Min(3)
   @Max(256)
   @Column
-  condition?: string
+  declare condition: string
 
   @CreatedAt
   @Column

@@ -8,15 +8,16 @@ import {
   PrimaryKey,
   ForeignKey,
   AutoIncrement,
+  DataType,
   Unique
 } from 'sequelize-typescript'
 import { WorkloadLensAnswer } from '@/db/models/workload-lenses-answers'
 import { LensPillarChoice } from '@/db/models/lens-pillar-choices'
 
 export interface WorkloadLensesAnswerChoiceAttributes {
-  id: string
-  answerId: string
-  choiceId: string
+  id: bigint
+  answerId: bigint
+  choiceId: bigint
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
@@ -37,17 +38,17 @@ export class WorkloadLensesAnswerChoice extends Model<
   @PrimaryKey
   @AutoIncrement
   @Column
-  id!: string
+  declare id: bigint
 
   @ForeignKey(() => WorkloadLensAnswer)
   @Unique('workload-lens-pillar-answer')
   @Column
-  answerId?: string
+  declare answerId: bigint
 
   @ForeignKey(() => LensPillarChoice)
   @Unique('workload-lens-pillar-answer')
-  @Column
-  choiceId?: string
+  @Column(DataType.BIGINT)
+  declare choiceId: bigint
 
   @CreatedAt
   @Column
