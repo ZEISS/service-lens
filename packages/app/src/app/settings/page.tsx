@@ -1,4 +1,5 @@
 import { Separator } from '@/components/ui/separator'
+import { SettingsGeneralForm } from '@/components/settings/settings-general-form'
 
 export default async function Page() {
   return (
@@ -9,6 +10,7 @@ export default async function Page() {
           <p className="text-sm text-muted-foreground">Site-wide settings</p>
         </div>
         <Separator />
+        <SettingsGeneralForm />
       </div>
     </>
   )
