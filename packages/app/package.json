@@ -12,6 +12,7 @@
     "build": "next build",
     "build:debug": "next build --debug",
     "start": "next start",
+    "server": "next server",
     "lint": "next lint",
     "fix": "next lint --fix",
     "db:migrate": "sequelize db:migrate",

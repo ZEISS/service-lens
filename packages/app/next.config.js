@@ -1,3 +1,5 @@
+const path = require('path')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -9,7 +11,8 @@ const nextConfig = {
       '@trpc/server',
       'sequelize',
       'sequelize-typescript'
-    ]
+    ],
+    outputFileTracingRoot: path.join(__dirname, '../../')
   },
   webpack: config => {
     config.experiments.topLevelAwait = true
