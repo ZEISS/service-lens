@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  distDir: 'out',
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
