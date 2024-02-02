@@ -14,9 +14,6 @@ export function MainNav({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
-  const headerList = headers()
-  const pathname = headerList.get('x-pathname')
-
   return (
     <nav
       className={cn('flex items-center space-x-4 lg:space-x-6', className)}

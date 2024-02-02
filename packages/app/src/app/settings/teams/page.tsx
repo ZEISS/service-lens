@@ -3,8 +3,9 @@ import { columns } from '@/components/settings/teams-data-columns'
 import { type DataTableOptions } from '@/components/data-table'
 import { TeamsListSchema } from '@/server/routers/schemas/teams'
 import { api } from '@/trpc/server-http'
-import { PropsWithChildren } from 'react'
 import { DataTable } from '@/components/data-table'
+
+export const dynamic = 'force-dynamic'
 
 const options = {
   toolbar: {}

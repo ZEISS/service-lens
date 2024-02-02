@@ -2,6 +2,8 @@ import { ProfileForm } from './components/profile-form'
 import { api } from '@/trpc/server-invoker'
 import { Separator } from '@/components/ui/separator'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   const me = await api.me.query()
 

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { QuestionRisk } from '@/db/models/lens-pillar-risks'
+import { QuestionRisk } from '@/db/models/workload-lenses-answers'
 import { HighRiskIcon } from '@/components/high_risk_icon'
 import { MediumRisk } from '@/components/medium_risk_icon'
 import { LowRisk } from '@/components/low_risk_icon'
@@ -9,18 +9,18 @@ export type RiskIconProps = {
 }
 
 export function RiskIcon({
-  risk = QuestionRisk.None,
+  risk = 'UNANSWERED',
   ...props
 }: PropsWithChildren<RiskIconProps>) {
-  if (risk === QuestionRisk.High) {
+  if (risk === 'HIGH_RISK') {
     return <HighRiskIcon {...props} />
   }
 
-  if (risk === QuestionRisk.Medium) {
+  if (risk === 'MEDIUM_RISK') {
     return <MediumRisk {...props} />
   }
 
-  if (risk === QuestionRisk.Low) {
+  if (risk === 'LOW_RISK') {
     return <LowRisk {...props} />
   }
 

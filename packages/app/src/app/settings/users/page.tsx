@@ -2,9 +2,10 @@ import { api } from '@/trpc/server-http'
 import { columns } from '@/components/settings/users-data-columns'
 import { DataTable } from '@/components/data-table'
 import { ListUsersSchema } from '@/server/routers/schemas/users'
-import { PropsWithChildren } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { type DataTableOptions } from '@/components/data-table'
+
+export const dynamic = 'force-dynamic'
 
 const options = {
   toolbar: {}

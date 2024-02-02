@@ -1,5 +1,6 @@
 import { PaginationSchema } from './pagination'
 import { z } from 'zod'
+import slugify from 'slugify'
 
 export const TeamsListSchema = PaginationSchema
 export type TeamsList = z.infer<typeof TeamsListSchema>
@@ -7,7 +8,14 @@ export type TeamsList = z.infer<typeof TeamsListSchema>
 export const TeamsGetSchema = z.string().uuid()
 export const TeamsCreateSchema = z.object({
   name: z.string().min(3).max(128),
-  slug: z.string().trim().toLowerCase().min(3).max(128).default(''),
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3)
+    .max(128)
+    .transform(s => slugify(s))
+    .default(''),
   description: z.string().min(10).max(256).optional(),
   contactEmail: z.string().email().optional()
 })

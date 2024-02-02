@@ -13,9 +13,6 @@ export function MainNav({
   scope,
   ...props
 }: PropsWithChildren<MainNavProps>) {
-  const headerList = headers()
-  const pathname = headerList.get('x-pathname')
-
   const nav = [
     {
       name: 'Dashboard',
