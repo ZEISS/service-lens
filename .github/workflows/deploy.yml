@@ -55,6 +55,7 @@ jobs:
           app_location: "/packages/app" # App source code path
           api_location: ""
           output_location: ".next/standalone/packages/app" # Built app content directory - optional
+          config_file_location: "./"
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
