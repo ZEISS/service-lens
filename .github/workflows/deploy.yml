@@ -43,6 +43,9 @@ jobs:
           DB_PASS: example
           NEXTAUTH_SECRET: "MY_STRONG_SECRET"
           NEXTAUTH_URL: http://localhost:3000
+      - run: |
+          cp -r .next/standalone/packages/app/. .next/standalone
+        working-directory: ./packages/app
       - id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -54,9 +57,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/packages/app" # App source code path
           api_location: ""
-          output_location: ".next/standalone/packages/app" # Built app content directory - optional
-          config_file_location: "./"
-          is_static_export: true
+          output_location: ".next/standalone" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
