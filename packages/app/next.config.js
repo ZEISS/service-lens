@@ -3,6 +3,7 @@ const path = require('path')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  trailingSlash: true,
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'

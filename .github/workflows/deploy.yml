@@ -58,6 +58,7 @@ jobs:
           app_location: "/packages/app" # App source code path
           api_location: ""
           output_location: ".next/standalone" # Built app content directory - optional
+          is_static_export: true
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
