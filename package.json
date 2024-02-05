@@ -9,5 +9,8 @@
   "workspaces": [
     "./packages/*"
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "build": "npm run build -w packages/app"
+  }
 }
