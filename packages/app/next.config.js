@@ -4,6 +4,17 @@ const path = require('path')
 const nextConfig = {
   output: 'standalone',
   trailingSlash: true,
+  reactStrictMode: true,
+  async rewrites() {
+    return {
+      fallback: [
+        {
+          source: '/:path*',
+          destination: '/index.html'
+        }
+      ]
+    }
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
