@@ -51,8 +51,8 @@ jobs:
         with:
           name: build
           path: |
-            /app/packages/app/.next
-            /app/packages/app/public
+            ./packages/app/.next
+            ./packages/app/public
           retention-days: 7
 
   release:
