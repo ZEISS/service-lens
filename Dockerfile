@@ -11,7 +11,7 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY /app/packages/app/public ./public
+COPY ./public .
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
