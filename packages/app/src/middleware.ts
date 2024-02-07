@@ -6,6 +6,8 @@ import { cookies } from 'next/headers'
 import { URLPattern } from 'urlpattern-polyfill'
 import { compileSchema } from 'ajv/dist/compile'
 
+const baseUrl = process.env.BASE_URL
+
 const PATTERNS = [
   {
     pattern: new URLPattern({ pathname: '/teams/:team' }),
@@ -29,10 +31,9 @@ const params = (url: string) => {
 
 export const middleware = async (request: NextRequest) => {
   const { origin, protocol, host } = request.nextUrl
-  const baseUrl =
+  const isHttps =
     request.headers.get('x-original-proto') === 'http' && protocol === 'https:'
-      ? `http://${host}`
-      : origin
+  const baseUrl = process.env.BASE_URL ?? isHttps ? `http://${host}` : origin
 
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-pathname', request.nextUrl.pathname)
