@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run build:debug -w packages/app
+      - run: npm run build:debug
         env:
           DB_HOST: postgres
           DB_NAME: example
@@ -52,4 +52,4 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run lint -w packages/app
+      - run: npm run lint
