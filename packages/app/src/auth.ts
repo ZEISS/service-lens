@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
-import SequelizeAdapter from '@/lib/adapter-sequelize'
+import SequelizeAdapter from '@auth/sequelize-adapter'
 import { type DefaultSession, NextAuthConfig } from 'next-auth'
 import sequelize from '@/db/config/config'
 
