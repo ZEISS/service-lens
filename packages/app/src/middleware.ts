@@ -53,8 +53,6 @@ export const middleware = async (request: NextRequest) => {
   const cookiesList = cookies()
   const hasScope = cookiesList.has('scope')
 
-  console.log(hasScope)
-
   if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
     return NextResponse.redirect(new URL(`/home`, origin), {
       status: 302

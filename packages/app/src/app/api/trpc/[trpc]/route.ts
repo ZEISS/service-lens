@@ -14,11 +14,13 @@ const handler = (req: Request) =>
     onError:
       process.env.NODE_ENV === 'development'
         ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? '<no-path>'}: ${error.message}`
-            )
-          }
+          console.error(
+            `❌ tRPC failed on ${path ?? '<no-path>'}: ${error.message}`
+          )
+        }
         : undefined
   })
 
 export { handler as GET, handler as POST }
+
+APPINSIGHTS_INSTRUMENTATIONKEY
