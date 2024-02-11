@@ -52,10 +52,9 @@ jobs:
             ./packages/app/public
           retention-days: 7
 
-  build_and_deploy_job:
+  deploy:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     needs: [ build ]
     steps:
       - uses: actions/checkout@v3
@@ -75,11 +74,14 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           skip_app_build: true
+          skip_api_build: true
+          is_static_export: false
+          app_location: ".next/standalone"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "" # App source code path
+          # app_location: "" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: ".next/standalone" # Built app content directory - optional
+          output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
