@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run build:debug
+      - run: npm run build
         env:
           DB_HOST: postgres
           DB_NAME: example

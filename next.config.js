@@ -23,8 +23,7 @@ const nextConfig = {
       '@trpc/server',
       'sequelize',
       'sequelize-typescript'
-    ],
-    outputFileTracingRoot: path.join(__dirname, '../../')
+    ]
   },
   webpack: config => {
     config.experiments.topLevelAwait = true
