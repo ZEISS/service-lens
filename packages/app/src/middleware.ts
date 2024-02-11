@@ -4,9 +4,6 @@ import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { URLPattern } from 'urlpattern-polyfill'
-import { compileSchema } from 'ajv/dist/compile'
-
-const baseUrl = process.env.BASE_URL
 
 const PATTERNS = [
   {

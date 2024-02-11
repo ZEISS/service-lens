@@ -67,6 +67,7 @@
     "cmdk": "^0.2.0",
     "cors": "^2.8.5",
     "date-fns": "^3.1.0",
+    "dotenv": "^16.4.2",
     "framer-motion": "^10.16.16",
     "lru-cache": "^10.1.0",
     "lucide-react": "^0.306.0",
