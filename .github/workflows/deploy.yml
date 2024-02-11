@@ -65,7 +65,7 @@ jobs:
         with:
           name: build
       - run: |
-          cp -r .next/standalone/packages/app .next/standalone
+          cp -r ./.next/static ./.next/standalone/packages/app/.next
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -75,11 +75,11 @@ jobs:
           action: "upload"
           skip_app_build: true
           skip_api_build: true
-          app_location: ".next/standalone"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           # app_location: "" # App source code path
           api_location: "" # Api source code path - optional
+          app_location: ".next/standalone/packages/app" # Built app content directory - optional
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
