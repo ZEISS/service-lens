@@ -4,6 +4,7 @@ const path = require('path')
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+
   async rewrites() {
     return {
       fallback: [
@@ -15,6 +16,7 @@ const nextConfig = {
     }
   },
   experimental: {
+    instrumentationHook: true,
     serverActions: {
       bodySizeLimit: '2mb'
     },
