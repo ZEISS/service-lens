@@ -20,6 +20,7 @@ declare module 'next-auth' {
 }
 
 export const options = {
+  basePath: '/api/auth',
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,

@@ -42,9 +42,11 @@ export const middleware = async (request: NextRequest) => {
     cache: 'no-store'
   })
 
-  const session: Session = await res.json()
-  const isLoggedIn = session !== null
-  const pathname = request.nextUrl.pathname
+  // console.log(await res.text())
+
+  // const session: Session = await res.json()
+  // const isLoggedIn = session !== null
+  // const pathname = request.nextUrl.pathname
 
   // if (!pathname.startsWith('/login') && !isLoggedIn) {
   //   return NextResponse.redirect(new URL('/login', origin))

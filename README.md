@@ -35,13 +35,13 @@ npm i
 docker compose up
 
 # Run migrations
-npm run migrate:up -w @service-lens/app
+npm run migrate:up
 
 # Run seeds
-npm run db:seed -w @service-lens/app
+npm run db:seed
 
 # Run the server
-npm run dev -w @service-lens/app
+npm run dev
 ```
 
 # License
