@@ -46,18 +46,18 @@ export const middleware = async (request: NextRequest) => {
   const isLoggedIn = session !== null
   const pathname = request.nextUrl.pathname
 
-  if (!pathname.startsWith('/login') && !isLoggedIn) {
-    return NextResponse.redirect(new URL('/login', origin))
-  }
+  // if (!pathname.startsWith('/login') && !isLoggedIn) {
+  //   return NextResponse.redirect(new URL('/login', origin))
+  // }
 
-  const cookiesList = cookies()
-  const hasScope = cookiesList.has('scope')
+  // const cookiesList = cookies()
+  // const hasScope = cookiesList.has('scope')
 
-  if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
-    return NextResponse.redirect(new URL(`/home`, origin), {
-      status: 302
-    })
-  }
+  // if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
+  //   return NextResponse.redirect(new URL(`/home`, origin), {
+  //     status: 302
+  //   })
+  // }
 
   return NextResponse.next({
     request: {
