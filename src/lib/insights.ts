@@ -1,17 +1,16 @@
-import appInsights from 'applicationinsights'
-
-const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+import * as appInsights from 'applicationinsights'
 
 appInsights
-  .setup(connectionString)
-  .setAutoCollectConsole(true, true)
-  .setAutoCollectHeartbeat(true)
-  .setAutoCollectPerformance(true)
-  .setAutoCollectExceptions(true)
+  .setup(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING)
   .setAutoCollectConsole(true)
-  .setAutoCollectRequests(true)
   .setAutoCollectDependencies(true)
+  .setAutoCollectExceptions(true)
+  .setAutoCollectHeartbeat(true)
+  .setAutoCollectPerformance(true, true)
+  .setAutoCollectRequests(true)
+  .setAutoDependencyCorrelation(true)
   .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C)
   .setSendLiveMetrics(true)
   .setUseDiskRetryCaching(true)
-  .start()
+
+appInsights.start()
