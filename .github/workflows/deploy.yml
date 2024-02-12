@@ -15,47 +15,10 @@ jobs:
       checks: write
     uses: ./.github/workflows/main.yml
 
-  build:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: example
-          POSTGRES_PASSWORD: example
-          POSTGRES_DB: example
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    needs: [ test ]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
-        env:
-          DB_HOST: postgres
-          DB_NAME: example
-          DB_USER: example
-          DB_PASS: example
-          NEXTAUTH_SECRET: "MY_STRONG_SECRET"
-          NEXTAUTH_URL: http://localhost:3000
-      - uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: |
-            ./.next
-            ./public
-          retention-days: 7
-
   deploy:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ test ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -71,8 +34,6 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_JOLLY_FIELD_066760403 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
-          skip_app_build: true
-          skip_api_build: true
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
