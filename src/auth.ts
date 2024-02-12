@@ -31,7 +31,7 @@ export const options = {
     generateSessionToken: () => crypto.randomUUID()
   },
   adapter,
-  debug: !isProduction,
+  debug: true,
   pages: {
     signIn: '/login'
   },
