@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { UserAuthForm } from '@/components/login/auth-form'
 import type { AppProvider } from 'next-auth/providers'
+import { getBaseUrl } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 async function getProviders() {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/providers`)
+  const res = await fetch(getBaseUrl() + '/api/auth/providers')
 
   if (!res.ok) {
     throw new Error('failed to fetch providers')

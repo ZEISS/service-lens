@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { URLPattern } from 'urlpattern-polyfill'
+import { getBaseUrl } from './lib/utils'
 
 const PATTERNS = [
   {
@@ -27,39 +28,34 @@ const params = (url: string) => {
 }
 
 export const middleware = async (request: NextRequest) => {
-  const { origin, protocol, host } = request.nextUrl
-  const isHttps =
-    request.headers.get('x-original-proto') === 'http' && protocol === 'https:'
-  const baseUrl = process.env.BASE_URL ?? isHttps ? `http://${host}` : origin
+  const { origin } = request.nextUrl
 
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-pathname', request.nextUrl.pathname)
 
-  const res = await fetch(`${baseUrl}/api/auth/session`, {
+  const res = await fetch(getBaseUrl() + '/api/auth/session', {
     headers: {
       cookie: headers().get('cookie') ?? ''
     },
     cache: 'no-store'
   })
 
-  // console.log(await res.text())
+  const session: Session = await res.json()
+  const isLoggedIn = session !== null
+  const pathname = request.nextUrl.pathname
 
-  // const session: Session = await res.json()
-  // const isLoggedIn = session !== null
-  // const pathname = request.nextUrl.pathname
+  if (!pathname.startsWith('/login') && !isLoggedIn) {
+    return NextResponse.redirect(new URL('/login', origin))
+  }
 
-  // if (!pathname.startsWith('/login') && !isLoggedIn) {
-  //   return NextResponse.redirect(new URL('/login', origin))
-  // }
+  const cookiesList = cookies()
+  const hasScope = cookiesList.has('scope')
 
-  // const cookiesList = cookies()
-  // const hasScope = cookiesList.has('scope')
-
-  // if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
-  //   return NextResponse.redirect(new URL(`/home`, origin), {
-  //     status: 302
-  //   })
-  // }
+  if (!hasScope && isLoggedIn && !pathname.startsWith('/home')) {
+    return NextResponse.redirect(new URL(`/home`, origin), {
+      status: 302
+    })
+  }
 
   return NextResponse.next({
     request: {

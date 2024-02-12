@@ -20,21 +20,21 @@ declare module 'next-auth' {
 }
 
 export const options = {
-  basePath: '/api/auth',
+  // basePath: '/api/auth',
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!
     })
   ],
-  session: {
-    generateSessionToken: () => crypto.randomUUID()
-  },
+  // session: {
+  //   generateSessionToken: () => crypto.randomUUID()
+  // },
   adapter,
   debug: true,
-  pages: {
-    signIn: '/login'
-  },
+  // pages: {
+  //   signIn: '/login'
+  // },
   callbacks: {
     session: async ({ session, user }: any) => {
       if (user?.id) {
