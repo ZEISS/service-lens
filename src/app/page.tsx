@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
-import { auth } from '@/auth'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import DefaultLayout from '@/components/default-layout'
 
 export const metadata: Metadata = {
@@ -10,12 +8,6 @@ export const metadata: Metadata = {
 }
 
 export default async function Root() {
-  const session = await auth()
-
-  if (session !== null) {
-    redirect('/home')
-  }
-
   return (
     <>
       <DefaultLayout>
