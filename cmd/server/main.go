@@ -5,54 +5,20 @@ import (
 	"log"
 	"os"
 
-	"github.com/katallaxie/pkg/logger"
-	"github.com/spf13/cobra"
 	"github.com/zeiss/service-lens/internal/adapters"
+	"github.com/zeiss/service-lens/internal/configs"
+	"github.com/zeiss/service-lens/internal/controllers"
+	"github.com/zeiss/service-lens/internal/services"
+
+	"github.com/katallaxie/pkg/logger"
+	"github.com/katallaxie/pkg/server"
+	"github.com/spf13/cobra"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-// DB ...
-type DB struct {
-	Username string
-	Password string
-	Port     int
-	Database string
-	Host     string
-}
-
-// Flags contains the command line flags.
-type Flags struct {
-	Addr string
-	DB   *DB
-}
-
-// New ...
-func New() *Config {
-	return &Config{
-		Flags: &Flags{
-			DB: &DB{
-				Username: "example",
-				Password: "example",
-				Port:     5432,
-				Database: "example",
-				Host:     "host.docker.internal",
-			},
-		},
-	}
-}
-
-// Config ...
-type Config struct {
-	Flags *Flags
-}
-
-// Cwd returns the current working directory.
-func (c *Config) Cwd() (string, error) {
-	return os.Getwd()
-}
-
-var cfg = New()
+var cfg = configs.New()
 
 var (
 	version = "dev"
@@ -97,6 +63,16 @@ func run(ctx context.Context) error {
 	db := adapters.NewDB(conn)
 	err = db.RunMigration()
 	if err != nil {
+		return err
+	}
+
+	pc := controllers.NewProfilesController(db)
+
+	srv, _ := server.WithContext(ctx)
+	webSrv := services.New(cfg, pc)
+
+	srv.Listen(webSrv, true)
+	if err := srv.Wait(); err != nil {
 		return err
 	}
 
