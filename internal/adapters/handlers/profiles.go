@@ -49,6 +49,38 @@ func (p *profilesHandler) GetProfile() fiber.Handler {
 			components.PageProps{
 				Children: []htmx.Node{
 					htmx.H1(htmx.Text(profile.Name)),
+					htmx.Div(
+						htmx.Attribute("role", "tablist"),
+						htmx.ClassNames{
+							"tabs":       true,
+							"tabs-boxed": true,
+						},
+						htmx.Input(
+							htmx.Attribute("type", "radio"),
+							htmx.Attribute("name", "my_tabs_2"),
+							htmx.Attribute("role", "tab"),
+							htmx.Attribute("class", "tab"),
+							htmx.Attribute("aria-label", "Tab 1"),
+						),
+						htmx.Div(
+							htmx.Attribute("role", "tabpanel"),
+							htmx.Attribute("class", "tab-content bg-base-100 border-base-300 rounded-box p-6"),
+							htmx.Text("Tab content 1"),
+						),
+						htmx.Input(
+							htmx.Attribute("type", "radio"),
+							htmx.Attribute("name", "my_tabs_2"),
+							htmx.Attribute("role", "tab"),
+							htmx.Attribute("class", "tab"),
+							htmx.Attribute("aria-label", "Tab 2"),
+							htmx.Attribute("checked", "true"),
+						),
+						htmx.Div(
+							htmx.Attribute("role", "tabpanel"),
+							htmx.Attribute("class", "tab-content bg-base-100 border-base-300 rounded-box p-6"),
+							htmx.Text("Tab content 2"),
+						),
+					),
 				},
 			},
 		)
@@ -72,7 +104,7 @@ func (p *profilesHandler) NewProfile() htmx.HtmxHandlerFunc {
 			return err
 		}
 
-		hx.Redirect("/")
+		hx.Redirect("/profiles/" + profile.ID.String())
 
 		return nil
 	}

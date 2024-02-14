@@ -39,8 +39,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		app.Get("/", indexHandler.Index())
 		app.Get("/profiles", profilesHandler.Index())
-		app.Get("/profiles/:id", profilesHandler.GetProfile())
 		app.Get("/profiles/new", profilesHandler.New())
+		app.Get("/profiles/:id", profilesHandler.GetProfile())
 		app.Post("/profiles", htmx.NewHtmxHandler(profilesHandler.NewProfile()))
 
 		err := app.Listen(a.cfg.Flags.Addr)

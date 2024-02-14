@@ -60,48 +60,7 @@ func Layout(p LayoutProps) htmx.Node {
 						),
 					),
 				),
-				htmx.Div(
-					htmx.ClassNames{"flex-1": true, "px-2": true, "mx-2": true},
-					htmx.Text("Navbar Title"),
-				),
-				htmx.Div(
-					htmx.ClassNames{"flex-none": true, "hidden": true, "lg:block": true},
-					htmx.Div(
-						htmx.ClassNames{
-							"flex":            true,
-							"justify-between": true,
-							"items-center":    true,
-						},
-						htmx.Ul(
-							htmx.ClassNames{
-								"menu":            true,
-								"menu-horizontal": true,
-							},
-							htmx.Button(
-								htmx.ClassNames{
-									"btn":        true,
-									"btn-square": true,
-									"btn-ghost":  true,
-								},
-								htmx.SVG(
-									htmx.ClassNames{"inline-block": true, "w-5": true, "h-5": true, "stroke-current": true},
-									htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
-									htmx.Attribute("fill", "none"),
-									htmx.Attribute("viewBox", "0 0 24 24"),
-									htmx.Path(
-										htmx.Attribute("stroke-linecap", "round"),
-										htmx.Attribute("stroke-linejoin", "round"),
-										htmx.Attribute("stroke-width", "2"),
-										htmx.Attribute("d", "M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"),
-									),
-								),
-							),
-							htmx.Li(htmx.A(htmx.Text("Navbar Item 1"))),
-							htmx.Li(htmx.A(htmx.Text("Navbar Item 2"))),
-						),
-						UserNav(UserNavProps{}),
-					),
-				),
+				Navbar(NavbarProps{}),
 			),
 			htmx.Div(p.Children...),
 		),
