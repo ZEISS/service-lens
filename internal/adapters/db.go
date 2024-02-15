@@ -21,6 +21,12 @@ func (d *DB) RunMigration() error {
 		&models.ProfileQuestion{},
 		&models.ProfileQuestions{},
 		&models.Profile{},
+		&models.Lens{},
+		&models.Pillar{},
+		&models.Question{},
+		&models.Resource{},
+		&models.Choice{},
+		&models.Risk{},
 	)
 }
 

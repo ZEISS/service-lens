@@ -11,12 +11,12 @@ import (
 
 // Lens is a model for a lens.
 type Lens struct {
-	ID          uuid.UUID  `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Version     int        `json:"version"`
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Pillars     []Pillar   `json:"pillars"`
-	Resources   []Resource `json:"resources"`
+	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Version     int       `json:"version"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Pillars     []Pillar  `json:"pillars"`
+	IsDraft     bool      `json:"is_draft"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -29,7 +29,8 @@ type Pillar struct {
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Questions   []Question `json:"questions"`
-	Resources   []Resource `json:"resources"`
+	Resources   []Resource `json:"resources" gorm:"foreignKey:ResourceID"`
+	LensID      uuid.UUID  `json:"lens_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -38,13 +39,14 @@ type Pillar struct {
 
 // Question is a model for a question.
 type Question struct {
-	ID          int        `json:"id" gorm:"type:uuid;primary_key;"`
+	ID          int        `json:"id" gorm:"primary_key"`
 	Ref         string     `json:"ref"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
-	Resources   []Resource `json:"resources"`
+	Resources   []Resource `json:"resources" gorm:"foreignKey:ResourceID"`
 	Choices     []Choice   `json:"choices"`
 	Risks       []Risk     `json:"risks"`
+	PillarID    int        `json:"pillar_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -53,9 +55,11 @@ type Question struct {
 
 // Resource is a model for a resource.
 type Resource struct {
-	ID          int    `json:"id" gorm:"primary_key"`
-	URL         string `json:"url"`
-	Description string `json:"description"`
+	ID           int    `json:"id" gorm:"primary_key"`
+	URL          string `json:"url"`
+	Description  string `json:"description"`
+	ResourceID   int    `json:"resource_id"`
+	ResourceType string `json:"resource_type"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -68,6 +72,7 @@ type Choice struct {
 	Ref         string `json:"ref"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	QuestionID  int    `json:"question_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -76,10 +81,11 @@ type Choice struct {
 
 // Risk is a model for a risk.
 type Risk struct {
-	ID        int    `json:"id" gorm:"primary_key"`
-	Ref       string `json:"ref"`
-	Risk      string `json:"risk"`
-	Condition string `json:"condition"`
+	ID         int    `json:"id" gorm:"primary_key"`
+	Ref        string `json:"ref"`
+	Risk       string `json:"risk"`
+	Condition  string `json:"condition"`
+	QuestionID int    `json:"question_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -104,7 +110,6 @@ func (l *Lens) UnmarshalJSON(data []byte) error {
 	l.Name = lens.Name
 	l.Description = lens.Description
 	l.Pillars = lens.Pillars
-	l.Resources = lens.Resources
 
 	return nil
 }
