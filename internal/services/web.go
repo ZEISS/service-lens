@@ -46,7 +46,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/profiles/:id", profilesHandler.GetProfile())
 		app.Post("/profiles", htmx.NewHtmxHandler(profilesHandler.NewProfile()))
 
-		lenses := app.Group("/lenses", lensesHandler.Index())
+		lenses := app.Group("/lenses")
+		lenses.Get("/list", lensesHandler.Index())
 		lenses.Get("/new", lensesHandler.New())
 
 		err := app.Listen(a.cfg.Flags.Addr)

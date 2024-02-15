@@ -23,7 +23,9 @@ func (p *lensesHandler) Index() fiber.Handler {
 	return htmx.NewCompHandler(
 		components.Page(
 			components.PageProps{
-				Children: []htmx.Node{},
+				Children: []htmx.Node{
+					htmx.P(htmx.Text("Lenses")),
+				},
 			},
 		),
 	)
@@ -55,58 +57,22 @@ func (p *lensesHandler) New() fiber.Handler {
 			components.PageProps{
 				Children: []htmx.Node{
 					htmx.FormElement(
-						htmx.HxPost("/lenses"),
+						htmx.ID("new-lens-form"),
+						htmx.HxPost("/lenses/new"),
+						htmx.HxEncoding("multipart/form-data"),
 						htmx.LabElement(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,
-								"max-w-lg":     true,
-								"mb-4":         true,
+								"max-w-xs":     true,
 							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label": true,
-								},
-								htmx.Span(
-									htmx.ClassNames{
-										"label-text": true,
-									},
-									htmx.Text("What is your name?"),
-								),
-							),
 							htmx.Input(
-								htmx.Attribute("type", "text"),
-								htmx.Attribute("name", "name"),
-								htmx.Attribute("placeholder", "Name ..."),
+								htmx.Attribute("type", "file"),
 								htmx.ClassNames{
-									"input":          true,
-									"input-bordered": true,
-									"w-full":         true,
-									"max-w-lg":       true,
-								},
-							),
-						),
-						htmx.LabElement(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-lg":     true,
-							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label":   true,
-									"sr-only": true,
-								},
-							),
-							htmx.Input(
-								htmx.Attribute("type", "text"),
-								htmx.Attribute("name", "description"),
-								htmx.Attribute("placeholder", "Description ..."),
-								htmx.ClassNames{
-									"input":          true,
-									"input-bordered": true,
-									"w-full":         true,
-									"max-w-lg":       true,
+									"file-input":          true,
+									"file-input-bordered": true,
+									"w-full":              true,
+									"max-w-xs":            true,
 								},
 							),
 						),
