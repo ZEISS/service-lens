@@ -32,6 +32,7 @@ func Navbar(p NavbarProps) htmx.Node {
 					),
 				),
 				htmx.Ul(
+					htmx.Attribute("tabindex", "0"),
 					htmx.ClassNames{
 						"menu":             true,
 						"menu-sm":          true,
@@ -89,10 +90,25 @@ func Navbar(p NavbarProps) htmx.Node {
 						htmx.Text("Profiles"),
 					),
 				),
+				htmx.Li(
+					htmx.A(
+						htmx.ClassNames{},
+						htmx.Attribute("href", "/lenses"),
+						htmx.Text("Lenses"),
+					),
+				),
 			),
 		),
 		htmx.Div(
 			htmx.ClassNames{"navbar-end": true},
+			htmx.A(
+				htmx.ClassNames{
+					"btn":       true,
+					"btn-ghost": true,
+				},
+				htmx.Text("Add Profile"),
+				htmx.Attribute("href", "/profiles/new"),
+			),
 			UserNav(UserNavProps{}),
 		),
 	)

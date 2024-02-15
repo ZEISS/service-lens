@@ -48,37 +48,106 @@ func (p *profilesHandler) GetProfile() fiber.Handler {
 		page := components.Page(
 			components.PageProps{
 				Children: []htmx.Node{
-					htmx.H1(htmx.Text(profile.Name)),
-					htmx.Div(
-						htmx.Attribute("role", "tablist"),
-						htmx.ClassNames{
-							"tabs":       true,
-							"tabs-boxed": true,
-						},
-						htmx.Input(
-							htmx.Attribute("type", "radio"),
-							htmx.Attribute("name", "my_tabs_2"),
-							htmx.Attribute("role", "tab"),
-							htmx.Attribute("class", "tab"),
-							htmx.Attribute("aria-label", "Tab 1"),
+					htmx.FormElement(
+						htmx.HxPost("/profiles"),
+						htmx.LabElement(
+							htmx.ClassNames{
+								"form-control": true,
+								"w-full":       true,
+								"max-w-lg":     true,
+								"mb-4":         true,
+							},
+							htmx.Div(
+								htmx.ClassNames{
+									"label": true,
+								},
+								htmx.Span(
+									htmx.ClassNames{
+										"label-text": true,
+									},
+									htmx.Text("What is your name?"),
+								),
+							),
+							htmx.Input(
+								htmx.Attribute("type", "text"),
+								htmx.Attribute("name", "name"),
+								htmx.Attribute("placeholder", "Name ..."),
+								htmx.Attribute("value", profile.Name),
+								htmx.Attribute("readonly", "true"),
+								htmx.Attribute("disabled", "true"),
+								htmx.ClassNames{
+									"input":          true,
+									"input-bordered": true,
+									"w-full":         true,
+									"max-w-lg":       true,
+								},
+							),
+						),
+						htmx.LabElement(
+							htmx.ClassNames{
+								"form-control": true,
+								"w-full":       true,
+								"max-w-lg":     true,
+							},
+							htmx.Div(
+								htmx.ClassNames{
+									"label":   true,
+									"sr-only": true,
+								},
+							),
+							htmx.Input(
+								htmx.Attribute("type", "text"),
+								htmx.Attribute("name", "description"),
+								htmx.Attribute("placeholder", "Description ..."),
+								htmx.Attribute("value", profile.Description),
+								htmx.Attribute("readonly", "true"),
+								htmx.Attribute("disabled", "true"),
+								htmx.ClassNames{
+									"input":          true,
+									"input-bordered": true,
+									"w-full":         true,
+									"max-w-lg":       true,
+								},
+							),
 						),
 						htmx.Div(
-							htmx.Attribute("role", "tabpanel"),
-							htmx.Attribute("class", "tab-content bg-base-100 border-base-300 rounded-box p-6"),
-							htmx.Text("Tab content 1"),
-						),
-						htmx.Input(
-							htmx.Attribute("type", "radio"),
-							htmx.Attribute("name", "my_tabs_2"),
-							htmx.Attribute("role", "tab"),
-							htmx.Attribute("class", "tab"),
-							htmx.Attribute("aria-label", "Tab 2"),
-							htmx.Attribute("checked", "true"),
+							htmx.ClassNames{
+								"divider": true,
+							},
 						),
 						htmx.Div(
-							htmx.Attribute("role", "tabpanel"),
-							htmx.Attribute("class", "tab-content bg-base-100 border-base-300 rounded-box p-6"),
-							htmx.Text("Tab content 2"),
+							htmx.ClassNames{
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
+							},
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Last updated"),
+							),
+							htmx.H3(
+								htmx.Text(profile.UpdatedAt.Format("2006-01-02 15:04:05")),
+							),
+						),
+						htmx.Div(
+							htmx.ClassNames{
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
+							},
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Created at"),
+							),
+							htmx.H3(
+								htmx.Text(
+									profile.CreatedAt.Format("2006-01-02 15:04:05"),
+								),
+							),
 						),
 					),
 				},

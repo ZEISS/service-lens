@@ -62,7 +62,12 @@ func Layout(p LayoutProps) htmx.Node {
 				),
 				Navbar(NavbarProps{}),
 			),
-			htmx.Div(p.Children...),
+			htmx.Div(
+				htmx.ClassNames{
+					"p-8": true,
+				},
+				htmx.Group(p.Children...),
+			),
 		),
 		htmx.Div(htmx.ClassNames{"drawer-side": true},
 			htmx.LabElement(htmx.Attribute("for", "app-drawer"), htmx.Attribute("aria-label", "close sidebar"), htmx.ClassNames{"drawer-overlay": true}),

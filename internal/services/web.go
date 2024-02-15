@@ -20,11 +20,12 @@ var _ server.Listener = (*WebSrv)(nil)
 type WebSrv struct {
 	cfg *configs.Config
 	pc  ports.Profiles
+	lc  ports.Lenses
 }
 
 // New returns a new instance of NoopSrv.
-func New(cfg *configs.Config, pc ports.Profiles) *WebSrv {
-	return &WebSrv{cfg, pc}
+func New(cfg *configs.Config, pc ports.Profiles, lc ports.Lenses) *WebSrv {
+	return &WebSrv{cfg, pc, lc}
 }
 
 // Start starts the server.
@@ -36,12 +37,17 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		indexHandler := handlers.NewIndexHandler()
 		profilesHandler := handlers.NewProfilesHandler(a.pc)
+		lensesHandler := handlers.NewLensesHandler(a.lc)
 
 		app.Get("/", indexHandler.Index())
+
 		app.Get("/profiles", profilesHandler.Index())
 		app.Get("/profiles/new", profilesHandler.New())
 		app.Get("/profiles/:id", profilesHandler.GetProfile())
 		app.Post("/profiles", htmx.NewHtmxHandler(profilesHandler.NewProfile()))
+
+		lenses := app.Group("/lenses", lensesHandler.Index())
+		lenses.Get("/new", lensesHandler.New())
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {

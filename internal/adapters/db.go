@@ -42,3 +42,8 @@ func (d *DB) FetchProfile(ctx context.Context, id uuid.UUID) (*models.Profile, e
 	err := d.conn.WithContext(ctx).Where("id = ?", id).First(profile).Error
 	return profile, err
 }
+
+// AddLens ...
+func (d *DB) AddLens(ctx context.Context) error {
+	return nil
+}
