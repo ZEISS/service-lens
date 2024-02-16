@@ -245,3 +245,90 @@ func (p *lensesHandler) New() fiber.Handler {
 		), nil
 	})
 }
+
+// List is the handler for the list of lenses.
+func (l *lensesHandler) List() fiber.Handler {
+	return htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
+		lenses, err := l.lc.ListLenses(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]htmx.Node, len(lenses))
+		for i, lens := range lenses {
+			items[i] = htmx.Tr(
+				htmx.Th(
+					htmx.Label(
+						htmx.Input(
+							htmx.ClassNames{
+								"checkbox": true,
+							},
+							htmx.Attribute("type", "checkbox"),
+							htmx.Attribute("name", "lens"),
+							htmx.Attribute("value", lens.ID.String()),
+						),
+					),
+				),
+				htmx.Th(htmx.Text(lens.ID.String())),
+				htmx.Td(htmx.Text(lens.Name)),
+				htmx.Td(htmx.Text(lens.Description)),
+			)
+		}
+
+		return components.Page(
+			components.PageProps{
+				Children: []htmx.Node{
+					htmx.Div(
+						htmx.ClassNames{"overflow-x-auto": true},
+						htmx.Table(
+							htmx.ClassNames{"table": true},
+							htmx.THead(
+								htmx.Tr(
+									htmx.Th(
+										htmx.Label(
+											htmx.Input(
+												htmx.ClassNames{
+													"checkbox": true,
+												},
+												htmx.Attribute("type", "checkbox"),
+												htmx.Attribute("name", "all"),
+											),
+										),
+									),
+									htmx.Th(htmx.Text("ID")),
+									htmx.Th(htmx.Text("Name")),
+									htmx.Th(htmx.Text("Description")),
+									htmx.Th(htmx.Text("Favorite Color")),
+								),
+							),
+							htmx.TBody(
+								items...,
+							),
+						),
+						htmx.Div(
+							htmx.ClassNames{},
+							htmx.Select(
+								htmx.ClassNames{
+									"select":   true,
+									"max-w-xs": true,
+								},
+								htmx.Option(
+									htmx.Text("10"),
+									htmx.Attribute("value", "10"),
+								),
+								htmx.Option(
+									htmx.Text("20"),
+									htmx.Attribute("value", "20"),
+								),
+								htmx.Option(
+									htmx.Text("30"),
+									htmx.Attribute("value", "30"),
+								),
+							),
+						),
+					),
+				},
+			}.WithContext(c),
+		), nil
+	})
+}

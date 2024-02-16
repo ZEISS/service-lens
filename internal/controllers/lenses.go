@@ -29,3 +29,8 @@ func (l *Lenses) AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, 
 func (l *Lenses) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error) {
 	return l.lenses.GetLensByID(ctx, id)
 }
+
+// ListLenses ...
+func (l *Lenses) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*models.Lens, error) {
+	return l.lenses.ListLenses(ctx, pagination)
+}

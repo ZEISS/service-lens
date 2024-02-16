@@ -74,3 +74,14 @@ func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error
 
 	return lens, err
 }
+
+// ListLenses ...
+func (d *DB) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*models.Lens, error) {
+  lenses := []*models.Lens{}
+  err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
+  if err != nil {
+    return nil, err
+  }
+
+  return lenses, nil
+}

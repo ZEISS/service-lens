@@ -47,7 +47,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Post("/profiles", htmx.NewHtmxHandler(profilesHandler.NewProfile()))
 
 		lenses := app.Group("/lenses")
-		lenses.Get("/list", lensesHandler.Index())
+		lenses.Get("/list", lensesHandler.List())
 		lenses.Get("/new", lensesHandler.New())
 		lenses.Post("/new", htmx.NewHtmxHandler(lensesHandler.NewLens()))
 		lenses.Get("/:id", lensesHandler.GetLens())
