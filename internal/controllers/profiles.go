@@ -29,3 +29,8 @@ func (p *Profiles) FetchProfile(ctx context.Context, id uuid.UUID) (*models.Prof
 func (p *Profiles) NewProfile(ctx context.Context, profile *models.Profile) error {
 	return p.profiles.NewProfile(ctx, profile)
 }
+
+// ListProfiles ...
+func (p *Profiles) ListProfiles(ctx context.Context, pagination *models.Pagination) ([]*models.Profile, error) {
+	return p.profiles.ListProfiles(ctx, pagination)
+}

@@ -59,6 +59,10 @@ func (l *lensesHandler) NewLens() htmx.HtmxHandlerFunc {
 			return err
 		}
 
+		lens.Tags = []*models.Tag{
+			{Name: hx.Ctx().FormValue("tag")},
+		}
+
 		lens, err = l.lc.AddLens(hx.Ctx().Context(), lens)
 		if err != nil {
 			return err
@@ -224,6 +228,17 @@ func (p *lensesHandler) New() fiber.Handler {
 									"max-w-xs":            true,
 								},
 							),
+							htmx.Input(
+								htmx.Attribute("type", "text"),
+								htmx.Attribute("name", "tag"),
+								htmx.Attribute("placeholder", "Tag ..."),
+								htmx.ClassNames{
+									"input":          true,
+									"input-bordered": true,
+									"w-full":         true,
+									"max-w-xs":       true,
+								},
+							),
 							htmx.Progress(
 								htmx.Attribute("id", "progress"),
 								htmx.Value("0"),
@@ -256,6 +271,18 @@ func (l *lensesHandler) List() fiber.Handler {
 
 		items := make([]htmx.Node, len(lenses))
 		for i, lens := range lenses {
+			tags := make([]htmx.Node, len(lens.Tags))
+			for j, tag := range lens.Tags {
+				tags[j] = htmx.Span(
+					htmx.ClassNames{
+						"badge":         true,
+						"badge-primary": true,
+						"badge-outline": true,
+					},
+					htmx.Text(tag.Name),
+				)
+			}
+
 			items[i] = htmx.Tr(
 				htmx.Th(
 					htmx.Label(
@@ -272,6 +299,7 @@ func (l *lensesHandler) List() fiber.Handler {
 				htmx.Th(htmx.Text(lens.ID.String())),
 				htmx.Td(htmx.Text(lens.Name)),
 				htmx.Td(htmx.Text(lens.Description)),
+				htmx.Td(tags...),
 			)
 		}
 
@@ -298,7 +326,6 @@ func (l *lensesHandler) List() fiber.Handler {
 									htmx.Th(htmx.Text("ID")),
 									htmx.Th(htmx.Text("Name")),
 									htmx.Th(htmx.Text("Description")),
-									htmx.Th(htmx.Text("Favorite Color")),
 								),
 							),
 							htmx.TBody(

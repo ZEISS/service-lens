@@ -27,6 +27,9 @@ func (d *DB) RunMigration() error {
 		&models.Resource{},
 		&models.Choice{},
 		&models.Risk{},
+		&models.Workload{},
+		&models.Tag{},
+		&models.Team{},
 	)
 }
 
@@ -66,8 +69,10 @@ func (d *DB) AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, erro
 
 // GetLensByID ...
 func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error) {
-	lens := &models.Lens{}
-	err := d.conn.WithContext(ctx).Where("id = ?", id).First(lens).Error
+	lens := &models.Lens{
+		ID: id,
+	}
+	err := d.conn.WithContext(ctx).Preload("Tags").Preload("Pillars").Find(lens).Error
 	if err != nil {
 		return nil, err
 	}
@@ -77,11 +82,22 @@ func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error
 
 // ListLenses ...
 func (d *DB) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*models.Lens, error) {
-  lenses := []*models.Lens{}
-  err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
-  if err != nil {
-    return nil, err
-  }
+	lenses := []*models.Lens{}
+	err := d.conn.WithContext(ctx).Preload("Tags").Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
+	if err != nil {
+		return nil, err
+	}
 
-  return lenses, nil
+	return lenses, nil
+}
+
+// ListProfiles ...
+func (d *DB) ListProfiles(ctx context.Context, pagination *models.Pagination) ([]*models.Profile, error) {
+	profiles := []*models.Profile{}
+	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return profiles, nil
 }

@@ -36,18 +36,32 @@ func Navbar(p NavbarProps) htmx.Node {
 			htmx.Div(
 				htmx.ClassNames{"dropdown": true},
 				htmx.Div(
-					htmx.ClassNames{"btn": true, "btn-ghost": true, "lg:hidden": true},
-					htmx.SVG(
-						htmx.ClassNames{"h-5": true, "w-5": true},
-						htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
-						htmx.Attribute("fill", "none"),
-						htmx.Attribute("viewBox", "0 0 24 24"),
-						htmx.Attribute("stroke", "currentColor"),
-						htmx.Path(
-							htmx.Attribute("stroke-linecap", "round"),
-							htmx.Attribute("stroke-linejoin", "round"),
-							htmx.Attribute("stroke-width", "2"),
-							htmx.Attribute("d", "M4 6h16M4 12h8m-8 6h16"),
+					htmx.Label(
+						htmx.ClassNames{
+							"btn":       true,
+							"btn-ghost": true,
+							"lg:hidden": true,
+						},
+						htmx.Attribute(
+							"for",
+							"app-drawer",
+						),
+						htmx.Attribute(
+							"aria-label",
+							"open sidebar",
+						),
+						htmx.SVG(
+							htmx.ClassNames{"h-5": true, "w-5": true},
+							htmx.Attribute("xmlns", "http://www.w3.org/2000/svg"),
+							htmx.Attribute("fill", "none"),
+							htmx.Attribute("viewBox", "0 0 24 24"),
+							htmx.Attribute("stroke", "currentColor"),
+							htmx.Path(
+								htmx.Attribute("stroke-linecap", "round"),
+								htmx.Attribute("stroke-linejoin", "round"),
+								htmx.Attribute("stroke-width", "2"),
+								htmx.Attribute("d", "M4 6h16M4 12h8m-8 6h16"),
+							),
 						),
 					),
 				),
@@ -87,18 +101,27 @@ func Navbar(p NavbarProps) htmx.Node {
 			),
 		),
 		htmx.Div(
-			htmx.ClassNames{"navbar-center": true, "hidden": true, "lg:flex": true},
+			htmx.ClassNames{
+				"navbar-center": true,
+				"hidden":        true,
+				"lg:flex":       true,
+			},
 			htmx.Ul(
-				htmx.ClassNames{"menu": true, "menu-horizontal": true, "px-1": true},
-				htmx.Li(htmx.A(htmx.Text("Item 1"))),
+				htmx.ClassNames{
+					"menu":            true,
+					"menu-horizontal": true,
+					"px-1":            true,
+				},
 				htmx.Li(
-					htmx.Details(
-						htmx.Summary(htmx.Text("Parent")),
-						htmx.Ul(
-							htmx.ClassNames{"p-2": true},
-							htmx.Li(htmx.A(htmx.Text("Submenu 1"))),
-							htmx.Li(htmx.A(htmx.Text("Submenu 2"))),
+					htmx.A(
+						htmx.ClassNames{
+							"active": strings.HasPrefix(p.ctx.Path(), "/workloads/list"),
+						},
+						htmx.Attribute(
+							"href",
+							"/workloads/list",
 						),
+						htmx.Text("Workloads"),
 					),
 				),
 				htmx.Li(
@@ -115,22 +138,19 @@ func Navbar(p NavbarProps) htmx.Node {
 						htmx.ClassNames{
 							"active": strings.HasPrefix(p.ctx.Path(), "/lenses/list"),
 						},
-						htmx.Attribute("href", "/lenses"),
+						htmx.Attribute(
+							"href",
+							"/lenses/list",
+						),
 						htmx.Text("Lenses"),
 					),
 				),
 			),
 		),
 		htmx.Div(
-			htmx.ClassNames{"navbar-end": true},
-			htmx.A(
-				htmx.ClassNames{
-					"btn":       true,
-					"btn-ghost": true,
-				},
-				htmx.Text("Add Profile"),
-				htmx.Attribute("href", "/profiles/new"),
-			),
+			htmx.ClassNames{
+				"navbar-end": true,
+			},
 			UserNav(UserNavProps{}),
 		),
 	)

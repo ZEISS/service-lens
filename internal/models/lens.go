@@ -18,6 +18,8 @@ type Lens struct {
 	Pillars     []Pillar  `json:"pillars"`
 	IsDraft     bool      `json:"is_draft"`
 
+	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
+
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`

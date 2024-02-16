@@ -256,3 +256,89 @@ func (p *profilesHandler) New() fiber.Handler {
 		),
 	)
 }
+
+// List is the handler for the list page.
+func (p *profilesHandler) List() fiber.Handler {
+	return htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
+		profiles, err := p.pc.ListProfiles(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+		if err != nil {
+			return nil, err
+		}
+
+		items := make([]htmx.Node, len(profiles))
+		for i, profile := range profiles {
+			items[i] = htmx.Tr(
+				htmx.Th(
+					htmx.Label(
+						htmx.Input(
+							htmx.ClassNames{
+								"checkbox": true,
+							},
+							htmx.Attribute("type", "checkbox"),
+							htmx.Attribute("name", "profile"),
+							htmx.Attribute("value", profile.ID.String()),
+						),
+					),
+				),
+				htmx.Th(htmx.Text(profile.ID.String())),
+				htmx.Td(htmx.Text(profile.Name)),
+				htmx.Td(htmx.Text(profile.Description)),
+			)
+		}
+
+		return components.Page(
+			components.PageProps{
+				Children: []htmx.Node{
+					htmx.Div(
+						htmx.ClassNames{"overflow-x-auto": true},
+						htmx.Table(
+							htmx.ClassNames{"table": true},
+							htmx.THead(
+								htmx.Tr(
+									htmx.Th(
+										htmx.Label(
+											htmx.Input(
+												htmx.ClassNames{
+													"checkbox": true,
+												},
+												htmx.Attribute("type", "checkbox"),
+												htmx.Attribute("name", "all"),
+											),
+										),
+									),
+									htmx.Th(htmx.Text("ID")),
+									htmx.Th(htmx.Text("Name")),
+									htmx.Th(htmx.Text("Description")),
+								),
+							),
+							htmx.TBody(
+								items...,
+							),
+						),
+						htmx.Div(
+							htmx.ClassNames{},
+							htmx.Select(
+								htmx.ClassNames{
+									"select":   true,
+									"max-w-xs": true,
+								},
+								htmx.Option(
+									htmx.Text("10"),
+									htmx.Attribute("value", "10"),
+								),
+								htmx.Option(
+									htmx.Text("20"),
+									htmx.Attribute("value", "20"),
+								),
+								htmx.Option(
+									htmx.Text("30"),
+									htmx.Attribute("value", "30"),
+								),
+							),
+						),
+					),
+				},
+			}.WithContext(c),
+		), nil
+	})
+}
