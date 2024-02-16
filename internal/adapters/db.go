@@ -45,11 +45,32 @@ func (d *DB) NewProfile(ctx context.Context, profile *models.Profile) error {
 // FetchProfile ...
 func (d *DB) FetchProfile(ctx context.Context, id uuid.UUID) (*models.Profile, error) {
 	profile := &models.Profile{}
+
 	err := d.conn.WithContext(ctx).Where("id = ?", id).First(profile).Error
+	if err != nil {
+		return nil, err
+	}
+
 	return profile, err
 }
 
 // AddLens ...
-func (d *DB) AddLens(ctx context.Context) error {
-	return nil
+func (d *DB) AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, error) {
+	err := d.conn.WithContext(ctx).Create(lens).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return lens, nil
+}
+
+// GetLensByID ...
+func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error) {
+	lens := &models.Lens{}
+	err := d.conn.WithContext(ctx).Where("id = ?", id).First(lens).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return lens, err
 }

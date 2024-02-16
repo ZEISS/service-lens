@@ -1,8 +1,14 @@
 package ports
 
-import "context"
+import (
+	"context"
+
+	"github.com/google/uuid"
+	"github.com/zeiss/service-lens/internal/models"
+)
 
 // Lenses ...
 type Lenses interface {
-	AddLens(ctx context.Context) error
+	GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error)
+	AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, error)
 }

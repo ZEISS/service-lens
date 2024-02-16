@@ -1,10 +1,30 @@
 package components
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+	htmx "github.com/zeiss/fiber-htmx"
+)
+
+var _ htmx.PropsWithContext[NavbarProps] = (*NavbarProps)(nil)
 
 // NavbarProps is the properties for the Navbar component.
 type NavbarProps struct {
 	Children []htmx.Node
+	ctx      *fiber.Ctx
+}
+
+// WithContext returns a new NavbarProps with the given context.
+func (p NavbarProps) WithContext(ctx *fiber.Ctx) NavbarProps {
+	p.ctx = ctx
+
+	return p
+}
+
+// Context ...
+func (p NavbarProps) Context() *fiber.Ctx {
+	return p.ctx
 }
 
 // Navbar is a whole document to output.
@@ -84,7 +104,7 @@ func Navbar(p NavbarProps) htmx.Node {
 				htmx.Li(
 					htmx.A(
 						htmx.ClassNames{
-							"active": true,
+							"active": strings.HasPrefix(p.ctx.Path(), "/profiles"),
 						},
 						htmx.Attribute("href", "/profiles"),
 						htmx.Text("Profiles"),
@@ -92,7 +112,9 @@ func Navbar(p NavbarProps) htmx.Node {
 				),
 				htmx.Li(
 					htmx.A(
-						htmx.ClassNames{},
+						htmx.ClassNames{
+							"active": strings.HasPrefix(p.ctx.Path(), "/lenses/list"),
+						},
 						htmx.Attribute("href", "/lenses"),
 						htmx.Text("Lenses"),
 					),

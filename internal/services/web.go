@@ -49,6 +49,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses := app.Group("/lenses")
 		lenses.Get("/list", lensesHandler.Index())
 		lenses.Get("/new", lensesHandler.New())
+		lenses.Post("/new", htmx.NewHtmxHandler(lensesHandler.NewLens()))
+		lenses.Get("/:id", lensesHandler.GetLens())
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {

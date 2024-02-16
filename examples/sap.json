@@ -4,12 +4,12 @@
   "description": "This evaluates an SAP against best practices.",
   "pillars": [
     {
-      "id": "operational_excellence",
+      "ref": "operational_excellence",
       "name": "Operational Excellence",
       "description": "Operational Excellence",
       "questions": [
         {
-          "id": "question_1",
+          "ref": "question_1",
           "title": "Question 1 - A longer title for the lens.",
           "description": "Question 1 asks about operational exelence",
           "resources": [
@@ -20,22 +20,22 @@
           ],
           "choices": [
             {
-              "id": "choice_1",
+              "ref": "choice_1",
               "title": "Choice 1",
               "description": "Choice 1 is provding a good choice."
             },
             {
-              "id": "choice_2",
+              "ref": "choice_2",
               "title": "Choice 2",
               "description": "Choice 2 is provding a good choice."
             },
             {
-              "id": "choice_3",
+              "ref": "choice_3",
               "title": "Choice 3",
               "description": "Choice 3 is provding a good choice."
             },
             {
-              "id": "none_of_these",
+              "ref": "none_of_these",
               "title": "None of these",
               "description": "None of these"
             }

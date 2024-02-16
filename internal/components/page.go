@@ -1,6 +1,7 @@
 package components
 
 import (
+	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -9,6 +10,20 @@ type PageProps struct {
 	Title    string
 	Path     string
 	Children []htmx.Node
+
+	ctx *fiber.Ctx
+}
+
+// WithContext returns a new PageProps with the given context.
+func (p PageProps) WithContext(ctx *fiber.Ctx) PageProps {
+	p.ctx = ctx
+
+	return p
+}
+
+// Context ...
+func (p PageProps) Context() *fiber.Ctx {
+	return p.ctx
 }
 
 // Page is a whole document to output.
@@ -23,8 +38,8 @@ func Page(p PageProps) htmx.Node {
 		},
 		Body: []htmx.Node{
 			Layout(
-				LayoutProps{Children: p.Children},
+				LayoutProps{Children: p.Children}.WithContext(p.Context()),
 			),
 		},
-	})
+	}.WithContext(p.Context()))
 }

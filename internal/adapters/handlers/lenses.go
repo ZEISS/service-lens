@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"io"
+
+	"github.com/google/uuid"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -31,36 +34,181 @@ func (p *lensesHandler) Index() fiber.Handler {
 	)
 }
 
-// NewLens is the handler for the new lens page.
-func (p *lensesHandler) NewLens() htmx.HtmxHandlerFunc {
+// NewLens ...
+func (l *lensesHandler) NewLens() htmx.HtmxHandlerFunc {
 	return func(hx *htmx.Htmx) error {
-		profile := &models.Profile{
-			Name:        hx.Ctx().FormValue("name"),
-			Description: hx.Ctx().FormValue("description"),
-		}
-
-		err := p.lc.AddLens(hx.Ctx().Context())
+		file, err := hx.Ctx().FormFile("spec")
 		if err != nil {
 			return err
 		}
 
-		hx.Redirect("/profiles/" + profile.ID.String())
+		f, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+
+		bb, err := io.ReadAll(f)
+		if err != nil {
+			return err
+		}
+
+		lens := &models.Lens{}
+		err = lens.UnmarshalJSON(bb)
+		if err != nil {
+			return err
+		}
+
+		lens, err = l.lc.AddLens(hx.Ctx().Context(), lens)
+		if err != nil {
+			return err
+		}
+
+		hx.Redirect("/lenses/" + lens.ID.String())
 
 		return nil
 	}
 }
 
+// GetLens ...
+func (l *lensesHandler) GetLens() fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id, err := uuid.Parse(c.Params("id"))
+		if err != nil {
+			return err
+		}
+
+		lens, err := l.lc.GetLensByID(c.Context(), id)
+		if err != nil {
+			return err
+		}
+
+		page := components.Page(
+			components.PageProps{
+				Children: []htmx.Node{
+					htmx.FormElement(
+						htmx.HxPost("/lenses"),
+						htmx.Label(
+							htmx.ClassNames{
+								"form-control": true,
+								"w-full":       true,
+								"max-w-lg":     true,
+								"mb-4":         true,
+							},
+							htmx.Div(
+								htmx.ClassNames{
+									"label": true,
+								},
+								htmx.Span(
+									htmx.ClassNames{
+										"label-text": true,
+									},
+									htmx.Text("What is your name?"),
+								),
+							),
+							htmx.Input(
+								htmx.Attribute("type", "text"),
+								htmx.Attribute("name", "name"),
+								htmx.Attribute("placeholder", "Name ..."),
+								htmx.Attribute("value", lens.Name),
+								htmx.Attribute("readonly", "true"),
+								htmx.Attribute("disabled", "true"),
+								htmx.ClassNames{
+									"input":          true,
+									"input-bordered": true,
+									"w-full":         true,
+									"max-w-lg":       true,
+								},
+							),
+						),
+						htmx.Label(
+							htmx.ClassNames{
+								"form-control": true,
+								"w-full":       true,
+								"max-w-lg":     true,
+							},
+							htmx.Div(
+								htmx.ClassNames{
+									"label":   true,
+									"sr-only": true,
+								},
+							),
+							htmx.Input(
+								htmx.Attribute("type", "text"),
+								htmx.Attribute("name", "description"),
+								htmx.Attribute("placeholder", "Description ..."),
+								htmx.Attribute("value", lens.Description),
+								htmx.Attribute("readonly", "true"),
+								htmx.Attribute("disabled", "true"),
+								htmx.ClassNames{
+									"input":          true,
+									"input-bordered": true,
+									"w-full":         true,
+									"max-w-lg":       true,
+								},
+							),
+						),
+						htmx.Div(
+							htmx.ClassNames{
+								"divider": true,
+							},
+						),
+						htmx.Div(
+							htmx.ClassNames{
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
+							},
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Last updated"),
+							),
+							htmx.H3(
+								htmx.Text(lens.UpdatedAt.Format("2006-01-02 15:04:05")),
+							),
+						),
+						htmx.Div(
+							htmx.ClassNames{
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
+							},
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Created at"),
+							),
+							htmx.H3(
+								htmx.Text(
+									lens.CreatedAt.Format("2006-01-02 15:04:05"),
+								),
+							),
+						),
+					),
+				},
+			},
+		)
+
+		c.Set("Content-Type", "text/html")
+
+		return page.Render(c)
+	}
+}
+
 // New is the handler for the new lens page.
 func (p *lensesHandler) New() fiber.Handler {
-	return htmx.NewCompHandler(
-		components.Page(
+	return htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
+		return components.Page(
 			components.PageProps{
 				Children: []htmx.Node{
 					htmx.FormElement(
 						htmx.ID("new-lens-form"),
 						htmx.HxPost("/lenses/new"),
 						htmx.HxEncoding("multipart/form-data"),
-						htmx.LabElement(
+						htmx.Label(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,
@@ -68,12 +216,18 @@ func (p *lensesHandler) New() fiber.Handler {
 							},
 							htmx.Input(
 								htmx.Attribute("type", "file"),
+								htmx.Attribute("name", "spec"),
 								htmx.ClassNames{
 									"file-input":          true,
 									"file-input-bordered": true,
 									"w-full":              true,
 									"max-w-xs":            true,
 								},
+							),
+							htmx.Progress(
+								htmx.Attribute("id", "progress"),
+								htmx.Value("0"),
+								htmx.Max("100"),
 							),
 						),
 						htmx.Button(
@@ -83,11 +237,11 @@ func (p *lensesHandler) New() fiber.Handler {
 								"my-4":        true,
 							},
 							htmx.Attribute("type", "submit"),
-							htmx.Text("Create Profile"),
+							htmx.Text("Create Lens"),
 						),
 					),
 				},
-			},
-		),
-	)
+			}.WithContext(c),
+		), nil
+	})
 }

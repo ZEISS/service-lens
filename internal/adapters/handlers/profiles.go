@@ -50,7 +50,7 @@ func (p *profilesHandler) GetProfile() fiber.Handler {
 				Children: []htmx.Node{
 					htmx.FormElement(
 						htmx.HxPost("/profiles"),
-						htmx.LabElement(
+						htmx.Label(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,
@@ -83,7 +83,7 @@ func (p *profilesHandler) GetProfile() fiber.Handler {
 								},
 							),
 						),
-						htmx.LabElement(
+						htmx.Label(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,
@@ -187,7 +187,7 @@ func (p *profilesHandler) New() fiber.Handler {
 				Children: []htmx.Node{
 					htmx.FormElement(
 						htmx.HxPost("/profiles"),
-						htmx.LabElement(
+						htmx.Label(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,
@@ -217,7 +217,7 @@ func (p *profilesHandler) New() fiber.Handler {
 								},
 							),
 						),
-						htmx.LabElement(
+						htmx.Label(
 							htmx.ClassNames{
 								"form-control": true,
 								"w-full":       true,

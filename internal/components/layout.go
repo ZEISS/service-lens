@@ -1,10 +1,31 @@
 package components
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	"github.com/gofiber/fiber/v2"
+	htmx "github.com/zeiss/fiber-htmx"
+)
 
 // LayoutProps is the properties for the Layout component.
 type LayoutProps struct {
 	Children []htmx.Node
+
+	ctx *fiber.Ctx
+}
+
+// WithContext returns a new LayoutProps with the given context.
+func (p LayoutProps) WithContext(ctx *fiber.Ctx) LayoutProps {
+	p.ctx = ctx
+
+	return p
+}
+
+// Context ...
+func (p LayoutProps) Context() *fiber.Ctx {
+	if p.ctx == nil {
+		return &fiber.Ctx{}
+	}
+
+	return p.ctx
 }
 
 // Layout is a whole document to output.
@@ -33,7 +54,7 @@ func Layout(p LayoutProps) htmx.Node {
 						"flex-none": true,
 						"lg:hidden": true,
 					},
-					htmx.LabElement(
+					htmx.Label(
 						htmx.ClassNames{
 							"btn":        true,
 							"btn-square": true,
@@ -60,7 +81,7 @@ func Layout(p LayoutProps) htmx.Node {
 						),
 					),
 				),
-				Navbar(NavbarProps{}),
+				Navbar(NavbarProps{}.WithContext(p.Context())),
 			),
 			htmx.Div(
 				htmx.ClassNames{
@@ -70,8 +91,26 @@ func Layout(p LayoutProps) htmx.Node {
 			),
 		),
 		htmx.Div(htmx.ClassNames{"drawer-side": true},
-			htmx.LabElement(htmx.Attribute("for", "app-drawer"), htmx.Attribute("aria-label", "close sidebar"), htmx.ClassNames{"drawer-overlay": true}),
-			htmx.Ul(htmx.ClassNames{"menu": true, "p-4": true, "w-80": true, "min-h-full": true, "bg-base-200": true},
+			htmx.Label(
+				htmx.Attribute(
+					"for",
+					"app-drawer",
+				),
+				htmx.Attribute(
+					"aria-label",
+					"close sidebar"),
+				htmx.ClassNames{
+					"drawer-overlay": true,
+				},
+			),
+			htmx.Ul(
+				htmx.ClassNames{
+					"menu":        true,
+					"p-4":         true,
+					"w-80":        true,
+					"min-h-full":  true,
+					"bg-base-200": true,
+				},
 				htmx.Li(htmx.A(htmx.Text("Sidebar Item 1"))),
 				htmx.Li(htmx.A(htmx.Text("Sidebar Item 2"))),
 			),
