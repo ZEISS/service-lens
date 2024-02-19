@@ -127,9 +127,12 @@ func Navbar(p NavbarProps) htmx.Node {
 				htmx.Li(
 					htmx.A(
 						htmx.ClassNames{
-							"active": strings.HasPrefix(p.ctx.Path(), "/profiles"),
+							"active": strings.HasPrefix(p.ctx.Path(), "/profiles/list"),
 						},
-						htmx.Attribute("href", "/profiles"),
+						htmx.Attribute(
+							"href",
+							"/profiles/list",
+						),
 						htmx.Text("Profiles"),
 					),
 				),

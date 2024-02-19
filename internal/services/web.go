@@ -38,21 +38,21 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(logger.New())
 
 		indexHandler := handlers.NewIndexHandler()
-		profilesHandler := handlers.NewProfilesHandler(a.pc)
-		lensesHandler := handlers.NewLensesHandler(a.lc)
+		profilesHandler := handlers.NewProfilesHandler(a.pc, a.db)
+		lensesHandler := handlers.NewLensesHandler(a.lc, a.db)
 
 		workloadController := controllers.NewWorkloadsController(a.db)
 
 		app.Get("/", indexHandler.Index())
 
 		profiles := app.Group("/profiles")
-		profiles.Get("/list", profilesHandler.List())
+		profiles.Get("/list", htmx.NewCompFuncHandler(profilesHandler.List))
 		profiles.Get("/new", profilesHandler.New())
 		profiles.Get("/:id", profilesHandler.GetProfile())
 		profiles.Post("/new", htmx.NewHtmxHandler(profilesHandler.NewProfile()))
 
 		lenses := app.Group("/lenses")
-		lenses.Get("/list", lensesHandler.List())
+		lenses.Get("/list", htmx.NewCompFuncHandler(lensesHandler.List))
 		lenses.Get("/new", lensesHandler.New())
 		lenses.Post("/new", htmx.NewHtmxHandler(lensesHandler.NewLens()))
 		lenses.Get("/:id", lensesHandler.GetLens())
