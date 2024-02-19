@@ -30,7 +30,12 @@ func (p NavbarProps) Context() *fiber.Ctx {
 // Navbar is a whole document to output.
 func Navbar(p NavbarProps) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{"navbar": true, "bg-base-100": true},
+		htmx.ClassNames{
+			"navbar":         true,
+			"bg-base-100":    true,
+			"border-8":       true,
+			"border-neutral": true,
+		},
 		htmx.Div(
 			htmx.ClassNames{"navbar-start": true},
 			htmx.Div(

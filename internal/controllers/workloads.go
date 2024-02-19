@@ -1,13 +1,17 @@
 package controllers
 
 import (
-	htmx "github.com/zeiss/fiber-htmx"
+	"fmt"
+
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	htmx "github.com/zeiss/fiber-htmx"
+	links "github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/loading"
 )
 
 // Workloads ...
@@ -20,9 +24,65 @@ func NewWorkloadsController(db ports.Repository) *Workloads {
 	return &Workloads{db}
 }
 
+// Search ...
+func (w *Workloads) Search(hx *htmx.Htmx) error {
+	q := hx.Ctx().FormValue("q")
+
+	pagination := &models.Pagination{
+		Limit:  10,
+		Offset: 0,
+		Search: q,
+	}
+
+	workloads, err := w.db.ListWorkloads(hx.Ctx().Context(), pagination)
+	if err != nil {
+		return err
+	}
+
+	workloadsItems := make([]htmx.Node, len(workloads))
+	for i, workload := range workloads {
+		workloadsItems[i] = htmx.Tr(
+			htmx.Th(
+				htmx.Label(
+					htmx.Input(
+						htmx.ClassNames{
+							"checkbox": true,
+						},
+						htmx.Attribute("type", "checkbox"),
+						htmx.Attribute("name", "profile"),
+						htmx.Attribute("value", workload.ID.String()),
+					),
+				),
+			),
+			htmx.Th(htmx.Text(workload.ID.String())),
+			htmx.Td(
+				links.Link(
+					links.LinkProps{
+						Href: fmt.Sprintf("/workloads/%s", workload.ID.String()),
+					},
+					htmx.Text(workload.Name),
+				),
+			),
+			htmx.Td(htmx.Text(workload.Description)),
+		)
+	}
+
+	return hx.RenderComp(
+		htmx.TBody(
+			htmx.ID("data-table"),
+			htmx.Group(workloadsItems...),
+		),
+	)
+}
+
 // Store ...
 func (w *Workloads) Store(hx *htmx.Htmx) error {
 	profileId, err := uuid.Parse(hx.Ctx().FormValue("profile"))
+	if err != nil {
+		return err
+	}
+
+	lensId, err := uuid.Parse(hx.Ctx().FormValue("lens"))
 	if err != nil {
 		return err
 	}
@@ -31,6 +91,7 @@ func (w *Workloads) Store(hx *htmx.Htmx) error {
 		Name:        hx.Ctx().FormValue("name"),
 		Description: hx.Ctx().FormValue("description"),
 		ProfileID:   profileId,
+		Lenses:      []*models.Lens{{ID: lensId}},
 	}
 
 	err = w.db.StoreWorkload(hx.Ctx().Context(), workload)
@@ -45,14 +106,17 @@ func (w *Workloads) Store(hx *htmx.Htmx) error {
 
 // List ...
 func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
-	profiles, err := w.db.ListWorkloads(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+	offset := c.QueryInt("offset", 0)
+	limit := c.QueryInt("limit", 10)
+
+	profiles, err := w.db.ListWorkloads(c.Context(), &models.Pagination{Limit: limit, Offset: offset})
 	if err != nil {
 		return nil, err
 	}
 
-	items := make([]htmx.Node, len(profiles))
+	profilesItems := make([]htmx.Node, len(profiles))
 	for i, profile := range profiles {
-		items[i] = htmx.Tr(
+		profilesItems[i] = htmx.Tr(
 			htmx.Th(
 				htmx.Label(
 					htmx.Input(
@@ -66,7 +130,14 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 				),
 			),
 			htmx.Th(htmx.Text(profile.ID.String())),
-			htmx.Td(htmx.Text(profile.Name)),
+			htmx.Td(
+				links.Link(
+					links.LinkProps{
+						Href: fmt.Sprintf("/workloads/%s", profile.ID.String()),
+					},
+					htmx.Text(profile.Name),
+				),
+			),
 			htmx.Td(htmx.Text(profile.Description)),
 		)
 	}
@@ -85,6 +156,34 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 		),
 		htmx.Div(
 			htmx.ClassNames{"overflow-x-auto": true},
+			htmx.Div(
+				htmx.ClassNames{
+					"flex":            true,
+					"justify-between": true,
+					"items-center":    true,
+				},
+				htmx.Input(
+					htmx.ClassNames{
+						"input":          true,
+						"input-bordered": true,
+					},
+					htmx.Attribute("type", "search"),
+					htmx.Attribute("placeholder", "Search ..."),
+					htmx.Attribute("name", "q"),
+					htmx.HxPost("/workloads/search"),
+					htmx.HxTarget("#data-table"),
+					htmx.HxSwap("outerHTML"),
+					htmx.HxIndicator(".htmx-indicator"),
+					htmx.HxTrigger("keyup changed delay:500ms, search"),
+				),
+				htmx.Div(
+					loading.Spinner(loading.SpinnerProps{
+						ClassNames: htmx.ClassNames{
+							"htmx-indicator": true,
+						},
+					}),
+				),
+			),
 			htmx.Table(
 				htmx.ClassNames{"table": true},
 				htmx.THead(
@@ -106,29 +205,42 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 					),
 				),
 				htmx.TBody(
-					items...,
+					htmx.ID("data-table"),
+					htmx.Group(profilesItems...),
 				),
 			),
 			htmx.Div(
-				htmx.ClassNames{},
-				htmx.Select(
-					htmx.ClassNames{
-						"select":   true,
-						"max-w-xs": true,
-					},
-					htmx.Option(
-						htmx.Text("10"),
-						htmx.Attribute("value", "10"),
-					),
-					htmx.Option(
-						htmx.Text("20"),
-						htmx.Attribute("value", "20"),
-					),
-					htmx.Option(
-						htmx.Text("30"),
-						htmx.Attribute("value", "30"),
+				htmx.FormElement(
+					htmx.ClassNames{},
+					htmx.Select(
+						htmx.HxTrigger("change"),
+						htmx.HxTarget("html"),
+						htmx.HxSwap("outerHTML"),
+						htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
+						htmx.ClassNames{
+							"select":   true,
+							"max-w-xs": true,
+						},
+						htmx.Option(
+							htmx.Text("10"),
+							htmx.Attribute("value", "10"),
+						),
+						htmx.Option(
+							htmx.Text("20"),
+							htmx.Attribute("value", "20"),
+						),
+						htmx.Option(
+							htmx.Text("30"),
+							htmx.Attribute("value", "30"),
+						),
 					),
 				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"flex":   true,
+					"w-full": true,
+				},
 			),
 		),
 	), nil
@@ -141,11 +253,24 @@ func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
 		return nil, err
 	}
 
-	items := make([]htmx.Node, len(profiles))
+	profilesItems := make([]htmx.Node, len(profiles))
 	for i, profile := range profiles {
-		items[i] = htmx.Option(
+		profilesItems[i] = htmx.Option(
 			htmx.Attribute("value", profile.ID.String()),
 			htmx.Text(profile.Name),
+		)
+	}
+
+	lenses, err := w.db.ListLenses(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+	if err != nil {
+		return nil, err
+	}
+
+	lensesItems := make([]htmx.Node, len(lenses))
+	for i, lens := range lenses {
+		lensesItems[i] = htmx.Option(
+			htmx.Attribute("value", lens.ID.String()),
+			htmx.Text(lens.Name),
 		)
 	}
 
@@ -213,7 +338,16 @@ func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
 					"block":    true,
 				},
 				htmx.Attribute("name", "profile"),
-				htmx.Group(items...),
+				htmx.Group(profilesItems...),
+			),
+			htmx.Select(
+				htmx.ClassNames{
+					"select":   true,
+					"max-w-xs": true,
+					"block":    true,
+				},
+				htmx.Attribute("name", "lens"),
+				htmx.Group(lensesItems...),
 			),
 			htmx.Button(
 				htmx.ClassNames{

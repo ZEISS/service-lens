@@ -6,4 +6,6 @@ type Pagination struct {
 	Limit int `json:"limit"`
 	// Offset is the number of items to skip.
 	Offset int `json:"offset"`
+	// Search is the search term to filter the results.
+	Search string `json:"search"`
 }

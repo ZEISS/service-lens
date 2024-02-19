@@ -59,6 +59,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		workloads := app.Group("/workloads")
 		workloads.Get("/list", htmx.NewCompFuncHandler(workloadController.List))
+		workloads.Post("/search", htmx.NewHtmxHandler(workloadController.Search))
 		workloads.Get("/new", htmx.NewCompFuncHandler(workloadController.New))
 		workloads.Post("/new", htmx.NewHtmxHandler(workloadController.Store))
 		workloads.Get("/:id", htmx.NewCompFuncHandler(workloadController.Show))

@@ -105,7 +105,8 @@ func (d *DB) ListProfiles(ctx context.Context, pagination *models.Pagination) ([
 // ListWorkloads ...
 func (d *DB) ListWorkloads(ctx context.Context, pagination *models.Pagination) ([]*models.Workload, error) {
 	workloads := []*models.Workload{}
-	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&workloads).Error
+
+	err := d.conn.WithContext(ctx).Where("name LIKE ?", "%"+pagination.Search+"%").Limit(pagination.Limit).Offset(pagination.Offset).Find(&workloads).Error
 	if err != nil {
 		return nil, err
 	}
