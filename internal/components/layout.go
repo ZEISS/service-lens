@@ -29,7 +29,7 @@ func (p LayoutProps) Context() *fiber.Ctx {
 }
 
 // Layout is a whole document to output.
-func Layout(p LayoutProps) htmx.Node {
+func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
 			"drawer": true,
@@ -50,7 +50,7 @@ func Layout(p LayoutProps) htmx.Node {
 				htmx.ClassNames{
 					"p-8": true,
 				},
-				htmx.Group(p.Children...),
+				htmx.Group(children...),
 			),
 		),
 		htmx.Div(

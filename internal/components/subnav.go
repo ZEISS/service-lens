@@ -6,31 +6,34 @@ import htmx "github.com/zeiss/fiber-htmx"
 type SubNavProps struct{}
 
 // SubNav ...
-func SubNav(p SubNavProps) htmx.Node {
+func SubNav(p SubNavProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{"navbar": true, "bg-base-100": true},
+		htmx.ClassNames{
+			"navbar":      true,
+			"bg-base-100": true,
+			"w-full":      true,
+		},
 		htmx.Div(
 			htmx.ClassNames{
-				"flex":     true,
-				"flex-row": true,
+				"navbar-start": true,
 			},
-			htmx.Div(),
-			htmx.H1(htmx.Text("Profiles")),
-			htmx.Div(
-				htmx.Button(
-					htmx.ClassNames{
-						"btn": true,
-					},
-					htmx.Text("Refresh"),
-				),
-				htmx.A(
-					htmx.ClassNames{
-						"btn": true,
-					},
-					htmx.Attribute("href", "/profiles/new"),
-					htmx.Text("Create Profile"),
-				),
+			htmx.A(
+				htmx.ClassNames{
+					"btn":       true,
+					"btn-ghost": true,
+					"lg:hidden": true,
+				},
+				htmx.Text("Menu"),
 			),
+		),
+		htmx.Div(
+
+			htmx.ClassNames{
+				"flex":       true,
+				"flex-row":   true,
+				"navbar-end": true,
+			},
+			htmx.Group(children...),
 		),
 	)
 }

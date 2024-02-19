@@ -4,4 +4,5 @@ package ports
 type Repository interface {
 	Profiles
 	Lenses
+	Workloads
 }

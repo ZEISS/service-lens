@@ -586,8 +586,8 @@ github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9dec
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.1/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
-github.com/zeiss/fiber-htmx v1.0.6 h1:sxwL25E9155ziDcMDgIChNDgsZ7CPLYbQ7I/2aCu6Qc=
-github.com/zeiss/fiber-htmx v1.0.6/go.mod h1:Pe9BHnt/BqbMMMevsZ7BwV951+YOEEr0xIXWTeoKQho=
+github.com/zeiss/fiber-htmx v1.0.10 h1:qjj8lvBMDUuqzgoQa287oyIRkypt9ma+LwolT9lw2Dw=
+github.com/zeiss/fiber-htmx v1.0.10/go.mod h1:Pe9BHnt/BqbMMMevsZ7BwV951+YOEEr0xIXWTeoKQho=
 gitlab.com/bosi/decorder v0.4.1 h1:VdsdfxhstabyhZovHafFw+9eJ6eU0d2CkFNJcZz/NU4=
 gitlab.com/bosi/decorder v0.4.1/go.mod h1:jecSqWUew6Yle1pCr2eLWTensJMmsxHsBwt+PVbkAqA=
 go-simpler.org/assert v0.7.0 h1:OzWWZqfNxt8cLS+MlUp6Tgk1HjPkmgdKBq9qvy8lZsA=

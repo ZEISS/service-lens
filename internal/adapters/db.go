@@ -101,3 +101,38 @@ func (d *DB) ListProfiles(ctx context.Context, pagination *models.Pagination) ([
 
 	return profiles, nil
 }
+
+// ListWorkloads ...
+func (d *DB) ListWorkloads(ctx context.Context, pagination *models.Pagination) ([]*models.Workload, error) {
+	workloads := []*models.Workload{}
+	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&workloads).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return workloads, nil
+}
+
+// ShowWorkload ...
+func (d *DB) ShowWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, error) {
+	workload := &models.Workload{
+		ID: id,
+	}
+
+	err := d.conn.WithContext(ctx).Preload("Tags").Find(workload).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return workload, nil
+}
+
+// StoreWorkload ...
+func (d *DB) StoreWorkload(ctx context.Context, workload *models.Workload) error {
+	return d.conn.WithContext(ctx).Create(workload).Error
+}
+
+// DestroyWorkload ...
+func (d *DB) DestroyWorkload(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Delete(&models.Workload{}, id).Error
+}

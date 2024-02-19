@@ -70,7 +70,7 @@ func run(ctx context.Context) error {
 	lc := controllers.NewLensesController(db)
 
 	srv, _ := server.WithContext(ctx)
-	webSrv := services.New(cfg, pc, lc)
+	webSrv := services.New(cfg, pc, lc, db)
 
 	srv.Listen(webSrv, true)
 	if err := srv.Wait(); err != nil {

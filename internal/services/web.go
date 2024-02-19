@@ -6,6 +6,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
 	"github.com/zeiss/service-lens/internal/configs"
+	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,11 +22,12 @@ type WebSrv struct {
 	cfg *configs.Config
 	pc  ports.Profiles
 	lc  ports.Lenses
+	db  ports.Repository
 }
 
 // New returns a new instance of NoopSrv.
-func New(cfg *configs.Config, pc ports.Profiles, lc ports.Lenses) *WebSrv {
-	return &WebSrv{cfg, pc, lc}
+func New(cfg *configs.Config, pc ports.Profiles, lc ports.Lenses, db ports.Repository) *WebSrv {
+	return &WebSrv{cfg, pc, lc, db}
 }
 
 // Start starts the server.
@@ -38,6 +40,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		indexHandler := handlers.NewIndexHandler()
 		profilesHandler := handlers.NewProfilesHandler(a.pc)
 		lensesHandler := handlers.NewLensesHandler(a.lc)
+
+		workloadController := controllers.NewWorkloadsController(a.db)
 
 		app.Get("/", indexHandler.Index())
 
@@ -52,6 +56,13 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses.Get("/new", lensesHandler.New())
 		lenses.Post("/new", htmx.NewHtmxHandler(lensesHandler.NewLens()))
 		lenses.Get("/:id", lensesHandler.GetLens())
+
+		workloads := app.Group("/workloads")
+		workloads.Get("/list", htmx.NewCompFuncHandler(workloadController.List))
+		workloads.Get("/new", htmx.NewCompFuncHandler(workloadController.New))
+		workloads.Post("/new", htmx.NewHtmxHandler(workloadController.Store))
+		workloads.Get("/:id", htmx.NewCompFuncHandler(workloadController.Show))
+		workloads.Delete("/:id", htmx.NewHtmxHandler(workloadController.Destroy))
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {
