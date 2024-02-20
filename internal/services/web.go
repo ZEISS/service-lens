@@ -42,6 +42,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lensesHandler := handlers.NewLensesHandler(a.lc, a.db)
 
 		workloadController := controllers.NewWorkloadsController(a.db)
+		settingsController := controllers.NewSettingsController(a.db)
 
 		app.Get("/", indexHandler.Index())
 
@@ -64,6 +65,9 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workloads.Post("/new", htmx.NewHtmxHandler(workloadController.Store))
 		workloads.Get("/:id", htmx.NewCompFuncHandler(workloadController.Show))
 		workloads.Delete("/:id", htmx.NewHtmxHandler(workloadController.Destroy))
+
+		settings := app.Group("/settings")
+		settings.Get("/list", htmx.NewCompFuncHandler(settingsController.List))
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {

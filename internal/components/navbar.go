@@ -31,10 +31,8 @@ func (p NavbarProps) Context() *fiber.Ctx {
 func Navbar(p NavbarProps) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
-			"navbar":         true,
-			"bg-base-100":    true,
-			"border-8":       true,
-			"border-neutral": true,
+			"navbar":      true,
+			"bg-base-100": true,
 		},
 		htmx.Div(
 			htmx.ClassNames{"navbar-start": true},
@@ -159,6 +157,14 @@ func Navbar(p NavbarProps) htmx.Node {
 			htmx.ClassNames{
 				"navbar-end": true,
 			},
+			htmx.Input(
+				htmx.ClassNames{
+					"toggle":           true,
+					"theme-controller": true,
+				},
+				htmx.Attribute("type", "checkbox"),
+				htmx.Value("cupcake"),
+			),
 			UserNav(UserNavProps{}),
 		),
 	)

@@ -28,6 +28,21 @@ func (p LayoutProps) Context() *fiber.Ctx {
 	return p.ctx
 }
 
+// WrapProps ...
+type WrapProps struct {
+	ClassName map[string]bool
+}
+
+// Wrap ...
+func Wrap(p WrapProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.ClassNames{
+			"p-6": true,
+		}.Merge(p.ClassName),
+		htmx.Group(children...),
+	)
+}
+
 // Layout is a whole document to output.
 func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
@@ -47,9 +62,7 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 			},
 			Navbar(NavbarProps{}.WithContext(p.Context())),
 			htmx.Div(
-				htmx.ClassNames{
-					"p-8": true,
-				},
+				htmx.ClassNames{},
 				htmx.Group(children...),
 			),
 		),

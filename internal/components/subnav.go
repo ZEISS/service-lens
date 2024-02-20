@@ -9,14 +9,19 @@ type SubNavProps struct{}
 func SubNav(p SubNavProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
-			"navbar":      true,
-			"bg-base-100": true,
-			"w-full":      true,
+			"navbar":         true,
+			"bg-base-100":    true,
+			"w-full":         true,
+			"border-neutral": true,
+			"border-b":       true,
+			"border-t":       true,
+			"px-6":           true,
 		},
 		htmx.Div(
 			htmx.ClassNames{
 				"navbar-start": true,
 			},
+			htmx.Group(children...),
 			htmx.A(
 				htmx.ClassNames{
 					"btn":       true,
@@ -25,15 +30,6 @@ func SubNav(p SubNavProps, children ...htmx.Node) htmx.Node {
 				},
 				htmx.Text("Menu"),
 			),
-		),
-		htmx.Div(
-
-			htmx.ClassNames{
-				"flex":       true,
-				"flex-row":   true,
-				"navbar-end": true,
-			},
-			htmx.Group(children...),
 		),
 	)
 }

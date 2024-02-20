@@ -2,6 +2,7 @@ package components
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/links"
 )
 
 // UserNavProps ...
@@ -51,7 +52,17 @@ func UserNav(p UserNavProps) htmx.Node {
 					htmx.Span(htmx.ClassNames{"badge": true}, htmx.Text("New")),
 				),
 			),
-			htmx.Li(htmx.A(htmx.Text("Settings"))),
+			htmx.Li(
+				links.Link(
+					links.LinkProps{
+						Href:       "/settings/list",
+						ClassNames: htmx.ClassNames{"underline-none": true},
+					},
+					htmx.Text(
+						"Settings",
+					),
+				),
+			),
 			htmx.Li(htmx.A(htmx.Text("Logout"))),
 		),
 	)

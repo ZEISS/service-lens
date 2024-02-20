@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	links "github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/loading"
 )
@@ -146,101 +147,123 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 		components.PageProps{}.WithContext(c),
 		components.SubNav(
 			components.SubNavProps{},
-			htmx.A(
-				htmx.ClassNames{
-					"btn": true,
-				},
-				htmx.Attribute("href", "/workloads/new"),
-				htmx.Text("Create Workload"),
+			breadcrumbs.Breadcrumbs(
+				breadcrumbs.BreadcrumbsProps{},
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/",
+						Title: "Home",
+					},
+				),
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/workloads/list",
+						Title: "Workloads",
+					},
+				),
 			),
 		),
-		htmx.Div(
-			htmx.ClassNames{"overflow-x-auto": true},
+		// components.SubNav(
+		// 	components.SubNavProps{},
+
+		// 	htmx.A(
+		// 		htmx.ClassNames{
+		// 			"btn": true,
+		// 		},
+		// 		htmx.Attribute("href", "/workloads/new"),
+		// 		htmx.Text("Create Workload"),
+		// 	),
+		// ),
+		components.Wrap(
+			components.WrapProps{},
 			htmx.Div(
-				htmx.ClassNames{
-					"flex":            true,
-					"justify-between": true,
-					"items-center":    true,
-				},
-				htmx.Input(
-					htmx.ClassNames{
-						"input":          true,
-						"input-bordered": true,
-					},
-					htmx.Attribute("type", "search"),
-					htmx.Attribute("placeholder", "Search ..."),
-					htmx.Attribute("name", "q"),
-					htmx.HxPost("/workloads/search"),
-					htmx.HxTarget("#data-table"),
-					htmx.HxSwap("outerHTML"),
-					htmx.HxIndicator(".htmx-indicator"),
-					htmx.HxTrigger("keyup changed delay:500ms, search"),
-				),
+				htmx.ClassNames{"overflow-x-auto": true},
 				htmx.Div(
-					loading.Spinner(loading.SpinnerProps{
-						ClassNames: htmx.ClassNames{
-							"htmx-indicator": true,
+					htmx.ClassNames{
+						"flex":            true,
+						"justify-between": true,
+						"items-center":    true,
+					},
+					htmx.Input(
+						htmx.ClassNames{
+							"input":          true,
+							"input-bordered": true,
 						},
-					}),
+						htmx.Attribute("type", "search"),
+						htmx.Attribute("placeholder", "Search ..."),
+						htmx.Attribute("name", "q"),
+						htmx.HxPost("/workloads/search"),
+						htmx.HxTarget("#data-table"),
+						htmx.HxSwap("outerHTML"),
+						htmx.HxIndicator(".htmx-indicator"),
+						htmx.HxTrigger("keyup changed delay:500ms, search"),
+					),
+					htmx.Div(
+						loading.Spinner(loading.SpinnerProps{
+							ClassNames: htmx.ClassNames{
+								"htmx-indicator": true,
+							},
+						}),
+					),
 				),
-			),
-			htmx.Table(
-				htmx.ClassNames{"table": true},
-				htmx.THead(
-					htmx.Tr(
-						htmx.Th(
-							htmx.Label(
-								htmx.Input(
-									htmx.ClassNames{
-										"checkbox": true,
-									},
-									htmx.Attribute("type", "checkbox"),
-									htmx.Attribute("name", "all"),
+				htmx.Table(
+					htmx.ClassNames{"table": true},
+					htmx.THead(
+						htmx.Tr(
+							htmx.Th(
+								htmx.Label(
+									htmx.Input(
+										htmx.ClassNames{
+											"checkbox": true,
+										},
+										htmx.Attribute("type", "checkbox"),
+										htmx.Attribute("name", "all"),
+									),
 								),
 							),
-						),
-						htmx.Th(htmx.Text("ID")),
-						htmx.Th(htmx.Text("Name")),
-						htmx.Th(htmx.Text("Description")),
-					),
-				),
-				htmx.TBody(
-					htmx.ID("data-table"),
-					htmx.Group(profilesItems...),
-				),
-			),
-			htmx.Div(
-				htmx.FormElement(
-					htmx.ClassNames{},
-					htmx.Select(
-						htmx.HxTrigger("change"),
-						htmx.HxTarget("html"),
-						htmx.HxSwap("outerHTML"),
-						htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
-						htmx.ClassNames{
-							"select":   true,
-							"max-w-xs": true,
-						},
-						htmx.Option(
-							htmx.Text("10"),
-							htmx.Attribute("value", "10"),
-						),
-						htmx.Option(
-							htmx.Text("20"),
-							htmx.Attribute("value", "20"),
-						),
-						htmx.Option(
-							htmx.Text("30"),
-							htmx.Attribute("value", "30"),
+							htmx.Th(htmx.Text("ID")),
+							htmx.Th(htmx.Text("Name")),
+							htmx.Th(htmx.Text("Description")),
 						),
 					),
+					htmx.TBody(
+						htmx.ID("data-table"),
+						htmx.Group(profilesItems...),
+					),
 				),
-			),
-			htmx.Div(
-				htmx.ClassNames{
-					"flex":   true,
-					"w-full": true,
-				},
+				htmx.Div(
+					htmx.FormElement(
+						htmx.ClassNames{},
+						htmx.Select(
+							htmx.HxTrigger("change"),
+							htmx.HxTarget("html"),
+							htmx.HxSwap("outerHTML"),
+							htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
+							htmx.ClassNames{
+								"select":   true,
+								"max-w-xs": true,
+							},
+							htmx.Option(
+								htmx.Text("10"),
+								htmx.Attribute("value", "10"),
+							),
+							htmx.Option(
+								htmx.Text("20"),
+								htmx.Attribute("value", "20"),
+							),
+							htmx.Option(
+								htmx.Text("30"),
+								htmx.Attribute("value", "30"),
+							),
+						),
+					),
+				),
+				htmx.Div(
+					htmx.ClassNames{
+						"flex":   true,
+						"w-full": true,
+					},
+				),
 			),
 		),
 	), nil
