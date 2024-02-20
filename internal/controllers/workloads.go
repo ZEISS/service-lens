@@ -59,6 +59,9 @@ func (w *Workloads) Search(hx *htmx.Htmx) error {
 			htmx.Td(
 				links.Link(
 					links.LinkProps{
+						ClassNames: htmx.ClassNames{
+							"link": false,
+						},
 						Href: fmt.Sprintf("/workloads/%s", workload.ID.String()),
 					},
 					htmx.Text(workload.Name),
@@ -163,17 +166,6 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 				),
 			),
 		),
-		// components.SubNav(
-		// 	components.SubNavProps{},
-
-		// 	htmx.A(
-		// 		htmx.ClassNames{
-		// 			"btn": true,
-		// 		},
-		// 		htmx.Attribute("href", "/workloads/new"),
-		// 		htmx.Text("Create Workload"),
-		// 	),
-		// ),
 		components.Wrap(
 			components.WrapProps{},
 			htmx.Div(
@@ -397,63 +389,197 @@ func (w *Workloads) Show(c *fiber.Ctx) (htmx.Node, error) {
 		return nil, err
 	}
 
+	lenses := make([]htmx.Node, len(workload.Lenses))
+	for i, lens := range workload.Lenses {
+		lenses[i] = htmx.Tr(
+			htmx.Th(htmx.Text(lens.ID.String())),
+			htmx.Td(htmx.Text(lens.Name)),
+		)
+	}
+
 	return components.Page(
 		components.PageProps{}.WithContext(c),
+		// components.SubNav(
+		// 	components.SubNavProps{},
+		// 	htmx.Button(
+		// 		htmx.ClassNames{
+		// 			"btn":       true,
+		// 			"btn-ghost": true,
+		// 		},
+		// 		// htmx.HxTrigger("click"),
+		// 		// htmx.Target("#htmx-modal"),
+		// 		htmx.HxOn("click", "daisy_modal.showModal()"),
+		// 		htmx.Text("Delete"),
+		// 	),
+		// 	htmx.Dialog(
+		// 		htmx.ClassNames{
+		// 			"modal": true,
+		// 		},
+		// 		htmx.ID("daisy_modal"),
+		// 		htmx.Div(
+		// 			htmx.ClassNames{
+		// 				"modal-box": true,
+		// 			},
+		// 			htmx.H3(
+		// 				htmx.ClassNames{
+		// 					"font-bold": true,
+		// 					"text-lg":   true,
+		// 				},
+		// 				htmx.ID("htmx-modal"),
+		// 				htmx.Text("Confirm to delete the workload"),
+		// 			),
+		// 			htmx.Div(
+		// 				htmx.ClassNames{
+		// 					"modal-action": true,
+		// 				},
+		// 				htmx.FormElement(
+		// 					htmx.HxDelete("/workloads/"+workload.ID.String()),
+		// 					htmx.Method("dialog"),
+		// 					htmx.Button(
+		// 						htmx.ClassNames{
+		// 							"btn": true,
+		// 						},
+		// 						htmx.Attribute("type", "submit"),
+		// 						htmx.Text("Confirm"),
+		// 					),
+		// 				),
+		// 			),
+		// 		),
+		// 	),
+		// ),
 		components.SubNav(
 			components.SubNavProps{},
-			htmx.Button(
-				htmx.ClassNames{
-					"btn":       true,
-					"btn-ghost": true,
-				},
-				// htmx.HxTrigger("click"),
-				// htmx.Target("#htmx-modal"),
-				htmx.HxOn("click", "daisy_modal.showModal()"),
-				htmx.Text("Delete"),
+			breadcrumbs.Breadcrumbs(
+				breadcrumbs.BreadcrumbsProps{},
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/",
+						Title: "Home",
+					},
+				),
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/workloads/list",
+						Title: "Workloads",
+					},
+				),
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/workloads/" + workload.ID.String(),
+						Title: workload.Name,
+					},
+				),
 			),
-			htmx.Dialog(
-				htmx.ClassNames{
-					"modal": true,
-				},
-				htmx.ID("daisy_modal"),
+		),
+		components.Wrap(
+			components.WrapProps{},
+			htmx.Div(
+				htmx.H1(
+					htmx.Text(workload.Name),
+				),
+				htmx.P(
+					htmx.Text(workload.Description),
+				),
 				htmx.Div(
 					htmx.ClassNames{
-						"modal-box": true,
+						"flex":     true,
+						"flex-col": true,
+						"py-2":     true,
 					},
-					htmx.H3(
+					htmx.H4(
 						htmx.ClassNames{
-							"font-bold": true,
-							"text-lg":   true,
+							"text-gray-500": true,
 						},
-						htmx.ID("htmx-modal"),
-						htmx.Text("Confirm to delete the workload"),
+						htmx.Text("Created at"),
 					),
-					htmx.Div(
+					htmx.H3(
+						htmx.Text(
+							workload.CreatedAt.Format("2006-01-02 15:04:05"),
+						),
+					),
+				),
+				htmx.Div(
+					htmx.ClassNames{
+						"flex":     true,
+						"flex-col": true,
+						"py-2":     true,
+					},
+					htmx.H4(
 						htmx.ClassNames{
-							"modal-action": true,
+							"text-gray-500": true,
 						},
-						htmx.FormElement(
-							htmx.HxDelete("/workloads/"+workload.ID.String()),
-							htmx.Method("dialog"),
-							htmx.Button(
-								htmx.ClassNames{
-									"btn": true,
-								},
-								htmx.Attribute("type", "submit"),
-								htmx.Text("Confirm"),
-							),
+						htmx.Text("Updated at"),
+					),
+					htmx.H3(
+						htmx.Text(
+							workload.UpdatedAt.Format("2006-01-02 15:04:05"),
 						),
 					),
 				),
 			),
 		),
-		htmx.Div(
-			htmx.ClassNames{"p-4": true},
-			htmx.H1(
-				htmx.Text(workload.Name),
-			),
-			htmx.P(
-				htmx.Text(workload.Description),
+		components.Wrap(
+			components.WrapProps{
+				ClassName: htmx.ClassNames{
+					"border-neutral": true,
+					"border-t":       true,
+					"px-6":           true,
+				},
+			},
+			htmx.Div(
+				htmx.ClassNames{
+					"overflow-x-auto": true,
+				},
+				htmx.Table(
+					htmx.ClassNames{
+						"table": true,
+					},
+					htmx.THead(
+						htmx.Tr(
+							htmx.Th(htmx.Text("ID")),
+							htmx.Th(htmx.Text("Lens")),
+						),
+					),
+					htmx.TBody(
+						htmx.Group(lenses...),
+					),
+				),
+				//       <div class="overflow-x-auto">
+				//   <table class="table">
+				//     <!-- head -->
+				//     <thead>
+				//       <tr>
+				//         <th></th>
+				//         <th>Name</th>
+				//         <th>Job</th>
+				//         <th>Favorite Color</th>
+				//       </tr>
+				//     </thead>
+				//     <tbody>
+				//       <!-- row 1 -->
+				//       <tr>
+				//         <th>1</th>
+				//         <td>Cy Ganderton</td>
+				//         <td>Quality Control Specialist</td>
+				//         <td>Blue</td>
+				//       </tr>
+				//       <!-- row 2 -->
+				//       <tr>
+				//         <th>2</th>
+				//         <td>Hart Hagerty</td>
+				//         <td>Desktop Support Technician</td>
+				//         <td>Purple</td>
+				//       </tr>
+				//       <!-- row 3 -->
+				//       <tr>
+				//         <th>3</th>
+				//         <td>Brice Swyre</td>
+				//         <td>Tax Accountant</td>
+				//         <td>Red</td>
+				//       </tr>
+				//     </tbody>
+				//   </table>
+				// </div>
 			),
 		),
 	), nil

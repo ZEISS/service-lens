@@ -120,7 +120,7 @@ func (d *DB) ShowWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, 
 		ID: id,
 	}
 
-	err := d.conn.WithContext(ctx).Preload("Tags").Find(workload).Error
+	err := d.conn.WithContext(ctx).Preload("Lenses").Preload("Tags").Find(workload).Error
 	if err != nil {
 		return nil, err
 	}

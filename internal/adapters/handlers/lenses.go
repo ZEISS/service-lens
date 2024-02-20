@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -305,50 +306,71 @@ func (l *lensesHandler) List(c *fiber.Ctx) (htmx.Node, error) {
 
 	return components.Page(
 		components.PageProps{}.WithContext(c),
-		htmx.Div(
-			htmx.ClassNames{"overflow-x-auto": true},
-			htmx.Table(
-				htmx.ClassNames{"table": true},
-				htmx.THead(
-					htmx.Tr(
-						htmx.Th(
-							htmx.Label(
-								htmx.Input(
-									htmx.ClassNames{
-										"checkbox": true,
-									},
-									htmx.Attribute("type", "checkbox"),
-									htmx.Attribute("name", "all"),
-								),
-							),
-						),
-						htmx.Th(htmx.Text("ID")),
-						htmx.Th(htmx.Text("Name")),
-						htmx.Th(htmx.Text("Description")),
-					),
+		components.SubNav(
+			components.SubNavProps{},
+			breadcrumbs.Breadcrumbs(
+				breadcrumbs.BreadcrumbsProps{},
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/",
+						Title: "Home",
+					},
 				),
-				htmx.TBody(
-					items...,
+				breadcrumbs.Breadcrumb(
+					breadcrumbs.BreadcrumbProps{
+						Href:  "/lenses/list",
+						Title: "Lenses",
+					},
 				),
 			),
+		),
+		components.Wrap(
+			components.WrapProps{},
 			htmx.Div(
-				htmx.ClassNames{},
-				htmx.Select(
-					htmx.ClassNames{
-						"select":   true,
-						"max-w-xs": true,
-					},
-					htmx.Option(
-						htmx.Text("10"),
-						htmx.Attribute("value", "10"),
+				htmx.ClassNames{"overflow-x-auto": true},
+				htmx.Table(
+					htmx.ClassNames{"table": true},
+					htmx.THead(
+						htmx.Tr(
+							htmx.Th(
+								htmx.Label(
+									htmx.Input(
+										htmx.ClassNames{
+											"checkbox": true,
+										},
+										htmx.Attribute("type", "checkbox"),
+										htmx.Attribute("name", "all"),
+									),
+								),
+							),
+							htmx.Th(htmx.Text("ID")),
+							htmx.Th(htmx.Text("Name")),
+							htmx.Th(htmx.Text("Description")),
+						),
 					),
-					htmx.Option(
-						htmx.Text("20"),
-						htmx.Attribute("value", "20"),
+					htmx.TBody(
+						items...,
 					),
-					htmx.Option(
-						htmx.Text("30"),
-						htmx.Attribute("value", "30"),
+				),
+				htmx.Div(
+					htmx.ClassNames{},
+					htmx.Select(
+						htmx.ClassNames{
+							"select":   true,
+							"max-w-xs": true,
+						},
+						htmx.Option(
+							htmx.Text("10"),
+							htmx.Attribute("value", "10"),
+						),
+						htmx.Option(
+							htmx.Text("20"),
+							htmx.Attribute("value", "20"),
+						),
+						htmx.Option(
+							htmx.Text("30"),
+							htmx.Attribute("value", "30"),
+						),
 					),
 				),
 			),
