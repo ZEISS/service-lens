@@ -1,6 +1,8 @@
 package components
 
-import htmx "github.com/zeiss/fiber-htmx"
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+)
 
 // SubNavProps ...
 type SubNavProps struct{}
@@ -17,19 +19,32 @@ func SubNav(p SubNavProps, children ...htmx.Node) htmx.Node {
 			"border-t":       true,
 			"px-6":           true,
 		},
-		htmx.Div(
-			htmx.ClassNames{
-				"navbar-start": true,
-			},
-			htmx.Group(children...),
-			htmx.A(
-				htmx.ClassNames{
-					"btn":       true,
-					"btn-ghost": true,
-					"lg:hidden": true,
-				},
-				htmx.Text("Menu"),
-			),
-		),
+		htmx.Group(children...),
+	)
+}
+
+// SubNavBreadcrumbProps ...
+type SubNavBreadcrumbProps struct{}
+
+// SubNavBreadcrumb ...
+func SubNavBreadcrumb(p SubNavBreadcrumbProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.ClassNames{
+			"navbar-start": true,
+		},
+		htmx.Group(children...),
+	)
+}
+
+// SubNavActionsProps ...
+type SubNavActionsProps struct{}
+
+// SubNavActions ...
+func SubNavActions(p SubNavActionsProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.ClassNames{
+			"navbar-end": true,
+		},
+		htmx.Group(children...),
 	)
 }

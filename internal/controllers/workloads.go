@@ -142,7 +142,11 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 					htmx.Text(profile.Name),
 				),
 			),
-			htmx.Td(htmx.Text(profile.Description)),
+			htmx.Td(
+				htmx.Text(
+					profile.Description,
+				),
+			),
 		)
 	}
 
@@ -150,19 +154,37 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 		components.PageProps{}.WithContext(c),
 		components.SubNav(
 			components.SubNavProps{},
-			breadcrumbs.Breadcrumbs(
-				breadcrumbs.BreadcrumbsProps{},
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/",
-						Title: "Home",
-					},
+			components.SubNavBreadcrumb(
+				components.SubNavBreadcrumbProps{},
+				breadcrumbs.Breadcrumbs(
+					breadcrumbs.BreadcrumbsProps{},
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/",
+							Title: "Home",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/workloads/list",
+							Title: "Workloads",
+						},
+					),
 				),
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/workloads/list",
-						Title: "Workloads",
+			),
+			components.SubNavActions(
+				components.SubNavActionsProps{},
+				links.Link(
+					links.LinkProps{
+						Href: "/workloads/new",
+						ClassNames: htmx.ClassNames{
+							"btn":         true,
+							"btn-outline": true,
+							"btn-xs":      true,
+							"link-hover":  true,
+						},
 					},
+					htmx.Text("Create Workload"),
 				),
 			),
 		),
@@ -393,81 +415,43 @@ func (w *Workloads) Show(c *fiber.Ctx) (htmx.Node, error) {
 	for i, lens := range workload.Lenses {
 		lenses[i] = htmx.Tr(
 			htmx.Th(htmx.Text(lens.ID.String())),
-			htmx.Td(htmx.Text(lens.Name)),
+			htmx.Td(
+				links.Link(
+					links.LinkProps{
+						Href: fmt.Sprintf("/workloads/%s/lens/%s/list", workload.ID.String(), lens.ID.String()),
+					},
+					htmx.Text(lens.Name),
+				),
+			),
 		)
 	}
 
 	return components.Page(
 		components.PageProps{}.WithContext(c),
-		// components.SubNav(
-		// 	components.SubNavProps{},
-		// 	htmx.Button(
-		// 		htmx.ClassNames{
-		// 			"btn":       true,
-		// 			"btn-ghost": true,
-		// 		},
-		// 		// htmx.HxTrigger("click"),
-		// 		// htmx.Target("#htmx-modal"),
-		// 		htmx.HxOn("click", "daisy_modal.showModal()"),
-		// 		htmx.Text("Delete"),
-		// 	),
-		// 	htmx.Dialog(
-		// 		htmx.ClassNames{
-		// 			"modal": true,
-		// 		},
-		// 		htmx.ID("daisy_modal"),
-		// 		htmx.Div(
-		// 			htmx.ClassNames{
-		// 				"modal-box": true,
-		// 			},
-		// 			htmx.H3(
-		// 				htmx.ClassNames{
-		// 					"font-bold": true,
-		// 					"text-lg":   true,
-		// 				},
-		// 				htmx.ID("htmx-modal"),
-		// 				htmx.Text("Confirm to delete the workload"),
-		// 			),
-		// 			htmx.Div(
-		// 				htmx.ClassNames{
-		// 					"modal-action": true,
-		// 				},
-		// 				htmx.FormElement(
-		// 					htmx.HxDelete("/workloads/"+workload.ID.String()),
-		// 					htmx.Method("dialog"),
-		// 					htmx.Button(
-		// 						htmx.ClassNames{
-		// 							"btn": true,
-		// 						},
-		// 						htmx.Attribute("type", "submit"),
-		// 						htmx.Text("Confirm"),
-		// 					),
-		// 				),
-		// 			),
-		// 		),
-		// 	),
-		// ),
 		components.SubNav(
 			components.SubNavProps{},
-			breadcrumbs.Breadcrumbs(
-				breadcrumbs.BreadcrumbsProps{},
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/",
-						Title: "Home",
-					},
-				),
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/workloads/list",
-						Title: "Workloads",
-					},
-				),
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/workloads/" + workload.ID.String(),
-						Title: workload.Name,
-					},
+			components.SubNavBreadcrumb(
+				components.SubNavBreadcrumbProps{},
+				breadcrumbs.Breadcrumbs(
+					breadcrumbs.BreadcrumbsProps{},
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/",
+							Title: "Home",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/workloads/list",
+							Title: "Workloads",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/workloads/" + workload.ID.String(),
+							Title: workload.Name,
+						},
+					),
 				),
 			),
 		),
@@ -544,42 +528,6 @@ func (w *Workloads) Show(c *fiber.Ctx) (htmx.Node, error) {
 						htmx.Group(lenses...),
 					),
 				),
-				//       <div class="overflow-x-auto">
-				//   <table class="table">
-				//     <!-- head -->
-				//     <thead>
-				//       <tr>
-				//         <th></th>
-				//         <th>Name</th>
-				//         <th>Job</th>
-				//         <th>Favorite Color</th>
-				//       </tr>
-				//     </thead>
-				//     <tbody>
-				//       <!-- row 1 -->
-				//       <tr>
-				//         <th>1</th>
-				//         <td>Cy Ganderton</td>
-				//         <td>Quality Control Specialist</td>
-				//         <td>Blue</td>
-				//       </tr>
-				//       <!-- row 2 -->
-				//       <tr>
-				//         <th>2</th>
-				//         <td>Hart Hagerty</td>
-				//         <td>Desktop Support Technician</td>
-				//         <td>Purple</td>
-				//       </tr>
-				//       <!-- row 3 -->
-				//       <tr>
-				//         <th>3</th>
-				//         <td>Brice Swyre</td>
-				//         <td>Tax Accountant</td>
-				//         <td>Red</td>
-				//       </tr>
-				//     </tbody>
-				//   </table>
-				// </div>
 			),
 		),
 	), nil

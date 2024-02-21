@@ -161,6 +161,7 @@ func Navbar(p NavbarProps) htmx.Node {
 				htmx.ClassNames{
 					"toggle":           true,
 					"theme-controller": true,
+					"mx-4":             true,
 				},
 				htmx.Attribute("type", "checkbox"),
 				htmx.Value("cupcake"),

@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -184,76 +186,97 @@ func (p *profilesHandler) NewProfile() htmx.HtmxHandlerFunc {
 func (p *profilesHandler) New() fiber.Handler {
 	return htmx.NewCompHandler(
 		components.Page(
-			components.PageProps{
-				Children: []htmx.Node{
-					htmx.FormElement(
-						htmx.HxPost("/profiles"),
-						htmx.Label(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-lg":     true,
-								"mb-4":         true,
+			components.PageProps{},
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
 							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label": true,
-								},
-								htmx.Span(
-									htmx.ClassNames{
-										"label-text": true,
-									},
-									htmx.Text("What is your name?"),
-								),
-							),
-							htmx.Input(
-								htmx.Attribute("type", "text"),
-								htmx.Attribute("name", "name"),
-								htmx.Attribute("placeholder", "Name ..."),
-								htmx.ClassNames{
-									"input":          true,
-									"input-bordered": true,
-									"w-full":         true,
-									"max-w-lg":       true,
-								},
-							),
 						),
-						htmx.Label(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-lg":     true,
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/profiles/list",
+								Title: "Profiles",
 							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label":   true,
-									"sr-only": true,
-								},
-							),
-							htmx.Input(
-								htmx.Attribute("type", "text"),
-								htmx.Attribute("name", "description"),
-								htmx.Attribute("placeholder", "Description ..."),
-								htmx.ClassNames{
-									"input":          true,
-									"input-bordered": true,
-									"w-full":         true,
-									"max-w-lg":       true,
-								},
-							),
-						),
-						htmx.Button(
-							htmx.ClassNames{
-								"btn":         true,
-								"btn-default": true,
-								"my-4":        true,
-							},
-							htmx.Attribute("type", "submit"),
-							htmx.Text("Create Profile"),
 						),
 					),
-				},
-			},
+				),
+			),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.FormElement(
+					htmx.HxPost("/profiles"),
+					htmx.Label(
+						htmx.ClassNames{
+							"form-control": true,
+							"w-full":       true,
+							"max-w-lg":     true,
+							"mb-4":         true,
+						},
+						htmx.Div(
+							htmx.ClassNames{
+								"label": true,
+							},
+							htmx.Span(
+								htmx.ClassNames{
+									"label-text": true,
+								},
+								htmx.Text("What is your name?"),
+							),
+						),
+						htmx.Input(
+							htmx.Attribute("type", "text"),
+							htmx.Attribute("name", "name"),
+							htmx.Attribute("placeholder", "Name ..."),
+							htmx.ClassNames{
+								"input":          true,
+								"input-bordered": true,
+								"w-full":         true,
+								"max-w-lg":       true,
+							},
+						),
+					),
+					htmx.Label(
+						htmx.ClassNames{
+							"form-control": true,
+							"w-full":       true,
+							"max-w-lg":     true,
+						},
+						htmx.Div(
+							htmx.ClassNames{
+								"label":   true,
+								"sr-only": true,
+							},
+						),
+						htmx.Input(
+							htmx.Attribute("type", "text"),
+							htmx.Attribute("name", "description"),
+							htmx.Attribute("placeholder", "Description ..."),
+							htmx.ClassNames{
+								"input":          true,
+								"input-bordered": true,
+								"w-full":         true,
+								"max-w-lg":       true,
+							},
+						),
+					),
+					htmx.Button(
+						htmx.ClassNames{
+							"btn":         true,
+							"btn-default": true,
+							"my-4":        true,
+						},
+						htmx.Attribute("type", "submit"),
+						htmx.Text("Create Profile"),
+					),
+				),
+			),
 		),
 	)
 }
@@ -288,6 +311,42 @@ func (p *profilesHandler) List(c *fiber.Ctx) (htmx.Node, error) {
 
 	return components.Page(
 		components.PageProps{}.WithContext(c),
+		components.SubNav(
+			components.SubNavProps{},
+			components.SubNavBreadcrumb(
+				components.SubNavBreadcrumbProps{},
+				breadcrumbs.Breadcrumbs(
+					breadcrumbs.BreadcrumbsProps{},
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/",
+							Title: "Home",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/profiles/list",
+							Title: "Profiles",
+						},
+					),
+				),
+			),
+			components.SubNavActions(
+				components.SubNavActionsProps{},
+				links.Link(
+					links.LinkProps{
+						Href: "/profiles/new",
+						ClassNames: htmx.ClassNames{
+							"btn":         true,
+							"btn-outline": true,
+							"btn-xs":      true,
+							"link-hover":  true,
+						},
+					},
+					htmx.Text("Create Profile"),
+				),
+			),
+		),
 		htmx.Div(
 			htmx.ClassNames{"overflow-x-auto": true},
 			htmx.Table(

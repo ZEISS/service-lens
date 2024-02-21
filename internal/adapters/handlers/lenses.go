@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -208,57 +209,78 @@ func (l *lensesHandler) GetLens() fiber.Handler {
 func (p *lensesHandler) New() fiber.Handler {
 	return htmx.NewCompFuncHandler(func(c *fiber.Ctx) (htmx.Node, error) {
 		return components.Page(
-			components.PageProps{
-				Children: []htmx.Node{
-					htmx.FormElement(
-						htmx.ID("new-lens-form"),
-						htmx.HxPost("/lenses/new"),
-						htmx.HxEncoding("multipart/form-data"),
-						htmx.Label(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-xs":     true,
+			components.PageProps{},
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
 							},
-							htmx.Input(
-								htmx.Attribute("type", "file"),
-								htmx.Attribute("name", "spec"),
-								htmx.ClassNames{
-									"file-input":          true,
-									"file-input-bordered": true,
-									"w-full":              true,
-									"max-w-xs":            true,
-								},
-							),
-							htmx.Input(
-								htmx.Attribute("type", "text"),
-								htmx.Attribute("name", "tag"),
-								htmx.Attribute("placeholder", "Tag ..."),
-								htmx.ClassNames{
-									"input":          true,
-									"input-bordered": true,
-									"w-full":         true,
-									"max-w-xs":       true,
-								},
-							),
-							htmx.Progress(
-								htmx.Attribute("id", "progress"),
-								htmx.Value("0"),
-								htmx.Max("100"),
-							),
 						),
-						htmx.Button(
-							htmx.ClassNames{
-								"btn":         true,
-								"btn-default": true,
-								"my-4":        true,
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/lenses/list",
+								Title: "Lenses",
 							},
-							htmx.Attribute("type", "submit"),
-							htmx.Text("Create Lens"),
 						),
 					),
-				},
-			}.WithContext(c),
+				),
+			),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.FormElement(
+					htmx.ID("new-lens-form"),
+					htmx.HxPost("/lenses/new"),
+					htmx.HxEncoding("multipart/form-data"),
+					htmx.Label(
+						htmx.ClassNames{
+							"form-control": true,
+							"w-full":       true,
+							"max-w-xs":     true,
+						},
+						htmx.Input(
+							htmx.Attribute("type", "file"),
+							htmx.Attribute("name", "spec"),
+							htmx.ClassNames{
+								"file-input":          true,
+								"file-input-bordered": true,
+								"w-full":              true,
+								"max-w-xs":            true,
+							},
+						),
+						htmx.Input(
+							htmx.Attribute("type", "text"),
+							htmx.Attribute("name", "tag"),
+							htmx.Attribute("placeholder", "Tag ..."),
+							htmx.ClassNames{
+								"input":          true,
+								"input-bordered": true,
+								"w-full":         true,
+								"max-w-xs":       true,
+							},
+						),
+						htmx.Progress(
+							htmx.Attribute("id", "progress"),
+							htmx.Value("0"),
+							htmx.Max("100"),
+						),
+					),
+					htmx.Button(
+						htmx.ClassNames{
+							"btn":         true,
+							"btn-default": true,
+							"my-4":        true,
+						},
+						htmx.Attribute("type", "submit"),
+						htmx.Text("Create Lens"),
+					),
+				),
+			),
 		), nil
 	})
 }
@@ -308,19 +330,37 @@ func (l *lensesHandler) List(c *fiber.Ctx) (htmx.Node, error) {
 		components.PageProps{}.WithContext(c),
 		components.SubNav(
 			components.SubNavProps{},
-			breadcrumbs.Breadcrumbs(
-				breadcrumbs.BreadcrumbsProps{},
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/",
-						Title: "Home",
-					},
+			components.SubNavBreadcrumb(
+				components.SubNavBreadcrumbProps{},
+				breadcrumbs.Breadcrumbs(
+					breadcrumbs.BreadcrumbsProps{},
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/",
+							Title: "Home",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/lenses/list",
+							Title: "Lenses",
+						},
+					),
 				),
-				breadcrumbs.Breadcrumb(
-					breadcrumbs.BreadcrumbProps{
-						Href:  "/lenses/list",
-						Title: "Lenses",
+			),
+			components.SubNavActions(
+				components.SubNavActionsProps{},
+				links.Link(
+					links.LinkProps{
+						Href: "/lenses/new",
+						ClassNames: htmx.ClassNames{
+							"btn":         true,
+							"btn-outline": true,
+							"btn-xs":      true,
+							"link-hover":  true,
+						},
 					},
+					htmx.Text("Create Lens"),
 				),
 			),
 		),
