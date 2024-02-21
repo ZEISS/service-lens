@@ -10,8 +10,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
-var _ ports.Lenses = (*Lenses)(nil)
-
 // Lens ...
 type Lens struct {
 	db ports.Repository

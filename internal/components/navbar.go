@@ -100,6 +100,10 @@ func Navbar(p NavbarProps) htmx.Node {
 					"btn-ghost": true,
 					"text-xl":   true,
 				},
+				htmx.Attribute(
+					"href",
+					"/",
+				),
 				htmx.Text("Service Lens"),
 			),
 		),

@@ -7,7 +7,6 @@ import (
 
 	"github.com/zeiss/service-lens/internal/adapters"
 	"github.com/zeiss/service-lens/internal/configs"
-	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/services"
 
 	"github.com/katallaxie/pkg/logger"
@@ -66,11 +65,8 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	pc := controllers.NewProfilesController(db)
-	lc := controllers.NewLensesController(db)
-
 	srv, _ := server.WithContext(ctx)
-	webSrv := services.New(cfg, pc, lc, db)
+	webSrv := services.New(cfg, db)
 
 	srv.Listen(webSrv, true)
 	if err := srv.Wait(); err != nil {
