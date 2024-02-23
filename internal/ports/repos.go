@@ -5,4 +5,5 @@ type Repository interface {
 	Profiles
 	Lenses
 	Workloads
+	Teams
 }

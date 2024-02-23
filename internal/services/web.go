@@ -42,7 +42,12 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workloadLensController := controllers.NewLensController(a.db)
 		settingsController := controllers.NewSettingsController(a.db)
 
+		teamsController := controllers.NewTeamsController(a.db)
+
 		app.Get("/", htmx.NewCompFuncHandler(homeController.Index))
+
+		teams := app.Group("/teams")
+		teams.Get("/new", htmx.NewCompFuncHandler(teamsController.New))
 
 		profiles := app.Group("/profiles")
 		profiles.Get("/list", htmx.NewCompFuncHandler(profilesController.List))

@@ -60,7 +60,9 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 				"flex":           true,
 				"flex-col":       true,
 			},
-			Navbar(NavbarProps{}.WithContext(p.Context())),
+			Navbar(
+				NavbarProps{}.WithContext(p.Context()),
+			),
 			htmx.Div(
 				htmx.ClassNames{},
 				htmx.Group(children...),

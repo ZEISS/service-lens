@@ -28,7 +28,7 @@ func (p NavbarProps) Context() *fiber.Ctx {
 }
 
 // Navbar is a whole document to output.
-func Navbar(p NavbarProps) htmx.Node {
+func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
 			"navbar":      true,
@@ -94,17 +94,8 @@ func Navbar(p NavbarProps) htmx.Node {
 					htmx.Li(htmx.A(htmx.Text("Item 3"))),
 				),
 			),
-			htmx.A(
-				htmx.ClassNames{
-					"btn":       true,
-					"btn-ghost": true,
-					"text-xl":   true,
-				},
-				htmx.Attribute(
-					"href",
-					"/",
-				),
-				htmx.Text("Service Lens"),
+			AccountSwitcher(
+				AccountSwitcherProps{},
 			),
 		),
 		htmx.Div(
@@ -170,6 +161,7 @@ func Navbar(p NavbarProps) htmx.Node {
 				htmx.Attribute("type", "checkbox"),
 				htmx.Value("cupcake"),
 			),
+			htmx.Group(children...),
 			UserNav(UserNavProps{}),
 		),
 	)
