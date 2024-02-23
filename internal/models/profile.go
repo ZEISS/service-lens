@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +14,10 @@ type Profile struct {
 	Name        string            `json:"name"`
 	Description string            `json:"description"`
 	Questions   []ProfileQuestion `json:"questions" gorm:"many2many:profiles_questions;"`
-	Tags        []*Tag            `json:"tags" gorm:"polymorphic:Taggable;"`
+
+	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;"`
+	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
+	TeamID uuid.UUID  `json:"team_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

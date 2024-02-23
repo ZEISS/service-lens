@@ -29,7 +29,6 @@ func (d *DB) RunMigration() error {
 		&models.Risk{},
 		&models.Workload{},
 		&models.Tag{},
-		&models.Team{},
 	)
 }
 
@@ -94,7 +93,7 @@ func (d *DB) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*
 // ListProfiles ...
 func (d *DB) ListProfiles(ctx context.Context, pagination *models.Pagination) ([]*models.Profile, error) {
 	profiles := []*models.Profile{}
-	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
+	err := d.conn.WithContext(ctx).Where("team_id = ?", "244b0756-4ace-44f2-b5cd-cd6fa8918e5f").Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
 	if err != nil {
 		return nil, err
 	}

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/adapters"
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/services"
@@ -61,6 +62,11 @@ func run(ctx context.Context) error {
 
 	db := adapters.NewDB(conn)
 	err = db.RunMigration()
+	if err != nil {
+		return err
+	}
+
+	err = authz.RunMigrations(conn)
 	if err != nil {
 		return err
 	}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +19,9 @@ type Lens struct {
 	Pillars     []Pillar  `json:"pillars"`
 	IsDraft     bool      `json:"is_draft"`
 
-	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
+	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
+	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
+	TeamID uuid.UUID  `json:"team_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
