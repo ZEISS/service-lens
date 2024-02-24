@@ -3,6 +3,7 @@ package components
 import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
+	"github.com/zeiss/fiber-htmx/components/icons"
 )
 
 // AccountSwitcherProps ...
@@ -21,6 +22,7 @@ func AccountSwitcher(p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
 				},
 			},
 			htmx.Text("CIT-CA"),
+			icons.ChevronUpDown(icons.IconProps{}),
 		),
 		dropdowns.DropdownMenuItems(
 			dropdowns.DropdownMenuItemsProps{},

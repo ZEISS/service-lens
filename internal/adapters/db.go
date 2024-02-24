@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -146,6 +147,8 @@ func (d *DB) AddTeam(ctx context.Context, team *authz.Team) (*authz.Team, error)
 		return nil, err
 	}
 
+	fmt.Println("here")
+
 	return team, nil
 }
 
@@ -170,4 +173,18 @@ func (d *DB) ListTeams(ctx context.Context, pagination *models.Pagination) ([]*a
 	}
 
 	return teams, nil
+}
+
+// GetTeamByID ...
+func (d *DB) GetTeamByID(ctx context.Context, id uuid.UUID) (*authz.Team, error) {
+	team := &authz.Team{
+		ID: id,
+	}
+
+	err := d.conn.WithContext(ctx).Find(&team).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return team, err
 }

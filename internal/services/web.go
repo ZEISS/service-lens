@@ -48,6 +48,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		teams := app.Group("/teams")
 		teams.Get("/new", htmx.NewCompFuncHandler(teamsController.New))
+		teams.Post("/new", htmx.NewHtmxHandler(teamsController.Store))
+		teams.Get("/:id", htmx.NewCompFuncHandler(teamsController.Show))
 
 		profiles := app.Group("/profiles")
 		profiles.Get("/list", htmx.NewCompFuncHandler(profilesController.List))

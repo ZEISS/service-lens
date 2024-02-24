@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // Teams ...
@@ -47,7 +50,7 @@ func (a *Teams) New(c *fiber.Ctx) (htmx.Node, error) {
 		components.Wrap(
 			components.WrapProps{},
 			htmx.FormElement(
-				htmx.HxPost("/teams"),
+				htmx.HxPost("/teams/new"),
 				htmx.Label(
 					htmx.ClassNames{
 						"form-control": true,
@@ -136,7 +139,116 @@ func (a *Teams) New(c *fiber.Ctx) (htmx.Node, error) {
 						},
 						Type: "submit",
 					},
-					htmx.Text("Create Profile"),
+					htmx.Text("Create Team"),
+				),
+			),
+		),
+	), nil
+}
+
+// Store ...
+func (a *Teams) Store(hx *htmx.Htmx) error {
+	team := &authz.Team{
+		Name:        hx.Ctx().FormValue("name"),
+		Slug:        hx.Ctx().FormValue("slug"),
+		Description: utils.StrPtr(hx.Ctx().FormValue("description")),
+	}
+
+	team, err := a.db.AddTeam(hx.Ctx().Context(), team)
+	if err != nil {
+		return err
+	}
+
+	hx.Redirect("/teams/" + team.ID.String())
+
+	return nil
+}
+
+// Show ...
+func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return nil, err
+	}
+
+	team, err := a.db.GetTeamByID(c.Context(), id)
+	if err != nil {
+		return nil, err
+	}
+
+	return components.Page(
+		components.PageProps{}.WithContext(c),
+		components.SubNav(
+			components.SubNavProps{},
+			components.SubNavBreadcrumb(
+				components.SubNavBreadcrumbProps{},
+				breadcrumbs.Breadcrumbs(
+					breadcrumbs.BreadcrumbsProps{},
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/",
+							Title: "Home",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/teams/list",
+							Title: "Teams",
+						},
+					),
+					breadcrumbs.Breadcrumb(
+						breadcrumbs.BreadcrumbProps{
+							Href:  "/teams/" + team.ID.String(),
+							Title: team.Name,
+						},
+					),
+				),
+			),
+		),
+		components.Wrap(
+			components.WrapProps{},
+			htmx.Div(
+				htmx.H1(
+					htmx.Text(team.Name),
+				),
+				htmx.P(
+					htmx.Text(utils.PtrStr(team.Description)),
+				),
+				htmx.Div(
+					htmx.ClassNames{
+						"flex":     true,
+						"flex-col": true,
+						"py-2":     true,
+					},
+					htmx.H4(
+						htmx.ClassNames{
+							"text-gray-500": true,
+						},
+						htmx.Text("Created at"),
+					),
+					htmx.H3(
+						htmx.Text(
+							team.CreatedAt.Format("2006-01-02 15:04:05"),
+						),
+					),
+				),
+				htmx.Div(
+					htmx.ClassNames{
+						"flex":     true,
+						"flex-col": true,
+						"py-2":     true,
+					},
+					htmx.H4(
+						htmx.ClassNames{
+							"text-gray-500": true,
+						},
+						htmx.Text("Updated at"),
+					),
+					htmx.H3(
+						htmx.Text(
+							team.UpdatedAt.Format("2006-01-02 15:04:05"),
+						),
+					),
 				),
 			),
 		),
