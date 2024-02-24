@@ -3,9 +3,11 @@ package adapters
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+
+	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -135,4 +137,37 @@ func (d *DB) StoreWorkload(ctx context.Context, workload *models.Workload) error
 // DestroyWorkload ...
 func (d *DB) DestroyWorkload(ctx context.Context, id uuid.UUID) error {
 	return d.conn.WithContext(ctx).Delete(&models.Workload{}, id).Error
+}
+
+// AddTeam ...
+func (d *DB) AddTeam(ctx context.Context, team *authz.Team) (*authz.Team, error) {
+	err := d.conn.WithContext(ctx).Create(team).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return team, nil
+}
+
+// GetTeamBySlug ...
+func (d *DB) GetTeamBySlug(ctx context.Context, slug string) (*authz.Team, error) {
+	team := &authz.Team{}
+
+	err := d.conn.WithContext(ctx).Where("slug = ?", slug).First(team).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return team, err
+}
+
+// ListTeams ...
+func (d *DB) ListTeams(ctx context.Context, pagination *models.Pagination) ([]*authz.Team, error) {
+	teams := []*authz.Team{}
+	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&teams).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
 }
