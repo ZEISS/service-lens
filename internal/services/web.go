@@ -51,19 +51,21 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams.Post("/new", htmx.NewHtmxHandler(teamsController.Store))
 		teams.Get("/:id", htmx.NewCompFuncHandler(teamsController.Show))
 
-		profiles := app.Group("/profiles")
+		team := app.Group("/:team")
+
+		profiles := team.Group("/profiles")
 		profiles.Get("/list", htmx.NewCompFuncHandler(profilesController.List))
 		profiles.Get("/new", htmx.NewCompFuncHandler(profilesController.New))
 		profiles.Post("/new", htmx.NewHtmxHandler(profilesController.Store))
 		profiles.Get("/:id", htmx.NewCompFuncHandler(profilesController.Show))
 
-		lenses := app.Group("/lenses")
+		lenses := team.Group("/lenses")
 		lenses.Get("/list", htmx.NewCompFuncHandler(lensesController.List))
 		lenses.Get("/new", htmx.NewCompFuncHandler(lensesController.New))
 		lenses.Post("/new", htmx.NewHtmxHandler(lensesController.Store))
 		lenses.Get("/:id", htmx.NewCompFuncHandler(lensesController.Show))
 
-		workloads := app.Group("/workloads")
+		workloads := team.Group("/workloads")
 		workloads.Get("/list", htmx.NewCompFuncHandler(workloadController.List))
 		workloads.Post("/search", htmx.NewHtmxHandler(workloadController.Search))
 		workloads.Get("/new", htmx.NewCompFuncHandler(workloadController.New))

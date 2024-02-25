@@ -11,5 +11,5 @@ import (
 type Profiles interface {
 	NewProfile(ctx context.Context, profile *models.Profile) error
 	FetchProfile(ctx context.Context, id uuid.UUID) (*models.Profile, error)
-	ListProfiles(ctx context.Context, pagination *models.Pagination) ([]*models.Profile, error)
+	ListProfiles(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Profile, error)
 }

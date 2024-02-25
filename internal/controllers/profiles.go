@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // Profiles ...
@@ -259,7 +260,12 @@ func (p *Profiles) Show(c *fiber.Ctx) (htmx.Node, error) {
 
 // List ...
 func (p *Profiles) List(c *fiber.Ctx) (htmx.Node, error) {
-	profiles, err := p.db.ListProfiles(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+	team, err := utils.TeamFromContext(c)
+	if err != nil {
+		return nil, err
+	}
+
+	profiles, err := p.db.ListProfiles(c.Context(), team, &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
 		return nil, err
 	}

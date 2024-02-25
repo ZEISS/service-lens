@@ -221,7 +221,9 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 					),
 				),
 				htmx.Table(
-					htmx.ClassNames{"table": true},
+					htmx.ClassNames{
+						"table": true,
+					},
 					htmx.THead(
 						htmx.Tr(
 							htmx.Th(
@@ -285,7 +287,7 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 
 // New ...
 func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
-	profiles, err := w.db.ListProfiles(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
+	profiles, err := w.db.ListProfiles(c.Context(), "", &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
 		return nil, err
 	}
