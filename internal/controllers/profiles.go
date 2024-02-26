@@ -6,6 +6,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -270,27 +271,6 @@ func (p *Profiles) List(c *fiber.Ctx) (htmx.Node, error) {
 		return nil, err
 	}
 
-	items := make([]htmx.Node, len(profiles))
-	for i, profile := range profiles {
-		items[i] = htmx.Tr(
-			htmx.Th(
-				htmx.Label(
-					htmx.Input(
-						htmx.ClassNames{
-							"checkbox": true,
-						},
-						htmx.Attribute("type", "checkbox"),
-						htmx.Attribute("name", "profile"),
-						htmx.Attribute("value", profile.ID.String()),
-					),
-				),
-			),
-			htmx.Th(htmx.Text(profile.ID.String())),
-			htmx.Td(htmx.Text(profile.Name)),
-			htmx.Td(htmx.Text(profile.Description)),
-		)
-	}
-
 	return components.Page(
 		components.PageProps{}.WithContext(c),
 		components.SubNav(
@@ -330,31 +310,77 @@ func (p *Profiles) List(c *fiber.Ctx) (htmx.Node, error) {
 			),
 		),
 		htmx.Div(
-			htmx.ClassNames{"overflow-x-auto": true},
-			htmx.Table(
-				htmx.ClassNames{"table": true},
-				htmx.THead(
-					htmx.Tr(
-						htmx.Th(
-							htmx.Label(
-								htmx.Input(
-									htmx.ClassNames{
-										"checkbox": true,
-									},
-									htmx.Attribute("type", "checkbox"),
-									htmx.Attribute("name", "all"),
-								),
-							),
-						),
-						htmx.Th(htmx.Text("ID")),
-						htmx.Th(htmx.Text("Name")),
-						htmx.Th(htmx.Text("Description")),
-					),
-				),
-				htmx.TBody(
-					items...,
-				),
+			htmx.ClassNames{
+				"overflow-x-auto": true,
+			},
+			tables.Table[*models.Profile](
+				tables.TableProps[*models.Profile]{
+					Columns: []tables.ColumnDef[*models.Profile]{
+						{
+							ID:          "id",
+							AccessorKey: "id",
+							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+								return htmx.Th(htmx.Text("ID"))
+							},
+							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+								return htmx.Td(
+									htmx.Text(row.ID.String()),
+								)
+							},
+						},
+						{
+							ID:          "name",
+							AccessorKey: "name",
+							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+								return htmx.Th(htmx.Text("Name"))
+							},
+							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+								return htmx.Td(
+									htmx.Text(row.Name),
+								)
+							},
+						},
+						{
+							ID:          "description",
+							AccessorKey: "description",
+							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+								return htmx.Th(htmx.Text("Description"))
+							},
+							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+								return htmx.Td(
+									htmx.Text(row.Description),
+								)
+							},
+						},
+					},
+					Rows: tables.NewRows(profiles),
+				},
 			),
+
+			// htmx.Table(
+			// 	htmx.ClassNames{"table": true},
+			// 	htmx.THead(
+			// 		htmx.Tr(
+			// 			htmx.Th(
+			// 				htmx.Label(
+			// 					htmx.Input(
+			// 						htmx.ClassNames{
+			// 							"checkbox": true,
+			// 						},
+			// 						htmx.Attribute("type", "checkbox"),
+			// 						htmx.Attribute("name", "all"),
+			// 					),
+			// 				),
+			// 			),
+			// 			htmx.Th(htmx.Text("ID")),
+			// 			htmx.Th(htmx.Text("Name")),
+			// 			htmx.Th(htmx.Text("Description")),
+			// 		),
+			// 	),
+			// 	htmx.TBody(
+			// 		items...,
+			// 	),
+			// ),
 			htmx.Div(
 				htmx.ClassNames{},
 				htmx.Select(
