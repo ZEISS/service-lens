@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -95,12 +94,8 @@ func (d *DB) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*
 
 // ListProfiles ...
 func (d *DB) ListProfiles(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Profile, error) {
-	team := &authz.Team{
-		Slug: teamSlug,
-	}
-
 	profiles := []*models.Profile{}
-	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Find(&team)).Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
+	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
 	if err != nil {
 		return nil, err
 	}
@@ -150,8 +145,6 @@ func (d *DB) AddTeam(ctx context.Context, team *authz.Team) (*authz.Team, error)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("here")
 
 	return team, nil
 }

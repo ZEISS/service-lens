@@ -37,11 +37,6 @@ func Page(p PageProps, children ...htmx.Node) htmx.Node {
 				htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),
 				htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
 			},
-			Body: []htmx.Node{
-				Layout(
-					LayoutProps{}.WithContext(p.Context()),
-					htmx.Group(children...),
-				),
-			},
+			Body: children,
 		}.WithContext(p.Context()))
 }

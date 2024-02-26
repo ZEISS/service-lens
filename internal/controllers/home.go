@@ -21,11 +21,14 @@ func NewHomeController(db ports.Repository) *Home {
 func (h *Home) Index(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
 		components.PageProps{},
-		components.Wrap(
-			components.WrapProps{},
-			htmx.Div(
-				htmx.H1(
-					htmx.Text("Welcome to Service Lens"),
+		components.Layout(
+			components.LayoutProps{}.WithContext(c),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.Div(
+					htmx.H1(
+						htmx.Text("Welcome to Service Lens"),
+					),
 				),
 			),
 		),

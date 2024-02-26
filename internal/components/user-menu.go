@@ -63,7 +63,12 @@ func UserNav(p UserNavProps) htmx.Node {
 					),
 				),
 			),
-			htmx.Li(htmx.A(htmx.Text("Logout"))),
+			htmx.Li(
+				htmx.A(
+					htmx.Attribute("href", "/logout"),
+					htmx.Text("Logout"),
+				),
+			),
 		),
 	)
 }

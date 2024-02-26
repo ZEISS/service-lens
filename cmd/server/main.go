@@ -13,7 +13,7 @@ import (
 	"github.com/katallaxie/pkg/logger"
 	"github.com/katallaxie/pkg/server"
 	"github.com/spf13/cobra"
-
+	gorm_adapter "github.com/zeiss/fiber-goth/adapters/gorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -71,8 +71,13 @@ func run(ctx context.Context) error {
 		return err
 	}
 
+	ga, err := gorm_adapter.New(conn)
+	if err != nil {
+		return err
+	}
+
 	srv, _ := server.WithContext(ctx)
-	webSrv := services.New(cfg, db)
+	webSrv := services.New(cfg, db, ga)
 
 	srv.Listen(webSrv, true)
 	if err := srv.Wait(); err != nil {

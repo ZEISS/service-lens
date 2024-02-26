@@ -65,74 +65,77 @@ func (l *Lenses) Store(hx *htmx.Htmx) error {
 func (l *Lenses) New(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
 		components.PageProps{},
-		components.SubNav(
-			components.SubNavProps{},
-			components.SubNavBreadcrumb(
-				components.SubNavBreadcrumbProps{},
-				breadcrumbs.Breadcrumbs(
-					breadcrumbs.BreadcrumbsProps{},
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/",
-							Title: "Home",
-						},
-					),
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/lenses/list",
-							Title: "Lenses",
-						},
+		components.Layout(
+			components.LayoutProps{}.WithContext(c),
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
+							},
+						),
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/lenses/list",
+								Title: "Lenses",
+							},
+						),
 					),
 				),
 			),
-		),
-		components.Wrap(
-			components.WrapProps{},
-			htmx.FormElement(
-				htmx.ID("new-lens-form"),
-				htmx.HxPost("/lenses/new"),
-				htmx.HxEncoding("multipart/form-data"),
-				htmx.Label(
-					htmx.ClassNames{
-						"form-control": true,
-						"w-full":       true,
-						"max-w-xs":     true,
-					},
-					htmx.Input(
-						htmx.Attribute("type", "file"),
-						htmx.Attribute("name", "spec"),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.FormElement(
+					htmx.ID("new-lens-form"),
+					htmx.HxPost("/lenses/new"),
+					htmx.HxEncoding("multipart/form-data"),
+					htmx.Label(
 						htmx.ClassNames{
-							"file-input":          true,
-							"file-input-bordered": true,
-							"w-full":              true,
-							"max-w-xs":            true,
+							"form-control": true,
+							"w-full":       true,
+							"max-w-xs":     true,
 						},
+						htmx.Input(
+							htmx.Attribute("type", "file"),
+							htmx.Attribute("name", "spec"),
+							htmx.ClassNames{
+								"file-input":          true,
+								"file-input-bordered": true,
+								"w-full":              true,
+								"max-w-xs":            true,
+							},
+						),
+						htmx.Input(
+							htmx.Attribute("type", "text"),
+							htmx.Attribute("name", "tag"),
+							htmx.Attribute("placeholder", "Tag ..."),
+							htmx.ClassNames{
+								"input":          true,
+								"input-bordered": true,
+								"w-full":         true,
+								"max-w-xs":       true,
+							},
+						),
+						htmx.Progress(
+							htmx.Attribute("id", "progress"),
+							htmx.Value("0"),
+							htmx.Max("100"),
+						),
 					),
-					htmx.Input(
-						htmx.Attribute("type", "text"),
-						htmx.Attribute("name", "tag"),
-						htmx.Attribute("placeholder", "Tag ..."),
+					htmx.Button(
 						htmx.ClassNames{
-							"input":          true,
-							"input-bordered": true,
-							"w-full":         true,
-							"max-w-xs":       true,
+							"btn":         true,
+							"btn-default": true,
+							"my-4":        true,
 						},
+						htmx.Attribute("type", "submit"),
+						htmx.Text("Create Lens"),
 					),
-					htmx.Progress(
-						htmx.Attribute("id", "progress"),
-						htmx.Value("0"),
-						htmx.Max("100"),
-					),
-				),
-				htmx.Button(
-					htmx.ClassNames{
-						"btn":         true,
-						"btn-default": true,
-						"my-4":        true,
-					},
-					htmx.Attribute("type", "submit"),
-					htmx.Text("Create Lens"),
 				),
 			),
 		),

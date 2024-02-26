@@ -151,134 +151,137 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{}.WithContext(c),
-		components.SubNav(
-			components.SubNavProps{},
-			components.SubNavBreadcrumb(
-				components.SubNavBreadcrumbProps{},
-				breadcrumbs.Breadcrumbs(
-					breadcrumbs.BreadcrumbsProps{},
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/",
-							Title: "Home",
-						},
-					),
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/workloads/list",
-							Title: "Workloads",
-						},
-					),
-				),
-			),
-			components.SubNavActions(
-				components.SubNavActionsProps{},
-				links.Link(
-					links.LinkProps{
-						Href: "/workloads/new",
-						ClassNames: htmx.ClassNames{
-							"btn":         true,
-							"btn-outline": true,
-							"btn-xs":      true,
-							"link-hover":  true,
-						},
-					},
-					htmx.Text("Create Workload"),
-				),
-			),
-		),
-		components.Wrap(
-			components.WrapProps{},
-			htmx.Div(
-				htmx.ClassNames{"overflow-x-auto": true},
-				htmx.Div(
-					htmx.ClassNames{
-						"flex":            true,
-						"justify-between": true,
-						"items-center":    true,
-					},
-					htmx.Input(
-						htmx.ClassNames{
-							"input":          true,
-							"input-bordered": true,
-						},
-						htmx.Attribute("type", "search"),
-						htmx.Attribute("placeholder", "Search ..."),
-						htmx.Attribute("name", "q"),
-						htmx.HxPost("/workloads/search"),
-						htmx.HxTarget("#data-table"),
-						htmx.HxSwap("outerHTML"),
-						htmx.HxIndicator(".htmx-indicator"),
-						htmx.HxTrigger("keyup changed delay:500ms, search"),
-					),
-					htmx.Div(
-						loading.Spinner(loading.SpinnerProps{
-							ClassNames: htmx.ClassNames{
-								"htmx-indicator": true,
+		components.PageProps{},
+		components.Layout(
+			components.LayoutProps{}.WithContext(c),
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
 							},
-						}),
+						),
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/workloads/list",
+								Title: "Workloads",
+							},
+						),
 					),
 				),
-				htmx.Table(
-					htmx.ClassNames{
-						"table": true,
-					},
-					htmx.THead(
-						htmx.Tr(
-							htmx.Th(
-								htmx.Label(
-									htmx.Input(
-										htmx.ClassNames{
-											"checkbox": true,
-										},
-										htmx.Attribute("type", "checkbox"),
-										htmx.Attribute("name", "all"),
+				components.SubNavActions(
+					components.SubNavActionsProps{},
+					links.Link(
+						links.LinkProps{
+							Href: "/workloads/new",
+							ClassNames: htmx.ClassNames{
+								"btn":         true,
+								"btn-outline": true,
+								"btn-xs":      true,
+								"link-hover":  true,
+							},
+						},
+						htmx.Text("Create Workload"),
+					),
+				),
+			),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.Div(
+					htmx.ClassNames{"overflow-x-auto": true},
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":            true,
+							"justify-between": true,
+							"items-center":    true,
+						},
+						htmx.Input(
+							htmx.ClassNames{
+								"input":          true,
+								"input-bordered": true,
+							},
+							htmx.Attribute("type", "search"),
+							htmx.Attribute("placeholder", "Search ..."),
+							htmx.Attribute("name", "q"),
+							htmx.HxPost("/workloads/search"),
+							htmx.HxTarget("#data-table"),
+							htmx.HxSwap("outerHTML"),
+							htmx.HxIndicator(".htmx-indicator"),
+							htmx.HxTrigger("keyup changed delay:500ms, search"),
+						),
+						htmx.Div(
+							loading.Spinner(loading.SpinnerProps{
+								ClassNames: htmx.ClassNames{
+									"htmx-indicator": true,
+								},
+							}),
+						),
+					),
+					htmx.Table(
+						htmx.ClassNames{
+							"table": true,
+						},
+						htmx.THead(
+							htmx.Tr(
+								htmx.Th(
+									htmx.Label(
+										htmx.Input(
+											htmx.ClassNames{
+												"checkbox": true,
+											},
+											htmx.Attribute("type", "checkbox"),
+											htmx.Attribute("name", "all"),
+										),
 									),
 								),
-							),
-							htmx.Th(htmx.Text("ID")),
-							htmx.Th(htmx.Text("Name")),
-							htmx.Th(htmx.Text("Description")),
-						),
-					),
-					htmx.TBody(
-						htmx.ID("data-table"),
-						htmx.Group(profilesItems...),
-					),
-				),
-				htmx.Div(
-					htmx.FormElement(
-						htmx.ClassNames{},
-						htmx.Select(
-							htmx.HxTrigger("change"),
-							htmx.HxTarget("html"),
-							htmx.HxSwap("outerHTML"),
-							htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
-							htmx.ClassNames{
-								"select":   true,
-								"max-w-xs": true,
-							},
-							htmx.Option(
-								htmx.Text("10"),
-								htmx.Attribute("value", "10"),
-							),
-							htmx.Option(
-								htmx.Text("20"),
-								htmx.Attribute("value", "20"),
-							),
-							htmx.Option(
-								htmx.Text("30"),
-								htmx.Attribute("value", "30"),
+								htmx.Th(htmx.Text("ID")),
+								htmx.Th(htmx.Text("Name")),
+								htmx.Th(htmx.Text("Description")),
 							),
 						),
+						htmx.TBody(
+							htmx.ID("data-table"),
+							htmx.Group(profilesItems...),
+						),
 					),
-				),
-				htmx.Div(
-					htmx.ClassNames{
-						"flex":   true,
-						"w-full": true,
-					},
+					htmx.Div(
+						htmx.FormElement(
+							htmx.ClassNames{},
+							htmx.Select(
+								htmx.HxTrigger("change"),
+								htmx.HxTarget("html"),
+								htmx.HxSwap("outerHTML"),
+								htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
+								htmx.ClassNames{
+									"select":   true,
+									"max-w-xs": true,
+								},
+								htmx.Option(
+									htmx.Text("10"),
+									htmx.Attribute("value", "10"),
+								),
+								htmx.Option(
+									htmx.Text("20"),
+									htmx.Attribute("value", "20"),
+								),
+								htmx.Option(
+									htmx.Text("30"),
+									htmx.Attribute("value", "30"),
+								),
+							),
+						),
+					),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":   true,
+							"w-full": true,
+						},
+					),
 				),
 			),
 		),
@@ -314,88 +317,91 @@ func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{}.WithContext(c),
-		htmx.FormElement(
-			htmx.HxPost("/workloads/new"),
-			htmx.Label(
-				htmx.ClassNames{
-					"form-control": true,
-					"w-full":       true,
-					"max-w-lg":     true,
-					"mb-4":         true,
-				},
-				htmx.Div(
+		components.PageProps{},
+		components.Layout(
+			components.LayoutProps{}.WithContext(c),
+			htmx.FormElement(
+				htmx.HxPost("/workloads/new"),
+				htmx.Label(
 					htmx.ClassNames{
-						"label": true,
+						"form-control": true,
+						"w-full":       true,
+						"max-w-lg":     true,
+						"mb-4":         true,
 					},
-					htmx.Span(
+					htmx.Div(
 						htmx.ClassNames{
-							"label-text": true,
+							"label": true,
+						},
+						htmx.Span(
+							htmx.ClassNames{
+								"label-text": true,
+							},
+						),
+					),
+					htmx.Input(
+						htmx.Attribute("type", "text"),
+						htmx.Attribute("name", "name"),
+						htmx.Attribute("placeholder", "Name ..."),
+						htmx.ClassNames{
+							"input":          true,
+							"input-bordered": true,
+							"w-full":         true,
+							"max-w-lg":       true,
 						},
 					),
 				),
-				htmx.Input(
-					htmx.Attribute("type", "text"),
-					htmx.Attribute("name", "name"),
-					htmx.Attribute("placeholder", "Name ..."),
+				htmx.Label(
 					htmx.ClassNames{
-						"input":          true,
-						"input-bordered": true,
-						"w-full":         true,
-						"max-w-lg":       true,
+						"form-control": true,
+						"w-full":       true,
+						"max-w-lg":     true,
 					},
+					htmx.Div(
+						htmx.ClassNames{
+							"label":   true,
+							"sr-only": true,
+						},
+					),
+					htmx.Input(
+						htmx.Attribute("type", "text"),
+						htmx.Attribute("name", "description"),
+						htmx.Attribute("placeholder", "Description ..."),
+						htmx.ClassNames{
+							"input":          true,
+							"input-bordered": true,
+							"w-full":         true,
+							"max-w-lg":       true,
+						},
+					),
 				),
-			),
-			htmx.Label(
-				htmx.ClassNames{
-					"form-control": true,
-					"w-full":       true,
-					"max-w-lg":     true,
-				},
-				htmx.Div(
+				htmx.Select(
 					htmx.ClassNames{
-						"label":   true,
-						"sr-only": true,
+						"select":   true,
+						"max-w-xs": true,
+						"block":    true,
 					},
+					htmx.Attribute("name", "profile"),
+					htmx.Group(profilesItems...),
 				),
-				htmx.Input(
-					htmx.Attribute("type", "text"),
-					htmx.Attribute("name", "description"),
-					htmx.Attribute("placeholder", "Description ..."),
+				htmx.Select(
 					htmx.ClassNames{
-						"input":          true,
-						"input-bordered": true,
-						"w-full":         true,
-						"max-w-lg":       true,
+						"select":   true,
+						"max-w-xs": true,
+						"block":    true,
 					},
+					htmx.Attribute("name", "lens"),
+					htmx.Group(lensesItems...),
 				),
-			),
-			htmx.Select(
-				htmx.ClassNames{
-					"select":   true,
-					"max-w-xs": true,
-					"block":    true,
-				},
-				htmx.Attribute("name", "profile"),
-				htmx.Group(profilesItems...),
-			),
-			htmx.Select(
-				htmx.ClassNames{
-					"select":   true,
-					"max-w-xs": true,
-					"block":    true,
-				},
-				htmx.Attribute("name", "lens"),
-				htmx.Group(lensesItems...),
-			),
-			htmx.Button(
-				htmx.ClassNames{
-					"btn":         true,
-					"btn-default": true,
-					"my-4":        true,
-				},
-				htmx.Attribute("type", "submit"),
-				htmx.Text("Create Workload"),
+				htmx.Button(
+					htmx.ClassNames{
+						"btn":         true,
+						"btn-default": true,
+						"my-4":        true,
+					},
+					htmx.Attribute("type", "submit"),
+					htmx.Text("Create Workload"),
+				),
 			),
 		),
 	), nil
@@ -429,105 +435,108 @@ func (w *Workloads) Show(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{}.WithContext(c),
-		components.SubNav(
-			components.SubNavProps{},
-			components.SubNavBreadcrumb(
-				components.SubNavBreadcrumbProps{},
-				breadcrumbs.Breadcrumbs(
-					breadcrumbs.BreadcrumbsProps{},
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/",
-							Title: "Home",
-						},
-					),
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/workloads/list",
-							Title: "Workloads",
-						},
-					),
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/workloads/" + workload.ID.String(),
-							Title: workload.Name,
-						},
-					),
-				),
-			),
-		),
-		components.Wrap(
-			components.WrapProps{},
-			htmx.Div(
-				htmx.H1(
-					htmx.Text(workload.Name),
-				),
-				htmx.P(
-					htmx.Text(workload.Description),
-				),
-				htmx.Div(
-					htmx.ClassNames{
-						"flex":     true,
-						"flex-col": true,
-						"py-2":     true,
-					},
-					htmx.H4(
-						htmx.ClassNames{
-							"text-gray-500": true,
-						},
-						htmx.Text("Created at"),
-					),
-					htmx.H3(
-						htmx.Text(
-							workload.CreatedAt.Format("2006-01-02 15:04:05"),
+		components.PageProps{},
+		components.Layout(
+			components.LayoutProps{}.WithContext(c),
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
+							},
 						),
-					),
-				),
-				htmx.Div(
-					htmx.ClassNames{
-						"flex":     true,
-						"flex-col": true,
-						"py-2":     true,
-					},
-					htmx.H4(
-						htmx.ClassNames{
-							"text-gray-500": true,
-						},
-						htmx.Text("Updated at"),
-					),
-					htmx.H3(
-						htmx.Text(
-							workload.UpdatedAt.Format("2006-01-02 15:04:05"),
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/workloads/list",
+								Title: "Workloads",
+							},
+						),
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/workloads/" + workload.ID.String(),
+								Title: workload.Name,
+							},
 						),
 					),
 				),
 			),
-		),
-		components.Wrap(
-			components.WrapProps{
-				ClassName: htmx.ClassNames{
-					"border-neutral": true,
-					"border-t":       true,
-					"px-6":           true,
-				},
-			},
-			htmx.Div(
-				htmx.ClassNames{
-					"overflow-x-auto": true,
-				},
-				htmx.Table(
-					htmx.ClassNames{
-						"table": true,
-					},
-					htmx.THead(
-						htmx.Tr(
-							htmx.Th(htmx.Text("ID")),
-							htmx.Th(htmx.Text("Lens")),
+			components.Wrap(
+				components.WrapProps{},
+				htmx.Div(
+					htmx.H1(
+						htmx.Text(workload.Name),
+					),
+					htmx.P(
+						htmx.Text(workload.Description),
+					),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Created at"),
+						),
+						htmx.H3(
+							htmx.Text(
+								workload.CreatedAt.Format("2006-01-02 15:04:05"),
+							),
 						),
 					),
-					htmx.TBody(
-						htmx.Group(lenses...),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Updated at"),
+						),
+						htmx.H3(
+							htmx.Text(
+								workload.UpdatedAt.Format("2006-01-02 15:04:05"),
+							),
+						),
+					),
+				),
+			),
+			components.Wrap(
+				components.WrapProps{
+					ClassName: htmx.ClassNames{
+						"border-neutral": true,
+						"border-t":       true,
+						"px-6":           true,
+					},
+				},
+				htmx.Div(
+					htmx.ClassNames{
+						"overflow-x-auto": true,
+					},
+					htmx.Table(
+						htmx.ClassNames{
+							"table": true,
+						},
+						htmx.THead(
+							htmx.Tr(
+								htmx.Th(htmx.Text("ID")),
+								htmx.Th(htmx.Text("Lens")),
+							),
+						),
+						htmx.TBody(
+							htmx.Group(lenses...),
+						),
 					),
 				),
 			),
