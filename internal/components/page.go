@@ -1,7 +1,6 @@
 package components
 
 import (
-	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -11,19 +10,7 @@ type PageProps struct {
 	Path     string
 	Children []htmx.Node
 
-	ctx *fiber.Ctx
-}
-
-// WithContext returns a new PageProps with the given context.
-func (p PageProps) WithContext(ctx *fiber.Ctx) PageProps {
-	p.ctx = ctx
-
-	return p
-}
-
-// Context ...
-func (p PageProps) Context() *fiber.Ctx {
-	return p.ctx
+	htmx.Ctx
 }
 
 // Page is a whole document to output.
@@ -38,5 +25,5 @@ func Page(p PageProps, children ...htmx.Node) htmx.Node {
 				htmx.Script(htmx.Attribute("src", "https://cdn.tailwindcss.com"), htmx.Attribute("type", "application/javascript")),
 			},
 			Body: children,
-		}.WithContext(p.Context()))
+		})
 }

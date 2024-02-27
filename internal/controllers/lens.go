@@ -22,10 +22,14 @@ func NewLensController(db ports.Repository) *Lens {
 
 // List ...
 func (l *Lens) List(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	return components.Page(
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{}.WithContext(c),
+			components.LayoutProps{
+				Ctx: ctx,
+			},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(

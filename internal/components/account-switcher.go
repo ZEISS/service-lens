@@ -1,13 +1,23 @@
 package components
 
 import (
+	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 )
 
 // AccountSwitcherProps ...
-type AccountSwitcherProps struct{}
+type AccountSwitcherProps struct {
+	ctx *fiber.Ctx
+}
+
+// WithContext returns a new PageProps with the given context.
+func (p AccountSwitcherProps) WithContext(ctx *fiber.Ctx) AccountSwitcherProps {
+	p.ctx = ctx
+
+	return p
+}
 
 // AccountSwitcher ...
 func AccountSwitcher(p AccountSwitcherProps, children ...htmx.Node) htmx.Node {

@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/paginations"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -42,8 +45,12 @@ func (p *Profiles) Store(hx *htmx.Htmx) error {
 
 // New ...
 func (p *Profiles) New(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	return components.Page(
-		components.PageProps{},
+		components.PageProps{
+			Ctx: ctx,
+		},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(
@@ -260,148 +267,161 @@ func (p *Profiles) Show(c *fiber.Ctx) (htmx.Node, error) {
 }
 
 // List ...
-func (p *Profiles) List(c *fiber.Ctx) (htmx.Node, error) {
-	team, err := utils.TeamFromContext(c)
+func (p *Profiles) List(hx *htmx.Htmx) error {
+	pagination := tables.PaginationFromContext(hx.Ctx())
+
+	team, err := utils.TeamFromContext(hx.Ctx())
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	profiles, err := p.db.ListProfiles(c.Context(), team, &models.Pagination{Limit: 10, Offset: 0})
+	profiles, err := p.db.ListProfiles(hx.Ctx().Context(), team, &models.Pagination{Limit: pagination.Limit, Offset: pagination.Offset})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return components.Page(
-		components.PageProps{}.WithContext(c),
-		components.SubNav(
-			components.SubNavProps{},
-			components.SubNavBreadcrumb(
-				components.SubNavBreadcrumbProps{},
-				breadcrumbs.Breadcrumbs(
-					breadcrumbs.BreadcrumbsProps{},
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/",
-							Title: "Home",
+	table := tables.Table[*models.Profile](
+		tables.TableProps[*models.Profile]{
+			Pagination: func(tp tables.TableProps[*models.Profile], r tables.Rows[*models.Profile]) htmx.Node {
+				return paginations.Pagination(
+					paginations.PaginationProps{},
+					paginations.Prev(
+						paginations.PaginationProps{
+							URL:    "",
+							Limit:  pagination.Limit,
+							Offset: pagination.Offset,
 						},
 					),
-					breadcrumbs.Breadcrumb(
-						breadcrumbs.BreadcrumbProps{
-							Href:  "/profiles/list",
-							Title: "Profiles",
+					paginations.Next(
+						paginations.PaginationProps{
+							URL:    "",
+							Limit:  pagination.Limit,
+							Offset: pagination.Offset,
 						},
 					),
-				),
-			),
-			components.SubNavActions(
-				components.SubNavActionsProps{},
-				links.Link(
-					links.LinkProps{
-						Href: "/profiles/new",
-						ClassNames: htmx.ClassNames{
-							"btn":         true,
-							"btn-outline": true,
-							"btn-xs":      true,
-							"link-hover":  true,
-						},
-					},
-					htmx.Text("Create Profile"),
-				),
-			),
-		),
-		htmx.Div(
-			htmx.ClassNames{
-				"overflow-x-auto": true,
+				)
 			},
-			tables.Table[*models.Profile](
-				tables.TableProps[*models.Profile]{
-					Columns: []tables.ColumnDef[*models.Profile]{
-						{
-							ID:          "id",
-							AccessorKey: "id",
-							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-								return htmx.Th(htmx.Text("ID"))
-							},
-							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-								return htmx.Td(
-									htmx.Text(row.ID.String()),
-								)
-							},
-						},
-						{
-							ID:          "name",
-							AccessorKey: "name",
-							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-								return htmx.Th(htmx.Text("Name"))
-							},
-							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-								return htmx.Td(
-									htmx.Text(row.Name),
-								)
-							},
-						},
-						{
-							ID:          "description",
-							AccessorKey: "description",
-							Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-								return htmx.Th(htmx.Text("Description"))
-							},
-							Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-								return htmx.Td(
-									htmx.Text(row.Description),
-								)
-							},
-						},
+			Columns: []tables.ColumnDef[*models.Profile]{
+				{
+					ID:          "id",
+					AccessorKey: "id",
+					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+						return htmx.Th(htmx.Text("ID"))
 					},
-					Rows: tables.NewRows(profiles),
+					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.ID.String()),
+						)
+					},
 				},
-			),
-
-			// htmx.Table(
-			// 	htmx.ClassNames{"table": true},
-			// 	htmx.THead(
-			// 		htmx.Tr(
-			// 			htmx.Th(
-			// 				htmx.Label(
-			// 					htmx.Input(
-			// 						htmx.ClassNames{
-			// 							"checkbox": true,
-			// 						},
-			// 						htmx.Attribute("type", "checkbox"),
-			// 						htmx.Attribute("name", "all"),
-			// 					),
-			// 				),
-			// 			),
-			// 			htmx.Th(htmx.Text("ID")),
-			// 			htmx.Th(htmx.Text("Name")),
-			// 			htmx.Th(htmx.Text("Description")),
-			// 		),
-			// 	),
-			// 	htmx.TBody(
-			// 		items...,
-			// 	),
-			// ),
-			htmx.Div(
-				htmx.ClassNames{},
-				htmx.Select(
-					htmx.ClassNames{
-						"select":   true,
-						"max-w-xs": true,
+				{
+					ID:          "name",
+					AccessorKey: "name",
+					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+						return htmx.Th(htmx.Text("Name"))
 					},
-					htmx.Option(
-						htmx.Text("10"),
-						htmx.Attribute("value", "10"),
+					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.Name),
+						)
+					},
+				},
+				{
+					ID:          "description",
+					AccessorKey: "description",
+					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
+						return htmx.Th(htmx.Text("Description"))
+					},
+					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.Description),
+						)
+					},
+				},
+			},
+			Rows: tables.NewRows(profiles),
+		},
+		htmx.ID("data-table"),
+	)
+
+	if hx.IsHxRequest() {
+		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d,offset=%d", hx.Ctx().Path(), pagination.Limit, pagination.Offset))
+
+		return hx.RenderComp(table)
+	}
+
+	ctx := htmx.NewDefaultCtx(hx.Ctx())
+
+	return hx.RenderComp(components.Page(
+		components.PageProps{},
+		components.Layout(
+			components.LayoutProps{
+				Ctx: ctx,
+			},
+			components.SubNav(
+				components.SubNavProps{},
+				components.SubNavBreadcrumb(
+					components.SubNavBreadcrumbProps{},
+					breadcrumbs.Breadcrumbs(
+						breadcrumbs.BreadcrumbsProps{},
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/",
+								Title: "Home",
+							},
+						),
+						breadcrumbs.Breadcrumb(
+							breadcrumbs.BreadcrumbProps{
+								Href:  "/profiles/list",
+								Title: "Profiles",
+							},
+						),
 					),
-					htmx.Option(
-						htmx.Text("20"),
-						htmx.Attribute("value", "20"),
+				),
+				components.SubNavActions(
+					components.SubNavActionsProps{},
+					links.Link(
+						links.LinkProps{
+							Href: "/profiles/new",
+							ClassNames: htmx.ClassNames{
+								"btn":         true,
+								"btn-outline": true,
+								"btn-xs":      true,
+								"link-hover":  true,
+							},
+						},
+						htmx.Text("Create Profile"),
 					),
-					htmx.Option(
-						htmx.Text("30"),
-						htmx.Attribute("value", "30"),
+				),
+			),
+			htmx.Div(
+				htmx.ClassNames{
+					"overflow-x-auto": true,
+				},
+				table,
+				htmx.Div(
+					htmx.ClassNames{},
+					htmx.Select(
+						htmx.ClassNames{
+							"select":   true,
+							"max-w-xs": true,
+						},
+						htmx.Option(
+							htmx.Text("10"),
+							htmx.Attribute("value", "10"),
+						),
+						htmx.Option(
+							htmx.Text("20"),
+							htmx.Attribute("value", "20"),
+						),
+						htmx.Option(
+							htmx.Text("30"),
+							htmx.Attribute("value", "30"),
+						),
 					),
 				),
 			),
 		),
-	), nil
+	),
+	)
 }

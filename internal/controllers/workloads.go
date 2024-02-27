@@ -110,6 +110,8 @@ func (w *Workloads) Store(hx *htmx.Htmx) error {
 
 // List ...
 func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	offset := c.QueryInt("offset", 0)
 	limit := c.QueryInt("limit", 10)
 
@@ -153,7 +155,9 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{}.WithContext(c),
+			components.LayoutProps{
+				Ctx: ctx,
+			},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(
@@ -290,6 +294,8 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 
 // New ...
 func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	profiles, err := w.db.ListProfiles(c.Context(), "", &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
 		return nil, err
@@ -319,7 +325,9 @@ func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{}.WithContext(c),
+			components.LayoutProps{
+				Ctx: ctx,
+			},
 			htmx.FormElement(
 				htmx.HxPost("/workloads/new"),
 				htmx.Label(
@@ -437,7 +445,7 @@ func (w *Workloads) Show(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{}.WithContext(c),
+			components.LayoutProps{},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(

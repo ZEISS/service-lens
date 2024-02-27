@@ -63,10 +63,14 @@ func (l *Lenses) Store(hx *htmx.Htmx) error {
 
 // New ...
 func (l *Lenses) New(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	return components.Page(
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{}.WithContext(c),
+			components.LayoutProps{
+				Ctx: ctx,
+			},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(
@@ -266,6 +270,8 @@ func (l *Lenses) Show(c *fiber.Ctx) (htmx.Node, error) {
 
 // List ...
 func (l *Lenses) List(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.NewDefaultCtx(c)
+
 	lenses, err := l.db.ListLenses(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
 		return nil, err
@@ -306,7 +312,9 @@ func (l *Lenses) List(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{}.WithContext(c),
+		components.PageProps{
+			Ctx: ctx,
+		},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(

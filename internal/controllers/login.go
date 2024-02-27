@@ -17,10 +17,12 @@ func NewLoginController(db ports.Repository) *Login {
 	return &Login{db}
 }
 
-// Show ...
-func (l *Login) Show(c *fiber.Ctx) (htmx.Node, error) {
+// Index ...
+func (l *Login) Index(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		components.PageProps{}.WithContext(c),
+		components.PageProps{
+			Ctx: htmx.NewDefaultCtx(c),
+		},
 		components.Wrap(
 			components.WrapProps{},
 			htmx.A(

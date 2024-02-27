@@ -1,7 +1,6 @@
 package components
 
 import (
-	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -9,23 +8,7 @@ import (
 type LayoutProps struct {
 	Children []htmx.Node
 
-	ctx *fiber.Ctx
-}
-
-// WithContext returns a new LayoutProps with the given context.
-func (p LayoutProps) WithContext(ctx *fiber.Ctx) LayoutProps {
-	p.ctx = ctx
-
-	return p
-}
-
-// Context ...
-func (p LayoutProps) Context() *fiber.Ctx {
-	if p.ctx == nil {
-		return &fiber.Ctx{}
-	}
-
-	return p.ctx
+	htmx.Ctx
 }
 
 // WrapProps ...
@@ -61,7 +44,9 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 				"flex-col":       true,
 			},
 			Navbar(
-				NavbarProps{}.WithContext(p.Context()),
+				NavbarProps{
+					Ctx: p.Ctx,
+				},
 			),
 			htmx.Div(
 				htmx.ClassNames{},

@@ -58,6 +58,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		profilesController := controllers.NewProfilesController(a.db)
 		lensesController := controllers.NewLensesController(a.db)
 
+		dashboardController := controllers.NewDashboardController(a.db)
+
 		workloadController := controllers.NewWorkloadsController(a.db)
 		workloadLensController := controllers.NewLensController(a.db)
 		settingsController := controllers.NewSettingsController(a.db)
@@ -65,7 +67,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teamsController := controllers.NewTeamsController(a.db)
 
 		app.Get("/", htmx.NewCompFuncHandler(homeController.Index))
-		app.Get("/login", htmx.NewCompFuncHandler(loginController.Show))
+		app.Get("/login", htmx.NewCompFuncHandler(loginController.Index))
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
@@ -76,9 +78,10 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams.Get("/:id", htmx.NewCompFuncHandler(teamsController.Show))
 
 		team := app.Group("/:team")
+		team.Get("/", htmx.NewCompFuncHandler(dashboardController.Index))
 
 		profiles := team.Group("/profiles")
-		profiles.Get("/list", htmx.NewCompFuncHandler(profilesController.List))
+		profiles.Get("/list", htmx.NewHtmxHandler(profilesController.List))
 		profiles.Get("/new", htmx.NewCompFuncHandler(profilesController.New))
 		profiles.Post("/new", htmx.NewHtmxHandler(profilesController.Store))
 		profiles.Get("/:id", htmx.NewCompFuncHandler(profilesController.Show))

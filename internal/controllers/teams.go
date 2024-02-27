@@ -177,7 +177,9 @@ func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{}.WithContext(c),
+		components.PageProps{
+			Ctx: htmx.NewDefaultCtx(c),
+		},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(

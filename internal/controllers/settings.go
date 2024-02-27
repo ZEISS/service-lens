@@ -22,7 +22,9 @@ func NewSettingsController(db ports.Repository) *Settings {
 // List ...
 func (a *Settings) List(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		components.PageProps{}.WithContext(c),
+		components.PageProps{
+			Ctx: htmx.NewDefaultCtx(c),
+		},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(
