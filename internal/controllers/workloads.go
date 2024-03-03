@@ -110,7 +110,8 @@ func (w *Workloads) Store(hx *htmx.Htmx) error {
 
 // List ...
 func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.NewDefaultCtx(c)
+	ctx := htmx.DefaultCtx()
+	ctx.Context(c)
 
 	offset := c.QueryInt("offset", 0)
 	limit := c.QueryInt("limit", 10)
@@ -294,7 +295,8 @@ func (w *Workloads) List(c *fiber.Ctx) (htmx.Node, error) {
 
 // New ...
 func (w *Workloads) New(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.NewDefaultCtx(c)
+	ctx := htmx.DefaultCtx()
+	ctx.Context(c)
 
 	profiles, err := w.db.ListProfiles(c.Context(), "", &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {

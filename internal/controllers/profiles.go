@@ -8,7 +8,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/fiber-htmx/components/links"
-	"github.com/zeiss/fiber-htmx/components/paginations"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -45,7 +44,8 @@ func (p *Profiles) Store(hx *htmx.Htmx) error {
 
 // New ...
 func (p *Profiles) New(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.NewDefaultCtx(c)
+	ctx := htmx.DefaultCtx()
+	ctx.Context(c)
 
 	return components.Page(
 		components.PageProps{
@@ -268,39 +268,20 @@ func (p *Profiles) Show(c *fiber.Ctx) (htmx.Node, error) {
 
 // List ...
 func (p *Profiles) List(hx *htmx.Htmx) error {
-	pagination := tables.PaginationFromContext(hx.Ctx())
+	limit, offset := tables.PaginationPropsFromContext(hx.Ctx())
 
 	team, err := utils.TeamFromContext(hx.Ctx())
 	if err != nil {
 		return err
 	}
 
-	profiles, err := p.db.ListProfiles(hx.Ctx().Context(), team, &models.Pagination{Limit: pagination.Limit, Offset: pagination.Offset})
+	profiles, err := p.db.ListProfiles(hx.Ctx().Context(), team, &models.Pagination{Limit: limit, Offset: offset})
 	if err != nil {
 		return err
 	}
 
 	table := tables.Table[*models.Profile](
 		tables.TableProps[*models.Profile]{
-			Pagination: func(tp tables.TableProps[*models.Profile], r tables.Rows[*models.Profile]) htmx.Node {
-				return paginations.Pagination(
-					paginations.PaginationProps{},
-					paginations.Prev(
-						paginations.PaginationProps{
-							URL:    "",
-							Limit:  pagination.Limit,
-							Offset: pagination.Offset,
-						},
-					),
-					paginations.Next(
-						paginations.PaginationProps{
-							URL:    "",
-							Limit:  pagination.Limit,
-							Offset: pagination.Offset,
-						},
-					),
-				)
-			},
 			Columns: []tables.ColumnDef[*models.Profile]{
 				{
 					ID:          "id",
@@ -345,12 +326,13 @@ func (p *Profiles) List(hx *htmx.Htmx) error {
 	)
 
 	if hx.IsHxRequest() {
-		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d,offset=%d", hx.Ctx().Path(), pagination.Limit, pagination.Offset))
+		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d,offset=%d", hx.Ctx().Path(), limit, offset))
 
 		return hx.RenderComp(table)
 	}
 
-	ctx := htmx.NewDefaultCtx(hx.Ctx())
+	ctx := htmx.DefaultCtx()
+	ctx.Context(hx.Ctx())
 
 	return hx.RenderComp(components.Page(
 		components.PageProps{},
@@ -400,23 +382,26 @@ func (p *Profiles) List(hx *htmx.Htmx) error {
 				},
 				table,
 				htmx.Div(
-					htmx.ClassNames{},
-					htmx.Select(
-						htmx.ClassNames{
-							"select":   true,
-							"max-w-xs": true,
+					htmx.ClassNames{
+						"bg-base-100": true,
+						"p-4":         true,
+					},
+					tables.Pagination(
+						tables.PaginationProps{
+							Limit:  limit,
+							Offset: offset,
 						},
-						htmx.Option(
-							htmx.Text("10"),
-							htmx.Attribute("value", "10"),
+						tables.Prev(
+							tables.PaginationProps{
+								URL:    "/api/data",
+								Offset: offset,
+								Limit:  limit,
+							},
 						),
-						htmx.Option(
-							htmx.Text("20"),
-							htmx.Attribute("value", "20"),
-						),
-						htmx.Option(
-							htmx.Text("30"),
-							htmx.Attribute("value", "30"),
+						tables.Next(
+							tables.PaginationProps{
+								URL: "/api/data",
+							},
 						),
 					),
 				),

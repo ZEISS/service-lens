@@ -81,7 +81,9 @@ func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 				),
 			),
 			AccountSwitcher(
-				AccountSwitcherProps{},
+				AccountSwitcherProps{
+					Ctx: p.Ctx,
+				},
 			),
 		),
 		htmx.Div(

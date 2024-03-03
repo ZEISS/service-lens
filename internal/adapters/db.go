@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -184,4 +185,56 @@ func (d *DB) GetTeamByID(ctx context.Context, id uuid.UUID) (*authz.Team, error)
 	}
 
 	return team, err
+}
+
+// GetUserByID ...
+func (d *DB) GetUserByID(ctx context.Context, id uuid.UUID) (*authz.User, error) {
+	user := &authz.User{
+		User: &adapters.User{
+			ID: id,
+		},
+	}
+
+	err := d.conn.WithContext(ctx).Find(&user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return user, err
+}
+
+// ListUsers ...
+func (d *DB) ListUsers(ctx context.Context, pagination *models.Pagination) ([]*authz.User, error) {
+	users := []*authz.User{}
+	err := d.conn.WithContext(ctx).Preload("Teams").Limit(pagination.Limit).Offset(pagination.Offset).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+// AddUser ...
+func (d *DB) AddUser(ctx context.Context, user *authz.User) (*authz.User, error) {
+	err := d.conn.WithContext(ctx).Create(user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// UpdateUser ...
+func (d *DB) UpdateUser(ctx context.Context, user *authz.User) (*authz.User, error) {
+	err := d.conn.WithContext(ctx).Save(user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+// DeleteUser ...
+func (d *DB) DeleteUser(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Delete(&authz.User{}, id).Error
 }

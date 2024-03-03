@@ -20,12 +20,8 @@ func NewDashboardController(db ports.Repository) *Dashboard {
 
 // Show ...
 func (d *Dashboard) Index(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.NewDefaultCtx(c)
-
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		components.PageProps{},
 		components.Layout(
 			components.LayoutProps{},
 			components.SubNav(

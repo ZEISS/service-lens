@@ -166,6 +166,9 @@ func (a *Teams) Store(hx *htmx.Htmx) error {
 
 // Show ...
 func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.DefaultCtx()
+	ctx.Context(c)
+
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return nil, err
@@ -178,7 +181,7 @@ func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
 
 	return components.Page(
 		components.PageProps{
-			Ctx: htmx.NewDefaultCtx(c),
+			Ctx: ctx,
 		},
 		components.SubNav(
 			components.SubNavProps{},

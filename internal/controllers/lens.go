@@ -22,7 +22,8 @@ func NewLensController(db ports.Repository) *Lens {
 
 // List ...
 func (l *Lens) List(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.NewDefaultCtx(c)
+	ctx := htmx.DefaultCtx()
+	ctx.Context(c)
 
 	return components.Page(
 		components.PageProps{},

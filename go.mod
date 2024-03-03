@@ -10,9 +10,9 @@ require (
 	github.com/katallaxie/pkg v0.5.12
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.0
-	github.com/zeiss/fiber-authz v1.0.9
+	github.com/zeiss/fiber-authz v1.0.13
 	github.com/zeiss/fiber-goth v1.2.0
-	github.com/zeiss/fiber-htmx v1.0.26
+	github.com/zeiss/fiber-htmx v1.0.32
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 	mvdan.cc/gofumpt v0.6.0
