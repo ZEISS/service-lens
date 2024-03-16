@@ -3,7 +3,7 @@ module github.com/zeiss/service-lens
 go 1.21.6
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.1
+	github.com/gofiber/fiber/v2 v2.52.2
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.56.2
 	github.com/google/uuid v1.6.0
@@ -12,7 +12,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/zeiss/fiber-authz v1.0.13
 	github.com/zeiss/fiber-goth v1.2.0
-	github.com/zeiss/fiber-htmx v1.0.32
+	github.com/zeiss/fiber-htmx v1.0.39
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 	mvdan.cc/gofumpt v0.6.0

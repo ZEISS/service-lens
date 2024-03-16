@@ -25,7 +25,7 @@ func AccountSwitcher(p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
 				},
 			},
 			htmx.Text("CIT-CA"),
-			icons.ChevronUpDown(icons.IconProps{}),
+			icons.ChevronUpDownOutline(icons.IconProps{}),
 		),
 		dropdowns.DropdownMenuItems(
 			dropdowns.DropdownMenuItemsProps{},
