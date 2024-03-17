@@ -61,7 +61,7 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 				),
 				Wrap(
 					WrapProps{},
-					htmx.Text("Drawer Content"),
+					htmx.Group(children...),
 				),
 			),
 			drawers.DrawerSide(
@@ -90,73 +90,6 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 			),
 		),
 	)
-
-	// return htmx.Div(
-	// 	htmx.ClassNames{
-	// 		"drawer": true,
-	// 	},
-	// 	htmx.Input(
-	// 		htmx.Attribute("id", "app-drawer"),
-	// 		htmx.Attribute("type", "checkbox"),
-	// 		htmx.Attribute("class", "drawer-toggle"),
-	// 	),
-	// 	htmx.Div(
-	// 		htmx.ClassNames{
-	// 			"drawer-content": true,
-	// 			"flex":           true,
-	// 			"flex-col":       true,
-	// 		},
-	// 		Navbar(
-	// 			NavbarProps{
-	// 				Ctx: p.Ctx,
-	// 			},
-	// 		),
-	// 		htmx.Div(
-	// 			htmx.ClassNames{},
-	// 			htmx.Group(children...),
-	// 		),
-	// 	),
-	// 	htmx.Div(
-	// 		htmx.ClassNames{
-	// 			"drawer-side": true,
-	// 		},
-	// 		htmx.Label(
-	// 			htmx.Attribute(
-	// 				"for",
-	// 				"app-drawer",
-	// 			),
-	// 			htmx.Attribute(
-	// 				"aria-label",
-	// 				"close sidebar"),
-	// 			htmx.ClassNames{
-	// 				"drawer-overlay": true,
-	// 			},
-	// 		),
-	// 		htmx.Ul(
-	// 			htmx.ClassNames{
-	// 				"menu":        true,
-	// 				"p-4":         true,
-	// 				"w-80":        true,
-	// 				"min-h-full":  true,
-	// 				"bg-base-200": true,
-	// 			},
-	// 			htmx.Li(
-	// 				htmx.A(
-	// 					htmx.Text(
-	// 						"Sidebar Item 1",
-	// 					),
-	// 				),
-	// 			),
-	// 			htmx.Li(
-	// 				htmx.A(
-	// 					htmx.Text(
-	// 						"Sidebar Item 2",
-	// 					),
-	// 				),
-	// 			),
-	// 		),
-	// 	),
-	// )
 }
 
 // MainMenuProps ...
@@ -318,22 +251,28 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 			},
 			menus.MenuItem(
 				menus.MenuItemProps{},
-				htmx.A(
-					htmx.Attribute("href", "#"),
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href: "/me/index",
+					},
 					htmx.Text("Profiles"),
 				),
 			),
 			menus.MenuItem(
 				menus.MenuItemProps{},
-				htmx.A(
-					htmx.Attribute("href", "#"),
-					htmx.Text("Settings"),
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href: "/site/settings",
+					},
+					htmx.Text("Site settings"),
 				),
 			),
 			menus.MenuItem(
 				menus.MenuItemProps{},
-				htmx.A(
-					htmx.Attribute("href", "#"),
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href: "/logout",
+					},
 					htmx.Text("Logout"),
 				),
 			),

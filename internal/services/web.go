@@ -55,6 +55,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		loginController := controllers.NewLoginController(a.db)
 
 		homeController := controllers.NewHomeController(a.db)
+		meController := controllers.NewMeController(a.db)
 		profilesController := controllers.NewProfilesController(a.db)
 		lensesController := controllers.NewLensesController(a.db)
 
@@ -71,6 +72,9 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
+
+		me := app.Group("/me")
+		me.Get("/index", htmx.NewCompFuncHandler(meController.Index))
 
 		teams := app.Group("/teams")
 		teams.Get("/new", htmx.NewCompFuncHandler(teamsController.New))
