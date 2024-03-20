@@ -19,17 +19,13 @@ func NewHomeController(db ports.Repository) *Home {
 
 // Index ...
 func (h *Home) Index(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		ctx,
+		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{
-				Ctx: ctx,
-			},
+			components.LayoutProps{},
 			components.Wrap(
 				components.WrapProps{},
 				htmx.Div(

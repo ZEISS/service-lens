@@ -63,15 +63,13 @@ func (l *Lenses) Store(hx *htmx.Htmx) error {
 
 // New ...
 func (l *Lenses) New(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	return components.Page(
+		ctx,
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{
-				Ctx: ctx,
-			},
+			components.LayoutProps{},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(
@@ -149,6 +147,8 @@ func (l *Lenses) New(c *fiber.Ctx) (htmx.Node, error) {
 
 // Show ...
 func (l *Lenses) Show(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.FromContext(c)
+
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return nil, err
@@ -160,6 +160,7 @@ func (l *Lenses) Show(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
+		ctx,
 		components.PageProps{
 			Children: []htmx.Node{
 				htmx.FormElement(
@@ -271,8 +272,7 @@ func (l *Lenses) Show(c *fiber.Ctx) (htmx.Node, error) {
 
 // List ...
 func (l *Lenses) List(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	lenses, err := l.db.ListLenses(c.Context(), &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
@@ -314,9 +314,8 @@ func (l *Lenses) List(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		ctx,
+		components.PageProps{},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(

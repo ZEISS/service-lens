@@ -19,13 +19,11 @@ func NewLoginController(db ports.Repository) *Login {
 
 // Index ...
 func (l *Login) Index(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		ctx,
+		components.PageProps{},
 		components.Wrap(
 			components.WrapProps{},
 			htmx.A(

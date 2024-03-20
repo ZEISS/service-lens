@@ -24,7 +24,10 @@ func NewTeamsController(db ports.Repository) *Teams {
 
 // New ...
 func (a *Teams) New(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.FromContext(c)
+
 	return components.Page(
+		ctx,
 		components.PageProps{},
 		components.SubNav(
 			components.SubNavProps{},
@@ -166,8 +169,7 @@ func (a *Teams) Store(hx *htmx.Htmx) error {
 
 // Show ...
 func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
@@ -180,9 +182,8 @@ func (a *Teams) Show(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		ctx,
+		components.PageProps{},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(

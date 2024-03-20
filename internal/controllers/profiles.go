@@ -44,13 +44,11 @@ func (p *Profiles) Store(hx *htmx.Htmx) error {
 
 // New ...
 func (p *Profiles) New(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.DefaultCtx()
-	ctx.Context(c)
+	ctx := htmx.FromContext(c)
 
 	return components.Page(
-		components.PageProps{
-			Ctx: ctx,
-		},
+		ctx,
+		components.PageProps{},
 		components.SubNav(
 			components.SubNavProps{},
 			components.SubNavBreadcrumb(
@@ -146,6 +144,8 @@ func (p *Profiles) New(c *fiber.Ctx) (htmx.Node, error) {
 
 // Show ...
 func (p *Profiles) Show(c *fiber.Ctx) (htmx.Node, error) {
+	ctx := htmx.FromContext(c)
+
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return nil, err
@@ -157,6 +157,7 @@ func (p *Profiles) Show(c *fiber.Ctx) (htmx.Node, error) {
 	}
 
 	return components.Page(
+		ctx,
 		components.PageProps{
 			Children: []htmx.Node{
 				htmx.FormElement(
@@ -331,15 +332,13 @@ func (p *Profiles) List(hx *htmx.Htmx) error {
 		return hx.RenderComp(table)
 	}
 
-	ctx := htmx.DefaultCtx()
-	ctx.Context(hx.Ctx())
+	ctx := htmx.FromContext(hx.Ctx())
 
 	return hx.RenderComp(components.Page(
+		ctx,
 		components.PageProps{},
 		components.Layout(
-			components.LayoutProps{
-				Ctx: ctx,
-			},
+			components.LayoutProps{},
 			components.SubNav(
 				components.SubNavProps{},
 				components.SubNavBreadcrumb(
