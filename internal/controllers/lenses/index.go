@@ -1,4 +1,4 @@
-package controllers
+package lenses
 
 import (
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
@@ -10,24 +10,25 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
-// Lens ...
-type Lens struct {
+// LensIndexController ...
+type LensIndexController struct {
 	db ports.Repository
+
+	htmx.UnimplementedController
 }
 
-// NewLensController ...
-func NewLensController(db ports.Repository) *Lens {
-	return &Lens{db}
+// NewLensIndexController ...
+func NewLensIndexController(db ports.Repository) *LensIndexController {
+	return &LensIndexController{db, htmx.UnimplementedController{}}
 }
 
-// List ...
-func (l *Lens) List(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.FromContext(c)
-
+// Get ...
+func (l *LensIndexController) Get(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		ctx,
+		l.Hx,
 		components.PageProps{},
 		components.Layout(
+			l.Hx,
 			components.LayoutProps{},
 			components.SubNav(
 				components.SubNavProps{},

@@ -14,7 +14,7 @@ type PageProps struct {
 }
 
 // Page is a whole document to output.
-func Page(ctx htmx.Context, props PageProps, children ...htmx.Node) htmx.Node {
+func Page(ctx htmx.Ctx, props PageProps, children ...htmx.Node) htmx.Node {
 	return htmx.HTML5(
 		ctx,
 		htmx.HTML5Props{

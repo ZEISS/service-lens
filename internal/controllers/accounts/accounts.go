@@ -1,4 +1,4 @@
-package controllers
+package accounts
 
 import (
 	"github.com/zeiss/service-lens/internal/ports"

@@ -31,7 +31,7 @@ func Wrap(p WrapProps, children ...htmx.Node) htmx.Node {
 }
 
 // Layout is a whole document to output.
-func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
+func Layout(ctx htmx.Ctx, p LayoutProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{},
 		drawers.Drawer(
@@ -71,6 +71,7 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 				drawers.DrawerSideMenu(
 					drawers.DrawerSideMenuProps{},
 					AccountSwitcher(
+						ctx,
 						AccountSwitcherProps{},
 					),
 					MainMenu(
@@ -218,7 +219,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/site/settings",
+								Href: "/site/settings/index",
 							},
 							htmx.Text("Site settings"),
 						),
@@ -262,7 +263,7 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuItemProps{},
 				menus.MenuLink(
 					menus.MenuLinkProps{
-						Href: "/site/settings",
+						Href: "/site/settings/index",
 					},
 					htmx.Text("Site settings"),
 				),

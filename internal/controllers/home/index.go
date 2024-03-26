@@ -1,4 +1,4 @@
-package controllers
+package home
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -7,24 +7,25 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
-// Home ...
-type Home struct {
+// HomeIndexController ...
+type HomeIndexController struct {
 	db ports.Repository
+
+	htmx.UnimplementedController
 }
 
-// NewHomeController ...
-func NewHomeController(db ports.Repository) *Home {
-	return &Home{db}
+// NewHomeIndexController ...
+func NewHomeIndexController(db ports.Repository) *HomeIndexController {
+	return &HomeIndexController{db, htmx.UnimplementedController{}}
 }
 
-// Index ...
-func (h *Home) Index(c *fiber.Ctx) (htmx.Node, error) {
-	ctx := htmx.FromContext(c)
-
+// Get ...
+func (h *HomeIndexController) Get(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		ctx,
+		h.Hx,
 		components.PageProps{},
 		components.Layout(
+			h.Hx,
 			components.LayoutProps{},
 			components.Wrap(
 				components.WrapProps{},

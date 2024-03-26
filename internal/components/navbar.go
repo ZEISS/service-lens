@@ -9,12 +9,10 @@ import (
 // NavbarProps is the properties for the Navbar component.
 type NavbarProps struct {
 	Children []htmx.Node
-
-	htmx.Ctx
 }
 
 // Navbar is a whole document to output.
-func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
+func Navbar(ctx htmx.Ctx, p NavbarProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ClassNames{
 			"navbar":      true,
@@ -81,9 +79,8 @@ func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 				),
 			),
 			AccountSwitcher(
-				AccountSwitcherProps{
-					Ctx: p.Ctx,
-				},
+				ctx,
+				AccountSwitcherProps{},
 			),
 		),
 		htmx.Div(
@@ -101,7 +98,7 @@ func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 				htmx.Li(
 					htmx.A(
 						htmx.ClassNames{
-							"active": strings.HasPrefix(p.Context().Path(), "/workloads/list"),
+							"active": strings.HasPrefix(ctx.Path(), "/workloads/list"),
 						},
 						htmx.Attribute(
 							"href",
@@ -113,7 +110,7 @@ func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 				htmx.Li(
 					htmx.A(
 						htmx.ClassNames{
-							"active": strings.HasPrefix(p.Context().Path(), "/profiles/list"),
+							"active": strings.HasPrefix(ctx.Path(), "/profiles/list"),
 						},
 						htmx.Attribute(
 							"href",
@@ -125,7 +122,7 @@ func Navbar(p NavbarProps, children ...htmx.Node) htmx.Node {
 				htmx.Li(
 					htmx.A(
 						htmx.ClassNames{
-							"active": strings.HasPrefix(p.Context().Path(), "/lenses/list"),
+							"active": strings.HasPrefix(ctx.Path(), "/lenses/list"),
 						},
 						htmx.Attribute(
 							"href",

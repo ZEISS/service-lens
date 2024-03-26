@@ -7,12 +7,10 @@ import (
 )
 
 // AccountSwitcherProps ...
-type AccountSwitcherProps struct {
-	htmx.Ctx
-}
+type AccountSwitcherProps struct{}
 
 // AccountSwitcher ...
-func AccountSwitcher(p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
+func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
 	return dropdowns.Dropdown(
 		dropdowns.DropdownProps{},
 		dropdowns.DropdownButton(
