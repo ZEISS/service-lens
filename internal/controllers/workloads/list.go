@@ -15,30 +15,42 @@ import (
 
 // WorkloadListController ...
 type WorkloadListController struct {
-	db ports.Repository
+	db       ports.Repository
+	profiles []*models.Workload
+	limit    int
+	offset   int
 
 	htmx.UnimplementedController
 }
 
 // NewWorkloadListController ...
 func NewWorkloadListController(db ports.Repository) *WorkloadListController {
-	return &WorkloadListController{db, htmx.UnimplementedController{}}
+	return &WorkloadListController{db, []*models.Workload{}, 10, 0, htmx.UnimplementedController{}}
+}
+
+// Prepare ...
+func (w *WorkloadListController) Prepare() error {
+	hx := w.Hx
+
+	w.offset = hx.Context().QueryInt("offset", 0)
+	w.limit = hx.Context().QueryInt("limit", 10)
+
+	profiles, err := w.db.ListWorkloads(hx.Context().Context(), &models.Pagination{Limit: w.limit, Offset: w.offset})
+	if err != nil {
+		return err
+	}
+
+	w.profiles = profiles
+
+	return nil
 }
 
 // Get ...
 func (w *WorkloadListController) Get() error {
 	hx := w.Hx
 
-	offset := hx.Context().QueryInt("offset", 0)
-	limit := hx.Context().QueryInt("limit", 10)
-
-	profiles, err := w.db.ListWorkloads(hx.Context().Context(), &models.Pagination{Limit: limit, Offset: offset})
-	if err != nil {
-		return err
-	}
-
-	profilesItems := make([]htmx.Node, len(profiles))
-	for i, profile := range profiles {
+	profilesItems := make([]htmx.Node, len(w.profiles))
+	for i, profile := range w.profiles {
 		profilesItems[i] = htmx.Tr(
 			htmx.Th(
 				htmx.Label(
@@ -179,7 +191,7 @@ func (w *WorkloadListController) Get() error {
 									htmx.HxTrigger("change"),
 									htmx.HxTarget("html"),
 									htmx.HxSwap("outerHTML"),
-									htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", limit, offset)),
+									htmx.HxGet(fmt.Sprintf("/workloads/list?limit=%d&offset=%d", w.limit, w.offset)),
 									htmx.ClassNames{
 										"select":   true,
 										"max-w-xs": true,

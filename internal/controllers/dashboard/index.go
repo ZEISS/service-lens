@@ -19,7 +19,7 @@ func NewDashboardController(db ports.Repository) *DashboardIndexController {
 	return &DashboardIndexController{db, htmx.UnimplementedController{}}
 }
 
-// Show ...
+// Get ...
 func (d *DashboardIndexController) Get() error {
 	return d.Hx.RenderComp(
 		components.Page(

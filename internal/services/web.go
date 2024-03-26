@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -45,6 +46,12 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			CookieHTTPOnly: true,
 		}
 
+		teamConfig := htmx.Config{
+			Resolvers: []htmx.ResolveFunc{
+				resolvers.Team(a.db),
+			},
+		}
+
 		app := fiber.New()
 		app.Use(requestid.New())
 		app.Use(logger.New())
@@ -67,13 +74,13 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
 
 		team := app.Group("/:team")
-		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db)))
+		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), teamConfig))
 
 		profiles := team.Group("/profiles")
-		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db)))
-		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db)))
-		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db)))
-		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db)))
+		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), teamConfig))
+		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), teamConfig))
+		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), teamConfig))
+		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), teamConfig))
 
 		// lenses := team.Group("/lenses")
 		// lenses.Get("/list", htmx.NewHxControllerHandler(lensesController.List))

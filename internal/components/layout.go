@@ -1,11 +1,15 @@
 package components
 
 import (
+	"fmt"
+
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	"github.com/zeiss/service-lens/internal/resolvers"
 )
 
 // LayoutProps is the properties for the Layout component.
@@ -75,6 +79,7 @@ func Layout(ctx htmx.Ctx, p LayoutProps, children ...htmx.Node) htmx.Node {
 						AccountSwitcherProps{},
 					),
 					MainMenu(
+						ctx,
 						MainMenuProps{},
 					),
 					dividers.Divider(
@@ -101,7 +106,9 @@ type MainMenuProps struct {
 }
 
 // MainMenu ...
-func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
+func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
+	team := ctx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+
 	return htmx.Nav(
 		htmx.Merge(
 			htmx.ClassNames{},
@@ -125,7 +132,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/workloads/new",
+								Href: fmt.Sprintf("/%s/workloads/new", team.Slug),
 							},
 							htmx.Text("New workload"),
 						),
@@ -134,7 +141,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/workloads/list",
+								Href: fmt.Sprintf("/%s/workloads/list", team.Slug),
 							},
 							htmx.Text("List workload"),
 						),
@@ -154,7 +161,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/lenses/new",
+								Href: fmt.Sprintf("/%s/lenses/new", team.Slug),
 							},
 							htmx.Text("New Lens"),
 						),
@@ -163,7 +170,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/lenses/list",
+								Href: fmt.Sprintf("/%s/lenses/list", team.Slug),
 							},
 							htmx.Text("List Lens"),
 						),
@@ -182,7 +189,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/profiles/new",
+								Href: fmt.Sprintf("/%s/profiles/new", team.Slug),
 							},
 							htmx.Text("New Profile"),
 						),
@@ -191,7 +198,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/profiles/list",
+								Href: fmt.Sprintf("/%s/profiles/list", team.Slug),
 							},
 							htmx.Text("List Profile"),
 						),

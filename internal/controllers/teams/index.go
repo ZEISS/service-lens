@@ -36,7 +36,6 @@ func (a *TeamIndexController) Get() error {
 	}
 
 	return hx.RenderComp(
-
 		components.Page(
 			a.Hx,
 			components.PageProps{},
