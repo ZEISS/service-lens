@@ -1,15 +1,32 @@
 package components
 
 import (
-	htmx "github.com/zeiss/fiber-htmx"
+	"fmt"
+
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/service-lens/internal/resolvers"
+
+	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // UserNavProps ...
 type UserNavProps struct{}
 
 // UserNav ...
-func UserNav(p UserNavProps) htmx.Node {
+func UserNav(ctx htmx.Ctx, p UserNavProps) htmx.Node {
+	user, ok := ctx.Values(resolvers.ValuesKeyUser).(*authz.User)
+	if !ok {
+		return htmx.Text("User not found")
+	}
+
+	users := []htmx.Node{}
+	for _, u := range *user.Teams {
+		users = append(users, htmx.Li(htmx.Text(u.Name)))
+	}
+
+	fmt.Println(user.Teams)
+
 	return htmx.Div(
 		htmx.ClassNames{"dropdown": true, "dropdown-end": true},
 		htmx.Div(
@@ -45,6 +62,7 @@ func UserNav(p UserNavProps) htmx.Node {
 				"rounded-box":      true,
 				"w-52":             true,
 			},
+			htmx.Group(users...),
 			htmx.Li(
 				htmx.A(
 					htmx.ClassNames{"justify-between": true},

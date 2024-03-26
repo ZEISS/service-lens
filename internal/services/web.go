@@ -46,9 +46,10 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			CookieHTTPOnly: true,
 		}
 
-		teamConfig := htmx.Config{
+		config := htmx.Config{
 			Resolvers: []htmx.ResolveFunc{
 				resolvers.Team(a.db),
+				resolvers.User(a.db),
 			},
 		}
 
@@ -66,7 +67,11 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
 
 		me := app.Group("/me")
-		me.Get("/index", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db)))
+		me.Get("/index", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db), htmx.Config{
+			Resolvers: []htmx.ResolveFunc{
+				resolvers.User(a.db),
+			},
+		}))
 
 		teams := app.Group("/teams")
 		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamsNewController(a.db)))
@@ -74,13 +79,13 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
 
 		team := app.Group("/:team")
-		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), teamConfig))
+		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
 
 		profiles := team.Group("/profiles")
-		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), teamConfig))
-		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), teamConfig))
-		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), teamConfig))
-		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), teamConfig))
+		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))
+		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
+		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
+		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
 
 		// lenses := team.Group("/lenses")
 		// lenses.Get("/list", htmx.NewHxControllerHandler(lensesController.List))

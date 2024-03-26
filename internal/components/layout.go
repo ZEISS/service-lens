@@ -107,7 +107,10 @@ type MainMenuProps struct {
 
 // MainMenu ...
 func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
-	team := ctx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	team, ok := ctx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	if !ok {
+		team = &authz.Team{}
+	}
 
 	return htmx.Nav(
 		htmx.Merge(
@@ -120,87 +123,95 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 					"w-full": true,
 				},
 			},
-			menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuCollapsible(
-					menus.MenuCollapsibleProps{},
-					menus.MenuCollapsibleSummary(
-						menus.MenuCollapsibleSummaryProps{},
-						htmx.Text("Workloads"),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/workloads/new", team.Slug),
-							},
-							htmx.Text("New workload"),
+			htmx.If(
+				team.Slug != "",
+				menus.MenuItem(
+					menus.MenuItemProps{},
+					menus.MenuCollapsible(
+						menus.MenuCollapsibleProps{},
+						menus.MenuCollapsibleSummary(
+							menus.MenuCollapsibleSummaryProps{},
+							htmx.Text("Workloads"),
 						),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/workloads/list", team.Slug),
-							},
-							htmx.Text("List workload"),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/workloads/new", team.Slug),
+								},
+								htmx.Text("New workload"),
+							),
 						),
-					),
-				),
-			),
-
-			menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuCollapsible(
-					menus.MenuCollapsibleProps{},
-					menus.MenuCollapsibleSummary(
-						menus.MenuCollapsibleSummaryProps{},
-						htmx.Text("Lenses"),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/lenses/new", team.Slug),
-							},
-							htmx.Text("New Lens"),
-						),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/lenses/list", team.Slug),
-							},
-							htmx.Text("List Lens"),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/workloads/list", team.Slug),
+								},
+								htmx.Text("List workload"),
+							),
 						),
 					),
 				),
 			),
-			menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuCollapsible(
-					menus.MenuCollapsibleProps{},
-					menus.MenuCollapsibleSummary(
-						menus.MenuCollapsibleSummaryProps{},
-						htmx.Text("Profiles"),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/profiles/new", team.Slug),
-							},
-							htmx.Text("New Profile"),
+			htmx.If(
+				team.Slug != "",
+				menus.MenuItem(
+					menus.MenuItemProps{},
+					menus.MenuCollapsible(
+						menus.MenuCollapsibleProps{},
+						menus.MenuCollapsibleSummary(
+							menus.MenuCollapsibleSummaryProps{},
+							htmx.Text("Lenses"),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/lenses/new", team.Slug),
+								},
+								htmx.Text("New Lens"),
+							),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/lenses/list", team.Slug),
+								},
+								htmx.Text("List Lens"),
+							),
 						),
 					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href: fmt.Sprintf("/%s/profiles/list", team.Slug),
-							},
-							htmx.Text("List Profile"),
+				),
+			),
+			htmx.If(
+				team.Slug != "",
+				menus.MenuItem(
+					menus.MenuItemProps{},
+					menus.MenuCollapsible(
+						menus.MenuCollapsibleProps{},
+						menus.MenuCollapsibleSummary(
+							menus.MenuCollapsibleSummaryProps{},
+							htmx.Text("Profiles"),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/profiles/new", team.Slug),
+								},
+								htmx.Text("New Profile"),
+							),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href: fmt.Sprintf("/%s/profiles/list", team.Slug),
+								},
+								htmx.Text("List Profile"),
+							),
 						),
 					),
 				),

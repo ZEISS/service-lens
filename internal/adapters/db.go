@@ -195,7 +195,7 @@ func (d *DB) GetUserByID(ctx context.Context, id uuid.UUID) (*authz.User, error)
 		},
 	}
 
-	err := d.conn.WithContext(ctx).Find(&user).Error
+	err := d.conn.WithContext(ctx).Preload("Teams").Find(&user).Error
 	if err != nil {
 		return nil, err
 	}

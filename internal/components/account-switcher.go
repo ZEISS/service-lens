@@ -1,9 +1,14 @@
 package components
 
 import (
+	"fmt"
+
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/service-lens/internal/resolvers"
 )
 
 // AccountSwitcherProps ...
@@ -11,6 +16,16 @@ type AccountSwitcherProps struct{}
 
 // AccountSwitcher ...
 func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
+	user, ok := ctx.Values(resolvers.ValuesKeyUser).(*authz.User)
+	if !ok {
+		return htmx.Text("User not found")
+	}
+
+	users := []htmx.Node{}
+	for _, t := range *user.Teams {
+		users = append(users, dropdowns.DropdownMenuItem(dropdowns.DropdownMenuItemProps{}, links.Link(links.LinkProps{Href: fmt.Sprintf("/%s/index", t.Slug)}, htmx.Text(t.Name))))
+	}
+
 	return dropdowns.Dropdown(
 		dropdowns.DropdownProps{},
 		dropdowns.DropdownButton(
@@ -26,18 +41,7 @@ func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node
 		),
 		dropdowns.DropdownMenuItems(
 			dropdowns.DropdownMenuItemsProps{},
-			dropdowns.DropdownMenuItem(
-				dropdowns.DropdownMenuItemProps{},
-				htmx.A(
-					htmx.Text("Item 1"),
-				),
-			),
-			dropdowns.DropdownMenuItem(
-				dropdowns.DropdownMenuItemProps{},
-				htmx.A(
-					htmx.Text("Item 2"),
-				),
-			),
+			htmx.Group(users...),
 		),
 	)
 }

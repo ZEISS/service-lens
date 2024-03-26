@@ -5,6 +5,7 @@ import (
 
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -114,11 +115,11 @@ func (p *ProfileNewController) Get() error {
 								},
 							),
 						),
-						htmx.Button(
-							htmx.ClassNames{
-								"btn":         true,
-								"btn-default": true,
-								"my-4":        true,
+						buttons.Primary(
+							buttons.ButtonProps{
+								ClassNames: htmx.ClassNames{
+									"my-4": true,
+								},
 							},
 							htmx.Attribute("type", "submit"),
 							htmx.Text("Create Profile"),

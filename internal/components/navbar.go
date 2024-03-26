@@ -147,7 +147,7 @@ func Navbar(ctx htmx.Ctx, p NavbarProps, children ...htmx.Node) htmx.Node {
 				htmx.Value("cupcake"),
 			),
 			htmx.Group(children...),
-			UserNav(UserNavProps{}),
+			UserNav(ctx, UserNavProps{}),
 		),
 	)
 }
