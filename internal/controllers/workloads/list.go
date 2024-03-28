@@ -8,7 +8,6 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	links "github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/loading"
 )
@@ -89,42 +88,6 @@ func (w *WorkloadListController) Get() error {
 			components.Layout(
 				hx,
 				components.LayoutProps{},
-				components.SubNav(
-					components.SubNavProps{},
-					components.SubNavBreadcrumb(
-						components.SubNavBreadcrumbProps{},
-						breadcrumbs.Breadcrumbs(
-							breadcrumbs.BreadcrumbsProps{},
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/",
-									Title: "Home",
-								},
-							),
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/workloads/list",
-									Title: "Workloads",
-								},
-							),
-						),
-					),
-					components.SubNavActions(
-						components.SubNavActionsProps{},
-						links.Link(
-							links.LinkProps{
-								Href: "/workloads/new",
-								ClassNames: htmx.ClassNames{
-									"btn":         true,
-									"btn-outline": true,
-									"btn-xs":      true,
-									"link-hover":  true,
-								},
-							},
-							htmx.Text("Create Workload"),
-						),
-					),
-				),
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

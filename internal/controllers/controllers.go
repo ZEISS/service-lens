@@ -81,3 +81,13 @@ func NewProfileNewController(db ports.Repository) *profiles.ProfileNewController
 func NewProfileIndexController(db ports.Repository) *profiles.ProfileIndexController {
 	return profiles.NewProfileIndexController(db)
 }
+
+// NewWorkloadListController ...
+func NewWorkloadListController(db ports.Repository) *workloads.WorkloadListController {
+	return workloads.NewWorkloadListController(db)
+}
+
+// NewWorkloadNewController ...
+func NewWorkloadNewController(db ports.Repository) *workloads.WorkloadNewController {
+	return workloads.NewWorkloadsNewController(db)
+}
