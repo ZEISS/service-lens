@@ -1,9 +1,14 @@
 package workloads
 
 import (
+	"fmt"
+
+	authz "github.com/zeiss/fiber-authz"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -11,18 +16,29 @@ import (
 
 // WorkloadNewController ...
 type WorkloadNewController struct {
-	db ports.Repository
+	db   ports.Repository
+	team *authz.Team
 
 	htmx.UnimplementedController
 }
 
 // NewWorkloadsNewController ...
 func NewWorkloadsNewController(db ports.Repository) *WorkloadNewController {
-	return &WorkloadNewController{db, htmx.UnimplementedController{}}
+	return &WorkloadNewController{
+		db: db,
+	}
 }
 
-// Put ...
-func (w *WorkloadNewController) Put() error {
+// Prepare ...
+func (w *WorkloadNewController) Prepare() error {
+	team := w.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	w.team = team
+
+	return nil
+}
+
+// Post ...
+func (w *WorkloadNewController) Post() error {
 	hx := w.Hx()
 
 	profileId, err := uuid.Parse(hx.Ctx().FormValue("profile"))
@@ -38,6 +54,7 @@ func (w *WorkloadNewController) Put() error {
 	workload := &models.Workload{
 		Name:        hx.Ctx().FormValue("name"),
 		Description: hx.Ctx().FormValue("description"),
+		Team:        *w.team,
 		ProfileID:   profileId,
 		Lenses:      []*models.Lens{{ID: lensId}},
 	}
@@ -47,7 +64,7 @@ func (w *WorkloadNewController) Put() error {
 		return err
 	}
 
-	hx.Redirect("/workloads/" + workload.ID.String())
+	hx.Redirect(fmt.Sprintf("/%s/workloads/%s", w.team.Slug, workload.ID))
 
 	return nil
 }
@@ -56,7 +73,7 @@ func (w *WorkloadNewController) Put() error {
 func (w *WorkloadNewController) Get() error {
 	hx := w.Hx()
 
-	profiles, err := w.db.ListWorkloads(hx.Context().Context(), &models.Pagination{Limit: 10, Offset: 0})
+	profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
 	if err != nil {
 		return err
 	}
@@ -69,18 +86,18 @@ func (w *WorkloadNewController) Get() error {
 		)
 	}
 
-	// lenses, err := w.db.ListLenses(hx.Context().Context(), &models.Pagination{Limit: 10, Offset: 0})
-	// if err != nil {
-	// 	return err
-	// }
+	lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
+	if err != nil {
+		return err
+	}
 
-	// lensesItems := make([]htmx.Node, len(lenses))
-	// for i, lens := range lenses {
-	// 	lensesItems[i] = htmx.Option(
-	// 		htmx.Attribute("value", lens.ID.String()),
-	// 		htmx.Text(lens.Name),
-	// 	)
-	// }
+	lensesItems := make([]htmx.Node, len(lenses))
+	for i, lens := range lenses {
+		lensesItems[i] = htmx.Option(
+			htmx.Attribute("value", lens.ID.String()),
+			htmx.Text(lens.Name),
+		)
+	}
 
 	return hx.RenderComp(
 		components.Page(
@@ -90,7 +107,7 @@ func (w *WorkloadNewController) Get() error {
 				hx,
 				components.LayoutProps{},
 				htmx.FormElement(
-					htmx.HxPost("/workloads/new"),
+					htmx.HxPost(""),
 					htmx.Label(
 						htmx.ClassNames{
 							"form-control": true,
@@ -160,14 +177,10 @@ func (w *WorkloadNewController) Get() error {
 							"block":    true,
 						},
 						htmx.Attribute("name", "lens"),
-						// htmx.Group(lensesItems...),
+						htmx.Group(lensesItems...),
 					),
-					htmx.Button(
-						htmx.ClassNames{
-							"btn":         true,
-							"btn-default": true,
-							"my-4":        true,
-						},
+					buttons.Primary(
+						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
 						htmx.Text("Create Workload"),
 					),

@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	links "github.com/zeiss/fiber-htmx/components/links"
 )
 
@@ -60,33 +59,6 @@ func (w *WorkloadIndexController) Get() error {
 			components.Layout(
 				hx,
 				components.LayoutProps{},
-				components.SubNav(
-					components.SubNavProps{},
-					components.SubNavBreadcrumb(
-						components.SubNavBreadcrumbProps{},
-						breadcrumbs.Breadcrumbs(
-							breadcrumbs.BreadcrumbsProps{},
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/",
-									Title: "Home",
-								},
-							),
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/workloads/list",
-									Title: "Workloads",
-								},
-							),
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/workloads/" + workload.ID.String(),
-									Title: workload.Name,
-								},
-							),
-						),
-					),
-				),
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

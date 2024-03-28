@@ -3,9 +3,11 @@ package workloads
 import (
 	"fmt"
 
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	links "github.com/zeiss/fiber-htmx/components/links"
@@ -14,32 +16,38 @@ import (
 
 // WorkloadListController ...
 type WorkloadListController struct {
-	db       ports.Repository
-	profiles []*models.Workload
-	limit    int
-	offset   int
+	db        ports.Repository
+	workloads []*models.Workload
+	team      *authz.Team
+	limit     int
+	offset    int
 
 	htmx.UnimplementedController
 }
 
 // NewWorkloadListController ...
 func NewWorkloadListController(db ports.Repository) *WorkloadListController {
-	return &WorkloadListController{db, []*models.Workload{}, 10, 0, htmx.UnimplementedController{}}
+	return &WorkloadListController{
+		db: db,
+	}
 }
 
 // Prepare ...
 func (w *WorkloadListController) Prepare() error {
 	hx := w.Hx()
 
+	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	w.team = team
+
 	w.offset = hx.Context().QueryInt("offset", 0)
 	w.limit = hx.Context().QueryInt("limit", 10)
 
-	profiles, err := w.db.ListWorkloads(hx.Context().Context(), &models.Pagination{Limit: w.limit, Offset: w.offset})
+	workloads, err := w.db.ListWorkloads(hx.Context().Context(), team.Slug, &models.Pagination{Limit: w.limit, Offset: w.offset})
 	if err != nil {
 		return err
 	}
 
-	w.profiles = profiles
+	w.workloads = workloads
 
 	return nil
 }
@@ -48,9 +56,9 @@ func (w *WorkloadListController) Prepare() error {
 func (w *WorkloadListController) Get() error {
 	hx := w.Hx()
 
-	profilesItems := make([]htmx.Node, len(w.profiles))
-	for i, profile := range w.profiles {
-		profilesItems[i] = htmx.Tr(
+	workloadItems := make([]htmx.Node, len(w.workloads))
+	for i, profile := range w.workloads {
+		workloadItems[i] = htmx.Tr(
 			htmx.Th(
 				htmx.Label(
 					htmx.Input(
@@ -144,7 +152,7 @@ func (w *WorkloadListController) Get() error {
 							),
 							htmx.TBody(
 								htmx.ID("data-table"),
-								htmx.Group(profilesItems...),
+								htmx.Group(workloadItems...),
 							),
 						),
 						htmx.Div(

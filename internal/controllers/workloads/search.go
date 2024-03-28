@@ -3,8 +3,10 @@ package workloads
 import (
 	"fmt"
 
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	links "github.com/zeiss/fiber-htmx/components/links"
@@ -12,14 +14,25 @@ import (
 
 // WorkloadSearchController ...
 type WorkloadSearchController struct {
-	db ports.Repository
+	db   ports.Repository
+	team *authz.Team
 
 	htmx.UnimplementedController
 }
 
 // NewWorkloadSearchController ...
 func NewWorkloadSearchController(db ports.Repository) *WorkloadSearchController {
-	return &WorkloadSearchController{db, htmx.UnimplementedController{}}
+	return &WorkloadSearchController{
+		db: db,
+	}
+}
+
+// Prepare ...
+func (w *WorkloadSearchController) Prepare() error {
+	team := w.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	w.team = team
+
+	return nil
 }
 
 // Post ...
@@ -34,7 +47,7 @@ func (w *WorkloadSearchController) Post() error {
 		Search: q,
 	}
 
-	workloads, err := w.db.ListWorkloads(hx.Ctx().Context(), pagination)
+	workloads, err := w.db.ListWorkloads(hx.Ctx().Context(), w.team.Slug, pagination)
 	if err != nil {
 		return err
 	}
