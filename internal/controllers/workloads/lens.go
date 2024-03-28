@@ -1,7 +1,10 @@
 package workloads
 
 import (
+	"fmt"
+
 	authz "github.com/zeiss/fiber-authz"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -51,6 +54,22 @@ func (w *WorkloadLensController) Prepare() error {
 // Get ...
 func (w *WorkloadLensController) Get() error {
 	hx := w.Hx()
+
+	pillars := make([]htmx.Node, len(w.lens.Pillars))
+	for _, pillar := range w.lens.Pillars {
+		tr := htmx.Tr(
+			htmx.Td(
+				links.Link(
+					links.LinkProps{
+						Href: fmt.Sprintf("%s/pillars/%d", w.lens.ID, pillar.ID),
+					},
+					htmx.Text(pillar.Name),
+				),
+			),
+		)
+
+		pillars = append(pillars, tr)
+	}
 
 	return hx.RenderComp(
 		components.Page(
@@ -124,13 +143,12 @@ func (w *WorkloadLensController) Get() error {
 							},
 							htmx.THead(
 								htmx.Tr(
-									htmx.Th(htmx.Text("ID")),
-									htmx.Th(htmx.Text("Lens")),
+									htmx.Th(htmx.Text("Pillar")),
 								),
 							),
-							// htmx.TBody(
-							// 	htmx.Group(lenses...),
-							// ),
+							htmx.TBody(
+								htmx.Group(pillars...),
+							),
 						),
 					),
 				),

@@ -44,7 +44,7 @@ func (w *WorkloadIndexController) Get() error {
 			htmx.Td(
 				links.Link(
 					links.LinkProps{
-						Href: fmt.Sprintf("lens/%s/list", lens.ID.String()),
+						Href: fmt.Sprintf("%s/lenses/%s", workload.ID, lens.ID.String()),
 					},
 					htmx.Text(lens.Name),
 				),

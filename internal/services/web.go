@@ -94,11 +94,12 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses.Get("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
 
 		workloads := team.Group("/workloads")
-		workloads.Get("/list", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), config))
+		workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), config))
 		workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
-		workloads.Get("/:id/lens/:lens/index", htmx.NewHxControllerHandler(controllers.NewWorkloadLensController(a.db), config))
+		workloads.Get("/:id/lenses/:lens", htmx.NewHxControllerHandler(controllers.NewWorkloadLensController(a.db), config))
+		workloads.Get("/:id/lenses/:lens/pillars/:pillar", htmx.NewHxControllerHandler(controllers.NewWorkloadPillarController(a.db), config))
 
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")
