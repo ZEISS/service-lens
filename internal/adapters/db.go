@@ -77,7 +77,7 @@ func (d *DB) GetLensByID(ctx context.Context, teamSlug string, id uuid.UUID) (*m
 			ID: id,
 		},
 	}
-	err := d.conn.WithContext(ctx).Preload("Tags").Preload("Pillars").Find(lens).Error
+	err := d.conn.WithContext(ctx).Preload("Tags").Preload("Pillars").Preload("Pillars.Questions").Find(lens).Error
 	if err != nil {
 		return nil, err
 	}
