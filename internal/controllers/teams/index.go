@@ -23,9 +23,9 @@ func NewTeamsIndexController(db ports.Repository) *TeamIndexController {
 
 // Get ...
 func (a *TeamIndexController) Get() error {
-	hx := a.Hx
+	hx := a.Hx()
 
-	id, err := uuid.Parse(a.Hx.Context().Params("id"))
+	id, err := uuid.Parse(a.Hx().Context().Params("id"))
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (a *TeamIndexController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			a.Hx,
+			a.Hx(),
 			components.PageProps{},
 			components.SubNav(
 				components.SubNavProps{},

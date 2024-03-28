@@ -1,14 +1,16 @@
 package lenses
 
 import (
+	"fmt"
 	"io"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
-	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LensListController ...
@@ -25,7 +27,7 @@ func NewLensListController(db ports.Repository) *LensListController {
 
 // Put ...
 func (l *LensListController) Put() error {
-	hx := l.Hx
+	hx := l.Hx()
 
 	file, err := hx.Ctx().FormFile("spec")
 	if err != nil {
@@ -65,12 +67,12 @@ func (l *LensListController) Put() error {
 
 // Post ...
 func (l *LensListController) Post() error {
-	return l.Hx.RenderComp(
+	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx,
+			l.Hx(),
 			components.PageProps{},
 			components.Layout(
-				l.Hx,
+				l.Hx(),
 				components.LayoutProps{},
 				components.SubNav(
 					components.SubNavProps{},
@@ -150,19 +152,19 @@ func (l *LensListController) Post() error {
 
 // Get ...
 // func (l *LensesIndexController) Get() error {
-// 	id, err := uuid.Parse(l.Hx.Context().Params("id"))
+// 	id, err := uuid.Parse(l.Hx().Context().Params("id"))
 // 	if err != nil {
 // 		return err
 // 	}
 
-// 	lens, err := l.db.GetLensByID(l.Hx.Context().Context(), id)
+// 	lens, err := l.db.GetLensByID(l.Hx().Context().Context(), id)
 // 	if err != nil {
 // 		return err
 // 	}
 
-// 	return l.Hx.RenderComp(
+// 	return l.Hx().RenderComp(
 // 		components.Page(
-// 			l.Hx,
+// 			l.Hx(),
 // 			components.PageProps{
 // 				Children: []htmx.Node{
 // 					htmx.FormElement(
@@ -274,133 +276,96 @@ func (l *LensListController) Post() error {
 // }
 
 // Get ...
-func (l *LensListController) Get() error {
-	lenses, err := l.db.ListLenses(l.Hx.Context().Context(), &models.Pagination{Limit: 10, Offset: 0})
+func (p *LensListController) Get() error {
+	hx := p.Hx()
+
+	limit, offset := tables.PaginationPropsFromContext(hx.Ctx())
+
+	team, err := utils.TeamFromContext(hx.Ctx())
 	if err != nil {
 		return err
 	}
 
-	items := make([]htmx.Node, len(lenses))
-	for i, lens := range lenses {
-		tags := make([]htmx.Node, len(lens.Tags))
-		for j, tag := range lens.Tags {
-			tags[j] = htmx.Span(
-				htmx.ClassNames{
-					"badge":         true,
-					"badge-primary": true,
-					"badge-outline": true,
-				},
-				htmx.Text(tag.Name),
-			)
-		}
-
-		items[i] = htmx.Tr(
-			htmx.Th(
-				htmx.Label(
-					htmx.Input(
-						htmx.ClassNames{
-							"checkbox": true,
-						},
-						htmx.Attribute("type", "checkbox"),
-						htmx.Attribute("name", "lens"),
-						htmx.Attribute("value", lens.ID.String()),
-					),
-				),
-			),
-			htmx.Th(htmx.Text(lens.ID.String())),
-			htmx.Td(htmx.Text(lens.Name)),
-			htmx.Td(htmx.Text(lens.Description)),
-			htmx.Td(tags...),
-		)
+	lenses, err := p.db.ListLenses(hx.Ctx().Context(), team, &models.Pagination{Limit: limit, Offset: offset})
+	if err != nil {
+		return err
 	}
 
-	return l.Hx.RenderComp(
+	table := tables.Table[*models.Lens](
+		tables.TableProps[*models.Lens]{
+			Columns: []tables.ColumnDef[*models.Lens]{
+				{
+					ID:          "id",
+					AccessorKey: "id",
+					Header: func(p tables.TableProps[*models.Lens]) htmx.Node {
+						return htmx.Th(htmx.Text("ID"))
+					},
+					Cell: func(p tables.TableProps[*models.Lens], row *models.Lens) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.ID.String()),
+						)
+					},
+				},
+				{
+					ID:          "name",
+					AccessorKey: "name",
+					Header: func(p tables.TableProps[*models.Lens]) htmx.Node {
+						return htmx.Th(htmx.Text("Name"))
+					},
+					Cell: func(p tables.TableProps[*models.Lens], row *models.Lens) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.Name),
+						)
+					},
+				},
+			},
+			Rows: tables.NewRows(lenses),
+		},
+		htmx.ID("data-table"),
+	)
 
+	if hx.IsHxRequest() {
+		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d,offset=%d", hx.Ctx().Path(), limit, offset))
+
+		return hx.RenderComp(table)
+	}
+
+	return hx.RenderComp(
 		components.Page(
-			l.Hx,
+			hx,
 			components.PageProps{},
-			components.SubNav(
-				components.SubNavProps{},
-				components.SubNavBreadcrumb(
-					components.SubNavBreadcrumbProps{},
-					breadcrumbs.Breadcrumbs(
-						breadcrumbs.BreadcrumbsProps{},
-						breadcrumbs.Breadcrumb(
-							breadcrumbs.BreadcrumbProps{
-								Href:  "/",
-								Title: "Home",
-							},
-						),
-						breadcrumbs.Breadcrumb(
-							breadcrumbs.BreadcrumbProps{
-								Href:  "/lenses/list",
-								Title: "Lenses",
-							},
-						),
-					),
-				),
-				components.SubNavActions(
-					components.SubNavActionsProps{},
-					links.Link(
-						links.LinkProps{
-							Href: "/lenses/new",
-							ClassNames: htmx.ClassNames{
-								"btn":         true,
-								"btn-outline": true,
-								"btn-xs":      true,
-								"link-hover":  true,
-							},
-						},
-						htmx.Text("Create Lens"),
-					),
-				),
-			),
-			components.Wrap(
-				components.WrapProps{},
-				htmx.Div(
-					htmx.ClassNames{"overflow-x-auto": true},
-					htmx.Table(
-						htmx.ClassNames{"table": true},
-						htmx.THead(
-							htmx.Tr(
-								htmx.Th(
-									htmx.Label(
-										htmx.Input(
-											htmx.ClassNames{
-												"checkbox": true,
-											},
-											htmx.Attribute("type", "checkbox"),
-											htmx.Attribute("name", "all"),
-										),
-									),
-								),
-								htmx.Th(htmx.Text("ID")),
-								htmx.Th(htmx.Text("Name")),
-								htmx.Th(htmx.Text("Description")),
-							),
-						),
-						htmx.TBody(
-							items...,
-						),
-					),
+			components.Layout(
+				hx,
+				components.LayoutProps{},
+				components.Wrap(
+					components.WrapProps{},
 					htmx.Div(
-						htmx.ClassNames{},
-						htmx.Select(
+						htmx.ClassNames{
+							"overflow-x-auto": true,
+						},
+						table,
+						htmx.Div(
 							htmx.ClassNames{
-								"select":   true,
-								"max-w-xs": true,
+								"bg-base-100": true,
+								"p-4":         true,
 							},
-							htmx.Option(
-								htmx.Text("10"),
-								htmx.Attribute("value", "10"),
-							),
-							htmx.Option(
-								htmx.Text("20"),
-								htmx.Attribute("value", "20"),
-							),
-							htmx.Option(
-								htmx.Text("30"),
-								htmx.Attribute("value", "30"),
+							tables.Pagination(
+								tables.PaginationProps{
+									Limit:  limit,
+									Offset: offset,
+								},
+								tables.Prev(
+									tables.PaginationProps{
+										URL:    "/api/data",
+										Offset: offset,
+										Limit:  limit,
+									},
+								),
+								tables.Next(
+									tables.PaginationProps{
+										URL: "/api/data",
+									},
+								),
 							),
 						),
 					),

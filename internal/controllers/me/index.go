@@ -23,22 +23,22 @@ func NewMeIndexController(db ports.Repository) *MeIndexController {
 
 // Get ...
 func (m *MeIndexController) Get() error {
-	session, err := goth.SessionFromContext(m.Hx.Context())
+	session, err := goth.SessionFromContext(m.Hx().Context())
 	if err != nil {
 		return err
 	}
 
-	user, err := m.db.GetUserByID(m.Hx.Context().Context(), session.UserID)
+	user, err := m.db.GetUserByID(m.Hx().Context().Context(), session.UserID)
 	if err != nil {
 		return err
 	}
 
-	return m.Hx.RenderComp(
+	return m.Hx().RenderComp(
 		components.Page(
-			m.Hx,
+			m.Hx(),
 			components.PageProps{},
 			components.Layout(
-				m.Hx,
+				m.Hx(),
 				components.LayoutProps{},
 				htmx.Form(
 					htmx.HxPost("/me"),

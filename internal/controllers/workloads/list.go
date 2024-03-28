@@ -30,7 +30,7 @@ func NewWorkloadListController(db ports.Repository) *WorkloadListController {
 
 // Prepare ...
 func (w *WorkloadListController) Prepare() error {
-	hx := w.Hx
+	hx := w.Hx()
 
 	w.offset = hx.Context().QueryInt("offset", 0)
 	w.limit = hx.Context().QueryInt("limit", 10)
@@ -47,7 +47,7 @@ func (w *WorkloadListController) Prepare() error {
 
 // Get ...
 func (w *WorkloadListController) Get() error {
-	hx := w.Hx
+	hx := w.Hx()
 
 	profilesItems := make([]htmx.Node, len(w.profiles))
 	for i, profile := range w.profiles {

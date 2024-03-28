@@ -25,12 +25,12 @@ func NewProfileIndexController(db ports.Repository) *ProfileIndexController {
 
 // Prepare ...
 func (p *ProfileIndexController) Prepare() error {
-	id, err := uuid.Parse(p.Hx.Context().Params("id"))
+	id, err := uuid.Parse(p.Hx().Context().Params("id"))
 	if err != nil {
 		return err
 	}
 
-	profile, err := p.db.FetchProfile(p.Hx.Context().Context(), id)
+	profile, err := p.db.FetchProfile(p.Hx().Context().Context(), id)
 	if err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (p *ProfileIndexController) Prepare() error {
 
 // Get ...
 func (p *ProfileIndexController) Get() error {
-	hx := p.Hx
+	hx := p.Hx()
 
 	return hx.RenderComp(
 		components.Page(

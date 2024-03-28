@@ -87,6 +87,12 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
 		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
 
+		lenses := team.Group("/lenses")
+		lenses.Get("/list", htmx.NewHxControllerHandler(controllers.NewLensListController(a.db), config))
+		lenses.Get("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
+		lenses.Post("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
+		lenses.Get("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
+
 		// lenses := team.Group("/lenses")
 		// lenses.Get("/list", htmx.NewHxControllerHandler(lensesController.List))
 		// lenses.Get("/new", htmx.NewHxControllerHandler(lensesController.New))

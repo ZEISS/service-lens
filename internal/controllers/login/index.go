@@ -20,9 +20,9 @@ func NewLoginIndexController(db ports.Repository) *LoginIndexController {
 
 // Get ...
 func (l *LoginIndexController) Get() error {
-	return l.Hx.RenderComp(
+	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx,
+			l.Hx(),
 			components.PageProps{},
 			components.Wrap(
 				components.WrapProps{},

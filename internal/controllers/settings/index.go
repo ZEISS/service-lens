@@ -22,10 +22,10 @@ func NewSettingsIndexController(db ports.Repository) *SettingsIndexController {
 
 // Get ...
 func (a *SettingsIndexController) Get() error {
-	return a.Hx.RenderComp(
+	return a.Hx().RenderComp(
 
 		components.Page(
-			a.Hx,
+			a.Hx(),
 			components.PageProps{},
 			components.SubNav(
 				components.SubNavProps{},

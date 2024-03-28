@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
-	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -27,7 +25,7 @@ func NewProfileListController(db ports.Repository) *ProfileListController {
 
 // Get ...
 func (p *ProfileListController) Get() error {
-	hx := p.Hx
+	hx := p.Hx()
 
 	limit, offset := tables.PaginationPropsFromContext(hx.Ctx())
 
@@ -99,68 +97,35 @@ func (p *ProfileListController) Get() error {
 			components.Layout(
 				hx,
 				components.LayoutProps{},
-				components.SubNav(
-					components.SubNavProps{},
-					components.SubNavBreadcrumb(
-						components.SubNavBreadcrumbProps{},
-						breadcrumbs.Breadcrumbs(
-							breadcrumbs.BreadcrumbsProps{},
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/",
-									Title: "Home",
-								},
-							),
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/profiles/list",
-									Title: "Profiles",
-								},
-							),
-						),
-					),
-					components.SubNavActions(
-						components.SubNavActionsProps{},
-						links.Link(
-							links.LinkProps{
-								Href: "/profiles/new",
-								ClassNames: htmx.ClassNames{
-									"btn":         true,
-									"btn-outline": true,
-									"btn-xs":      true,
-									"link-hover":  true,
-								},
-							},
-							htmx.Text("Create Profile"),
-						),
-					),
-				),
-				htmx.Div(
-					htmx.ClassNames{
-						"overflow-x-auto": true,
-					},
-					table,
+				components.Wrap(
+					components.WrapProps{},
 					htmx.Div(
 						htmx.ClassNames{
-							"bg-base-100": true,
-							"p-4":         true,
+							"overflow-x-auto": true,
 						},
-						tables.Pagination(
-							tables.PaginationProps{
-								Limit:  limit,
-								Offset: offset,
+						table,
+						htmx.Div(
+							htmx.ClassNames{
+								"bg-base-100": true,
+								"p-4":         true,
 							},
-							tables.Prev(
+							tables.Pagination(
 								tables.PaginationProps{
-									URL:    "/api/data",
-									Offset: offset,
 									Limit:  limit,
+									Offset: offset,
 								},
-							),
-							tables.Next(
-								tables.PaginationProps{
-									URL: "/api/data",
-								},
+								tables.Prev(
+									tables.PaginationProps{
+										URL:    "/api/data",
+										Offset: offset,
+										Limit:  limit,
+									},
+								),
+								tables.Next(
+									tables.PaginationProps{
+										URL: "/api/data",
+									},
+								),
 							),
 						),
 					),

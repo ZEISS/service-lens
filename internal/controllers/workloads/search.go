@@ -24,7 +24,7 @@ func NewWorkloadSearchController(db ports.Repository) *WorkloadSearchController 
 
 // Post ...
 func (w *WorkloadSearchController) Post() error {
-	hx := w.Hx
+	hx := w.Hx()
 
 	q := hx.Ctx().FormValue("q")
 

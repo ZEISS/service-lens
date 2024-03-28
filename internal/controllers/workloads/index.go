@@ -26,7 +26,7 @@ func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
 
 // get ...
 func (w *WorkloadIndexController) Get() error {
-	hx := w.Hx
+	hx := w.Hx()
 
 	id, err := uuid.Parse(hx.Context().Params("id"))
 	if err != nil {
@@ -169,7 +169,7 @@ func (w *WorkloadIndexController) Get() error {
 
 // Delete ...
 func (w *WorkloadIndexController) Delete() error {
-	hx := w.Hx
+	hx := w.Hx()
 
 	id, err := uuid.Parse(hx.Ctx().Params("id"))
 	if err != nil {

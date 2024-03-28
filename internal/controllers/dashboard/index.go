@@ -21,12 +21,12 @@ func NewDashboardController(db ports.Repository) *DashboardIndexController {
 
 // Get ...
 func (d *DashboardIndexController) Get() error {
-	return d.Hx.RenderComp(
+	return d.Hx().RenderComp(
 		components.Page(
-			d.Hx,
+			d.Hx(),
 			components.PageProps{},
 			components.Layout(
-				d.Hx,
+				d.Hx(),
 				components.LayoutProps{},
 				components.SubNav(
 					components.SubNavProps{},

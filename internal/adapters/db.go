@@ -83,9 +83,9 @@ func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error
 }
 
 // ListLenses ...
-func (d *DB) ListLenses(ctx context.Context, pagination *models.Pagination) ([]*models.Lens, error) {
+func (d *DB) ListLenses(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Lens, error) {
 	lenses := []*models.Lens{}
-	err := d.conn.WithContext(ctx).Preload("Tags").Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
+	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
 	if err != nil {
 		return nil, err
 	}

@@ -26,7 +26,7 @@ func NewProfileNewController(db ports.Repository) *ProfileNewController {
 
 // Post ...
 func (p *ProfileNewController) Post() error {
-	hx := p.Hx
+	hx := p.Hx()
 
 	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
 
@@ -48,14 +48,14 @@ func (p *ProfileNewController) Post() error {
 
 // New ...
 func (p *ProfileNewController) Get() error {
-	team := p.Hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	team := p.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
 
-	return p.Hx.RenderComp(
+	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx,
+			p.Hx(),
 			components.PageProps{},
 			components.Layout(
-				p.Hx,
+				p.Hx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

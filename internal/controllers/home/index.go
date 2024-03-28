@@ -22,10 +22,10 @@ func NewHomeIndexController(db ports.Repository) *HomeIndexController {
 // Get ...
 func (h *HomeIndexController) Get(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		h.Hx,
+		h.Hx(),
 		components.PageProps{},
 		components.Layout(
-			h.Hx,
+			h.Hx(),
 			components.LayoutProps{},
 			components.Wrap(
 				components.WrapProps{},

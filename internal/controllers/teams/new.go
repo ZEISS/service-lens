@@ -24,9 +24,9 @@ func NewTeamsNewController(db ports.Repository) *TeamsNewController {
 
 // Get ...
 func (a *TeamsNewController) Get() error {
-	return a.Hx.RenderComp(
+	return a.Hx().RenderComp(
 		components.Page(
-			a.Hx,
+			a.Hx(),
 			components.PageProps{},
 			components.SubNav(
 				components.SubNavProps{},
@@ -151,7 +151,7 @@ func (a *TeamsNewController) Get() error {
 
 // Post ...
 func (a *TeamsNewController) Post() error {
-	hx := a.Hx
+	hx := a.Hx()
 
 	team := &authz.Team{
 		Name:        hx.Ctx().FormValue("name"),

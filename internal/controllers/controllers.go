@@ -22,9 +22,19 @@ func NewLoginIndexController(db ports.Repository) *login.LoginIndexController {
 	return login.NewLoginIndexController(db)
 }
 
+// NewLensNewController ...
+func NewLensNewController(db ports.Repository) *lenses.LensNewController {
+	return lenses.NewLensNewController(db)
+}
+
 // NewLensIndexController ...
 func NewLensIndexController(db ports.Repository) *lenses.LensIndexController {
 	return lenses.NewLensIndexController(db)
+}
+
+// NewLensListController ...
+func NewLensListController(db ports.Repository) *lenses.LensListController {
+	return lenses.NewLensListController(db)
 }
 
 // NewWorkloadIndexController ...

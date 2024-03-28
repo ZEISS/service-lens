@@ -23,14 +23,14 @@ func NewTeamDashboardController(db ports.Repository) *TeamDashboardController {
 
 // Get ...
 func (t *TeamDashboardController) Get() error {
-	team := t.Hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	team := t.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
 
-	return t.Hx.RenderComp(
+	return t.Hx().RenderComp(
 		components.Page(
-			t.Hx,
+			t.Hx(),
 			components.PageProps{},
 			components.Layout(
-				t.Hx,
+				t.Hx(),
 				components.LayoutProps{},
 				components.SubNav(
 					components.SubNavProps{},
