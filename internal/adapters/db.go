@@ -70,9 +70,12 @@ func (d *DB) AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, erro
 }
 
 // GetLensByID ...
-func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error) {
+func (d *DB) GetLensByID(ctx context.Context, teamSlug string, id uuid.UUID) (*models.Lens, error) {
 	lens := &models.Lens{
 		ID: id,
+		Team: authz.Team{
+			ID: id,
+		},
 	}
 	err := d.conn.WithContext(ctx).Preload("Tags").Preload("Pillars").Find(lens).Error
 	if err != nil {

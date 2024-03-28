@@ -57,7 +57,7 @@ func (w *WorkloadListController) Get() error {
 	hx := w.Hx()
 
 	workloadItems := make([]htmx.Node, len(w.workloads))
-	for i, profile := range w.workloads {
+	for i, workload := range w.workloads {
 		workloadItems[i] = htmx.Tr(
 			htmx.Th(
 				htmx.Label(
@@ -67,22 +67,22 @@ func (w *WorkloadListController) Get() error {
 						},
 						htmx.Attribute("type", "checkbox"),
 						htmx.Attribute("name", "profile"),
-						htmx.Attribute("value", profile.ID.String()),
+						htmx.Attribute("value", workload.ID.String()),
 					),
 				),
 			),
-			htmx.Th(htmx.Text(profile.ID.String())),
+			htmx.Th(htmx.Text(workload.ID.String())),
 			htmx.Td(
 				links.Link(
 					links.LinkProps{
-						Href: fmt.Sprintf("/workloads/%s", profile.ID.String()),
+						Href: fmt.Sprintf("/%s/workloads/%s", w.team.Slug, workload.ID.String()),
 					},
-					htmx.Text(profile.Name),
+					htmx.Text(workload.Name),
 				),
 			),
 			htmx.Td(
 				htmx.Text(
-					profile.Description,
+					workload.Description,
 				),
 			),
 		)

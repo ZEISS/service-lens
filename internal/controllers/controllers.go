@@ -91,3 +91,8 @@ func NewWorkloadListController(db ports.Repository) *workloads.WorkloadListContr
 func NewWorkloadNewController(db ports.Repository) *workloads.WorkloadNewController {
 	return workloads.NewWorkloadsNewController(db)
 }
+
+// NewWorkloadLensController ...
+func NewWorkloadLensController(db ports.Repository) *workloads.WorkloadLensController {
+	return workloads.NewWorkloadLensController(db)
+}

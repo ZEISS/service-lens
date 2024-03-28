@@ -1,56 +1,56 @@
 package workloads
 
 import (
-	"fmt"
-
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
-	links "github.com/zeiss/fiber-htmx/components/links"
 )
 
-// WorkloadIndexController ...
-type WorkloadIndexController struct {
-	db ports.Repository
+// WorkloadLensController ...
+type WorkloadLensController struct {
+	db   ports.Repository
+	team *authz.Team
+	lens *models.Lens
 
 	htmx.UnimplementedController
 }
 
-// NewWorkloadIndexController ...
-func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
-	return &WorkloadIndexController{db, htmx.UnimplementedController{}}
+// NewWorkloadLensController ...
+func NewWorkloadLensController(db ports.Repository) *WorkloadLensController {
+	return &WorkloadLensController{
+		db: db,
+	}
 }
 
-// get ...
-func (w *WorkloadIndexController) Get() error {
+// Prepare ...
+func (w *WorkloadLensController) Prepare() error {
 	hx := w.Hx()
 
-	id, err := uuid.Parse(hx.Context().Params("id"))
+	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	w.team = team
+
+	lensID, err := uuid.Parse(hx.Context().Params("lens"))
 	if err != nil {
 		return err
 	}
 
-	workload, err := w.db.ShowWorkload(hx.Context().Context(), id)
+	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, lensID)
 	if err != nil {
 		return err
 	}
+	w.lens = lens
 
-	lenses := make([]htmx.Node, len(workload.Lenses))
-	for i, lens := range workload.Lenses {
-		lenses[i] = htmx.Tr(
-			htmx.Th(htmx.Text(lens.ID.String())),
-			htmx.Td(
-				links.Link(
-					links.LinkProps{
-						Href: fmt.Sprintf("lens/%s/list", lens.ID.String()),
-					},
-					htmx.Text(lens.Name),
-				),
-			),
-		)
-	}
+	return nil
+}
+
+// Get ...
+func (w *WorkloadLensController) Get() error {
+	hx := w.Hx()
 
 	return hx.RenderComp(
 		components.Page(
@@ -63,10 +63,10 @@ func (w *WorkloadIndexController) Get() error {
 					components.WrapProps{},
 					htmx.Div(
 						htmx.H1(
-							htmx.Text(workload.Name),
+							htmx.Text(w.lens.Name),
 						),
 						htmx.P(
-							htmx.Text(workload.Description),
+							htmx.Text(w.lens.Description),
 						),
 						htmx.Div(
 							htmx.ClassNames{
@@ -82,7 +82,7 @@ func (w *WorkloadIndexController) Get() error {
 							),
 							htmx.H3(
 								htmx.Text(
-									workload.CreatedAt.Format("2006-01-02 15:04:05"),
+									w.lens.CreatedAt.Format("2006-01-02 15:04:05"),
 								),
 							),
 						),
@@ -100,7 +100,7 @@ func (w *WorkloadIndexController) Get() error {
 							),
 							htmx.H3(
 								htmx.Text(
-									workload.UpdatedAt.Format("2006-01-02 15:04:05"),
+									w.lens.UpdatedAt.Format("2006-01-02 15:04:05"),
 								),
 							),
 						),
@@ -128,32 +128,13 @@ func (w *WorkloadIndexController) Get() error {
 									htmx.Th(htmx.Text("Lens")),
 								),
 							),
-							htmx.TBody(
-								htmx.Group(lenses...),
-							),
+							// htmx.TBody(
+							// 	htmx.Group(lenses...),
+							// ),
 						),
 					),
 				),
 			),
 		),
 	)
-}
-
-// Delete ...
-func (w *WorkloadIndexController) Delete() error {
-	hx := w.Hx()
-
-	id, err := uuid.Parse(hx.Ctx().Params("id"))
-	if err != nil {
-		return err
-	}
-
-	err = w.db.DestroyWorkload(hx.Ctx().Context(), id)
-	if err != nil {
-		return err
-	}
-
-	hx.Redirect("/workloads/list")
-
-	return nil
 }
