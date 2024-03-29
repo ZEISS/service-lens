@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/google/uuid"
@@ -13,18 +14,21 @@ import (
 
 // WorkloadIndexController ...
 type WorkloadIndexController struct {
-	db ports.Repository
+	db       ports.Repository
+	workload *models.Workload
 
 	htmx.UnimplementedController
 }
 
 // NewWorkloadIndexController ...
 func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
-	return &WorkloadIndexController{db, htmx.UnimplementedController{}}
+	return &WorkloadIndexController{
+		db: db,
+	}
 }
 
-// get ...
-func (w *WorkloadIndexController) Get() error {
+// Prepare ...
+func (w *WorkloadIndexController) Prepare() error {
 	hx := w.Hx()
 
 	id, err := uuid.Parse(hx.Context().Params("id"))
@@ -32,19 +36,27 @@ func (w *WorkloadIndexController) Get() error {
 		return err
 	}
 
-	workload, err := w.db.ShowWorkload(hx.Context().Context(), id)
+	workload, err := w.db.IndexWorkload(hx.Context().Context(), id)
 	if err != nil {
 		return err
 	}
+	w.workload = workload
 
-	lenses := make([]htmx.Node, len(workload.Lenses))
-	for i, lens := range workload.Lenses {
+	return nil
+}
+
+// Get ...
+func (w *WorkloadIndexController) Get() error {
+	hx := w.Hx()
+
+	lenses := make([]htmx.Node, len(w.workload.Lenses))
+	for i, lens := range w.workload.Lenses {
 		lenses[i] = htmx.Tr(
 			htmx.Th(htmx.Text(lens.ID.String())),
 			htmx.Td(
 				links.Link(
 					links.LinkProps{
-						Href: fmt.Sprintf("%s/lenses/%s", workload.ID, lens.ID.String()),
+						Href: fmt.Sprintf("%s/lenses/%s", w.workload.ID, lens.ID.String()),
 					},
 					htmx.Text(lens.Name),
 				),
@@ -63,10 +75,10 @@ func (w *WorkloadIndexController) Get() error {
 					components.WrapProps{},
 					htmx.Div(
 						htmx.H1(
-							htmx.Text(workload.Name),
+							htmx.Text(w.workload.Name),
 						),
 						htmx.P(
-							htmx.Text(workload.Description),
+							htmx.Text(w.workload.Description),
 						),
 						htmx.Div(
 							htmx.ClassNames{
@@ -82,7 +94,7 @@ func (w *WorkloadIndexController) Get() error {
 							),
 							htmx.H3(
 								htmx.Text(
-									workload.CreatedAt.Format("2006-01-02 15:04:05"),
+									w.workload.CreatedAt.Format("2006-01-02 15:04:05"),
 								),
 							),
 						),
@@ -100,7 +112,7 @@ func (w *WorkloadIndexController) Get() error {
 							),
 							htmx.H3(
 								htmx.Text(
-									workload.UpdatedAt.Format("2006-01-02 15:04:05"),
+									w.workload.UpdatedAt.Format("2006-01-02 15:04:05"),
 								),
 							),
 						),
@@ -130,6 +142,69 @@ func (w *WorkloadIndexController) Get() error {
 							),
 							htmx.TBody(
 								htmx.Group(lenses...),
+							),
+						),
+					),
+				),
+				components.Wrap(
+					components.WrapProps{
+						ClassName: htmx.ClassNames{
+							"border-neutral": true,
+							"border-t":       true,
+							"px-6":           true,
+						},
+					},
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Name"),
+						),
+						htmx.H3(
+							htmx.Text(
+								w.workload.Profile.Name,
+							),
+						),
+					),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Description"),
+						),
+						htmx.H3(
+							htmx.Text(
+								w.workload.Profile.Description,
+							),
+						),
+					),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Updated at"),
+						),
+						htmx.H3(
+							htmx.Text(
+								w.workload.Profile.UpdatedAt.Format("2006-01-02 15:04:05"),
 							),
 						),
 					),

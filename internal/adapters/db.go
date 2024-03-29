@@ -32,6 +32,7 @@ func (d *DB) RunMigration() error {
 		&models.Risk{},
 		&models.Workload{},
 		&models.Tag{},
+		&models.WorkloadLensQuestionAnswer{},
 	)
 }
 
@@ -120,12 +121,12 @@ func (d *DB) ListWorkloads(ctx context.Context, teamSlug string, pagination *mod
 }
 
 // ShowWorkload ...
-func (d *DB) ShowWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, error) {
+func (d *DB) IndexWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, error) {
 	workload := &models.Workload{
 		ID: id,
 	}
 
-	err := d.conn.WithContext(ctx).Preload("Lenses").Preload("Tags").Find(workload).Error
+	err := d.conn.WithContext(ctx).Preload("Lenses").Preload("Tags").Preload("Profile").Preload("Answers").Preload("Answers.Choices").Find(workload).Error
 	if err != nil {
 		return nil, err
 	}

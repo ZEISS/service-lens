@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Profile represents a business profile
+// Profile represents a business profile.
 type Profile struct {
 	ID          uuid.UUID         `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
 	Name        string            `json:"name"`

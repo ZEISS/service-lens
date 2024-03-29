@@ -2,7 +2,6 @@ package workloads
 
 import (
 	authz "github.com/zeiss/fiber-authz"
-	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -97,34 +96,35 @@ func (w *WorkloadPillarController) Get() error {
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
-					drawers.Drawer(
-						drawers.DrawerProps{
-							ID: "pillars-drawer",
-							ClassNames: htmx.ClassNames{
-								"drawer-open": true,
-							},
-						},
-						drawers.DrawerContent(
-							drawers.DrawerContentProps{
-								ID: "pillars-drawer",
-								ClassNames: htmx.ClassNames{
-									"px-8": true,
-								},
-							},
-							htmx.Text("Drawer this is the new content for the drawer"),
-						),
-						drawers.DrawerSide(
-							drawers.DrawerSideProps{},
-							menus.Menu(
-								menus.MenuProps{
-									ClassNames: htmx.ClassNames{
-										"w-full": true,
-									},
-								},
-								htmx.Group(pillars...),
-							),
-						),
-					),
+
+					// drawers.Drawer(
+					// 	drawers.DrawerProps{
+					// 		ID: "pillars-drawer",
+					// 		ClassNames: htmx.ClassNames{
+					// 			"drawer-open": true,
+					// 		},
+					// 	},
+					// 	drawers.DrawerContent(
+					// 		drawers.DrawerContentProps{
+					// 			ID: "pillars-drawer",
+					// 			ClassNames: htmx.ClassNames{
+					// 				"px-8": true,
+					// 			},
+					// 		},
+					// 		htmx.Text("Drawer this is the new content for the drawer"),
+					// 	),
+					// 	drawers.DrawerSide(
+					// 		drawers.DrawerSideProps{},
+					// 		menus.Menu(
+					// 			menus.MenuProps{
+					// 				ClassNames: htmx.ClassNames{
+					// 					"w-full": true,
+					// 				},
+					// 			},
+					// 			htmx.Group(pillars...),
+					// 		),
+					// 	),
+					// ),
 				),
 			),
 		),
