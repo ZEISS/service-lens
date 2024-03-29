@@ -146,7 +146,7 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							menus.MenuItemProps{},
 							menus.MenuLink(
 								menus.MenuLinkProps{
-									Href: fmt.Sprintf("/%s/workloads/list", team.Slug),
+									Href: fmt.Sprintf("/%s/workloads", team.Slug),
 								},
 								htmx.Text("List workload"),
 							),

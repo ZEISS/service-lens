@@ -3,7 +3,6 @@ package teams
 import (
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/resolvers"
@@ -32,21 +31,6 @@ func (t *TeamDashboardController) Get() error {
 			components.Layout(
 				t.Hx(),
 				components.LayoutProps{},
-				components.SubNav(
-					components.SubNavProps{},
-					components.SubNavBreadcrumb(
-						components.SubNavBreadcrumbProps{},
-						breadcrumbs.Breadcrumbs(
-							breadcrumbs.BreadcrumbsProps{},
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/",
-									Title: "Home",
-								},
-							),
-						),
-					),
-				),
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

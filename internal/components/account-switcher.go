@@ -31,16 +31,22 @@ func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node
 		dropdowns.DropdownButton(
 			dropdowns.DropdownButtonProps{
 				ClassNames: htmx.ClassNames{
-					"btn":         true,
-					"btn-sm":      true,
-					"btn-outline": true,
+					"btn":             true,
+					"btn-sm":          true,
+					"btn-outline":     true,
+					"w-full":          true,
+					"justify-between": true,
 				},
 			},
 			htmx.Text("CIT-CA"),
 			icons.ChevronUpDownOutline(icons.IconProps{}),
 		),
 		dropdowns.DropdownMenuItems(
-			dropdowns.DropdownMenuItemsProps{},
+			dropdowns.DropdownMenuItemsProps{
+				ClassNames: htmx.ClassNames{
+					"w-full": true,
+				},
+			},
 			htmx.Group(users...),
 		),
 	)

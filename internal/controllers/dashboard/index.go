@@ -2,7 +2,6 @@ package dashboard
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -16,7 +15,14 @@ type DashboardIndexController struct {
 
 // NewDashboardIndexController ...
 func NewDashboardController(db ports.Repository) *DashboardIndexController {
-	return &DashboardIndexController{db, htmx.UnimplementedController{}}
+	return &DashboardIndexController{
+		db: db,
+	}
+}
+
+// Prepare ...
+func (d *DashboardIndexController) Prepare() error {
+	return nil
 }
 
 // Get ...
@@ -28,21 +34,6 @@ func (d *DashboardIndexController) Get() error {
 			components.Layout(
 				d.Hx(),
 				components.LayoutProps{},
-				components.SubNav(
-					components.SubNavProps{},
-					components.SubNavBreadcrumb(
-						components.SubNavBreadcrumbProps{},
-						breadcrumbs.Breadcrumbs(
-							breadcrumbs.BreadcrumbsProps{},
-							breadcrumbs.Breadcrumb(
-								breadcrumbs.BreadcrumbProps{
-									Href:  "/",
-									Title: "Home",
-								},
-							),
-						),
-					),
-				),
 				components.Wrap(
 					components.WrapProps{},
 				),
