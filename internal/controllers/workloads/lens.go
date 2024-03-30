@@ -123,6 +123,15 @@ func (w *WorkloadLensController) Get() error {
 								),
 							),
 						),
+						htmx.Div(
+							htmx.ClassNames{},
+							links.Button(
+								links.LinkProps{
+									Href: fmt.Sprintf("%s/edit", w.lens.ID),
+								},
+								htmx.Text("Review"),
+							),
+						),
 					),
 				),
 				components.Wrap(
