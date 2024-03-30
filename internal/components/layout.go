@@ -296,5 +296,14 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 				),
 			),
 		),
+		htmx.Input(
+			htmx.ClassNames{
+				"toggle":           true,
+				"theme-controller": true,
+				"mx-4":             true,
+			},
+			htmx.Attribute("type", "checkbox"),
+			htmx.Value("cupcake"),
+		),
 	)
 }

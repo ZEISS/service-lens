@@ -149,62 +149,81 @@ func (w *WorkloadIndexController) Get() error {
 				components.Wrap(
 					components.WrapProps{
 						ClassName: htmx.ClassNames{
-							"border-neutral": true,
-							"border-t":       true,
-							"px-6":           true,
+							"-mx-6": true,
 						},
 					},
-					htmx.Div(
+					htmx.H1(
 						htmx.ClassNames{
-							"flex":     true,
-							"flex-col": true,
-							"py-2":     true,
+							"text-2xl":     true,
+							"bg-neutral":   true,
+							"py-2":         true,
+							"px-4":         true,
+							"rounded":      true,
+							"text-primary": true,
 						},
-						htmx.H4(
-							htmx.ClassNames{
-								"text-gray-500": true,
-							},
-							htmx.Text("Name"),
-						),
-						htmx.H3(
-							htmx.Text(
-								w.workload.Profile.Name,
-							),
-						),
+						htmx.Text("Profile"),
 					),
 					htmx.Div(
 						htmx.ClassNames{
-							"flex":     true,
-							"flex-col": true,
-							"py-2":     true,
+							"rounded":        true,
+							"border":         true,
+							"border-neutral": true,
+							"px-4":           true,
+							"py-2":           true,
+							"border-t":       true,
 						},
-						htmx.H4(
+						htmx.Div(
 							htmx.ClassNames{
-								"text-gray-500": true,
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
 							},
-							htmx.Text("Description"),
-						),
-						htmx.H3(
-							htmx.Text(
-								w.workload.Profile.Description,
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Name"),
+							),
+							htmx.H3(
+								htmx.Text(
+									w.workload.Profile.Name,
+								),
 							),
 						),
-					),
-					htmx.Div(
-						htmx.ClassNames{
-							"flex":     true,
-							"flex-col": true,
-							"py-2":     true,
-						},
-						htmx.H4(
+						htmx.Div(
 							htmx.ClassNames{
-								"text-gray-500": true,
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
 							},
-							htmx.Text("Updated at"),
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Description"),
+							),
+							htmx.H3(
+								htmx.Text(
+									w.workload.Profile.Description,
+								),
+							),
 						),
-						htmx.H3(
-							htmx.Text(
-								w.workload.Profile.UpdatedAt.Format("2006-01-02 15:04:05"),
+						htmx.Div(
+							htmx.ClassNames{
+								"flex":     true,
+								"flex-col": true,
+								"py-2":     true,
+							},
+							htmx.H4(
+								htmx.ClassNames{
+									"text-gray-500": true,
+								},
+								htmx.Text("Updated at"),
+							),
+							htmx.H3(
+								htmx.Text(
+									w.workload.Profile.UpdatedAt.Format("2006-01-02 15:04:05"),
+								),
 							),
 						),
 					),

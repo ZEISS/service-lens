@@ -2,7 +2,6 @@ package workloads
 
 import (
 	authz "github.com/zeiss/fiber-authz"
-	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -10,13 +9,14 @@ import (
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 )
 
 // WorkloadPillarController ...
 type WorkloadPillarController struct {
-	db   ports.Repository
-	team *authz.Team
-	lens *models.Lens
+	db     ports.Repository
+	team   *authz.Team
+	pillar *models.Pillar
 
 	htmx.UnimplementedController
 }
@@ -40,11 +40,16 @@ func (w *WorkloadPillarController) Prepare() error {
 		return err
 	}
 
-	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, lensID)
+	pillarId, err := hx.Context().ParamsInt("pillar")
 	if err != nil {
 		return err
 	}
-	w.lens = lens
+
+	pillar, err := w.db.GetPillarById(hx.Context().Context(), team.Slug, lensID, pillarId)
+	if err != nil {
+		return err
+	}
+	w.pillar = pillar
 
 	return nil
 }
@@ -53,38 +58,23 @@ func (w *WorkloadPillarController) Prepare() error {
 func (w *WorkloadPillarController) Get() error {
 	hx := w.Hx()
 
-	pillars := make([]htmx.Node, len(w.lens.Pillars))
-
-	for _, pillar := range w.lens.Pillars {
-		menuItems := make([]htmx.Node, len(pillar.Questions))
-
-		for _, question := range pillar.Questions {
-			menuItem := menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuLink(
-					menus.MenuLinkProps{},
+	questions := make([]htmx.Node, len(w.pillar.Questions))
+	for i, question := range w.pillar.Questions {
+		questions[i] = cards.Card(
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					"w-full": true,
+				},
+			},
+			cards.Body(
+				cards.BodyProps{},
+				cards.Title(
+					cards.TitleProps{},
 					htmx.Text(question.Title),
 				),
-			)
-
-			menuItems = append(menuItems, menuItem)
-		}
-
-		menu := menus.MenuItem(
-			menus.MenuItemProps{},
-			menus.MenuCollapsible(
-				menus.MenuCollapsibleProps{
-					Open: true,
-				},
-				menus.MenuCollapsibleSummary(
-					menus.MenuCollapsibleSummaryProps{},
-					htmx.Text(pillar.Name),
-				),
-				htmx.Group(menuItems...),
+				htmx.Text(question.Description),
 			),
 		)
-
-		pillars = append(pillars, menu)
 	}
 
 	return hx.RenderComp(
@@ -96,35 +86,13 @@ func (w *WorkloadPillarController) Get() error {
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
-
-					// drawers.Drawer(
-					// 	drawers.DrawerProps{
-					// 		ID: "pillars-drawer",
-					// 		ClassNames: htmx.ClassNames{
-					// 			"drawer-open": true,
-					// 		},
-					// 	},
-					// 	drawers.DrawerContent(
-					// 		drawers.DrawerContentProps{
-					// 			ID: "pillars-drawer",
-					// 			ClassNames: htmx.ClassNames{
-					// 				"px-8": true,
-					// 			},
-					// 		},
-					// 		htmx.Text("Drawer this is the new content for the drawer"),
-					// 	),
-					// 	drawers.DrawerSide(
-					// 		drawers.DrawerSideProps{},
-					// 		menus.Menu(
-					// 			menus.MenuProps{
-					// 				ClassNames: htmx.ClassNames{
-					// 					"w-full": true,
-					// 				},
-					// 			},
-					// 			htmx.Group(pillars...),
-					// 		),
-					// 	),
-					// ),
+					htmx.H1(
+						htmx.Text(w.pillar.Name),
+					),
+				),
+				components.Wrap(
+					components.WrapProps{},
+					htmx.Group(questions...),
 				),
 			),
 		),

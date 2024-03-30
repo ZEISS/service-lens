@@ -86,6 +86,21 @@ func (d *DB) GetLensByID(ctx context.Context, teamSlug string, id uuid.UUID) (*m
 	return lens, err
 }
 
+// GetPillarById ...
+func (d *DB) GetPillarById(ctx context.Context, teamSlug string, lensId uuid.UUID, id int) (*models.Pillar, error) {
+	pillar := &models.Pillar{
+		ID:     id,
+		LensID: lensId,
+	}
+
+	err := d.conn.WithContext(ctx).Preload("Questions").Find(pillar).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return pillar, err
+}
+
 // ListLenses ...
 func (d *DB) ListLenses(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Lens, error) {
 	lenses := []*models.Lens{}
