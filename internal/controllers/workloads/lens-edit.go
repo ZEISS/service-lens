@@ -1,9 +1,13 @@
 package workloads
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/drawers"
+	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -15,9 +19,10 @@ import (
 
 // WorkloadLensEditController ...
 type WorkloadLensEditController struct {
-	db   ports.Repository
-	team *authz.Team
-	lens *models.Lens
+	db       ports.Repository
+	team     *authz.Team
+	lens     *models.Lens
+	question models.Question
 
 	htmx.UnimplementedController
 }
@@ -41,11 +46,24 @@ func (w *WorkloadLensEditController) Prepare() error {
 		return err
 	}
 
+	questionID, err := hx.Context().ParamsInt("question")
+	if err != nil {
+		return err
+	}
+
 	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, lensID)
 	if err != nil {
 		return err
 	}
 	w.lens = lens
+
+	for _, pillar := range lens.Pillars {
+		for _, question := range pillar.Questions {
+			if question.ID == questionID {
+				w.question = question
+			}
+		}
+	}
 
 	return nil
 }
@@ -53,39 +71,6 @@ func (w *WorkloadLensEditController) Prepare() error {
 // Get ...
 func (w *WorkloadLensEditController) Get() error {
 	hx := w.Hx()
-
-	pillars := make([]htmx.Node, len(w.lens.Pillars))
-	for _, pillar := range w.lens.Pillars {
-		questions := make([]htmx.Node, len(pillar.Questions))
-
-		for _, question := range pillar.Questions {
-			questions = append(questions, menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuLink(
-					menus.MenuLinkProps{
-						Href: "/",
-					},
-					htmx.Text(question.Title),
-				),
-			))
-		}
-
-		menu := menus.MenuItem(
-			menus.MenuItemProps{},
-			menus.MenuCollapsible(
-				menus.MenuCollapsibleProps{
-					Open: true,
-				},
-				menus.MenuCollapsibleSummary(
-					menus.MenuCollapsibleSummaryProps{},
-					htmx.Text(pillar.Name),
-				),
-				htmx.Group(questions...),
-			),
-		)
-
-		pillars = append(pillars, menu)
-	}
 
 	return hx.RenderComp(
 		components.Page(
@@ -110,22 +95,138 @@ func (w *WorkloadLensEditController) Get() error {
 									"px-8": true,
 								},
 							},
-							htmx.Text("Drawer this is the new content for the drawer"),
+							htmx.H1(htmx.Text(w.question.Title)),
+							htmx.Text(w.question.Description),
+							EditFormComponent(
+								EditFormProps{
+									Question: w.question,
+								},
+							),
 						),
 						drawers.DrawerSide(
 							drawers.DrawerSideProps{},
-							menus.Menu(
-								menus.MenuProps{
-									ClassNames: htmx.ClassNames{
-										"w-full": true,
-									},
+							EditMenuComponent(
+								EditMenuProps{
+									Lens: w.lens,
 								},
-								htmx.Group(pillars...),
 							),
 						),
 					),
 				),
 			),
 		),
+	)
+}
+
+// EditFormProps ...
+type EditFormProps struct {
+	Question models.Question
+}
+
+// EditFormComponent ...
+func EditFormComponent(p EditFormProps) htmx.Node {
+	choices := make([]htmx.Node, len(p.Question.Choices))
+
+	for _, choice := range p.Question.Choices {
+		input := forms.FormControl(
+			forms.FormControlProps{},
+			forms.FormControlLabel(
+				forms.FormControlLabelProps{},
+				forms.FormControlLabelText(
+					forms.FormControlLabelTextProps{},
+					htmx.Text(choice.Title),
+				),
+				forms.Checkbox(
+					forms.CheckboxProps{
+						Name:  choice.Ref,
+						Value: choice.Ref,
+					},
+					htmx.Text(choice.Title),
+				),
+			),
+		)
+
+		choices = append(choices, input)
+	}
+
+	return htmx.Form(
+		htmx.Method("PUT"),
+		htmx.Group(choices...),
+		forms.FormControl(
+			forms.FormControlProps{},
+			forms.FormControlLabel(
+				forms.FormControlLabelProps{},
+				forms.FormControlLabelText(
+					forms.FormControlLabelTextProps{},
+					htmx.Text("Question does not apply to this workload"),
+				),
+				forms.Toggle(
+					forms.ToggleProps{},
+				),
+			),
+		),
+		forms.TextareaBordered(
+			forms.TextareaProps{
+				ClassNames: htmx.ClassNames{
+					"w-full": true,
+				},
+				Placeholder: "Opional notes",
+			},
+		),
+		buttons.OutlinePrimary(
+			buttons.ButtonProps{},
+			htmx.Type("submit"),
+			htmx.Text("Save"),
+		),
+	)
+}
+
+// EditMenuProps ...
+type EditMenuProps struct {
+	Lens *models.Lens
+}
+
+// EditMenuComponent ...
+func EditMenuComponent(p EditMenuProps) htmx.Node {
+	pillars := make([]htmx.Node, len(p.Lens.Pillars))
+	for _, pillar := range p.Lens.Pillars {
+		questions := make([]htmx.Node, len(pillar.Questions))
+
+		for _, question := range pillar.Questions {
+			questions = append(questions, menus.MenuItem(
+				menus.MenuItemProps{},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href: fmt.Sprintf("%d", question.ID),
+					},
+					htmx.Text(question.Title),
+				),
+			))
+		}
+
+		menu := menus.MenuItem(
+			menus.MenuItemProps{},
+			menus.MenuCollapsible(
+				menus.MenuCollapsibleProps{
+					Open: true,
+				},
+				menus.MenuCollapsibleSummary(
+					menus.MenuCollapsibleSummaryProps{},
+					htmx.Text(pillar.Name),
+				),
+				htmx.Group(questions...),
+			),
+		)
+
+		pillars = append(pillars, menu)
+	}
+
+	return menus.Menu(
+		menus.MenuProps{
+			ClassNames: htmx.ClassNames{
+				"w-full": true,
+			},
+		},
+		htmx.Group(pillars...),
 	)
 }
