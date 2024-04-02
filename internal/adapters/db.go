@@ -112,6 +112,17 @@ func (d *DB) ListLenses(ctx context.Context, teamSlug string, pagination *models
 	return lenses, nil
 }
 
+// ListAnswers ...
+func (d *DB) ListAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.UUID, questionID int) (*models.WorkloadLensQuestionAnswer, error) {
+	answers := &models.WorkloadLensQuestionAnswer{}
+	err := d.conn.WithContext(ctx).Where("workload_id = ? AND lens_id = ? AND question_id = ?", workloadID, lensID, questionID).Preload("Choices").Find(&answers).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return answers, nil
+}
+
 // ListProfiles ...
 func (d *DB) ListProfiles(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Profile, error) {
 	profiles := []*models.Profile{}

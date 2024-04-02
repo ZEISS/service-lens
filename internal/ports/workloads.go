@@ -13,4 +13,5 @@ type Workloads interface {
 	IndexWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, error)
 	StoreWorkload(ctx context.Context, workload *models.Workload) error
 	DestroyWorkload(ctx context.Context, id uuid.UUID) error
+	ListAnswers(ctx context.Context, id uuid.UUID, lensID uuid.UUID, questionID int) (*models.WorkloadLensQuestionAnswer, error)
 }

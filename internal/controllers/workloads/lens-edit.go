@@ -17,12 +17,21 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
+// WorkloadLensEditControllerGetParams ...
+type WorkloadLensEditControllerGetParams struct {
+	ID       uuid.UUID `json:"id" xml:"id" form:"id"`
+	Team     string    `json:"team" xml:"team" form:"team"`
+	Lens     uuid.UUID `json:"lens" xml:"lens" form:"lens"`
+	Question int       `json:"question" xml:"question" form:"question"`
+}
+
 // WorkloadLensEditController ...
 type WorkloadLensEditController struct {
 	db       ports.Repository
 	team     *authz.Team
 	lens     *models.Lens
 	question models.Question
+	answers  *models.WorkloadLensQuestionAnswer
 
 	htmx.UnimplementedController
 }
@@ -41,25 +50,26 @@ func (w *WorkloadLensEditController) Prepare() error {
 	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
 	w.team = team
 
-	lensID, err := uuid.Parse(hx.Context().Params("lens"))
-	if err != nil {
-		return err
+	params := &WorkloadLensEditControllerGetParams{}
+	if err := hx.Context().ParamsParser(params); err != nil {
+		return nil
 	}
 
-	questionID, err := hx.Context().ParamsInt("question")
-	if err != nil {
-		return err
-	}
-
-	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, lensID)
+	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, params.Lens)
 	if err != nil {
 		return err
 	}
 	w.lens = lens
 
+	answers, err := w.db.ListAnswers(hx.Context().Context(), params.ID, params.Lens, params.Question)
+	if err != nil {
+		return err
+	}
+	w.answers = answers
+
 	for _, pillar := range lens.Pillars {
 		for _, question := range pillar.Questions {
-			if question.ID == questionID {
+			if question.ID == params.Question {
 				w.question = question
 			}
 		}
@@ -100,6 +110,7 @@ func (w *WorkloadLensEditController) Get() error {
 							EditFormComponent(
 								EditFormProps{
 									Question: w.question,
+									Answer:   w.answers,
 								},
 							),
 						),
@@ -118,9 +129,15 @@ func (w *WorkloadLensEditController) Get() error {
 	)
 }
 
+// Post ...
+func (w *WorkloadLensEditController) Post() error {
+	return nil
+}
+
 // EditFormProps ...
 type EditFormProps struct {
 	Question models.Question
+	Answer   *models.WorkloadLensQuestionAnswer
 }
 
 // EditFormComponent ...
@@ -128,6 +145,13 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 	choices := make([]htmx.Node, len(p.Question.Choices))
 
 	for _, choice := range p.Question.Choices {
+		var checked bool
+		for _, answer := range p.Answer.Choices {
+			if answer.ID == choice.ID {
+				checked = true
+			}
+		}
+
 		input := forms.FormControl(
 			forms.FormControlProps{},
 			forms.FormControlLabel(
@@ -138,8 +162,9 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 				),
 				forms.Checkbox(
 					forms.CheckboxProps{
-						Name:  choice.Ref,
-						Value: choice.Ref,
+						Name:    choice.Ref,
+						Value:   choice.Ref,
+						Checked: checked,
 					},
 					htmx.Text(choice.Title),
 				),
@@ -150,7 +175,7 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 	}
 
 	return htmx.Form(
-		htmx.Method("PUT"),
+		htmx.Method("POST"),
 		htmx.Group(choices...),
 		forms.FormControl(
 			forms.FormControlProps{},
@@ -174,8 +199,9 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 			},
 		),
 		buttons.OutlinePrimary(
-			buttons.ButtonProps{},
-			htmx.Type("submit"),
+			buttons.ButtonProps{
+				Type: "submit",
+			},
 			htmx.Text("Save"),
 		),
 	)
