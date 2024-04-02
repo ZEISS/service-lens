@@ -2,6 +2,7 @@ package workloads
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -162,8 +163,8 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 				),
 				forms.Checkbox(
 					forms.CheckboxProps{
-						Name:    choice.Ref,
-						Value:   choice.Ref,
+						Name:    "choices",
+						Value:   strconv.Itoa(choice.ID),
 						Checked: checked,
 					},
 					htmx.Text(choice.Title),
@@ -175,7 +176,8 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 	}
 
 	return htmx.Form(
-		htmx.Method("POST"),
+		htmx.HxPost(""),
+		htmx.HxSwap("none"),
 		htmx.Group(choices...),
 		forms.FormControl(
 			forms.FormControlProps{},
@@ -186,7 +188,10 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 					htmx.Text("Question does not apply to this workload"),
 				),
 				forms.Toggle(
-					forms.ToggleProps{},
+					forms.ToggleProps{
+						Name:  "does_not_apply",
+						Value: "does_not_apply",
+					},
 				),
 			),
 		),

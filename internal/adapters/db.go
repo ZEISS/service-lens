@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/models"
@@ -121,6 +122,36 @@ func (d *DB) ListAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.
 	}
 
 	return answers, nil
+}
+
+// UpdateAnswers ...
+func (d *DB) UpdateAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.UUID, questionID int, choices []int) error {
+	answer := &models.WorkloadLensQuestionAnswer{
+		WorkloadID: workloadID,
+		LensID:     lensID,
+		QuestionID: questionID,
+	}
+
+	err := d.conn.WithContext(ctx).Where("workload_id = ? AND lens_id = ? AND question_id = ?", workloadID, lensID, questionID).FirstOrCreate(&answer).Error
+	if err != nil {
+		return err
+	}
+
+	for _, choice := range choices {
+		answer.Choices = append(answer.Choices, &models.Choice{
+			ID:         choice,
+			QuestionID: questionID,
+		})
+	}
+
+	fmt.Println(answer.Choices)
+
+	err = d.conn.WithContext(ctx).Model(&answer).Association("Choices").Replace(answer.Choices)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ListProfiles ...
