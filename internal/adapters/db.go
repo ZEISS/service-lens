@@ -127,14 +127,20 @@ func (d *DB) ListAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.
 func (d *DB) UpdateAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.UUID, questionID int, choices []int, doesNotApply bool, notes string) error {
 	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		answer := &models.WorkloadLensQuestionAnswer{
-			WorkloadID:   workloadID,
-			LensID:       lensID,
-			QuestionID:   questionID,
-			DoesNotApply: doesNotApply,
-			Notes:        notes,
+			WorkloadID: workloadID,
+			LensID:     lensID,
+			QuestionID: questionID,
 		}
 
 		err := tx.Where("workload_id = ? AND lens_id = ? AND question_id = ?", workloadID, lensID, questionID).FirstOrCreate(&answer).Error
+		if err != nil {
+			return err
+		}
+
+		answer.DoesNotApply = doesNotApply
+		answer.Notes = notes
+
+		err = tx.Save(&answer).Error
 		if err != nil {
 			return err
 		}

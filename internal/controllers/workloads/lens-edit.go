@@ -163,9 +163,10 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 				),
 				forms.Checkbox(
 					forms.CheckboxProps{
-						Name:    "choices",
-						Value:   strconv.Itoa(choice.ID),
-						Checked: checked,
+						Name:     "choices",
+						Value:    strconv.Itoa(choice.ID),
+						Checked:  checked,
+						Disabled: p.Answer.DoesNotApply,
 					},
 					htmx.Text(choice.Title),
 				),
@@ -189,9 +190,9 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 				),
 				forms.Toggle(
 					forms.ToggleProps{
-						Name:     "does_not_apply",
-						Value:    "1",
-						Disabled: p.Answer.DoesNotApply,
+						Name:    "does_not_apply",
+						Value:   "1",
+						Checked: p.Answer.DoesNotApply,
 					},
 					htmx.HyperScript("on change if me.checked set disabled of <input[type=checkbox][name=choices]/> to true else set disabled of <input[type=checkbox][name=choices]/> to false"),
 				),
