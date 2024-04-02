@@ -35,14 +35,14 @@ type WorkloadLensQuestionAnswer struct {
 	DoesNotApplyReason string `json:"does_not_apply_reason"`
 	Notes              string `json:"notes"`
 
-	Question   Question `json:"question" gorm:"foreignkey:QuestionID;"`
-	QuestionID int      `json:"question_id"`
+	QuestionID int      `json:"question_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
+	Question   Question `json:"question"`
 
-	LensID uuid.UUID `json:"lens_id"`
+	LensID uuid.UUID `json:"lens_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
 	Lens   Lens      `json:"lens"`
 
-	WorkloadID uuid.UUID `json:"workload_id"`
-	Workload   Workload  `json:"workload"`
+	WorkloadID uuid.UUID `json:"workload_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
+	Workload   Workload  `json:"workload" `
 
 	Choices []*Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;"`
 

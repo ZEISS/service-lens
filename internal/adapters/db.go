@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/models"
@@ -125,33 +124,36 @@ func (d *DB) ListAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.
 }
 
 // UpdateAnswers ...
-func (d *DB) UpdateAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.UUID, questionID int, choices []int) error {
-	answer := &models.WorkloadLensQuestionAnswer{
-		WorkloadID: workloadID,
-		LensID:     lensID,
-		QuestionID: questionID,
-	}
+func (d *DB) UpdateAnswers(ctx context.Context, workloadID uuid.UUID, lensID uuid.UUID, questionID int, choices []int, doesNotApply bool, notes string) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		answer := &models.WorkloadLensQuestionAnswer{
+			WorkloadID:   workloadID,
+			LensID:       lensID,
+			QuestionID:   questionID,
+			DoesNotApply: doesNotApply,
+			Notes:        notes,
+		}
 
-	err := d.conn.WithContext(ctx).Where("workload_id = ? AND lens_id = ? AND question_id = ?", workloadID, lensID, questionID).FirstOrCreate(&answer).Error
-	if err != nil {
-		return err
-	}
+		err := tx.Where("workload_id = ? AND lens_id = ? AND question_id = ?", workloadID, lensID, questionID).FirstOrCreate(&answer).Error
+		if err != nil {
+			return err
+		}
 
-	for _, choice := range choices {
-		answer.Choices = append(answer.Choices, &models.Choice{
-			ID:         choice,
-			QuestionID: questionID,
-		})
-	}
+		c := []*models.Choice{}
+		for _, choice := range choices {
+			c = append(c, &models.Choice{
+				ID:         choice,
+				QuestionID: questionID,
+			})
+		}
 
-	fmt.Println(answer.Choices)
+		err = tx.Model(&answer).Association("Choices").Replace(c)
+		if err != nil {
+			return err
+		}
 
-	err = d.conn.WithContext(ctx).Model(&answer).Association("Choices").Replace(answer.Choices)
-	if err != nil {
-		return err
-	}
-
-	return nil
+		return nil
+	})
 }
 
 // ListProfiles ...

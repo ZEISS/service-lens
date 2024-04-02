@@ -17,7 +17,9 @@ type WorkloadLensQuestionUpdateControllerParams struct {
 
 // WorkloadLensQuestionUpdateControllerBody ...
 type WorkloadLensQuestionUpdateControllerBody struct {
-	Choices []int `json:"choices" xml:"choices" form:"choices"`
+	Choices      []int  `json:"choices" xml:"choices" form:"choices"`
+	DoesNotApply bool   `json:"does_not_apply" xml:"does_not_apply" form:"does_not_apply"`
+	Notes        string `json:"notes" xml:"notes" form:"notes"`
 }
 
 // WorkloadLensQuestionUpdateController ...
@@ -55,7 +57,7 @@ func (w *WorkloadLensQuestionUpdateController) Prepare() error {
 
 // Post ...
 func (w *WorkloadLensQuestionUpdateController) Post() error {
-	err := w.db.UpdateAnswers(w.Hx().Context().Context(), w.params.ID, w.params.Lens, w.params.Question, w.body.Choices)
+	err := w.db.UpdateAnswers(w.Hx().Context().Context(), w.params.ID, w.params.Lens, w.params.Question, w.body.Choices, w.body.DoesNotApply, w.body.Notes)
 	if err != nil {
 		return err
 	}

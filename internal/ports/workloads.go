@@ -14,5 +14,5 @@ type Workloads interface {
 	StoreWorkload(ctx context.Context, workload *models.Workload) error
 	DestroyWorkload(ctx context.Context, id uuid.UUID) error
 	ListAnswers(ctx context.Context, id uuid.UUID, lensID uuid.UUID, questionID int) (*models.WorkloadLensQuestionAnswer, error)
-	UpdateAnswers(ctx context.Context, id uuid.UUID, lensID uuid.UUID, questionID int, choices []int) error
+	UpdateAnswers(ctx context.Context, id uuid.UUID, lensID uuid.UUID, questionID int, choices []int, doesNotApply bool, notes string) error
 }
