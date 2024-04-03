@@ -3,7 +3,9 @@ package components
 import (
 	"strings"
 
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/service-lens/internal/resolvers"
 )
 
 // NavbarProps is the properties for the Navbar component.
@@ -79,8 +81,9 @@ func Navbar(ctx htmx.Ctx, p NavbarProps, children ...htmx.Node) htmx.Node {
 				),
 			),
 			AccountSwitcher(
-				ctx,
-				AccountSwitcherProps{},
+				AccountSwitcherProps{
+					User: ctx.Values(resolvers.ValuesKeyUser).(*authz.User),
+				},
 			),
 		),
 		htmx.Div(

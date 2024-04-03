@@ -8,24 +8,19 @@ import (
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/fiber-htmx/components/utils"
 )
 
 // AccountSwitcherProps ...
-type AccountSwitcherProps struct{}
+type AccountSwitcherProps struct {
+	// ClassNames ...
+	ClassNames htmx.ClassNames
+	// User ...
+	User *authz.User
+}
 
 // AccountSwitcher ...
-func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node) htmx.Node {
-	user, ok := ctx.Values(resolvers.ValuesKeyUser).(*authz.User)
-	if !ok {
-		return htmx.Text("User not found")
-	}
-
-	users := []htmx.Node{}
-	for _, t := range *user.Teams {
-		users = append(users, dropdowns.DropdownMenuItem(dropdowns.DropdownMenuItemProps{}, links.Link(links.LinkProps{Href: fmt.Sprintf("/%s/index", t.Slug)}, htmx.Text(t.Name))))
-	}
-
+func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Node {
 	return dropdowns.Dropdown(
 		dropdowns.DropdownProps{},
 		dropdowns.DropdownButton(
@@ -47,7 +42,9 @@ func AccountSwitcher(ctx htmx.Ctx, p AccountSwitcherProps, children ...htmx.Node
 					"w-full": true,
 				},
 			},
-			htmx.Group(users...),
+			utils.Map(func(el authz.Team) htmx.Node {
+				return dropdowns.DropdownMenuItem(dropdowns.DropdownMenuItemProps{}, links.Link(links.LinkProps{Href: fmt.Sprintf("/%s/index", el.Slug)}, htmx.Text(el.Name)))
+			}, *props.User.Teams...),
 		),
 	)
 }

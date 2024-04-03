@@ -75,8 +75,9 @@ func Layout(ctx htmx.Ctx, p LayoutProps, children ...htmx.Node) htmx.Node {
 				drawers.DrawerSideMenu(
 					drawers.DrawerSideMenuProps{},
 					AccountSwitcher(
-						ctx,
-						AccountSwitcherProps{},
+						AccountSwitcherProps{
+							User: ctx.Values(resolvers.ValuesKeyUser).(*authz.User),
+						},
 					),
 					MainMenu(
 						ctx,
