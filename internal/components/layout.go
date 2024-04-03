@@ -246,7 +246,7 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/site/settings/index",
+								Href: "/me/settings",
 							},
 							htmx.Text("Settings"),
 						),
@@ -290,7 +290,7 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuItemProps{},
 				menus.MenuLink(
 					menus.MenuLinkProps{
-						Href: "/site/settings/index",
+						Href: "/settings",
 					},
 					htmx.Text("Settings"),
 				),

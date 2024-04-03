@@ -8,6 +8,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -81,11 +82,105 @@ func (t *TeamListController) Prepare() error {
 }
 
 // Get ...
-func (t *TeamListController) Get() error {
-	hx := t.Hx()
+func (w *TeamListController) Get() error {
+	hx := w.Hx()
 
-	table := tables.Table[*authz.Team](
+	if hx.IsHxRequest() {
+		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
+
+		return hx.RenderComp(
+			TeamListTableComponent(
+				TeamListTableProps{
+					Teams:  w.teams,
+					Offset: w.query.Offset,
+					Limit:  w.query.Limit,
+				},
+			),
+		)
+	}
+
+	return hx.RenderComp(
+		components.Page(
+			hx,
+			components.PageProps{},
+			components.Layout(
+				hx,
+				components.LayoutProps{},
+				components.Wrap(
+					components.WrapProps{},
+					htmx.Div(
+						htmx.ClassNames{
+							"overflow-x-auto": true,
+						},
+						TeamListTableComponent(
+							TeamListTableProps{
+								Teams:  w.teams,
+								Offset: w.query.Offset,
+								Limit:  w.query.Limit,
+							},
+						),
+					),
+				),
+			),
+		),
+	)
+}
+
+// TeamListTablePaginationProps ...
+type TeamListTablePaginationProps struct {
+	Limit  int
+	Offset int
+	Total  int
+	Target string
+}
+
+// TeamListTablePaginationComponent ...
+func TeamListTablePaginationComponent(props TeamListTablePaginationProps, children ...htmx.Node) htmx.Node {
+	return tables.Pagination(
+		tables.PaginationProps{
+			Limit:  props.Limit,
+			Offset: props.Offset,
+			Target: props.Target,
+		},
+		tables.Prev(
+			tables.PaginationProps{
+				URL:    "/site/teams",
+				Offset: props.Offset,
+				Limit:  props.Limit,
+				Target: props.Target,
+			},
+		),
+		tables.Select(
+			tables.SelectProps{
+				Limit:  props.Limit,
+				Offset: props.Offset,
+				Limits: tables.DefaultLimits,
+				Target: props.Target,
+			},
+		),
+		tables.Next(
+			tables.PaginationProps{
+				URL:    "/site/teams",
+				Offset: props.Offset,
+				Limit:  props.Limit,
+				Target: props.Target,
+			},
+		),
+	)
+}
+
+// TeamListTableProps ...
+type TeamListTableProps struct {
+	Teams  []*authz.Team
+	Offset int
+	Limit  int
+}
+
+// TeamListTableComponent ...
+func TeamListTableComponent(props TeamListTableProps, children ...htmx.Node) htmx.Node {
+	return tables.Table[*authz.Team](
 		tables.TableProps[*authz.Team]{
+			ID: "workloads-table",
 			Columns: []tables.ColumnDef[*authz.Team]{
 				{
 					ID:          "id",
@@ -107,7 +202,12 @@ func (t *TeamListController) Get() error {
 					},
 					Cell: func(p tables.TableProps[*authz.Team], row *authz.Team) htmx.Node {
 						return htmx.Td(
-							htmx.Text(row.Name),
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf("/site/teams/%s", row.ID.String()),
+								},
+								htmx.Text(row.Name),
+							),
 						)
 					},
 				},
@@ -126,7 +226,7 @@ func (t *TeamListController) Get() error {
 
 								htmx.HxDelete(fmt.Sprintf("/site/teams/%s", row.ID.String())),
 								htmx.HxTarget("closest <tr />"),
-								htmx.HxConfirm("Are you sure you want to delete this team?"),
+								htmx.HxConfirm("Are you sure you want to delete this workload?"),
 								icons.TrashOutline(
 									icons.IconProps{},
 								),
@@ -135,54 +235,15 @@ func (t *TeamListController) Get() error {
 					},
 				},
 			},
-			Rows: tables.NewRows(t.teams),
-		},
-		htmx.ID("data-table"),
-	)
-
-	// if hx.IsHxRequest() {
-	// 	hx.ReplaceURL(fmt.Sprintf("%s?limit=%d,offset=%d", hx.Ctx().Path(), limit, offset))
-
-	// 	return hx.RenderComp(table)
-	// }
-
-	return hx.RenderComp(
-		components.Layout(
-			hx,
-			components.LayoutProps{},
-			components.Wrap(
-				components.WrapProps{},
-				htmx.Div(
-					htmx.ClassNames{
-						"overflow-x-auto": true,
-					},
-					table,
-					htmx.Div(
-						htmx.ClassNames{
-							"bg-base-100": true,
-							"p-4":         true,
-						},
-						tables.Pagination(
-							tables.PaginationProps{
-								Limit:  t.query.Limit,
-								Offset: t.query.Offset,
-							},
-							tables.Prev(
-								tables.PaginationProps{
-									URL:    "/api/data",
-									Offset: t.query.Offset,
-									Limit:  t.query.Limit,
-								},
-							),
-							tables.Next(
-								tables.PaginationProps{
-									URL: "/api/data",
-								},
-							),
-						),
-					),
-				),
+			Rows: tables.NewRows(props.Teams),
+			Pagination: TeamListTablePaginationComponent(
+				TeamListTablePaginationProps{
+					Limit:  props.Limit,
+					Offset: props.Offset,
+					Total:  len(props.Teams),
+					Target: "#workloads-table",
+				},
 			),
-		),
+		},
 	)
 }

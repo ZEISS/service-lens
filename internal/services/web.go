@@ -69,6 +69,11 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
+		app.Get("/settings", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db), htmx.Config{
+			Resolvers: []htmx.ResolveFunc{
+				resolvers.User(a.db),
+			},
+		}))
 
 		me := app.Group("/me")
 		me.Get("/index", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db), htmx.Config{

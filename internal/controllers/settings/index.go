@@ -2,8 +2,6 @@ package settings
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/breadcrumbs"
-	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -21,42 +19,16 @@ func NewSettingsIndexController(db ports.Repository) *SettingsIndexController {
 }
 
 // Get ...
-func (a *SettingsIndexController) Get() error {
-	return a.Hx().RenderComp(
-
+func (m *SettingsIndexController) Get() error {
+	return m.Hx().RenderComp(
 		components.Page(
-			a.Hx(),
+			m.Hx(),
 			components.PageProps{},
-			components.SubNav(
-				components.SubNavProps{},
-				components.SubNavBreadcrumb(
-					components.SubNavBreadcrumbProps{},
-					breadcrumbs.Breadcrumbs(
-						breadcrumbs.BreadcrumbsProps{},
-						breadcrumbs.Breadcrumb(
-							breadcrumbs.BreadcrumbProps{
-								Href:  "/",
-								Title: "Home",
-							},
-						),
-						breadcrumbs.Breadcrumb(
-							breadcrumbs.BreadcrumbProps{
-								Href:  "/settings/list",
-								Title: "Settings",
-							},
-						),
-					),
-				),
-				components.SubNavActions(
-					components.SubNavActionsProps{},
-					buttons.Outline(
-						buttons.ButtonProps{
-							ClassNames: htmx.ClassNames{
-								"btn-xs": true,
-							},
-						},
-						htmx.Text("Create Workload"),
-					),
+			components.Layout(
+				m.Hx(),
+				components.LayoutProps{},
+				components.Wrap(
+					components.WrapProps{},
 				),
 			),
 		),

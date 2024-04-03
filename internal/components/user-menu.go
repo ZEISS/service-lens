@@ -73,7 +73,7 @@ func UserNav(ctx htmx.Ctx, p UserNavProps) htmx.Node {
 			htmx.Li(
 				links.Link(
 					links.LinkProps{
-						Href:       "/settings/list",
+						Href:       "/settings",
 						ClassNames: htmx.ClassNames{"underline-none": true},
 					},
 					htmx.Text(

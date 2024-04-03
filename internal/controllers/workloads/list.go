@@ -100,30 +100,6 @@ func (w *WorkloadListController) Get() error {
 					Team:      w.team,
 					Offset:    w.query.Offset,
 					Limit:     w.query.Limit,
-					Pagination: tables.Pagination(
-						tables.PaginationProps{
-							Limit:  w.query.Limit,
-							Offset: w.query.Offset,
-							Target: "#workloads-table",
-						},
-						tables.Prev(
-							tables.PaginationProps{
-								URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
-								Offset: w.query.Offset,
-								Limit:  w.query.Limit,
-								Target: "#workloads-table",
-							},
-						),
-						tables.Next(
-							tables.PaginationProps{
-								URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
-								Offset: w.query.Offset,
-								Limit:  w.query.Limit,
-								Total:  len(w.workloads),
-								Target: "#workloads-table",
-							},
-						),
-					),
 				},
 			),
 		)
@@ -148,30 +124,6 @@ func (w *WorkloadListController) Get() error {
 								Team:      w.team,
 								Offset:    w.query.Offset,
 								Limit:     w.query.Limit,
-								Pagination: tables.Pagination(
-									tables.PaginationProps{
-										Limit:  w.query.Limit,
-										Offset: w.query.Offset,
-										Target: "#workloads-table",
-									},
-									tables.Prev(
-										tables.PaginationProps{
-											URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
-											Offset: w.query.Offset,
-											Limit:  w.query.Limit,
-											Target: "#workloads-table",
-										},
-									),
-									tables.Next(
-										tables.PaginationProps{
-											URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
-											Offset: w.query.Offset,
-											Limit:  w.query.Limit,
-											Total:  len(w.workloads),
-											Target: "#workloads-table",
-										},
-									),
-								),
 							},
 						),
 					),
@@ -181,13 +133,56 @@ func (w *WorkloadListController) Get() error {
 	)
 }
 
+// WorkloadListTablePaginationProps ...
+type WorkloadListTablePaginationProps struct {
+	Limit  int
+	Offset int
+	Total  int
+	Target string
+	Team   *authz.Team
+}
+
+// WorkloadListTablePaginationComponent ...
+func WorkloadListTablePaginationComponent(props WorkloadListTablePaginationProps, children ...htmx.Node) htmx.Node {
+	return tables.Pagination(
+		tables.PaginationProps{
+			Limit:  props.Limit,
+			Offset: props.Offset,
+			Target: props.Target,
+		},
+		tables.Prev(
+			tables.PaginationProps{
+				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				Offset: props.Offset,
+				Limit:  props.Limit,
+				Target: props.Target,
+			},
+		),
+		tables.Select(
+			tables.SelectProps{
+				Limit:  props.Limit,
+				Offset: props.Offset,
+				Limits: tables.DefaultLimits,
+				Target: props.Target,
+			},
+		),
+		tables.Next(
+			tables.PaginationProps{
+				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				Offset: props.Offset,
+				Limit:  props.Limit,
+				Target: props.Target,
+			},
+		),
+	)
+}
+
 // WorkloadListTableProps ...
 type WorkloadListTableProps struct {
-	Workloads  []*models.Workload
-	Team       *authz.Team
-	Offset     int
-	Limit      int
-	Pagination htmx.Node
+	Workloads []*models.Workload
+	Team      *authz.Team
+	Offset    int
+	Limit     int
 }
 
 // WorkloadListTableComponent ...
@@ -244,8 +239,16 @@ func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.N
 					},
 				},
 			},
-			Rows:       tables.NewRows(props.Workloads),
-			Pagination: props.Pagination,
+			Rows: tables.NewRows(props.Workloads),
+			Pagination: WorkloadListTablePaginationComponent(
+				WorkloadListTablePaginationProps{
+					Limit:  props.Limit,
+					Offset: props.Offset,
+					Total:  len(props.Workloads),
+					Target: "#workloads-table",
+					Team:   props.Team,
+				},
+			),
 		},
 	)
 }
