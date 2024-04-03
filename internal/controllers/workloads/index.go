@@ -44,7 +44,7 @@ func (w *WorkloadIndexController) Prepare() error {
 	hx := w.Hx()
 
 	params := NewDefaultWorkloadIndexControllerParams()
-	if err := hx.Ctx().BodyParser(params); err != nil {
+	if err := hx.Ctx().ParamsParser(params); err != nil {
 		return err
 	}
 	w.params = params

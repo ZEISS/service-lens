@@ -73,6 +73,7 @@ func (w *WorkloadListController) Prepare() error {
 
 	w.query = NewDefaultWorkloadListControllerQuery()
 	if err := hx.Ctx().QueryParser(w.query); err != nil {
+		fmt.Println("error parsing query", err)
 		return err
 	}
 
@@ -89,8 +90,111 @@ func (w *WorkloadListController) Prepare() error {
 func (w *WorkloadListController) Get() error {
 	hx := w.Hx()
 
-	table := tables.Table[*models.Workload](
+	if hx.IsHxRequest() {
+		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
+
+		return hx.RenderComp(
+			WorkloadListTableComponent(
+				WorkloadListTableProps{
+					Workloads: w.workloads,
+					Team:      w.team,
+					Offset:    w.query.Offset,
+					Limit:     w.query.Limit,
+					Pagination: tables.Pagination(
+						tables.PaginationProps{
+							Limit:  w.query.Limit,
+							Offset: w.query.Offset,
+							Target: "#workloads-table",
+						},
+						tables.Prev(
+							tables.PaginationProps{
+								URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
+								Offset: w.query.Offset,
+								Limit:  w.query.Limit,
+								Target: "#workloads-table",
+							},
+						),
+						tables.Next(
+							tables.PaginationProps{
+								URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
+								Offset: w.query.Offset,
+								Limit:  w.query.Limit,
+								Total:  len(w.workloads),
+								Target: "#workloads-table",
+							},
+						),
+					),
+				},
+			),
+		)
+	}
+
+	return hx.RenderComp(
+		components.Page(
+			hx,
+			components.PageProps{},
+			components.Layout(
+				hx,
+				components.LayoutProps{},
+				components.Wrap(
+					components.WrapProps{},
+					htmx.Div(
+						htmx.ClassNames{
+							"overflow-x-auto": true,
+						},
+						WorkloadListTableComponent(
+							WorkloadListTableProps{
+								Workloads: w.workloads,
+								Team:      w.team,
+								Offset:    w.query.Offset,
+								Limit:     w.query.Limit,
+								Pagination: tables.Pagination(
+									tables.PaginationProps{
+										Limit:  w.query.Limit,
+										Offset: w.query.Offset,
+										Target: "#workloads-table",
+									},
+									tables.Prev(
+										tables.PaginationProps{
+											URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
+											Offset: w.query.Offset,
+											Limit:  w.query.Limit,
+											Target: "#workloads-table",
+										},
+									),
+									tables.Next(
+										tables.PaginationProps{
+											URL:    fmt.Sprintf("/%s/workloads", w.team.Slug),
+											Offset: w.query.Offset,
+											Limit:  w.query.Limit,
+											Total:  len(w.workloads),
+											Target: "#workloads-table",
+										},
+									),
+								),
+							},
+						),
+					),
+				),
+			),
+		),
+	)
+}
+
+// WorkloadListTableProps ...
+type WorkloadListTableProps struct {
+	Workloads  []*models.Workload
+	Team       *authz.Team
+	Offset     int
+	Limit      int
+	Pagination htmx.Node
+}
+
+// WorkloadListTableComponent ...
+func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.Node) htmx.Node {
+	return tables.Table[*models.Workload](
 		tables.TableProps[*models.Workload]{
+			ID: "workloads-table",
 			Columns: []tables.ColumnDef[*models.Workload]{
 				{
 					ID:          "id",
@@ -129,7 +233,7 @@ func (w *WorkloadListController) Get() error {
 									},
 								},
 
-								htmx.HxDelete(fmt.Sprintf("/%s/workloads/%s", w.team.Slug, row.ID.String())),
+								htmx.HxDelete(fmt.Sprintf("/%s/workloads/%s", props.Team.Slug, row.ID.String())),
 								htmx.HxTarget("closest <tr />"),
 								htmx.HxConfirm("Are you sure you want to delete this workload?"),
 								icons.TrashOutline(
@@ -140,52 +244,8 @@ func (w *WorkloadListController) Get() error {
 					},
 				},
 			},
-			Rows: tables.NewRows(w.workloads),
+			Rows:       tables.NewRows(props.Workloads),
+			Pagination: props.Pagination,
 		},
-		htmx.ID("data-table"),
-	)
-
-	return hx.RenderComp(
-		components.Page(
-			hx,
-			components.PageProps{},
-			components.Layout(
-				hx,
-				components.LayoutProps{},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
-						},
-						table,
-						htmx.Div(
-							htmx.ClassNames{
-								"bg-base-100": true,
-								"p-4":         true,
-							},
-							tables.Pagination(
-								tables.PaginationProps{
-									Limit:  w.query.Limit,
-									Offset: w.query.Offset,
-								},
-								tables.Prev(
-									tables.PaginationProps{
-										URL:    "/api/data",
-										Offset: w.query.Offset,
-										Limit:  w.query.Limit,
-									},
-								),
-								tables.Next(
-									tables.PaginationProps{
-										URL: "/api/data",
-									},
-								),
-							),
-						),
-					),
-				),
-			),
-		),
 	)
 }
