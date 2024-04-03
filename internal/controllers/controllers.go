@@ -52,14 +52,19 @@ func NewSettingsIndexController(db ports.Repository) *settings.SettingsIndexCont
 	return settings.NewSettingsIndexController(db)
 }
 
-// NewTeamIndexController ...
-func NewTeamIndexController(db ports.Repository) *teams.TeamIndexController {
-	return teams.NewTeamsIndexController(db)
+// NewTeamListController ...
+func NewTeamListController(db ports.Repository) *teams.TeamListController {
+	return teams.NewTeamListController(db)
 }
 
-// NewTeamsNewController ...
-func NewTeamsNewController(db ports.Repository) *teams.TeamsNewController {
-	return teams.NewTeamsNewController(db)
+// NewTeamNewController ...
+func NewTeamNewController(db ports.Repository) *teams.TeamNewController {
+	return teams.NewTeamNewController(db)
+}
+
+// NewTeamIndexController ...
+func NewTeamIndexController(db ports.Repository) *teams.TeamIndexController {
+	return teams.NewTeamIndexController(db)
 }
 
 // NewTeamDashboardController ...

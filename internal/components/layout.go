@@ -228,7 +228,16 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href: "/teams/list",
+								Href: "/site/teams/new",
+							},
+							htmx.Text("New Teams"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{},
+						menus.MenuLink(
+							menus.MenuLinkProps{
+								Href: "/site/teams",
 							},
 							htmx.Text("List Teams"),
 						),

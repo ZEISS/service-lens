@@ -77,11 +77,6 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			},
 		}))
 
-		teams := app.Group("/teams")
-		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamsNewController(a.db)))
-		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamsNewController(a.db)))
-		teams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
-
 		team := app.Group("/:team")
 		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
 
@@ -110,6 +105,12 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")
 		siteSettings.Get("/index", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db)))
+
+		siteTeams := site.Group("/teams")
+		siteTeams.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamListController(a.db)))
+		siteTeams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
+		siteTeams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
+		siteTeams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {
