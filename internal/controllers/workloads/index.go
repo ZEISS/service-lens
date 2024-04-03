@@ -12,10 +12,22 @@ import (
 	links "github.com/zeiss/fiber-htmx/components/links"
 )
 
+// WorkloadIndexControllerParams ...
+type WorkloadIndexControllerParams struct {
+	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
+	Team string    `json:"team" xml:"team" form:"team"`
+}
+
+// NewDefaultWorkloadIndexControllerParams ...
+func NewDefaultWorkloadIndexControllerParams() *WorkloadIndexControllerParams {
+	return &WorkloadIndexControllerParams{}
+}
+
 // WorkloadIndexController ...
 type WorkloadIndexController struct {
 	db       ports.Repository
 	workload *models.Workload
+	params   *WorkloadIndexControllerParams
 
 	htmx.UnimplementedController
 }
@@ -31,12 +43,13 @@ func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
 func (w *WorkloadIndexController) Prepare() error {
 	hx := w.Hx()
 
-	id, err := uuid.Parse(hx.Context().Params("id"))
-	if err != nil {
+	params := NewDefaultWorkloadIndexControllerParams()
+	if err := hx.Ctx().BodyParser(params); err != nil {
 		return err
 	}
+	w.params = params
 
-	workload, err := w.db.IndexWorkload(hx.Context().Context(), id)
+	workload, err := w.db.IndexWorkload(hx.Context().Context(), params.ID)
 	if err != nil {
 		return err
 	}
@@ -235,19 +248,10 @@ func (w *WorkloadIndexController) Get() error {
 
 // Delete ...
 func (w *WorkloadIndexController) Delete() error {
-	hx := w.Hx()
-
-	id, err := uuid.Parse(hx.Ctx().Params("id"))
+	err := w.db.DestroyWorkload(w.Hx().Ctx().Context(), w.workload.ID)
 	if err != nil {
 		return err
 	}
-
-	err = w.db.DestroyWorkload(hx.Ctx().Context(), id)
-	if err != nil {
-		return err
-	}
-
-	hx.Redirect("/workloads/list")
 
 	return nil
 }

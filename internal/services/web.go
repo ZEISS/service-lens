@@ -97,6 +97,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
+		workloads.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
 		workloads.Get("/:id/lenses/:lens", htmx.NewHxControllerHandler(controllers.NewWorkloadLensController(a.db), config))
 		workloads.Get("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
 		workloads.Post("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensQuestionUpdateController(a.db), config))

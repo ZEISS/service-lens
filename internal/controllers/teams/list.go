@@ -8,7 +8,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/icons"
-	"github.com/zeiss/fiber-htmx/components/modals"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -127,9 +126,7 @@ func (t *TeamListController) Get() error {
 
 								htmx.HxDelete(fmt.Sprintf("/site/teams/%s", row.ID.String())),
 								htmx.HxTarget("closest <tr />"),
-								// htmx.HyperScript("on click remove closest <tr />"),
 								htmx.HxConfirm("Are you sure you want to delete this team?"),
-								// htmx.HyperScript("on click my_modal_1.showModal()"),
 								icons.TrashOutline(
 									icons.IconProps{},
 								),
@@ -150,57 +147,37 @@ func (t *TeamListController) Get() error {
 	// }
 
 	return hx.RenderComp(
-		components.Page(
+		components.Layout(
 			hx,
-			components.PageProps{},
-			modals.Modal(
-				modals.ModalProps{
-					ID: "my_modal_1",
-				},
-				htmx.HyperScript("on htmx:confirm halt the event"),
-				modals.ModalAction(
-					modals.ModalActionProps{},
-					modals.ModalCloseButton(
-						modals.ModalCloseButtonProps{
-							ClassNames: htmx.ClassNames{
-								"btn-error": true,
-							},
-						},
-					),
-				),
-			),
-			components.Layout(
-				hx,
-				components.LayoutProps{},
-				components.Wrap(
-					components.WrapProps{},
+			components.LayoutProps{},
+			components.Wrap(
+				components.WrapProps{},
+				htmx.Div(
+					htmx.ClassNames{
+						"overflow-x-auto": true,
+					},
+					table,
 					htmx.Div(
 						htmx.ClassNames{
-							"overflow-x-auto": true,
+							"bg-base-100": true,
+							"p-4":         true,
 						},
-						table,
-						htmx.Div(
-							htmx.ClassNames{
-								"bg-base-100": true,
-								"p-4":         true,
+						tables.Pagination(
+							tables.PaginationProps{
+								Limit:  t.query.Limit,
+								Offset: t.query.Offset,
 							},
-							tables.Pagination(
+							tables.Prev(
 								tables.PaginationProps{
-									Limit:  t.query.Limit,
+									URL:    "/api/data",
 									Offset: t.query.Offset,
+									Limit:  t.query.Limit,
 								},
-								tables.Prev(
-									tables.PaginationProps{
-										URL:    "/api/data",
-										Offset: t.query.Offset,
-										Limit:  t.query.Limit,
-									},
-								),
-								tables.Next(
-									tables.PaginationProps{
-										URL: "/api/data",
-									},
-								),
+							),
+							tables.Next(
+								tables.PaginationProps{
+									URL: "/api/data",
+								},
 							),
 						),
 					),

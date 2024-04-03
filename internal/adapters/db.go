@@ -206,7 +206,14 @@ func (d *DB) StoreWorkload(ctx context.Context, workload *models.Workload) error
 
 // DestroyWorkload ...
 func (d *DB) DestroyWorkload(ctx context.Context, id uuid.UUID) error {
-	return d.conn.WithContext(ctx).Delete(&models.Workload{}, id).Error
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Delete(&models.Workload{ID: id}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 // AddTeam ...
