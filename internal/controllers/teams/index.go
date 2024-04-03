@@ -150,5 +150,12 @@ func (w *TeamIndexController) Get() error {
 
 // Delete ...
 func (w *TeamIndexController) Delete() error {
+	err := w.db.DeleteTeam(w.Hx().Context().Context(), w.params.ID)
+	if err != nil {
+		return err
+	}
+
+	w.Hx().Redirect("/site/teams")
+
 	return nil
 }

@@ -314,3 +314,15 @@ func (d *DB) UpdateUser(ctx context.Context, user *authz.User) (*authz.User, err
 func (d *DB) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	return d.conn.WithContext(ctx).Delete(&authz.User{}, id).Error
 }
+
+// DeleteTeam ...
+func (d *DB) DeleteTeam(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Delete(&authz.Team{ID: id}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+}

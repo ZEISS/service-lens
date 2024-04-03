@@ -1,9 +1,14 @@
 package teams
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/modals"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -107,6 +112,31 @@ func (t *TeamListController) Get() error {
 						)
 					},
 				},
+				{
+					Header: func(p tables.TableProps[*authz.Team]) htmx.Node {
+						return nil
+					},
+					Cell: func(p tables.TableProps[*authz.Team], row *authz.Team) htmx.Node {
+						return htmx.Td(
+							buttons.Button(
+								buttons.ButtonProps{
+									ClassNames: htmx.ClassNames{
+										"btn-square": true,
+									},
+								},
+
+								htmx.HxDelete(fmt.Sprintf("/site/teams/%s", row.ID.String())),
+								htmx.HxTarget("closest <tr />"),
+								// htmx.HyperScript("on click remove closest <tr />"),
+								htmx.HxConfirm("Are you sure you want to delete this team?"),
+								// htmx.HyperScript("on click my_modal_1.showModal()"),
+								icons.TrashOutline(
+									icons.IconProps{},
+								),
+							),
+						)
+					},
+				},
 			},
 			Rows: tables.NewRows(t.teams),
 		},
@@ -123,6 +153,22 @@ func (t *TeamListController) Get() error {
 		components.Page(
 			hx,
 			components.PageProps{},
+			modals.Modal(
+				modals.ModalProps{
+					ID: "my_modal_1",
+				},
+				htmx.HyperScript("on htmx:confirm halt the event"),
+				modals.ModalAction(
+					modals.ModalActionProps{},
+					modals.ModalCloseButton(
+						modals.ModalCloseButtonProps{
+							ClassNames: htmx.ClassNames{
+								"btn-error": true,
+							},
+						},
+					),
+				),
+			),
 			components.Layout(
 				hx,
 				components.LayoutProps{},
