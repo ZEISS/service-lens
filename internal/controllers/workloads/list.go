@@ -13,6 +13,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -211,7 +212,12 @@ func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.N
 					},
 					Cell: func(p tables.TableProps[*models.Workload], row *models.Workload) htmx.Node {
 						return htmx.Td(
-							htmx.Text(row.Name),
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf("workloads/%s", row.ID.String()),
+								},
+								htmx.Text(row.Name),
+							),
 						)
 					},
 				},
