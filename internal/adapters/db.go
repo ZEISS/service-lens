@@ -70,6 +70,18 @@ func (d *DB) AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, erro
 	return lens, nil
 }
 
+// DestroyLens ...
+func (d *DB) DestroyLens(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Delete(&models.Lens{ID: id}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
+
 // GetLensByID ...
 func (d *DB) GetLensByID(ctx context.Context, teamSlug string, id uuid.UUID) (*models.Lens, error) {
 	lens := &models.Lens{

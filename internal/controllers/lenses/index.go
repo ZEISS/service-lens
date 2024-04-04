@@ -1,16 +1,29 @@
 package lenses
 
 import (
+	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
+// LensIndexControllerParams ...
+type LensIndexControllerParams struct {
+	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
+	Team string    `json:"team" xml:"team" form:"team"`
+}
+
+// NewDefaultLensIndexControllerParams ...
+func NewDefaultLensIndexControllerParams() *LensIndexControllerParams {
+	return &LensIndexControllerParams{}
+}
+
 // LensIndexController ...
 type LensIndexController struct {
-	db   ports.Repository
-	lens *models.Lens
+	db     ports.Repository
+	lens   *models.Lens
+	params *LensIndexControllerParams
 
 	htmx.UnimplementedController
 }
@@ -24,10 +37,10 @@ func NewLensIndexController(db ports.Repository) *LensIndexController {
 
 // Prepare ...
 func (l *LensIndexController) Prepare() error {
-	// id, err := uuid.Parse(l.Hx().Context().Params("id"))
-	// if err != nil {
-	// 	return err
-	// }
+	l.params = NewDefaultLensIndexControllerParams()
+	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -49,4 +62,14 @@ func (l *LensIndexController) Get() error {
 			),
 		),
 	)
+}
+
+// Delete ...
+func (l *LensIndexController) Delete() error {
+	err := l.db.DestroyLens(l.Hx().Ctx().Context(), l.params.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
