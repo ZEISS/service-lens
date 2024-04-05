@@ -3,6 +3,7 @@ package profiles
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -14,60 +15,77 @@ import (
 	"github.com/zeiss/service-lens/internal/resolvers"
 )
 
-// ProfileNewController ...
-type ProfileNewController struct {
-	db ports.Repository
+// ProfileEditControllerParams ...
+type ProfileEditControllerParams struct {
+	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
+	Team string    `json:"team" xml:"team" form:"team"`
+}
+
+// NewDefaultProfileEditControllerParams ...
+func NewDefaultProfileEditControllerParams() *ProfileEditControllerParams {
+	return &ProfileEditControllerParams{}
+}
+
+// ProfileEditController ...
+type ProfileEditController struct {
+	db      ports.Repository
+	params  *ProfileEditControllerParams
+	profile *models.Profile
+	team    *authz.Team
 
 	htmx.UnimplementedController
 }
 
-// NewProfileNewController ...
-func NewProfileNewController(db ports.Repository) *ProfileNewController {
-	return &ProfileNewController{
+// NewProfileEditController ...
+func NewProfileEditController(db ports.Repository) *ProfileEditController {
+	return &ProfileEditController{
 		db: db,
 	}
 }
 
-// ProfileNewControllerQuery ...
-type ProfileNewControllerQuery struct {
-	Name        string `json:"name" xml:"name" form:"name"`
-	Description string `json:"description" xml:"description" form:"description"`
-}
+// Prepare ...
+func (p *ProfileEditController) Prepare() error {
+	p.params = NewDefaultProfileEditControllerParams()
+	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
+		return err
+	}
 
-// NewDefaultProfileNewControllerQuery ...
-func NewDefaultProfileNewControllerQuery() *ProfileNewControllerQuery {
-	return &ProfileNewControllerQuery{}
+	profile, err := p.db.GetProfileByID(p.Hx().Ctx().Context(), p.params.ID)
+	if err != nil {
+		return err
+	}
+	p.profile = profile
+
+	p.team = p.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
+
+	return nil
 }
 
 // Post ...
-func (p *ProfileNewController) Post() error {
-	hx := p.Hx()
-
-	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
-
+func (p *ProfileEditController) Post() error {
 	query := NewDefaultProfileNewControllerQuery()
-	if err := hx.Ctx().BodyParser(query); err != nil {
+	if err := p.Hx().Ctx().BodyParser(query); err != nil {
 		return err
 	}
 
 	profile := &models.Profile{
-		Name:        query.Name,
+		ID:          p.profile.ID,
 		Description: query.Description,
-		Team:        *team,
+		Team:        *p.team,
 	}
 
-	err := p.db.NewProfile(hx.Ctx().Context(), profile)
+	err := p.db.UpdateProfile(p.Hx().Ctx().Context(), profile)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, profile.ID))
+	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", p.team.Slug, profile.ID))
 
 	return nil
 }
 
 // New ...
-func (p *ProfileNewController) Get() error {
+func (p *ProfileEditController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
 			p.Hx(),
@@ -120,7 +138,9 @@ func (p *ProfileNewController) Get() error {
 								),
 								forms.TextInputBordered(
 									forms.TextInputProps{
-										Name: "name",
+										Name:     "name",
+										Value:    p.profile.Name,
+										Disabled: true,
 									},
 								),
 								forms.FormControlLabel(
@@ -164,7 +184,8 @@ func (p *ProfileNewController) Get() error {
 									),
 									forms.TextInputBordered(
 										forms.TextInputProps{
-											Name: "description",
+											Name:  "description",
+											Value: p.profile.Description,
 										},
 									),
 									forms.FormControlLabel(
@@ -185,7 +206,7 @@ func (p *ProfileNewController) Get() error {
 					buttons.OutlinePrimary(
 						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
-						htmx.Text("Create Profile"),
+						htmx.Text("Upload Profile"),
 					),
 				),
 			),

@@ -93,6 +93,41 @@ func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error
 	return lens, err
 }
 
+// UpdateProfile ...
+func (d *DB) UpdateProfile(ctx context.Context, profile *models.Profile) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Save(profile).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
+
+// DestroyProfile ...
+func (d *DB) DestroyProfile(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Delete(&models.Profile{ID: id}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+}
+
+// GetProfileByID ...
+func (d *DB) GetProfileByID(ctx context.Context, id uuid.UUID) (*models.Profile, error) {
+	profile := &models.Profile{ID: id}
+	err := d.conn.WithContext(ctx).Preload("Questions").Find(profile).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return profile, err
+}
+
 // GetPillarById ...
 func (d *DB) GetPillarById(ctx context.Context, teamSlug string, lensId uuid.UUID, id int) (*models.Pillar, error) {
 	pillar := &models.Pillar{

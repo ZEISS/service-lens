@@ -1,8 +1,11 @@
 package lenses
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -115,6 +118,15 @@ func (l *LensIndexController) Get() error {
 									),
 								),
 							),
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.OutlinePrimary(
+									buttons.ButtonProps{},
+									htmx.HxDelete(""),
+									htmx.HxConfirm("Are you sure you want to delete this lens?"),
+									htmx.Text("Delete"),
+								),
+							),
 						),
 					),
 				),
@@ -129,6 +141,8 @@ func (l *LensIndexController) Delete() error {
 	if err != nil {
 		return err
 	}
+
+	l.Hx().Redirect(fmt.Sprintf("/%s/lenses/list", l.params.Team))
 
 	return nil
 }

@@ -1,17 +1,34 @@
 package profiles
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
+// ProfileIndexControllerParams ...
+type ProfileIndexControllerParams struct {
+	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
+	Team string    `json:"team" xml:"team" form:"team"`
+}
+
+// NewDefaultProfileIndexControllerParams ...
+func NewDefaultProfileIndexControllerParams() *ProfileIndexControllerParams {
+	return &ProfileIndexControllerParams{}
+}
+
 // ProfileIndexController ...
 type ProfileIndexController struct {
 	db      ports.Repository
 	profile *models.Profile
+	params  *ProfileIndexControllerParams
 
 	htmx.UnimplementedController
 }
@@ -25,12 +42,12 @@ func NewProfileIndexController(db ports.Repository) *ProfileIndexController {
 
 // Prepare ...
 func (p *ProfileIndexController) Prepare() error {
-	id, err := uuid.Parse(p.Hx().Context().Params("id"))
-	if err != nil {
+	p.params = NewDefaultProfileIndexControllerParams()
+	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
 		return err
 	}
 
-	profile, err := p.db.FetchProfile(p.Hx().Context().Context(), id)
+	profile, err := p.db.GetProfileByID(p.Hx().Ctx().Context(), p.params.ID)
 	if err != nil {
 		return err
 	}
@@ -41,113 +58,85 @@ func (p *ProfileIndexController) Prepare() error {
 
 // Get ...
 func (p *ProfileIndexController) Get() error {
-	hx := p.Hx()
-
-	return hx.RenderComp(
+	return p.Hx().RenderComp(
 		components.Page(
-			hx,
+			p.Hx(),
 			components.PageProps{},
 			components.Layout(
-				hx,
+				p.Hx(),
 				components.LayoutProps{},
-				htmx.FormElement(
-					htmx.HxPost("/profiles"),
-					htmx.Label(
-						htmx.ClassNames{
-							"form-control": true,
-							"w-full":       true,
-							"max-w-lg":     true,
-							"mb-4":         true,
-						},
-						htmx.Div(
-							htmx.ClassNames{
-								"label": true,
-							},
-							htmx.Span(
-								htmx.ClassNames{
-									"label-text": true,
-								},
-								htmx.Text("What is your name?"),
+				components.Wrap(
+					components.WrapProps{},
+					cards.CardBordered(
+						cards.CardProps{},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Overview"),
 							),
-						),
-						htmx.Input(
-							htmx.Attribute("type", "text"),
-							htmx.Attribute("name", "name"),
-							htmx.Attribute("placeholder", "Name ..."),
-							htmx.Attribute("value", p.profile.Name),
-							htmx.Attribute("readonly", "true"),
-							htmx.Attribute("disabled", "true"),
-							htmx.ClassNames{
-								"input":          true,
-								"input-bordered": true,
-								"w-full":         true,
-								"max-w-lg":       true,
-							},
-						),
-					),
-					htmx.Label(
-						htmx.ClassNames{
-							"form-control": true,
-							"w-full":       true,
-							"max-w-lg":     true,
-						},
-						htmx.Div(
-							htmx.ClassNames{
-								"label":   true,
-								"sr-only": true,
-							},
-						),
-						htmx.Input(
-							htmx.Attribute("type", "text"),
-							htmx.Attribute("name", "description"),
-							htmx.Attribute("placeholder", "Description ..."),
-							htmx.Attribute("value", p.profile.Description),
-							htmx.Attribute("readonly", "true"),
-							htmx.Attribute("disabled", "true"),
-							htmx.ClassNames{
-								"input":          true,
-								"input-bordered": true,
-								"w-full":         true,
-								"max-w-lg":       true,
-							},
-						),
-					),
-					htmx.Div(
-						htmx.ClassNames{
-							"divider": true,
-						},
-					),
-					htmx.Div(
-						htmx.ClassNames{
-							"flex":     true,
-							"flex-col": true,
-							"py-2":     true,
-						},
-						htmx.H4(
-							htmx.ClassNames{
-								"text-gray-500": true,
-							},
-							htmx.Text("Last updated"),
-						),
-						htmx.H3(
-							htmx.Text(p.profile.UpdatedAt.Format("2006-01-02 15:04:05")),
-						),
-					),
-					htmx.Div(
-						htmx.ClassNames{
-							"flex":     true,
-							"flex-col": true,
-							"py-2":     true,
-						},
-						htmx.H4(
-							htmx.ClassNames{
-								"text-gray-500": true,
-							},
-							htmx.Text("Created at"),
-						),
-						htmx.H3(
-							htmx.Text(
-								p.profile.CreatedAt.Format("2006-01-02 15:04:05"),
+							htmx.Div(
+								htmx.H1(
+									htmx.Text(p.profile.Name),
+								),
+								htmx.P(
+									htmx.Text(p.profile.Description),
+								),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
+										htmx.Text("Created at"),
+									),
+									htmx.H3(
+										htmx.Text(
+											p.profile.CreatedAt.Format("2006-01-02 15:04:05"),
+										),
+									),
+								),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
+										htmx.Text("Updated at"),
+									),
+									htmx.H3(
+										htmx.Text(
+											p.profile.UpdatedAt.Format("2006-01-02 15:04:05"),
+										),
+									),
+								),
+							),
+							cards.Actions(
+								cards.ActionsProps{},
+								links.Button(
+									links.LinkProps{
+										ClassNames: htmx.ClassNames{
+											"btn-outline": true,
+											"btn-primary": true,
+										},
+										Href: fmt.Sprintf("%s/edit", p.params.ID),
+									},
+									htmx.Text("Edit"),
+								),
+								buttons.OutlinePrimary(
+									buttons.ButtonProps{},
+									htmx.HxDelete(""),
+									htmx.HxConfirm("Are you sure you want to delete this profile?"),
+									htmx.Text("Delete"),
+								),
 							),
 						),
 					),
@@ -155,4 +144,16 @@ func (p *ProfileIndexController) Get() error {
 			),
 		),
 	)
+}
+
+// Delete ...
+func (p *ProfileIndexController) Delete() error {
+	err := p.db.DestroyProfile(p.Hx().Ctx().Context(), p.params.ID)
+	if err != nil {
+		return err
+	}
+
+	p.Hx().Redirect("list")
+
+	return nil
 }

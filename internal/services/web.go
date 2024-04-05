@@ -90,6 +90,9 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
 		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
 		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
+		profiles.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
+		profiles.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
+		profiles.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
 
 		lenses := team.Group("/lenses")
 		lenses.Get("/list", htmx.NewHxControllerHandler(controllers.NewLensListController(a.db), config))
@@ -97,6 +100,8 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses.Post("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
 		lenses.Get("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
 		lenses.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
+		lenses.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
+		lenses.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
 
 		workloads := team.Group("/workloads")
 		workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), config))

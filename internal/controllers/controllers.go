@@ -102,9 +102,19 @@ func NewWorkloadLensController(db ports.Repository) *workloads.WorkloadLensContr
 	return workloads.NewWorkloadLensController(db)
 }
 
+// NewProfileEditController ...
+func NewProfileEditController(db ports.Repository) *profiles.ProfileEditController {
+	return profiles.NewProfileEditController(db)
+}
+
 // NewWorkloadLensEditController ...
 func NewWorkloadLensEditController(db ports.Repository) *workloads.WorkloadLensEditController {
 	return workloads.NewWorkloadLensEditController(db)
+}
+
+// NewLensEditController ...
+func NewLensEditController(db ports.Repository) *lenses.LensEditController {
+	return lenses.NewLensEditController(db)
 }
 
 // NewWorkloadPillarController ...

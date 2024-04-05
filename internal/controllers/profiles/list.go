@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -62,7 +63,12 @@ func (p *ProfileListController) Get() error {
 					},
 					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
 						return htmx.Td(
-							htmx.Text(row.Name),
+							links.Link(
+								links.LinkProps{
+									Href: row.ID.String(),
+								},
+								htmx.Text(row.Name),
+							),
 						)
 					},
 				},

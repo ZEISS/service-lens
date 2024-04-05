@@ -2,6 +2,7 @@ package lenses
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -212,6 +213,18 @@ func LensListTableComponent(props LensListTableProps, children ...htmx.Node) htm
 					Cell: func(p tables.TableProps[*models.Lens], row *models.Lens) htmx.Node {
 						return htmx.Td(
 							htmx.Text(row.Name),
+						)
+					},
+				},
+				{
+					ID:          "version",
+					AccessorKey: "version",
+					Header: func(p tables.TableProps[*models.Lens]) htmx.Node {
+						return htmx.Th(htmx.Text("Version"))
+					},
+					Cell: func(p tables.TableProps[*models.Lens], row *models.Lens) htmx.Node {
+						return htmx.Td(
+							htmx.Text(strconv.Itoa(row.Version)),
 						)
 					},
 				},

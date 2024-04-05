@@ -13,8 +13,8 @@ import (
 // Lens is a model for a lens.
 type Lens struct {
 	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Version     int       `json:"version"`
-	Name        string    `json:"name"`
+	Version     int       `json:"version" gorm:"uniqueIndex:idx_lens_name_version"`
+	Name        string    `json:"name" gorm:"uniqueIndex:idx_lens_name_version"`
 	Description string    `json:"description"`
 	Pillars     []Pillar  `json:"pillars"`
 	IsDraft     bool      `json:"is_draft"`
