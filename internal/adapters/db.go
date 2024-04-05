@@ -375,3 +375,36 @@ func (d *DB) DeleteTeam(ctx context.Context, id uuid.UUID) error {
 		return nil
 	})
 }
+
+// TotalCountWorkloads ...
+func (d *DB) TotalCountWorkloads(ctx context.Context, teamSlug string) (int, error) {
+	var count int64
+	err := d.conn.WithContext(ctx).Model(&models.Workload{}).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
+}
+
+// TotalCountLenses ...
+func (d *DB) TotalCountLenses(ctx context.Context, teamSlug string) (int, error) {
+	var count int64
+	err := d.conn.WithContext(ctx).Model(&models.Lens{}).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
+}
+
+// TotalCountProfiles ...
+func (d *DB) TotalCountProfiles(ctx context.Context, teamSlug string) (int, error) {
+	var count int64
+	err := d.conn.WithContext(ctx).Model(&models.Profile{}).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
+}

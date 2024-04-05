@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -83,7 +84,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		}))
 
 		team := app.Group("/:team")
-		team.Get("/index", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
+		team.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
 
 		profiles := team.Group("/profiles")
 		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))
@@ -104,7 +105,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
 
 		workloads := team.Group("/workloads")
-		workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), config))
+		workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
 		workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
 		workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
@@ -116,14 +117,14 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")
-		siteSettings.Get("/index", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db)))
+		siteSettings.Get("/", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
 
 		siteTeams := site.Group("/teams")
-		siteTeams.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamListController(a.db)))
-		siteTeams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
-		siteTeams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
-		siteTeams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
-		siteTeams.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
+		siteTeams.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamListController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteTeams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteTeams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteTeams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteTeams.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {

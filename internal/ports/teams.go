@@ -20,4 +20,10 @@ type Teams interface {
 	ListTeams(ctx context.Context, pagination *models.Pagination) ([]*authz.Team, error)
 	// DeleteTeam
 	DeleteTeam(ctx context.Context, id uuid.UUID) error
+	// TotalCountWorkloads returns the total number of workloads.
+	TotalCountWorkloads(ctx context.Context, teamSlug string) (int, error)
+	// TotalCountLenses returns the total number of lenses.
+	TotalCountLenses(ctx context.Context, teamSlug string) (int, error)
+	// TotalCountProfiles returns the total number of questions.
+	TotalCountProfiles(ctx context.Context, teamSlug string) (int, error)
 }

@@ -50,7 +50,7 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 							ClassNames: htmx.ClassNames{
 								"link": false,
 							},
-							Href: fmt.Sprintf("/%s/index", el.Slug),
+							Href: fmt.Sprintf("/%s", el.Slug),
 						},
 						htmx.Text(el.Name),
 					),
