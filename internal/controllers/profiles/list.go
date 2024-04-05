@@ -13,6 +13,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -211,7 +212,12 @@ func ProfileListTableComponent(props ProfileListTableProps, children ...htmx.Nod
 					},
 					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
 						return htmx.Td(
-							htmx.Text(row.Name),
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf("/%s/profiles/%s", props.Team.Slug, row.ID.String()),
+								},
+								htmx.Text(row.Name),
+							),
 						)
 					},
 				},

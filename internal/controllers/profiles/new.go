@@ -162,8 +162,8 @@ func (p *ProfileNewController) Get() error {
 											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
 										),
 									),
-									forms.TextInputBordered(
-										forms.TextInputProps{
+									forms.TextareaBordered(
+										forms.TextareaProps{
 											Name: "description",
 										},
 									),
@@ -179,6 +179,36 @@ func (p *ProfileNewController) Get() error {
 										),
 									),
 								),
+							),
+						),
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Evaluation"),
+							),
+						),
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Tags - Optional"),
 							),
 						),
 					),

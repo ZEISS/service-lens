@@ -241,9 +241,15 @@ func (d *DB) IndexWorkload(ctx context.Context, id uuid.UUID) (*models.Workload,
 	return workload, nil
 }
 
-// StoreWorkload ...
-func (d *DB) StoreWorkload(ctx context.Context, workload *models.Workload) error {
-	return d.conn.WithContext(ctx).Create(workload).Error
+// CreateWorkload ...
+func (d *DB) CreateWorkload(ctx context.Context, workload *models.Workload) error {
+	return d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Create(workload).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
 // DestroyWorkload ...

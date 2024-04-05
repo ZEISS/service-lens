@@ -3,6 +3,7 @@ package workloads
 import (
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -16,6 +17,19 @@ import (
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 )
+
+// WorkloadNewControllerQuery ...
+type WorkloadNewControllerQuery struct {
+	Profile     uuid.UUID `json:"profile" xml:"profile" form:"profile" validate:"required,uuid"`
+	Lens        uuid.UUID `json:"lens" xml:"lens" form:"lens" validate:"required,uuid"`
+	Description string    `json:"description" xml:"description" form:"description" validate:"required,min=3,max=1024"`
+	Name        string    `json:"name" xml:"name" form:"name" validate:"required,min=3,max=100"`
+}
+
+// NewWorkloadNewControllerQuery ...
+func NewWorkloadNewControllerQuery() *WorkloadNewControllerQuery {
+	return &WorkloadNewControllerQuery{}
+}
 
 // WorkloadNewController ...
 type WorkloadNewController struct {
@@ -42,32 +56,31 @@ func (w *WorkloadNewController) Prepare() error {
 
 // Post ...
 func (w *WorkloadNewController) Post() error {
-	hx := w.Hx()
-
-	profileId, err := uuid.Parse(hx.Ctx().FormValue("profile"))
-	if err != nil {
+	query := NewWorkloadNewControllerQuery()
+	if err := w.Hx().Ctx().BodyParser(query); err != nil {
 		return err
 	}
 
-	lensId, err := uuid.Parse(hx.Ctx().FormValue("lens"))
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	err := validate.Struct(query)
 	if err != nil {
 		return err
 	}
 
 	workload := &models.Workload{
-		Name:        hx.Ctx().FormValue("name"),
-		Description: hx.Ctx().FormValue("description"),
+		Description: query.Description,
+		Lenses:      []*models.Lens{{ID: query.Lens}},
+		Name:        query.Name,
+		ProfileID:   query.Profile,
 		Team:        *w.team,
-		ProfileID:   profileId,
-		Lenses:      []*models.Lens{{ID: lensId}},
 	}
 
-	err = w.db.StoreWorkload(hx.Ctx().Context(), workload)
+	err = w.db.CreateWorkload(w.Hx().Ctx().Context(), workload)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/workloads/%s", w.team.Slug, workload.ID))
+	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", w.team.Slug, workload.ID))
 
 	return nil
 }
@@ -196,8 +209,8 @@ func (w *WorkloadNewController) Get() error {
 											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
 										),
 									),
-									forms.TextInputBordered(
-										forms.TextInputProps{
+									forms.TextareaBordered(
+										forms.TextareaProps{
 											Name: "description",
 										},
 									),
@@ -216,94 +229,94 @@ func (w *WorkloadNewController) Get() error {
 							),
 						),
 					),
-				),
-				cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"w-full": true,
-							"my-4":   true,
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
 						},
-					},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Profile"),
-						),
-						dropdowns.Dropdown(
-							dropdowns.DropdownProps{},
-							htmx.Input(
-								htmx.Attribute("type", "hidden"),
-								htmx.ID("profile-input"),
-								htmx.Attribute("name", "profile"),
-								htmx.Value("good"),
-								htmx.HyperScript("on newprofile set @value to 'tag'"),
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Profile"),
 							),
-							dropdowns.DropdownButton(
-								dropdowns.DropdownButtonProps{
-									ClassNames: htmx.ClassNames{
-										"m-1": true,
+							dropdowns.Dropdown(
+								dropdowns.DropdownProps{},
+								htmx.Input(
+									htmx.Attribute("type", "hidden"),
+									htmx.ID("profile-input"),
+									htmx.Attribute("name", "profile"),
+									htmx.Value("good"),
+									htmx.HyperScript("on newprofile set @value to 'tag'"),
+								),
+								dropdowns.DropdownButton(
+									dropdowns.DropdownButtonProps{
+										ClassNames: htmx.ClassNames{
+											"m-1": true,
+										},
 									},
-								},
-								htmx.Role("button"),
-								htmx.Text("Select Profile"),
-							),
-							dropdowns.DropdownMenuItems(
-								dropdowns.DropdownMenuItemsProps{},
-								dropdowns.DropdownMenuItem(
-									dropdowns.DropdownMenuItemProps{},
-									htmx.Text("Profile One"),
-									htmx.DataAttribute("profile", "1"),
-									htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
+									htmx.Role("button"),
+									htmx.Text("Select Profile"),
+								),
+								dropdowns.DropdownMenuItems(
+									dropdowns.DropdownMenuItemsProps{},
+									dropdowns.DropdownMenuItem(
+										dropdowns.DropdownMenuItemProps{},
+										htmx.Text("Profile One"),
+										htmx.DataAttribute("profile", "1"),
+										htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
+									),
 								),
 							),
-						),
-						htmx.Select(
-							htmx.ClassNames{
-								"select":   true,
-								"max-w-xs": true,
-								"block":    true,
-							},
-							htmx.Attribute("name", "profile"),
-							htmx.Group(profilesItems...),
+							htmx.Select(
+								htmx.ClassNames{
+									"select":   true,
+									"max-w-xs": true,
+									"block":    true,
+								},
+								htmx.Attribute("name", "profile"),
+								htmx.Group(profilesItems...),
+							),
 						),
 					),
-				),
-				cards.Body(
-					cards.BodyProps{},
-					cards.Title(
-						cards.TitleProps{},
-						htmx.Text("Lens"),
-					),
-				),
-				cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"w-full": true,
-							"my-4":   true,
-						},
-					},
 					cards.Body(
 						cards.BodyProps{},
 						cards.Title(
 							cards.TitleProps{},
-							htmx.Text("Tags (Optional)"),
+							htmx.Text("Lens"),
 						),
 					),
-				),
-				htmx.Select(
-					htmx.ClassNames{
-						"select":   true,
-						"max-w-xs": true,
-						"block":    true,
-					},
-					htmx.Attribute("name", "lens"),
-					htmx.Group(lensesItems...),
-				),
-				buttons.OutlinePrimary(
-					buttons.ButtonProps{},
-					htmx.Attribute("type", "submit"),
-					htmx.Text("Create Workload"),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Tags (Optional)"),
+							),
+						),
+					),
+					htmx.Select(
+						htmx.ClassNames{
+							"select":   true,
+							"max-w-xs": true,
+							"block":    true,
+						},
+						htmx.Attribute("name", "lens"),
+						htmx.Group(lensesItems...),
+					),
+					buttons.OutlinePrimary(
+						buttons.ButtonProps{},
+						htmx.Attribute("type", "submit"),
+						htmx.Text("Create Workload"),
+					),
 				),
 			),
 		),
