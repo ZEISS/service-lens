@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -107,8 +108,31 @@ func (w *WorkloadLensEditController) Get() error {
 									"px-8": true,
 								},
 							},
-							htmx.H1(htmx.Text(w.question.Title)),
-							htmx.Text(w.question.Description),
+							cards.CardBordered(
+								cards.CardProps{
+									ClassNames: htmx.ClassNames{
+										"my-4": true,
+									},
+								},
+								cards.Body(
+									cards.BodyProps{},
+									cards.Title(
+										cards.TitleProps{},
+										htmx.Text(w.question.Title),
+									),
+									components.CardDataBlock(
+										&components.CardDataBlockProps{
+											Title: "Description",
+											Data:  w.question.Description,
+										},
+									),
+									AdditionalInformationComponent(
+										AdditionalInformationProps{
+											Description: w.question.Description,
+										},
+									),
+								),
+							),
 							EditFormComponent(
 								EditFormProps{
 									Question: w.question,
@@ -175,33 +199,62 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 
 	return htmx.Form(
 		htmx.HxPost(""),
+		htmx.HxDisabledElt("input[type='text'], input[type='checkbox'], textarea, button"),
 		htmx.HxSwap("none"),
-		htmx.Group(choices...),
-		DoesNotApplyComponent(
-			DoesNotApplyProps{
-				Checked: p.Answer.DoesNotApply,
-			},
-		),
-		AdditionalInformationComponent(
-			AdditionalInformationProps{
-				Description: p.Question.Description,
-			},
-		),
-		forms.TextareaBordered(
-			forms.TextareaProps{
+		cards.CardBordered(
+			cards.CardProps{
 				ClassNames: htmx.ClassNames{
-					"w-full": true,
+					"my-4": true,
 				},
-				Placeholder: "Optional notes",
-				Name:        "notes",
 			},
-			htmx.Text(p.Answer.Notes),
+			cards.Body(
+				cards.BodyProps{},
+				cards.Title(
+					cards.TitleProps{},
+					htmx.Text("Answers"),
+				),
+				htmx.Group(choices...),
+			),
+		),
+		cards.CardBordered(
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					"my-4": true,
+				},
+			},
+			cards.Body(
+				cards.BodyProps{},
+				DoesNotApplyComponent(
+					DoesNotApplyProps{
+						Checked: p.Answer.DoesNotApply,
+					},
+				),
+			),
+		),
+		cards.CardBordered(
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					"my-4": true,
+				},
+			},
+			cards.Body(
+				cards.BodyProps{},
+				forms.TextareaBordered(
+					forms.TextareaProps{
+						ClassNames: htmx.ClassNames{
+							"w-full": true,
+						},
+						Placeholder: "Optional notes",
+						Name:        "notes",
+					},
+					htmx.Text(p.Answer.Notes),
+				),
+			),
 		),
 		buttons.OutlinePrimary(
 			buttons.ButtonProps{
 				Type: "submit",
 			},
-
 			htmx.Text("Save"),
 		),
 	)

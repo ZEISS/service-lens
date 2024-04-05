@@ -149,7 +149,7 @@ func (l *LensEditController) Get() error {
 									},
 								},
 								htmx.Text("Create Lens"),
-								htmx.HxDisableElt("this"),
+								htmx.HxDisabledElt("this"),
 							),
 						),
 					),

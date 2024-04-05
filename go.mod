@@ -3,6 +3,7 @@ module github.com/zeiss/service-lens
 go 1.21.6
 
 require (
+	github.com/go-playground/validator/v10 v10.18.0
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.57.2
@@ -12,7 +13,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/zeiss/fiber-authz v1.0.13
 	github.com/zeiss/fiber-goth v1.2.0
-	github.com/zeiss/fiber-htmx v1.1.35
+	github.com/zeiss/fiber-htmx v1.1.36
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 	mvdan.cc/gofumpt v0.6.0
@@ -71,7 +72,6 @@ require (
 	github.com/go-openapi/swag v0.22.9 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.18.0 // indirect
 	github.com/go-toolsmith/astcast v1.1.0 // indirect
 	github.com/go-toolsmith/astcopy v1.1.0 // indirect
 	github.com/go-toolsmith/astequal v1.2.0 // indirect
