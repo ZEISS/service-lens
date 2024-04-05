@@ -87,7 +87,7 @@ func (w *WorkloadIndexController) Get() error {
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{
-						ClassName: htmx.ClassNames{
+						ClassNames: htmx.ClassNames{
 							"-mx-6": true,
 						},
 					},
@@ -148,7 +148,7 @@ func (w *WorkloadIndexController) Get() error {
 				),
 				components.Wrap(
 					components.WrapProps{
-						ClassName: htmx.ClassNames{
+						ClassNames: htmx.ClassNames{
 							"-mx-6": true,
 						},
 					},
@@ -184,7 +184,7 @@ func (w *WorkloadIndexController) Get() error {
 				),
 				components.Wrap(
 					components.WrapProps{
-						ClassName: htmx.ClassNames{
+						ClassNames: htmx.ClassNames{
 							"-mx-6": true,
 						},
 					},

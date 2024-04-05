@@ -3,13 +3,14 @@ package components
 import (
 	"fmt"
 
+	"github.com/zeiss/service-lens/internal/resolvers"
+
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/menus"
-	"github.com/zeiss/service-lens/internal/resolvers"
 )
 
 // LayoutProps is the properties for the Layout component.
@@ -21,15 +22,16 @@ type LayoutProps struct {
 
 // WrapProps ...
 type WrapProps struct {
-	ClassName map[string]bool
+	ClassNames htmx.ClassNames
 }
 
 // Wrap ...
 func Wrap(p WrapProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
-		htmx.ClassNames{
-			"p-6": true,
-		}.Merge(p.ClassName),
+		htmx.Merge(
+			htmx.ClassNames{},
+			p.ClassNames,
+		),
 		htmx.Group(children...),
 	)
 }
@@ -64,7 +66,11 @@ func Layout(ctx htmx.Ctx, p LayoutProps, children ...htmx.Node) htmx.Node {
 					),
 				),
 				Wrap(
-					WrapProps{},
+					WrapProps{
+						ClassNames: htmx.ClassNames{
+							"m-6": true,
+						},
+					},
 					htmx.Group(children...),
 				),
 			),

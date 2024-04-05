@@ -57,7 +57,7 @@ func (w *WorkloadLensEditController) Prepare() error {
 		return nil
 	}
 
-	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, params.Lens)
+	lens, err := w.db.GetLensByID(hx.Context().Context(), params.Lens)
 	if err != nil {
 		return err
 	}

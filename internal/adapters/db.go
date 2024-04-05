@@ -83,13 +83,8 @@ func (d *DB) DestroyLens(ctx context.Context, id uuid.UUID) error {
 }
 
 // GetLensByID ...
-func (d *DB) GetLensByID(ctx context.Context, teamSlug string, id uuid.UUID) (*models.Lens, error) {
-	lens := &models.Lens{
-		ID: id,
-		Team: authz.Team{
-			ID: id,
-		},
-	}
+func (d *DB) GetLensByID(ctx context.Context, id uuid.UUID) (*models.Lens, error) {
+	lens := &models.Lens{ID: id}
 	err := d.conn.WithContext(ctx).Preload("Tags").Preload("Pillars").Preload("Pillars.Questions").Preload("Pillars.Questions.Choices").Find(lens).Error
 	if err != nil {
 		return nil, err

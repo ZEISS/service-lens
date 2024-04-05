@@ -20,6 +20,9 @@ func Page(ctx htmx.Ctx, props PageProps, children ...htmx.Node) htmx.Node {
 		htmx.HTML5Props{
 			Title:    props.Title,
 			Language: "en",
+			Attributes: []htmx.Node{
+				htmx.DataAttribute("theme", "light"),
+			},
 			Head: []htmx.Node{
 				htmx.Link(htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui@4.7.0/dist/full.min.css"), htmx.Attribute("rel", "stylesheet"), htmx.Attribute("type", "text/css")),
 				htmx.Script(htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.10"), htmx.Attribute("type", "application/javascript")),

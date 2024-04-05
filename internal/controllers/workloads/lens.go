@@ -42,7 +42,7 @@ func (w *WorkloadLensController) Prepare() error {
 		return err
 	}
 
-	lens, err := w.db.GetLensByID(hx.Context().Context(), team.Slug, lensID)
+	lens, err := w.db.GetLensByID(hx.Context().Context(), lensID)
 	if err != nil {
 		return err
 	}
@@ -136,7 +136,7 @@ func (w *WorkloadLensController) Get() error {
 				),
 				components.Wrap(
 					components.WrapProps{
-						ClassName: htmx.ClassNames{
+						ClassNames: htmx.ClassNames{
 							"border-neutral": true,
 							"border-t":       true,
 							"px-6":           true,
