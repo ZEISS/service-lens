@@ -55,7 +55,6 @@ func (p *ProfileEditController) Prepare() error {
 		return err
 	}
 	p.profile = profile
-
 	p.team = p.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
 
 	return nil
@@ -68,18 +67,14 @@ func (p *ProfileEditController) Post() error {
 		return err
 	}
 
-	profile := &models.Profile{
-		ID:          p.profile.ID,
-		Description: query.Description,
-		Team:        *p.team,
-	}
+	p.profile.Description = query.Description
 
-	err := p.db.UpdateProfile(p.Hx().Ctx().Context(), profile)
+	err := p.db.UpdateProfile(p.Hx().Ctx().Context(), p.profile)
 	if err != nil {
 		return err
 	}
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", p.team.Slug, profile.ID))
+	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", p.team.Slug, p.profile.ID))
 
 	return nil
 }

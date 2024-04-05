@@ -76,11 +76,53 @@ func (p *ProfileIndexController) Get() error {
 								htmx.Text("Overview"),
 							),
 							htmx.Div(
-								htmx.H1(
-									htmx.Text(p.profile.Name),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
+										htmx.Text("ID"),
+									),
+									htmx.H3(
+										htmx.Text(p.profile.ID.String()),
+									),
 								),
-								htmx.P(
-									htmx.Text(p.profile.Description),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
+										htmx.Text("Name"),
+									),
+									htmx.H3(
+										htmx.Text(p.profile.Name),
+									),
+								),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
+										htmx.Text("Description"),
+									),
+									htmx.H3(
+										htmx.Text(p.profile.Description),
+									),
 								),
 								htmx.Div(
 									htmx.ClassNames{

@@ -88,7 +88,7 @@ func (w *WorkloadIndexController) Get() error {
 				components.Wrap(
 					components.WrapProps{
 						ClassNames: htmx.ClassNames{
-							"-mx-6": true,
+							"py-4": true,
 						},
 					},
 					cards.CardBordered(
@@ -100,11 +100,23 @@ func (w *WorkloadIndexController) Get() error {
 								htmx.Text("Overview"),
 							),
 							htmx.Div(
-								htmx.H1(
-									htmx.Text(w.workload.Name),
+								components.CardDataBlock(
+									&components.CardDataBlockProps{
+										Title: "ID",
+										Data:  w.workload.ID.String(),
+									},
 								),
-								htmx.P(
-									htmx.Text(w.workload.Description),
+								components.CardDataBlock(
+									&components.CardDataBlockProps{
+										Title: "Name",
+										Data:  w.workload.Name,
+									},
+								),
+								components.CardDataBlock(
+									&components.CardDataBlockProps{
+										Title: "Description",
+										Data:  w.workload.Description,
+									},
 								),
 								htmx.Div(
 									htmx.ClassNames{
@@ -149,7 +161,7 @@ func (w *WorkloadIndexController) Get() error {
 				components.Wrap(
 					components.WrapProps{
 						ClassNames: htmx.ClassNames{
-							"-mx-6": true,
+							"py-4": true,
 						},
 					},
 					cards.CardBordered(
@@ -185,7 +197,7 @@ func (w *WorkloadIndexController) Get() error {
 				components.Wrap(
 					components.WrapProps{
 						ClassNames: htmx.ClassNames{
-							"-mx-6": true,
+							"py-4": true,
 						},
 					},
 					cards.CardBordered(
