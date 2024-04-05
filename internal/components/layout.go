@@ -288,9 +288,9 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuItemProps{},
 				menus.MenuLink(
 					menus.MenuLinkProps{
-						Href: "/me/index",
+						Href: "/me",
 					},
-					htmx.Text("Profiles"),
+					htmx.Text("Profile"),
 				),
 			),
 			menus.MenuItem(

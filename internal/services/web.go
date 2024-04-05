@@ -76,7 +76,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		}))
 
 		me := app.Group("/me")
-		me.Get("/index", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db), htmx.Config{
+		me.Get("/", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db), htmx.Config{
 			Resolvers: []htmx.ResolveFunc{
 				resolvers.User(a.db),
 			},

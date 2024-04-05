@@ -43,7 +43,18 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 				},
 			},
 			utils.Map(func(el authz.Team) htmx.Node {
-				return dropdowns.DropdownMenuItem(dropdowns.DropdownMenuItemProps{}, links.Link(links.LinkProps{Href: fmt.Sprintf("/%s/index", el.Slug)}, htmx.Text(el.Name)))
+				return dropdowns.DropdownMenuItem(
+					dropdowns.DropdownMenuItemProps{},
+					links.Link(
+						links.LinkProps{
+							ClassNames: htmx.ClassNames{
+								"link": false,
+							},
+							Href: fmt.Sprintf("/%s/index", el.Slug),
+						},
+						htmx.Text(el.Name),
+					),
+				)
 			}, *props.User.Teams...),
 		),
 	)
