@@ -1,81 +1,24 @@
 package teams
 
 import (
-	"errors"
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
+	"github.com/go-playground/validator/v10"
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// TeamNewControllerParams ...
-type TeamNewControllerParams struct {
-	ID uuid.UUID `json:"id" xml:"id" form:"id"`
-}
-
-// NewDefaultTeamNewControllerParams ...
-func NewDefaultTeamNewControllerParams() *TeamNewControllerParams {
-	return &TeamNewControllerParams{}
-}
-
-// TeamNewControllerQuery ...
-type TeamNewControllerQuery struct{}
-
-// NewDefaultTeamNewControllerQuery ...
-func NewDefaultTeamNewControllerQuery() *TeamNewControllerQuery {
-	return &TeamNewControllerQuery{}
-}
-
-// TeamNewControllerBody ...
-type TeamNewControllerBody struct {
-	Name        string `json:"name" xml:"name" form:"name"`
-	Slug        string `json:"slug" xml:"slug" form:"slug"`
-	Description string `json:"description" xml:"description" form:"description"`
-}
-
-// NewDefaultTeamNewControllerBody ...
-func NewDefaultTeamNewControllerBody() *TeamNewControllerBody {
-	return &TeamNewControllerBody{}
-}
-
 // TeamNewController ...
 type TeamNewController struct {
-	db     ports.Repository
-	params *TeamNewControllerParams
-	query  *TeamNewControllerQuery
-	body   *TeamNewControllerBody
+	db ports.Repository
 
 	htmx.UnimplementedController
-}
-
-// Prepare ...
-func (a *TeamNewController) Prepare() error {
-	params := NewDefaultTeamNewControllerParams()
-	if err := a.Hx().Context().ParamsParser(params); err != nil {
-		return err
-	}
-	a.params = params
-
-	query := NewDefaultTeamNewControllerQuery()
-	if err := a.Hx().Context().QueryParser(query); err != nil {
-		return err
-	}
-	a.query = query
-
-	body := NewDefaultTeamNewControllerBody()
-	if err := a.Hx().Context().BodyParser(body); err != nil && !errors.Is(err, fiber.ErrUnprocessableEntity) {
-		return err
-	}
-	a.body = body
-
-	return nil
 }
 
 // NewTeamNewController ...
@@ -85,134 +28,216 @@ func NewTeamNewController(db ports.Repository) *TeamNewController {
 	}
 }
 
+// TeamNewControllerQuery ...
+type TeamNewControllerQuery struct {
+	Name        string `json:"name" xml:"name" form:"name" validate:"required,min=3,max=100"`
+	Description string `json:"description" xml:"description" form:"description" validate:"required,min=3,max=1024"`
+	Slug        string `json:"slug" xml:"slug" form:"slug" validate:"required,min=3,max=100,lowercase,slug"`
+}
+
+// NewDefaultTeamNewControllerQuery ...
+func NewDefaultTeamNewControllerQuery() *TeamNewControllerQuery {
+	return &TeamNewControllerQuery{}
+}
+
+// Post ...
+func (p *TeamNewController) Post() error {
+	hx := p.Hx()
+
+	query := NewDefaultTeamNewControllerQuery()
+	if err := hx.Ctx().BodyParser(query); err != nil {
+		return err
+	}
+
+	team := &authz.Team{
+		Name:        query.Name,
+		Description: utils.StrPtr(query.Description),
+		Slug:        query.Slug,
+	}
+
+	validator := validator.New()
+	if err := validator.Struct(query); err != nil {
+		return err
+	}
+
+	team, err := p.db.CreateTeam(hx.Ctx().Context(), team)
+	if err != nil {
+		return err
+	}
+
+	hx.Redirect(fmt.Sprintf("/site/teams/%s", team.ID))
+
+	return nil
+}
+
 // Get ...
-func (a *TeamNewController) Get() error {
-	return a.Hx().RenderComp(
+func (p *TeamNewController) Get() error {
+	return p.Hx().RenderComp(
 		components.Page(
-			a.Hx(),
+			p.Hx(),
 			components.PageProps{},
 			components.Layout(
-				a.Hx(),
+				p.Hx(),
 				components.LayoutProps{},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.FormElement(
-						htmx.HxPost(""),
-						htmx.Label(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-lg":     true,
+				htmx.FormElement(
+					htmx.HxPost(""),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
 							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label":   true,
-									"sr-only": true,
-								},
-								htmx.Span(
-									htmx.ClassNames{
-										"label-text": true,
-									},
-								),
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Properties"),
 							),
-							forms.TextInputBordered(
-								forms.TextInputProps{
+							forms.FormControl(
+								forms.FormControlProps{
 									ClassNames: htmx.ClassNames{
-										"w-full":   true,
-										"max-w-xs": false,
+										"py-4": true,
 									},
-									Name:        "name",
-									Placeholder: "Name ...",
 								},
-							),
-						),
-						htmx.Label(
-							htmx.ClassNames{
-								"form-control": true,
-								"w-full":       true,
-								"max-w-lg":     true,
-							},
-							htmx.Div(
-								htmx.ClassNames{
-									"label":   true,
-									"sr-only": true,
-								},
-								htmx.Span(
-									htmx.ClassNames{
-										"label-text": true,
-									},
-								),
-							),
-							forms.TextInputBordered(
-								forms.TextInputProps{
-									ClassNames: htmx.ClassNames{
-										"w-full":   true,
-										"max-w-lg": true,
-									},
-									Name:        "slug",
-									Placeholder: "Slug ...",
-								},
-							),
-							htmx.Label(
-								htmx.ClassNames{
-									"form-control": true,
-									"w-full":       true,
-									"max-w-lg":     true,
-								},
-								htmx.Div(
-									htmx.ClassNames{
-										"label":   true,
-										"sr-only": true,
-									},
-									htmx.Span(
-										htmx.ClassNames{
-											"label-text": true,
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"-my-4": true,
+											},
 										},
+										htmx.Text("Name"),
+									),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("The display name of the team."),
 									),
 								),
 								forms.TextInputBordered(
 									forms.TextInputProps{
-										ClassNames: htmx.ClassNames{
-											"w-full":   true,
-											"max-w-xs": false,
-										},
-										Name:        "description",
-										Placeholder: "Description ...",
+										Name: "name",
 									},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("The name must be from 3 to 100 characters. At least 3 characters must be non-whitespace."),
+									),
+								),
+								forms.FormControl(
+									forms.FormControlProps{
+										ClassNames: htmx.ClassNames{
+											"py-4": true,
+										},
+									},
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"-my-4": true,
+												},
+											},
+											htmx.Text("Slug"),
+										),
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("A unique identifier for the team."),
+										),
+									),
+									forms.TextInputBordered(
+										forms.TextInputProps{
+											Name: "slug",
+										},
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("The slug must be from 3 to 100 characters. At least 3 characters must be non-whitespace. The slug must be lowercase and contain only letters, numbers, and hyphens. The slug must be unique within the site"),
+										),
+									),
+									forms.FormControl(
+										forms.FormControlProps{
+											ClassNames: htmx.ClassNames{
+												"py-4": true,
+											},
+										},
+										forms.FormControlLabel(
+											forms.FormControlLabelProps{},
+											forms.FormControlLabelText(
+												forms.FormControlLabelTextProps{
+													ClassNames: htmx.ClassNames{
+														"-my-4": true,
+													},
+												},
+												htmx.Text("Description"),
+											),
+										),
+										forms.FormControlLabel(
+											forms.FormControlLabelProps{},
+											forms.FormControlLabelText(
+												forms.FormControlLabelTextProps{
+													ClassNames: htmx.ClassNames{
+														"text-neutral-500": true,
+													},
+												},
+												htmx.Text("A brief description of the team to document its scope and intended purpose."),
+											),
+										),
+										forms.TextareaBordered(
+											forms.TextareaProps{
+												Name: "description",
+											},
+										),
+										forms.FormControlLabel(
+											forms.FormControlLabelProps{},
+											forms.FormControlLabelText(
+												forms.FormControlLabelTextProps{
+													ClassNames: htmx.ClassNames{
+														"text-neutral-500": true,
+													},
+												},
+												htmx.Text("The description must be from 3 to 1024 characters."),
+											),
+										),
+									),
 								),
 							),
 						),
-						buttons.OutlinePrimary(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"my-4": true,
-								},
-								Type: "submit",
-							},
-
-							htmx.Text("Create Team"),
-						),
+					),
+					buttons.OutlinePrimary(
+						buttons.ButtonProps{},
+						htmx.Attribute("type", "submit"),
+						htmx.Text("Create Team"),
 					),
 				),
 			),
 		),
 	)
-}
-
-// Post ...
-func (a *TeamNewController) Post() error {
-	team := &authz.Team{
-		Name:        a.body.Name,
-		Slug:        a.body.Slug,
-		Description: utils.StrPtr(a.body.Description),
-	}
-
-	team, err := a.db.AddTeam(a.Hx().Ctx().Context(), team)
-	if err != nil {
-		return err
-	}
-
-	a.Hx().Redirect(fmt.Sprintf("/site/teams/%s", team.ID))
-
-	return nil
 }

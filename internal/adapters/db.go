@@ -264,16 +264,9 @@ func (d *DB) DestroyWorkload(ctx context.Context, id uuid.UUID) error {
 	})
 }
 
-// AddTeam ...
-func (d *DB) AddTeam(ctx context.Context, team *authz.Team) (*authz.Team, error) {
-	err := d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		err := tx.Save(team).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
+// CreateTeam ...
+func (d *DB) CreateTeam(ctx context.Context, team *authz.Team) (*authz.Team, error) {
+	err := d.conn.WithContext(ctx).Save(team).Error
 	if err != nil {
 		return nil, err
 	}
