@@ -32,7 +32,7 @@ func NewTeamNewController(db ports.Repository) *TeamNewController {
 type TeamNewControllerQuery struct {
 	Name        string `json:"name" xml:"name" form:"name" validate:"required,min=3,max=100"`
 	Description string `json:"description" xml:"description" form:"description" validate:"required,min=3,max=1024"`
-	Slug        string `json:"slug" xml:"slug" form:"slug" validate:"required,min=3,max=100,lowercase,slug"`
+	Slug        string `json:"slug" xml:"slug" form:"slug" validate:"required,min=3,max=100,lowercase"`
 }
 
 // NewDefaultTeamNewControllerQuery ...
