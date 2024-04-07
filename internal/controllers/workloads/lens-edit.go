@@ -93,7 +93,11 @@ func (w *WorkloadLensEditController) Get() error {
 				hx,
 				components.LayoutProps{},
 				components.Wrap(
-					components.WrapProps{},
+					components.WrapProps{
+						ClassNames: htmx.ClassNames{
+							"-m-6": true,
+						},
+					},
 					drawers.Drawer(
 						drawers.DrawerProps{
 							ID: "pillars-drawer",
@@ -141,7 +145,13 @@ func (w *WorkloadLensEditController) Get() error {
 							),
 						),
 						drawers.DrawerSide(
-							drawers.DrawerSideProps{},
+							drawers.DrawerSideProps{
+								ClassNames: htmx.ClassNames{
+									"h-screen":        true,
+									"overflow-y-auto": true,
+									"bg-base-300":     true,
+								},
+							},
 							EditMenuComponent(
 								EditMenuProps{
 									Lens: w.lens,
@@ -384,7 +394,10 @@ func EditMenuComponent(p EditMenuProps) htmx.Node {
 	return menus.Menu(
 		menus.MenuProps{
 			ClassNames: htmx.ClassNames{
-				"w-full": true,
+				"w-full":         true,
+				"bg-transparent": true,
+				"bg-base-300":    false,
+				"rounded-box":    false,
 			},
 		},
 		htmx.Group(pillars...),

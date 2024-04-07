@@ -111,8 +111,8 @@ func (w *LensListController) Get() error {
 							LensListTableProps{
 								Lenses: w.lenses.Rows,
 								Team:   w.team,
-								Offset: w.lenses.GetLimit(),
-								Limit:  w.lenses.GetOffset(),
+								Offset: w.lenses.GetOffset(),
+								Limit:  w.lenses.GetLimit(),
 								Total:  int(w.lenses.TotalRows),
 							},
 						),
