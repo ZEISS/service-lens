@@ -45,7 +45,7 @@ func NewDefaultWorkloadListControllerQuery() *WorkloadListControllerQuery {
 // WorkloadListController ...
 type WorkloadListController struct {
 	db        ports.Repository
-	workloads []*models.Workload
+	workloads *models.Pagination[*models.Workload]
 	team      *authz.Team
 
 	params *WorkloadListControllerParams
@@ -74,11 +74,15 @@ func (w *WorkloadListController) Prepare() error {
 
 	w.query = NewDefaultWorkloadListControllerQuery()
 	if err := hx.Ctx().QueryParser(w.query); err != nil {
-		fmt.Println("error parsing query", err)
 		return err
 	}
 
-	workloads, err := w.db.ListWorkloads(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: w.query.Limit, Offset: w.query.Offset})
+	pagination := models.NewPagination[*models.Workload]()
+	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+		return err
+	}
+
+	workloads, err := w.db.ListWorkloads(hx.Context().Context(), w.team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -89,29 +93,12 @@ func (w *WorkloadListController) Prepare() error {
 
 // Get ...
 func (w *WorkloadListController) Get() error {
-	hx := w.Hx()
-
-	if hx.IsHxRequest() {
-		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
-
-		return hx.RenderComp(
-			WorkloadListTableComponent(
-				WorkloadListTableProps{
-					Workloads: w.workloads,
-					Team:      w.team,
-					Offset:    w.query.Offset,
-					Limit:     w.query.Limit,
-				},
-			),
-		)
-	}
-
-	return hx.RenderComp(
+	return w.Hx().RenderComp(
 		components.Page(
-			hx,
+			w.Hx(),
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.Hx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -121,10 +108,11 @@ func (w *WorkloadListController) Get() error {
 						},
 						WorkloadListTableComponent(
 							WorkloadListTableProps{
-								Workloads: w.workloads,
+								Workloads: w.workloads.Rows,
 								Team:      w.team,
-								Offset:    w.query.Offset,
-								Limit:     w.query.Limit,
+								Offset:    w.workloads.GetOffset(),
+								Limit:     w.workloads.GetLimit(),
+								Total:     int(w.workloads.TotalRows),
 							},
 						),
 					),
@@ -161,6 +149,7 @@ func WorkloadListTablePaginationComponent(props WorkloadListTablePaginationProps
 		),
 		tables.Select(
 			tables.SelectProps{
+				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
@@ -173,6 +162,7 @@ func WorkloadListTablePaginationComponent(props WorkloadListTablePaginationProps
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 	)
@@ -184,6 +174,7 @@ type WorkloadListTableProps struct {
 	Team      *authz.Team
 	Offset    int
 	Limit     int
+	Total     int
 }
 
 // WorkloadListTableComponent ...
@@ -250,7 +241,7 @@ func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.N
 				WorkloadListTablePaginationProps{
 					Limit:  props.Limit,
 					Offset: props.Offset,
-					Total:  len(props.Workloads),
+					Total:  props.Total,
 					Target: "#workloads-table",
 					Team:   props.Team,
 				},

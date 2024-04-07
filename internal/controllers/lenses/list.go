@@ -46,7 +46,7 @@ func NewDefaultLensListControllerQuery() *LensListControllerQuery {
 // LensListController ...
 type LensListController struct {
 	db     ports.Repository
-	lenses []*models.Lens
+	lenses *models.Pagination[*models.Lens]
 	team   *authz.Team
 
 	params *LensListControllerParams
@@ -75,11 +75,15 @@ func (w *LensListController) Prepare() error {
 
 	w.query = NewDefaultLensListControllerQuery()
 	if err := hx.Ctx().QueryParser(w.query); err != nil {
-		fmt.Println("error parsing query", err)
 		return err
 	}
 
-	lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: w.query.Limit, Offset: w.query.Offset})
+	pagination := models.NewPagination[*models.Lens]()
+	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+		return err
+	}
+
+	lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -90,29 +94,12 @@ func (w *LensListController) Prepare() error {
 
 // Get ...
 func (w *LensListController) Get() error {
-	hx := w.Hx()
-
-	if hx.IsHxRequest() {
-		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
-
-		return hx.RenderComp(
-			LensListTableComponent(
-				LensListTableProps{
-					Lenses: w.lenses,
-					Team:   w.team,
-					Offset: w.query.Offset,
-					Limit:  w.query.Limit,
-				},
-			),
-		)
-	}
-
-	return hx.RenderComp(
+	return w.Hx().RenderComp(
 		components.Page(
-			hx,
+			w.Hx(),
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.Hx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -122,10 +109,11 @@ func (w *LensListController) Get() error {
 						},
 						LensListTableComponent(
 							LensListTableProps{
-								Lenses: w.lenses,
+								Lenses: w.lenses.Rows,
 								Team:   w.team,
-								Offset: w.query.Offset,
-								Limit:  w.query.Limit,
+								Offset: w.lenses.GetLimit(),
+								Limit:  w.lenses.GetOffset(),
+								Total:  int(w.lenses.TotalRows),
 							},
 						),
 					),
@@ -148,32 +136,38 @@ type LensListTablePaginationProps struct {
 func LensListTablePaginationComponent(props LensListTablePaginationProps, children ...htmx.Node) htmx.Node {
 	return tables.Pagination(
 		tables.PaginationProps{
+			URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
 			Limit:  props.Limit,
 			Offset: props.Offset,
 			Target: props.Target,
+			Total:  props.Total,
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Select(
 			tables.SelectProps{
+				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Next(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 	)
@@ -185,6 +179,7 @@ type LensListTableProps struct {
 	Team   *authz.Team
 	Offset int
 	Limit  int
+	Total  int
 }
 
 // LensListTableComponent ...
@@ -263,7 +258,7 @@ func LensListTableComponent(props LensListTableProps, children ...htmx.Node) htm
 				LensListTablePaginationProps{
 					Limit:  props.Limit,
 					Offset: props.Offset,
-					Total:  len(props.Lenses),
+					Total:  props.Total,
 					Target: "lenses-table",
 					Team:   props.Team,
 				},

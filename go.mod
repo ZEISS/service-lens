@@ -13,7 +13,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/zeiss/fiber-authz v1.0.13
 	github.com/zeiss/fiber-goth v1.2.0
-	github.com/zeiss/fiber-htmx v1.1.36
+	github.com/zeiss/fiber-htmx v1.1.41
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 	mvdan.cc/gofumpt v0.6.0

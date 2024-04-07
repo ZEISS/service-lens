@@ -44,7 +44,7 @@ type TeamListController struct {
 	db     ports.Repository
 	params *TeamListControllerParams
 	query  *TeamListControllerQuery
-	teams  []*authz.Team
+	teams  *models.Pagination[*authz.Team]
 
 	htmx.UnimplementedController
 }
@@ -72,7 +72,12 @@ func (t *TeamListController) Prepare() error {
 	}
 	t.query = query
 
-	teams, err := t.db.ListTeams(hx.Context().Context(), &models.Pagination{Limit: query.Limit, Offset: query.Offset})
+	pagination := models.NewPagination[*authz.Team]()
+	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+		return err
+	}
+
+	teams, err := t.db.ListTeams(hx.Context().Context(), pagination)
 	if err != nil {
 		return err
 	}
@@ -91,9 +96,10 @@ func (w *TeamListController) Get() error {
 		return hx.RenderComp(
 			TeamListTableComponent(
 				TeamListTableProps{
-					Teams:  w.teams,
-					Offset: w.query.Offset,
-					Limit:  w.query.Limit,
+					Teams:  w.teams.Rows,
+					Offset: w.teams.GetOffset(),
+					Limit:  w.teams.GetLimit(),
+					Total:  int(w.teams.TotalRows),
 				},
 			),
 		)
@@ -114,9 +120,10 @@ func (w *TeamListController) Get() error {
 						},
 						TeamListTableComponent(
 							TeamListTableProps{
-								Teams:  w.teams,
-								Offset: w.query.Offset,
-								Limit:  w.query.Limit,
+								Teams:  w.teams.Rows,
+								Offset: w.teams.GetOffset(),
+								Limit:  w.teams.GetLimit(),
+								Total:  int(w.teams.TotalRows),
 							},
 						),
 					),
@@ -148,6 +155,7 @@ func TeamListTablePaginationComponent(props TeamListTablePaginationProps, childr
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Select(
@@ -156,6 +164,7 @@ func TeamListTablePaginationComponent(props TeamListTablePaginationProps, childr
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Next(
@@ -164,6 +173,7 @@ func TeamListTablePaginationComponent(props TeamListTablePaginationProps, childr
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 	)
@@ -174,6 +184,7 @@ type TeamListTableProps struct {
 	Teams  []*authz.Team
 	Offset int
 	Limit  int
+	Total  int
 }
 
 // TeamListTableComponent ...
@@ -240,7 +251,7 @@ func TeamListTableComponent(props TeamListTableProps, children ...htmx.Node) htm
 				TeamListTablePaginationProps{
 					Limit:  props.Limit,
 					Offset: props.Offset,
-					Total:  len(props.Teams),
+					Total:  props.Total,
 					Target: "#workloads-table",
 				},
 			),

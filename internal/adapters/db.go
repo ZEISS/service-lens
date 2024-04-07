@@ -144,14 +144,16 @@ func (d *DB) GetPillarById(ctx context.Context, teamSlug string, lensId uuid.UUI
 }
 
 // ListLenses ...
-func (d *DB) ListLenses(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Lens, error) {
+func (d *DB) ListLenses(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Lens]) (*models.Pagination[*models.Lens], error) {
 	lenses := []*models.Lens{}
-	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
+
+	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&lenses, &pagination, d.conn)).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&lenses).Error
 	if err != nil {
 		return nil, err
 	}
+	pagination.Rows = lenses
 
-	return lenses, nil
+	return &pagination, nil
 }
 
 // ListAnswers ...
@@ -205,26 +207,29 @@ func (d *DB) UpdateAnswers(ctx context.Context, workloadID uuid.UUID, lensID uui
 }
 
 // ListProfiles ...
-func (d *DB) ListProfiles(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Profile, error) {
+func (d *DB) ListProfiles(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Profile]) (*models.Pagination[*models.Profile], error) {
 	profiles := []*models.Profile{}
-	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&profiles).Error
+
+	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&profiles, &pagination, d.conn)).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Find(&profiles).Error
 	if err != nil {
 		return nil, err
 	}
+	pagination.Rows = profiles
 
-	return profiles, nil
+	return &pagination, nil
 }
 
 // ListWorkloads ...
-func (d *DB) ListWorkloads(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Workload, error) {
+func (d *DB) ListWorkloads(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Workload]) (*models.Pagination[*models.Workload], error) {
 	workloads := []*models.Workload{}
 
-	err := d.conn.WithContext(ctx).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Limit(pagination.Limit).Offset(pagination.Offset).Find(&workloads).Error
+	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&workloads, &pagination, d.conn)).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Find(&workloads).Error
 	if err != nil {
 		return nil, err
 	}
+	pagination.Rows = workloads
 
-	return workloads, nil
+	return &pagination, nil
 }
 
 // ShowWorkload ...
@@ -287,14 +292,16 @@ func (d *DB) GetTeamBySlug(ctx context.Context, slug string) (*authz.Team, error
 }
 
 // ListTeams ...
-func (d *DB) ListTeams(ctx context.Context, pagination *models.Pagination) ([]*authz.Team, error) {
+func (d *DB) ListTeams(ctx context.Context, pagination models.Pagination[*authz.Team]) (*models.Pagination[*authz.Team], error) {
 	teams := []*authz.Team{}
-	err := d.conn.WithContext(ctx).Limit(pagination.Limit).Offset(pagination.Offset).Find(&teams).Error
+
+	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&teams, &pagination, d.conn)).Find(&teams).Error
 	if err != nil {
 		return nil, err
 	}
+	pagination.Rows = teams
 
-	return teams, nil
+	return &pagination, nil
 }
 
 // GetTeamByID ...
@@ -328,14 +335,16 @@ func (d *DB) GetUserByID(ctx context.Context, id uuid.UUID) (*authz.User, error)
 }
 
 // ListUsers ...
-func (d *DB) ListUsers(ctx context.Context, pagination *models.Pagination) ([]*authz.User, error) {
+func (d *DB) ListUsers(ctx context.Context, pagination models.Pagination[*authz.User]) (*models.Pagination[*authz.User], error) {
 	users := []*authz.User{}
-	err := d.conn.WithContext(ctx).Preload("Teams").Limit(pagination.Limit).Offset(pagination.Offset).Find(&users).Error
+
+	err := d.conn.WithContext(ctx).Preload("Teams").Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
+	pagination.Rows = users
 
-	return users, nil
+	return &pagination, nil
 }
 
 // AddUser ...

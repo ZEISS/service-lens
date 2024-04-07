@@ -30,6 +30,9 @@ func Page(ctx htmx.Ctx, props PageProps, children ...htmx.Node) htmx.Node {
 				htmx.Script(htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"), htmx.Attribute("type", "application/javascript")),
 			},
 		},
-		children...,
+		htmx.Body(
+			// htmx.HxBoost(true),
+			htmx.Group(children...),
+		),
 	)
 }

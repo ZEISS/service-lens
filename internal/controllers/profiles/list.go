@@ -45,7 +45,7 @@ func NewDefaultProfileListControllerQuery() *ProfileListControllerQuery {
 // ProfileListController ...
 type ProfileListController struct {
 	db       ports.Repository
-	profiles []*models.Profile
+	profiles *models.Pagination[*models.Profile]
 	team     *authz.Team
 
 	params *ProfileListControllerParams
@@ -74,11 +74,15 @@ func (w *ProfileListController) Prepare() error {
 
 	w.query = NewDefaultProfileListControllerQuery()
 	if err := hx.Ctx().QueryParser(w.query); err != nil {
-		fmt.Println("error parsing query", err)
 		return err
 	}
 
-	profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: w.query.Limit, Offset: w.query.Offset})
+	pagination := models.NewPagination[*models.Profile]()
+	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+		return err
+	}
+
+	profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -89,29 +93,13 @@ func (w *ProfileListController) Prepare() error {
 
 // Get ...
 func (w *ProfileListController) Get() error {
-	hx := w.Hx()
-
-	if hx.IsHxRequest() {
-		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
-
-		return hx.RenderComp(
-			ProfileListTableComponent(
-				ProfileListTableProps{
-					Profiles: w.profiles,
-					Team:     w.team,
-					Offset:   w.query.Offset,
-					Limit:    w.query.Limit,
-				},
-			),
-		)
-	}
-
-	return hx.RenderComp(
+	fmt.Println(w.profiles.TotalRows)
+	return w.Hx().RenderComp(
 		components.Page(
-			hx,
+			w.Hx(),
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.Hx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -121,10 +109,11 @@ func (w *ProfileListController) Get() error {
 						},
 						ProfileListTableComponent(
 							ProfileListTableProps{
-								Profiles: w.profiles,
+								Profiles: w.profiles.Rows,
 								Team:     w.team,
 								Offset:   w.query.Offset,
 								Limit:    w.query.Limit,
+								Total:    int(w.profiles.TotalRows),
 							},
 						),
 					),
@@ -147,32 +136,38 @@ type ProfileListTablePaginationProps struct {
 func ProfileListTablePaginationComponent(props ProfileListTablePaginationProps, children ...htmx.Node) htmx.Node {
 	return tables.Pagination(
 		tables.PaginationProps{
+			URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
 			Limit:  props.Limit,
 			Offset: props.Offset,
 			Target: props.Target,
+			Total:  props.Total,
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Select(
 			tables.SelectProps{
+				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 		tables.Next(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/workloads", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
+				Total:  props.Total,
 			},
 		),
 	)
@@ -184,6 +179,7 @@ type ProfileListTableProps struct {
 	Team     *authz.Team
 	Offset   int
 	Limit    int
+	Total    int
 }
 
 // ProfileListTableComponent ...
@@ -250,7 +246,7 @@ func ProfileListTableComponent(props ProfileListTableProps, children ...htmx.Nod
 				ProfileListTablePaginationProps{
 					Limit:  props.Limit,
 					Offset: props.Offset,
-					Total:  len(props.Profiles),
+					Total:  props.Total,
 					Target: "profiles-tables",
 					Team:   props.Team,
 				},

@@ -17,7 +17,7 @@ type Teams interface {
 	// CreateTeam ...
 	CreateTeam(ctx context.Context, team *authz.Team) (*authz.Team, error)
 	// ListTeams ...
-	ListTeams(ctx context.Context, pagination *models.Pagination) ([]*authz.Team, error)
+	ListTeams(ctx context.Context, pagination models.Pagination[*authz.Team]) (*models.Pagination[*authz.Team], error)
 	// DeleteTeam
 	DeleteTeam(ctx context.Context, id uuid.UUID) error
 	// TotalCountWorkloads returns the total number of workloads.

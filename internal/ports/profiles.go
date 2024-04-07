@@ -14,7 +14,7 @@ type Profiles interface {
 	// FetchProfile fetches a profile by its ID.
 	FetchProfile(ctx context.Context, id uuid.UUID) (*models.Profile, error)
 	// ListProfiles lists all profiles.
-	ListProfiles(ctx context.Context, teamSlug string, pagination *models.Pagination) ([]*models.Profile, error)
+	ListProfiles(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Profile]) (*models.Pagination[*models.Profile], error)
 	// GetProfileByID fetches a profile by its ID.
 	GetProfileByID(ctx context.Context, id uuid.UUID) (*models.Profile, error)
 	// UpdateProfile updates a profile.

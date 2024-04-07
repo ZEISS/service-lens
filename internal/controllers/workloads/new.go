@@ -89,31 +89,31 @@ func (w *WorkloadNewController) Post() error {
 func (w *WorkloadNewController) Get() error {
 	hx := w.Hx()
 
-	profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
-	if err != nil {
-		return err
-	}
+	// profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
+	// if err != nil {
+	// 	return err
+	// }
 
-	profilesItems := make([]htmx.Node, len(profiles))
-	for i, profile := range profiles {
-		profilesItems[i] = htmx.Option(
-			htmx.Attribute("value", profile.ID.String()),
-			htmx.Text(profile.Name),
-		)
-	}
+	profilesItems := make([]htmx.Node, 0)
+	// for i, profile := range profiles {
+	// 	profilesItems[i] = htmx.Option(
+	// 		htmx.Attribute("value", profile.ID.String()),
+	// 		htmx.Text(profile.Name),
+	// 	)
+	// }
 
-	lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
-	if err != nil {
-		return err
-	}
+	// lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
+	// if err != nil {
+	// 	return err
+	// }
 
-	lensesItems := make([]htmx.Node, len(lenses))
-	for i, lens := range lenses {
-		lensesItems[i] = htmx.Option(
-			htmx.Attribute("value", lens.ID.String()),
-			htmx.Text(lens.Name),
-		)
-	}
+	lensesItems := make([]htmx.Node, 0)
+	// for i, lens := range lenses {
+	// 	lensesItems[i] = htmx.Option(
+	// 		htmx.Attribute("value", lens.ID.String()),
+	// 		htmx.Text(lens.Name),
+	// 	)
+	// }
 
 	return hx.RenderComp(
 		components.Page(
