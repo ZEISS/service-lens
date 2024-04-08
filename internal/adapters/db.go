@@ -23,6 +23,7 @@ func (d *DB) RunMigration() error {
 		&models.ProfileQuestionAnswer{},
 		&models.ProfileQuestion{},
 		&models.ProfileQuestions{},
+		&models.Environment{},
 		&models.Profile{},
 		&models.Lens{},
 		&models.Pillar{},
@@ -415,4 +416,43 @@ func (d *DB) TotalCountProfiles(ctx context.Context, teamSlug string) (int, erro
 	}
 
 	return int(count), nil
+}
+
+// NewEnvironment ...
+func (d *DB) NewEnvironment(ctx context.Context, environment *models.Environment) error {
+	return d.conn.WithContext(ctx).Create(environment).Error
+}
+
+// ListEnvironment ...
+func (d *DB) ListEnvironment(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Environment]) (*models.Pagination[*models.Environment], error) {
+	environments := []*models.Environment{}
+
+	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&environments, &pagination, d.conn)).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Find(&environments).Error
+	if err != nil {
+		return nil, err
+	}
+	pagination.Rows = environments
+
+	return &pagination, nil
+}
+
+// GetEnvironment ...
+func (d *DB) GetEnvironment(ctx context.Context, id uuid.UUID) (*models.Environment, error) {
+	environment := &models.Environment{ID: id}
+	err := d.conn.WithContext(ctx).Find(environment).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return environment, err
+}
+
+// UpdateEnvironment ...
+func (d *DB) UpdateEnvironment(ctx context.Context, environment *models.Environment) error {
+	return d.conn.WithContext(ctx).Save(environment).Error
+}
+
+// DeleteEnvironment ...
+func (d *DB) DeleteEnvironment(ctx context.Context, id uuid.UUID) error {
+	return d.conn.WithContext(ctx).Delete(&models.Environment{ID: id}).Error
 }

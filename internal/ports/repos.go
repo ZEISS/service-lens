@@ -7,4 +7,5 @@ type Repository interface {
 	Teams
 	Users
 	Workloads
+	Environments
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
+	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
 	"github.com/zeiss/service-lens/internal/controllers/login"
 	"github.com/zeiss/service-lens/internal/controllers/me"
@@ -125,4 +126,24 @@ func NewWorkloadPillarController(db ports.Repository) *workloads.WorkloadPillarC
 // NewWorkloadLensQuestionUpdateController ...
 func NewWorkloadLensQuestionUpdateController(db ports.Repository) *workloads.WorkloadLensQuestionUpdateController {
 	return workloads.NewWorkloadLensQuestionUpdateController(db)
+}
+
+// NewEnvironmentNewController ...
+func NewEnvironmentNewController(db ports.Repository) *environments.EnvironmentNewController {
+	return environments.NewEnvironmentNewController(db)
+}
+
+// NewEnvironmentIndexController ...
+func NewEnvironmentIndexController(db ports.Repository) *environments.EnvironmentIndexController {
+	return environments.NewEnvironmentIndexController(db)
+}
+
+// NewEnvironmentListController ...
+func NewEnvironmentListController(db ports.Repository) *environments.EnvironmentListController {
+	return environments.NewEnvironmentListController(db)
+}
+
+// NewEnvironmentEditController ...
+func NewEnvironmentEditController(db ports.Repository) *environments.EnvironmentEditController {
+	return environments.NewEnvironmentEditController(db)
 }

@@ -10,18 +10,22 @@ import (
 
 // Workload ...
 type Workload struct {
-	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	ProfileID   uuid.UUID `json:"profile_id"`
-	Profile     Profile   `json:"profile"`
-	Lenses      []*Lens   `json:"lenses" gorm:"many2many:workload_lenses;"`
+	ID            uuid.UUID   `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Name          string      `json:"name"`
+	Description   string      `json:"description"`
+	ProfileID     uuid.UUID   `json:"profile_id"`
+	Profile       Profile     `json:"profile"`
+	Lenses        []*Lens     `json:"lenses" gorm:"many2many:workload_lenses;"`
+	EnvironmentID uuid.UUID   `json:"environment_id"`
+	Environment   Environment `json:"environment"`
 
 	Answers []*WorkloadLensQuestionAnswer `json:"answers" gorm:"foreignKey:WorkloadID;"`
 
 	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:workload;"`
 	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
 	TeamID uuid.UUID  `json:"team_id"`
+
+	ReviewOwner string `json:"review_owner" validate:"required,min=1,max=255"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

@@ -11,9 +11,10 @@ type TaggableType string
 
 // TaggableType ...
 const (
-	LensType    TaggableType = "Lens"
-	ProfileTyp  TaggableType = "Profile"
-	WorkloadTyp TaggableType = "Workload"
+	LensType       TaggableType = "Lens"
+	ProfileTyp     TaggableType = "Profile"
+	WorkloadTyp    TaggableType = "Workload"
+	EnvironmentTyp TaggableType = "Environment"
 )
 
 // Tag ...

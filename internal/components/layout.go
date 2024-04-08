@@ -256,6 +256,41 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 					),
 				),
 			),
+			htmx.If(
+				team.Slug != "",
+				menus.MenuItem(
+					menus.MenuItemProps{},
+					menus.MenuCollapsible(
+						menus.MenuCollapsibleProps{
+							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/%s/environments", team.Slug)),
+						},
+						menus.MenuCollapsibleSummary(
+							menus.MenuCollapsibleSummaryProps{},
+							htmx.Text("Environments"),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href:   fmt.Sprintf("/%s/environments/new", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/%s/environments/new", team.Slug),
+								},
+								htmx.Text("New Environment"),
+							),
+						),
+						menus.MenuItem(
+							menus.MenuItemProps{},
+							menus.MenuLink(
+								menus.MenuLinkProps{
+									Href:   fmt.Sprintf("/%s/environments/list", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/%s/environments/list", team.Slug),
+								},
+								htmx.Text("List Environment"),
+							),
+						),
+					),
+				),
+			),
 			menus.MenuItem(
 				menus.MenuItemProps{},
 				menus.MenuCollapsible(

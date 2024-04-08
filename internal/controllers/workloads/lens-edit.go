@@ -181,8 +181,8 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 	choices := make([]htmx.Node, len(p.Question.Choices))
 
 	var noneOfThese bool
-	for _, choice := range p.Question.Choices {
-		if choice.Ref == "none_of_these" {
+	for _, choice := range p.Answer.Choices {
+		if choice.Ref == models.NoneOfTheseQuestionRef {
 			noneOfThese = true
 		}
 	}
@@ -198,6 +198,7 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 		checkbox := CheckboxComponent(
 			CheckboxProps{
 				Title:    choice.Title,
+				Ref:      choice.Ref,
 				Value:    strconv.Itoa(choice.ID),
 				Checked:  checked,
 				Disabled: (noneOfThese && choice.Ref != "none_of_these") || p.Answer.DoesNotApply,
@@ -209,7 +210,6 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 
 	return htmx.Form(
 		htmx.HxPost(""),
-		htmx.HxDisabledElt("input[type='text'], input[type='checkbox'], textarea, button"),
 		htmx.HxSwap("none"),
 		cards.CardBordered(
 			cards.CardProps{
@@ -249,15 +249,29 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 			},
 			cards.Body(
 				cards.BodyProps{},
-				forms.TextareaBordered(
-					forms.TextareaProps{
-						ClassNames: htmx.ClassNames{
-							"w-full": true,
+				forms.FormControl(
+					forms.FormControlProps{},
+					forms.TextareaBordered(
+						forms.TextareaProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+							},
+							Placeholder: "Optional notes",
+							Name:        "notes",
 						},
-						Placeholder: "Optional notes",
-						Name:        "notes",
-					},
-					htmx.Text(p.Answer.Notes),
+						htmx.Text(p.Answer.Notes),
+					),
+					forms.FormControlLabel(
+						forms.FormControlLabelProps{},
+						forms.FormControlLabelText(
+							forms.FormControlLabelTextProps{
+								ClassNames: htmx.ClassNames{
+									"text-neutral-500": true,
+								},
+							},
+							htmx.Text("Optional notes. Can be from 3 to 2048 characters."),
+						),
+					),
 				),
 			),
 		),
@@ -266,6 +280,7 @@ func EditFormComponent(p EditFormProps) htmx.Node {
 				Type: "submit",
 			},
 			htmx.Text("Save"),
+			htmx.HxDisabledElt("this"),
 		),
 	)
 }
@@ -275,7 +290,7 @@ type CheckboxProps struct {
 	Title    string
 	Value    string
 	Checked  bool
-	Ref      string
+	Ref      models.QuestionRef
 	Disabled bool
 }
 
@@ -296,6 +311,8 @@ func CheckboxComponent(p CheckboxProps) htmx.Node {
 					Checked:  p.Checked,
 					Disabled: p.Disabled,
 				},
+				htmx.DataAttribute("ref", p.Ref.String()),
+				htmx.If(p.Ref == models.NoneOfTheseQuestionRef, htmx.HyperScript("on change if me.checked set disabled of <input[type=checkbox][name=choices]:not([data-ref=none_of_these])/> to true else set disabled of <input[type=checkbox][name=choices]:not([data-ref=none_of_these])/> to false")),
 			),
 		),
 	)

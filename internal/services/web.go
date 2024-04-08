@@ -86,6 +86,15 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		team := app.Group("/:team")
 		team.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
 
+		environments := team.Group("/environments")
+		environments.Get("/list", htmx.NewHxControllerHandler(controllers.NewEnvironmentListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Get("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Post("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Get("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		environments.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+
 		profiles := team.Group("/profiles")
 		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))
 		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))

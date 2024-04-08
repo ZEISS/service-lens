@@ -10,6 +10,19 @@ import (
 	"gorm.io/gorm"
 )
 
+// QuestionRef is a question reference.
+type QuestionRef string
+
+// String is a string representation of a question reference.
+func (q QuestionRef) String() string {
+	return string(q)
+}
+
+const (
+	// NoneOfTheseQuestionRef is a question reference for none of these.
+	NoneOfTheseQuestionRef QuestionRef = "none_of_these"
+)
+
 // Lens is a model for a lens.
 type Lens struct {
 	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
@@ -73,11 +86,11 @@ type Resource struct {
 
 // Choice is a model for a choice.
 type Choice struct {
-	ID          int    `json:"id" gorm:"primary_key"`
-	Ref         string `json:"ref"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	QuestionID  int    `json:"question_id"`
+	ID          int         `json:"id" gorm:"primary_key"`
+	Ref         QuestionRef `json:"ref"`
+	Title       string      `json:"title"`
+	Description string      `json:"description"`
+	QuestionID  int         `json:"question_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
