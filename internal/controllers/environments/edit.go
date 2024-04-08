@@ -201,7 +201,7 @@ func (p *EnvironmentEditController) Get() error {
 					buttons.OutlinePrimary(
 						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
-						htmx.Text("Upload Environment"),
+						htmx.Text("Update Environment"),
 					),
 				),
 			),

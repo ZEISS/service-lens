@@ -20,6 +20,9 @@ type DB struct {
 // RunMigration ...
 func (d *DB) RunMigration() error {
 	return d.conn.AutoMigrate(
+		&authz.Team{},
+		&authz.User{},
+		&authz.Role{},
 		&models.ProfileQuestionAnswer{},
 		&models.ProfileQuestion{},
 		&models.ProfileQuestions{},
@@ -224,7 +227,12 @@ func (d *DB) ListProfiles(ctx context.Context, teamSlug string, pagination model
 func (d *DB) ListWorkloads(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Workload]) (*models.Pagination[*models.Workload], error) {
 	workloads := []*models.Workload{}
 
-	err := d.conn.WithContext(ctx).Scopes(models.Paginate(&workloads, &pagination, d.conn)).Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).Find(&workloads).Error
+	err := d.conn.WithContext(ctx).
+		Scopes(models.Paginate(&workloads, &pagination, d.conn)).
+		Preload("Team").
+		Preload("Environment").
+		Where("team_id = (?)", d.conn.WithContext(ctx).Select("id").Where("slug = ?", teamSlug).Table("teams")).
+		Find(&workloads).Error
 	if err != nil {
 		return nil, err
 	}
@@ -239,7 +247,15 @@ func (d *DB) IndexWorkload(ctx context.Context, id uuid.UUID) (*models.Workload,
 		ID: id,
 	}
 
-	err := d.conn.WithContext(ctx).Preload("Lenses").Preload("Tags").Preload("Profile").Preload("Answers").Preload("Answers.Choices").Find(workload).Error
+	err := d.conn.WithContext(ctx).
+		Preload("Environment").
+		Preload("Lenses").
+		Preload("Tags").
+		Preload("Profile").
+		Preload("Team").
+		Preload("Answers").
+		Preload("Answers.Choices").
+		Find(workload).Error
 	if err != nil {
 		return nil, err
 	}

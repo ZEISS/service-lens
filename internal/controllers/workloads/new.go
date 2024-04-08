@@ -266,7 +266,7 @@ func (w *WorkloadNewController) Get() error {
 										dropdowns.DropdownMenuItemProps{},
 										htmx.Text("Profile One"),
 										htmx.DataAttribute("profile", "1"),
-										htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
+										// htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
 									),
 								),
 							),
@@ -300,6 +300,9 @@ func (w *WorkloadNewController) Get() error {
 							cards.Title(
 								cards.TitleProps{},
 								htmx.Text("Tags (Optional)"),
+								components.TagInput(
+									components.TagInputProps{},
+								),
 							),
 						),
 					),

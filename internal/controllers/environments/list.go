@@ -136,7 +136,7 @@ type EnvironmentListTablePaginationProps struct {
 func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginationProps, children ...htmx.Node) htmx.Node {
 	return tables.Pagination(
 		tables.PaginationProps{
-			URL:    fmt.Sprintf("/%s/Environments/list", props.Team.Slug),
+			URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
 			Limit:  props.Limit,
 			Offset: props.Offset,
 			Target: props.Target,
@@ -144,7 +144,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/Environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
@@ -153,7 +153,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		),
 		tables.Select(
 			tables.SelectProps{
-				URL:    fmt.Sprintf("/%s/Environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
@@ -163,7 +163,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		),
 		tables.Next(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/Environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,

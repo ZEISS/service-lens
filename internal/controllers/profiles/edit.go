@@ -201,7 +201,7 @@ func (p *ProfileEditController) Get() error {
 					buttons.OutlinePrimary(
 						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
-						htmx.Text("Upload Profile"),
+						htmx.Text("Update Profile"),
 					),
 				),
 			),

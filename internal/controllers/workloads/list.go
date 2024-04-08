@@ -213,6 +213,23 @@ func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.N
 					},
 				},
 				{
+					ID:          "environment",
+					AccessorKey: "environment",
+					Header: func(p tables.TableProps[*models.Workload]) htmx.Node {
+						return htmx.Th(htmx.Text("Environment"))
+					},
+					Cell: func(p tables.TableProps[*models.Workload], row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf("/%s/environments/%s", row.Team.Slug, row.ID.String()),
+								},
+								htmx.Text(row.Name),
+							),
+						)
+					},
+				},
+				{
 					Header: func(p tables.TableProps[*models.Workload]) htmx.Node {
 						return nil
 					},
