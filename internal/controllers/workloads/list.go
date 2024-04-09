@@ -222,9 +222,9 @@ func WorkloadListTableComponent(props WorkloadListTableProps, children ...htmx.N
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: fmt.Sprintf("/%s/environments/%s", row.Team.Slug, row.ID.String()),
+									Href: fmt.Sprintf("/%s/environments/%s", row.Team.Slug, row.Environment.ID.String()),
 								},
-								htmx.Text(row.Name),
+								htmx.Text(row.Environment.Name),
 							),
 						)
 					},

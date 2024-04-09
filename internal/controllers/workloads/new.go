@@ -7,7 +7,6 @@ import (
 	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -242,34 +241,37 @@ func (w *WorkloadNewController) Get() error {
 								cards.TitleProps{},
 								htmx.Text("Profile"),
 							),
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								htmx.Input(
-									htmx.Attribute("type", "hidden"),
-									htmx.ID("profile-input"),
-									htmx.Attribute("name", "profile"),
-									htmx.Value("good"),
-									htmx.HyperScript("on newprofile set @value to 'tag'"),
-								),
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{
-										ClassNames: htmx.ClassNames{
-											"m-1": true,
-										},
-									},
-									htmx.Role("button"),
-									htmx.Text("Select Profile"),
-								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{},
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
-										htmx.Text("Profile One"),
-										htmx.DataAttribute("profile", "1"),
-										// htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
-									),
-								),
+							components.MultiSelect(
+								components.MultiSelectProps{},
 							),
+							// dropdowns.Dropdown(
+							// 	dropdowns.DropdownProps{},
+							// 	htmx.Input(
+							// 		htmx.Attribute("type", "hidden"),
+							// 		htmx.ID("profile-input"),
+							// 		htmx.Attribute("name", "profile"),
+							// 		htmx.Value("good"),
+							// 		htmx.HyperScript("on newprofile set @value to 'tag'"),
+							// 	),
+							// 	dropdowns.DropdownButton(
+							// 		dropdowns.DropdownButtonProps{
+							// 			ClassNames: htmx.ClassNames{
+							// 				"m-1": true,
+							// 			},
+							// 		},
+							// 		htmx.Role("button"),
+							// 		htmx.Text("Select Profile"),
+							// 	),
+							// 	dropdowns.DropdownMenuItems(
+							// 		dropdowns.DropdownMenuItemsProps{},
+							// 		dropdowns.DropdownMenuItem(
+							// 			dropdowns.DropdownMenuItemProps{},
+							// 			htmx.Text("Profile One"),
+							// 			htmx.DataAttribute("profile", "1"),
+							// 			// htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
+							// 		),
+							// 	),
+
 							htmx.Select(
 								htmx.ClassNames{
 									"select":   true,

@@ -1,10 +1,8 @@
 version: '3'
 
 tasks:
-  watch:
-    watch: true
-    sources:
-      - '**/*.go'
+  generate:
     cmds:
-      - go build cmd/server/main.go
-      - ./main
+      - go generate ./...
+    generates:
+      - ./static/output.css

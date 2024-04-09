@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"net/http"
 	"os"
 
 	authz "github.com/zeiss/fiber-authz"
@@ -11,8 +12,10 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/resolvers"
 	"github.com/zeiss/service-lens/internal/utils"
+	"github.com/zeiss/service-lens/static"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
 	requestid "github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/katallaxie/pkg/server"
@@ -57,6 +60,10 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app := fiber.New()
 		app.Use(requestid.New())
 		app.Use(logger.New())
+
+		app.Use("/static", filesystem.New(filesystem.Config{
+			Root: http.FS(static.Assets),
+		}))
 
 		app.Use(goth.NewProtectMiddleware(gothConfig))
 		app.Use(authz.SetAuthzHandler(authz.NewNoopObjectResolver(), authz.NewNoopActionResolver(), authz.NewGothAuthzPrincipalResolver()))
