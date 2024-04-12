@@ -31,7 +31,7 @@ func NewTeamNewController(db ports.Repository) *TeamNewController {
 // TeamNewControllerQuery ...
 type TeamNewControllerQuery struct {
 	Name        string `json:"name" xml:"name" form:"name" validate:"required,min=3,max=100"`
-	Description string `json:"description" xml:"description" form:"description" validate:"required,min=3,max=1024"`
+	Description string `json:"description" xml:"description" form:"description" validate:"omitempty,min=3,max=1024"`
 	Slug        string `json:"slug" xml:"slug" form:"slug" validate:"required,min=3,max=100,lowercase"`
 }
 
@@ -46,6 +46,7 @@ func (p *TeamNewController) Post() error {
 
 	query := NewDefaultTeamNewControllerQuery()
 	if err := hx.Ctx().BodyParser(query); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -57,11 +58,13 @@ func (p *TeamNewController) Post() error {
 
 	validator := validator.New()
 	if err := validator.Struct(query); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	team, err := p.db.CreateTeam(hx.Ctx().Context(), team)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 

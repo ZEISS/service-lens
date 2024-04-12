@@ -1,3 +1,4 @@
+"use strict";
 (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
@@ -8507,4 +8508,18 @@
   // src/input.ts
   var import_htmx = __toESM(require_htmx_min());
   var import_hyperscript = __toESM(require_hyperscript_min());
+  customElements.define(
+    "chat-input",
+    class extends HTMLFormElement {
+      connectedCallback() {
+        if (!this.isConnected)
+          return;
+        this.dataset.hxGet = "/";
+        this.dataset.hxTarget = "#messages";
+        this.dataset.hxSwap = "afterbegin";
+        this.addEventListener("htmx:beforeSend", () => this.reset());
+      }
+    },
+    { extends: "form" }
+  );
 })();

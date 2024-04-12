@@ -1,6 +1,8 @@
 module github.com/zeiss/service-lens
 
-go 1.21.6
+go 1.22.1
+
+toolchain go1.22.2
 
 require (
 	github.com/go-playground/validator/v10 v10.18.0
@@ -14,8 +16,9 @@ require (
 	github.com/zeiss/fiber-authz v1.0.13
 	github.com/zeiss/fiber-goth v1.2.0
 	github.com/zeiss/fiber-htmx v1.1.41
-	gorm.io/driver/postgres v1.5.6
-	gorm.io/gorm v1.25.7
+	github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429
+	gorm.io/driver/postgres v1.5.7
+	gorm.io/gorm v1.25.9
 	mvdan.cc/gofumpt v0.6.0
 )
 

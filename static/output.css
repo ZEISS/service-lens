@@ -12202,6 +12202,14 @@ html:has(.drawer-open.drawer-open) {
   forced-color-adjust: none;
 }
 
+.\[_\:\\w-\.\\d\] {
+  _: \w-.\d;
+}
+
+.\[_\:\\w\] {
+  _: \w;
+}
+
 .\[a-zA-Z0-9\:\\\\-\\\\\._\$\] {
   a-z-a--z0-9: \\-\\. $;
 }

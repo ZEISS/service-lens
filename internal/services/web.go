@@ -57,6 +57,10 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			},
 		}
 
+		authzConfig := authz.Config{
+			Checker: a.adapter.(authz.AuthzChecker),
+		}
+
 		app := fiber.New()
 		app.Use(requestid.New())
 		app.Use(logger.New())
@@ -90,8 +94,17 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			},
 		}))
 
+		teams := app.Group("/teams")
+		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+
 		team := app.Group("/:team")
-		team.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config))
+		team.Get(
+			"/",
+			authz.NewTBACHandler(
+				htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config),
+				authz.Read, "team",
+				authzConfig),
+		)
 
 		environments := team.Group("/environments")
 		environments.Get("/list", htmx.NewHxControllerHandler(controllers.NewEnvironmentListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))

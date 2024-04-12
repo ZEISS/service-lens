@@ -6,6 +6,11 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
+// HelloWorld ...
+func HelloWorld(children ...htmx.Node) htmx.Node {
+	return htmx.Element("hello-world", children...)
+}
+
 // DashboardIndexController ...
 type DashboardIndexController struct {
 	db ports.Repository
@@ -36,6 +41,17 @@ func (d *DashboardIndexController) Get() error {
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
+					htmx.Form(
+						// htmx.Attribute("data-target", "hello-world.form"),
+						htmx.Attribute("is", "chat-input"),
+						htmx.Input(
+							htmx.Attribute("type", "text"),
+							htmx.Attribute("name", "user-message"),
+						),
+					),
+				),
+				htmx.Div(
+					htmx.ID("messages"),
 				),
 			),
 		),

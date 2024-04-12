@@ -56,6 +56,18 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 					),
 				)
 			}, *props.User.Teams...),
+			dropdowns.DropdownMenuItem(
+				dropdowns.DropdownMenuItemProps{},
+				links.Link(
+					links.LinkProps{
+						ClassNames: htmx.ClassNames{
+							"link": false,
+						},
+						Href: "/teams/new",
+					},
+					htmx.Text("Create team"),
+				),
+			),
 		),
 	)
 }
