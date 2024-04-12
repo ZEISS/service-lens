@@ -5,6 +5,7 @@ import (
 
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -291,8 +292,34 @@ func (d *DB) DestroyWorkload(ctx context.Context, id uuid.UUID) error {
 }
 
 // CreateTeam ...
-func (d *DB) CreateTeam(ctx context.Context, team *authz.Team) (*authz.Team, error) {
-	err := d.conn.WithContext(ctx).Save(team).Error
+func (d *DB) CreateTeam(ctx context.Context, team *authz.Team, user *authz.User) (*authz.Team, error) {
+	team.Users = &[]authz.User{*user}
+
+	err := d.conn.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		err := tx.Create(team).Error
+		if err != nil {
+			return err
+		}
+
+		var role authz.Role
+		role.Name = utils.RoleOwner.String()
+		err = tx.First(&role).Error
+		if err != nil {
+			return err
+		}
+
+		var userRole authz.UserRole
+		userRole.UserID = user.ID
+		userRole.TeamID = team.ID
+		userRole.RoleID = role.ID
+
+		err = tx.Create(&userRole).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}

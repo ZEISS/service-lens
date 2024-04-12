@@ -96,6 +96,18 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		teams := app.Group("/teams")
 		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		teams.Get(
+			"/:team",
+			authz.NewTBACHandler(
+				htmx.NewHxControllerHandler(
+					controllers.NewTeamIndexController(a.db),
+					utils.Resolvers(resolvers.User(a.db)),
+				),
+				utils.PermissionView, "team",
+				authzConfig,
+			),
+		)
 
 		team := app.Group("/:team")
 		team.Get(

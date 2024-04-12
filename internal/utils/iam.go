@@ -22,6 +22,8 @@ const (
 	RoleAdmin = authz.AuthzAction("admin")
 	// RoleSuperAdmin grants all permissions
 	RoleSuperAdmin = authz.AuthzAction("superadmin")
+	// RoleOwner grants all permissions
+	RoleOwner = authz.AuthzAction("owner")
 	// RoleCreate grants the ability to create
 	RoleCreate = authz.AuthzAction("create")
 	// RoleDelete grants the ability to delete

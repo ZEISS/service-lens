@@ -6,6 +6,7 @@ package authz
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -149,6 +150,8 @@ func NewTBACHandler(handler fiber.Handler, action AuthzAction, param string, con
 		}
 
 		team := AuthzObject(c.Params(param, ""))
+
+		fmt.Println(team)
 
 		principal, _, _, err := AuthzFromContext(c)
 		if err != nil {

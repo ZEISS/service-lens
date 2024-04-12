@@ -2,6 +2,7 @@ package authz
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -145,6 +146,8 @@ func NewTBAC(db *gorm.DB) *tbac {
 // Allowed is a method that returns true if the principal is allowed to perform the action on the user.
 func (t *tbac) Allowed(ctx context.Context, principal AuthzPrincipal, object AuthzObject, action AuthzAction) (bool, error) {
 	var allowed int64
+
+	fmt.Println(action, object)
 
 	teamSlug := t.db.WithContext(ctx).Model(&Team{}).Select("id").Where("slug = ?", object)
 

@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/resolvers"
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
@@ -46,25 +47,25 @@ func (p *TeamNewController) Post() error {
 
 	query := NewDefaultTeamNewControllerQuery()
 	if err := hx.Ctx().BodyParser(query); err != nil {
-		fmt.Println(err)
 		return err
 	}
+
+	user := hx.Values(resolvers.ValuesKeyUser).(*authz.User)
 
 	team := &authz.Team{
 		Name:        query.Name,
 		Description: utils.StrPtr(query.Description),
 		Slug:        query.Slug,
+		Users:       &[]authz.User{*user},
 	}
 
 	validator := validator.New()
 	if err := validator.Struct(query); err != nil {
-		fmt.Println(err)
 		return err
 	}
 
-	team, err := p.db.CreateTeam(hx.Ctx().Context(), team)
+	team, err := p.db.CreateTeam(hx.Ctx().Context(), team, user)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
