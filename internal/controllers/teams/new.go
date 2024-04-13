@@ -69,7 +69,7 @@ func (p *TeamNewController) Post() error {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/site/teams/%s", team.ID))
+	hx.Redirect(fmt.Sprintf("/teams/%s", team.Slug))
 
 	return nil
 }

@@ -1,6 +1,8 @@
 package teams
 
 import (
+	"fmt"
+
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -53,6 +55,13 @@ func (t *TeamDashboardController) Prepare() error {
 	t.totalCountProfiles = totalCountProfiles
 
 	return nil
+}
+
+// Error ...
+func (t *TeamDashboardController) Error(err error) error {
+	fmt.Println(err)
+
+	return err
 }
 
 // Get ...

@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	authz "github.com/zeiss/fiber-authz"
-	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -19,10 +17,13 @@ import (
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
 	requestid "github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/katallaxie/pkg/server"
+	authz "github.com/zeiss/fiber-authz"
 	goth "github.com/zeiss/fiber-goth"
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/github"
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/filters"
 )
 
 var _ server.Listener = (*WebSrv)(nil)
@@ -50,16 +51,16 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			CookieHTTPOnly: true,
 		}
 
-		config := htmx.Config{
-			Resolvers: []htmx.ResolveFunc{
-				resolvers.Team(a.db),
-				resolvers.User(a.db),
-			},
-		}
+		// config := htmx.Config{
+		// 	Resolvers: []htmx.ResolveFunc{
+		// 		resolvers.Team(a.db),
+		// 		resolvers.User(a.db),
+		// 	},
+		// }
 
-		authzConfig := authz.Config{
-			Checker: a.adapter.(authz.AuthzChecker),
-		}
+		// authzConfig := authz.Config{
+		// 	Checker: a.adapter.(authz.AuthzChecker),
+		// }
 
 		app := fiber.New()
 		app.Use(requestid.New())
@@ -97,64 +98,85 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams := app.Group("/teams")
 		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
 		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		teams.Get(
-			"/:team",
-			authz.NewTBACHandler(
-				htmx.NewHxControllerHandler(
-					controllers.NewTeamIndexController(a.db),
-					utils.Resolvers(resolvers.User(a.db)),
-				),
-				utils.PermissionView, "team",
-				authzConfig,
+
+		team := teams.Group("/:team")
+		team.Get(
+			"/index",
+			htmx.NewHxControllerHandler(
+				controllers.NewTeamDashboardController(a.db),
+				htmx.Config{
+					Resolvers: []htmx.ResolveFunc{
+						resolvers.User(a.db),
+						resolvers.Team(a.db),
+					},
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
 			),
 		)
 
-		team := app.Group("/:team")
-		team.Get(
-			"/",
-			authz.NewTBACHandler(
-				htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config),
-				authz.Read, "team",
-				authzConfig),
-		)
+		// teams.Get(
+		// 	"/:team/index",
+		// 	authz.NewTBACHandler(
+		// 		htmx.NewHxControllerHandler(
+		// 			controllers.NewTeamDashboardController(a.db),
+		// 			utils.Resolvers(
+		// 				resolvers.User(a.db),
+		// 				resolvers.Team(a.db),
+		// 			),
+		// 		),
+		// 		utils.PermissionView, "team",
+		// 		authzConfig,
+		// 	),
+		// )
 
-		environments := team.Group("/environments")
-		environments.Get("/list", htmx.NewHxControllerHandler(controllers.NewEnvironmentListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Get("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Post("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Get("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		environments.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// team := app.Group("/:team")
+		// team.Get(
+		// 	"/",
+		// 	authz.NewTBACHandler(
+		// 		htmx.NewHxControllerHandler(controllers.NewTeamDashboardController(a.db), config),
+		// 		authz.Read, "team",
+		// 		authzConfig),
+		// )
 
-		profiles := team.Group("/profiles")
-		profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))
-		profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
-		profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
-		profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
-		profiles.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
-		profiles.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
-		profiles.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
+		// environments := team.Group("/environments")
+		// environments.Get("/list", htmx.NewHxControllerHandler(controllers.NewEnvironmentListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Get("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Post("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Get("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// environments.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
 
-		lenses := team.Group("/lenses")
-		lenses.Get("/list", htmx.NewHxControllerHandler(controllers.NewLensListController(a.db), config))
-		lenses.Get("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
-		lenses.Post("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
-		lenses.Get("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
-		lenses.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
-		lenses.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
-		lenses.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
+		// profiles := team.Group("/profiles")
+		// profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))
+		// profiles.Get("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
+		// profiles.Post("/new", htmx.NewHxControllerHandler(controllers.NewProfileNewController(a.db), config))
+		// profiles.Get("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
+		// profiles.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewProfileIndexController(a.db), config))
+		// profiles.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
+		// profiles.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewProfileEditController(a.db), config))
 
-		workloads := team.Group("/workloads")
-		workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
-		workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
-		workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
-		workloads.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
-		workloads.Get("/:id/lenses/:lens/edit", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
-		workloads.Get("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
-		workloads.Post("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensQuestionUpdateController(a.db), config))
-		workloads.Get("/:id/lenses/:lens/pillars/:pillar", htmx.NewHxControllerHandler(controllers.NewWorkloadPillarController(a.db), config))
+		// lenses := team.Group("/lenses")
+		// lenses.Get("/list", htmx.NewHxControllerHandler(controllers.NewLensListController(a.db), config))
+		// lenses.Get("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
+		// lenses.Post("/new", htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db), config))
+		// lenses.Get("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
+		// lenses.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
+		// lenses.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
+		// lenses.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
+
+		// workloads := team.Group("/workloads")
+		// workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
+		// workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
+		// workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
+		// workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
+		// workloads.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
+		// workloads.Get("/:id/lenses/:lens/edit", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
+		// workloads.Get("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
+		// workloads.Post("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensQuestionUpdateController(a.db), config))
+		// workloads.Get("/:id/lenses/:lens/pillars/:pillar", htmx.NewHxControllerHandler(controllers.NewWorkloadPillarController(a.db), config))
 
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")
