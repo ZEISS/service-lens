@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/zeiss/service-lens/internal/resolvers"
-
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LayoutProps is the properties for the Layout component.
@@ -91,7 +90,7 @@ func Layout(ctx htmx.Ctx, p LayoutProps, children ...htmx.Node) htmx.Node {
 					drawers.DrawerSideMenuProps{},
 					AccountSwitcher(
 						AccountSwitcherProps{
-							User: ctx.Values(resolvers.ValuesKeyUser).(*authz.User),
+							User: ctx.Values(utils.ValuesKeyUser).(*authz.User),
 						},
 					),
 					MainMenu(
@@ -125,7 +124,7 @@ type MainMenuProps struct {
 
 // MainMenu ...
 func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
-	team, ok := ctx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	team, ok := ctx.Values(utils.ValuesKeyTeam).(*authz.Team)
 	if !ok {
 		team = &authz.Team{}
 	}

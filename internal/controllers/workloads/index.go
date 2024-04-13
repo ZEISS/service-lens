@@ -6,6 +6,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -28,6 +29,7 @@ func NewDefaultWorkloadIndexControllerParams() *WorkloadIndexControllerParams {
 type WorkloadIndexController struct {
 	db       ports.Repository
 	workload *models.Workload
+	ctx      htmx.Ctx
 	params   *WorkloadIndexControllerParams
 
 	htmx.UnimplementedController
@@ -43,6 +45,12 @@ func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
 // Prepare ...
 func (w *WorkloadIndexController) Prepare() error {
 	hx := w.Hx()
+
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	params := NewDefaultWorkloadIndexControllerParams()
 	if err := hx.Ctx().ParamsParser(params); err != nil {
@@ -80,10 +88,10 @@ func (w *WorkloadIndexController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			hx,
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{

@@ -11,7 +11,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -32,8 +32,8 @@ func NewWorkloadNewControllerQuery() *WorkloadNewControllerQuery {
 
 // WorkloadNewController ...
 type WorkloadNewController struct {
-	db   ports.Repository
-	team *authz.Team
+	db  ports.Repository
+	ctx htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -47,8 +47,11 @@ func NewWorkloadsNewController(db ports.Repository) *WorkloadNewController {
 
 // Prepare ...
 func (w *WorkloadNewController) Prepare() error {
-	team := w.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
-	w.team = team
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	return nil
 }
@@ -66,12 +69,14 @@ func (w *WorkloadNewController) Post() error {
 		return err
 	}
 
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+
 	workload := &models.Workload{
 		Description: query.Description,
 		Lenses:      []*models.Lens{{ID: query.Lens}},
 		Name:        query.Name,
 		ProfileID:   query.Profile,
-		Team:        *w.team,
+		Team:        *team,
 	}
 
 	err = w.db.CreateWorkload(w.Hx().Ctx().Context(), workload)
@@ -79,7 +84,7 @@ func (w *WorkloadNewController) Post() error {
 		return err
 	}
 
-	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", w.team.Slug, workload.ID))
+	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", team.Slug, workload.ID))
 
 	return nil
 }
@@ -116,10 +121,10 @@ func (w *WorkloadNewController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			hx,
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.ctx,
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

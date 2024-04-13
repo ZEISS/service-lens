@@ -5,7 +5,7 @@ import (
 
 	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -15,7 +15,7 @@ type UserNavProps struct{}
 
 // UserNav ...
 func UserNav(ctx htmx.Ctx, p UserNavProps) htmx.Node {
-	user, ok := ctx.Values(resolvers.ValuesKeyUser).(*authz.User)
+	user, ok := ctx.Values(utils.ValuesKeyUser).(*authz.User)
 	if !ok {
 		return htmx.Text("User not found")
 	}

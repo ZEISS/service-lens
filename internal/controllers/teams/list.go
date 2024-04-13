@@ -13,6 +13,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TeamListControllerParams ...
@@ -45,6 +46,7 @@ type TeamListController struct {
 	params *TeamListControllerParams
 	query  *TeamListControllerQuery
 	teams  *models.Pagination[*authz.Team]
+	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -59,6 +61,12 @@ func NewTeamListController(db ports.Repository) *TeamListController {
 // Prepare ...
 func (t *TeamListController) Prepare() error {
 	hx := t.Hx()
+
+	ctx, err := htmx.NewDefaultContext(t.Hx().Ctx(), utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
+	if err != nil {
+		return err
+	}
+	t.ctx = ctx
 
 	params := NewDefaultTeamListControllerParams()
 	if err := hx.Context().ParamsParser(params); err != nil {
@@ -107,10 +115,10 @@ func (w *TeamListController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			hx,
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

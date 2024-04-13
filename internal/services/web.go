@@ -8,7 +8,6 @@ import (
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/controllers"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
 	"github.com/zeiss/service-lens/internal/utils"
 	"github.com/zeiss/service-lens/static"
 
@@ -73,31 +72,19 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(goth.NewProtectMiddleware(gothConfig))
 		app.Use(authz.SetAuthzHandler(authz.NewNoopObjectResolver(), authz.NewNoopActionResolver(), authz.NewGothAuthzPrincipalResolver()))
 
-		app.Get("/", htmx.NewHxControllerHandler(controllers.NewDashboardController(a.db), htmx.Config{
-			Resolvers: []htmx.ResolveFunc{
-				resolvers.User(a.db),
-			},
-		}))
+		app.Get("/", htmx.NewHxControllerHandler(controllers.NewDashboardController(a.db)))
 		app.Get("/login", htmx.NewHxControllerHandler(controllers.NewLoginIndexController(a.db)))
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
-		app.Get("/settings", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db), htmx.Config{
-			Resolvers: []htmx.ResolveFunc{
-				resolvers.User(a.db),
-			},
-		}))
+		app.Get("/settings", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db)))
 
 		me := app.Group("/me")
-		me.Get("/", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db), htmx.Config{
-			Resolvers: []htmx.ResolveFunc{
-				resolvers.User(a.db),
-			},
-		}))
+		me.Get("/", htmx.NewHxControllerHandler(controllers.NewMeIndexController(a.db)))
 
 		teams := app.Group("/teams")
-		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
+		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
 
 		team := teams.Group("/:team")
 		team.Get(
@@ -105,10 +92,6 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			htmx.NewHxControllerHandler(
 				controllers.NewTeamDashboardController(a.db),
 				htmx.Config{
-					Resolvers: []htmx.ResolveFunc{
-						resolvers.User(a.db),
-						resolvers.Team(a.db),
-					},
 					Filters: []htmx.FilterFunc{
 						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
 					},
@@ -180,14 +163,14 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")
-		siteSettings.Get("/", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteSettings.Get("/", htmx.NewHxControllerHandler(controllers.NewSettingsIndexController(a.db)))
 
 		siteTeams := site.Group("/teams")
-		siteTeams.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamListController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		siteTeams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		siteTeams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		siteTeams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
-		siteTeams.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db), utils.Resolvers(resolvers.User(a.db))))
+		siteTeams.Get("/", htmx.NewHxControllerHandler(controllers.NewTeamListController(a.db)))
+		siteTeams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
+		siteTeams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
+		siteTeams.Get("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
+		siteTeams.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewTeamIndexController(a.db)))
 
 		err := app.Listen(a.cfg.Flags.Addr)
 		if err != nil {

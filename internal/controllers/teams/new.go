@@ -11,13 +11,13 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TeamNewController ...
 type TeamNewController struct {
-	db ports.Repository
+	db  ports.Repository
+	ctx htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -41,6 +41,17 @@ func NewDefaultTeamNewControllerQuery() *TeamNewControllerQuery {
 	return &TeamNewControllerQuery{}
 }
 
+// Prepare ...
+func (p *TeamNewController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+	p.ctx = ctx
+
+	return nil
+}
+
 // Post ...
 func (p *TeamNewController) Post() error {
 	hx := p.Hx()
@@ -50,7 +61,7 @@ func (p *TeamNewController) Post() error {
 		return err
 	}
 
-	user := hx.Values(resolvers.ValuesKeyUser).(*authz.User)
+	user := htmx.Locals[*authz.User](p.ctx, utils.ValuesKeyUser)
 
 	team := &authz.Team{
 		Name:        query.Name,
@@ -78,10 +89,10 @@ func (p *TeamNewController) Post() error {
 func (p *TeamNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx(),
+			p.ctx,
 			components.PageProps{},
 			components.Layout(
-				p.Hx(),
+				p.ctx,
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // ProfileIndexControllerParams ...
@@ -29,6 +30,7 @@ type ProfileIndexController struct {
 	db      ports.Repository
 	profile *models.Profile
 	params  *ProfileIndexControllerParams
+	ctx     htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -42,6 +44,12 @@ func NewProfileIndexController(db ports.Repository) *ProfileIndexController {
 
 // Prepare ...
 func (p *ProfileIndexController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+	p.ctx = ctx
+
 	p.params = NewDefaultProfileIndexControllerParams()
 	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
 		return err
@@ -60,10 +68,10 @@ func (p *ProfileIndexController) Prepare() error {
 func (p *ProfileIndexController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx(),
+			p.ctx,
 			components.PageProps{},
 			components.Layout(
-				p.Hx(),
+				p.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

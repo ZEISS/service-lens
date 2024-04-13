@@ -7,7 +7,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -47,7 +47,7 @@ func NewDefaultLensListControllerQuery() *LensListControllerQuery {
 type LensListController struct {
 	db     ports.Repository
 	lenses *models.Pagination[*models.Lens]
-	team   *authz.Team
+	ctx    htmx.Ctx
 
 	params *LensListControllerParams
 	query  *LensListControllerQuery
@@ -66,7 +66,13 @@ func NewLensListController(db ports.Repository) *LensListController {
 func (w *LensListController) Prepare() error {
 	hx := w.Hx()
 
-	w.team = hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
+
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
 
 	w.params = NewDefaultLensListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -83,7 +89,7 @@ func (w *LensListController) Prepare() error {
 		return err
 	}
 
-	lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, pagination)
+	lenses, err := w.db.ListLenses(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -96,10 +102,10 @@ func (w *LensListController) Prepare() error {
 func (w *LensListController) Get() error {
 	return w.Hx().RenderComp(
 		components.Page(
-			w.Hx(),
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				w.Hx(),
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -110,7 +116,7 @@ func (w *LensListController) Get() error {
 						LensListTableComponent(
 							LensListTableProps{
 								Lenses: w.lenses.Rows,
-								Team:   w.team,
+								Team:   htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam),
 								Offset: w.lenses.GetOffset(),
 								Limit:  w.lenses.GetLimit(),
 								Total:  int(w.lenses.TotalRows),

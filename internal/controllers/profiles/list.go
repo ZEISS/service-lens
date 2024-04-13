@@ -6,7 +6,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -46,7 +46,7 @@ func NewDefaultProfileListControllerQuery() *ProfileListControllerQuery {
 type ProfileListController struct {
 	db       ports.Repository
 	profiles *models.Pagination[*models.Profile]
-	team     *authz.Team
+	ctx      htmx.Ctx
 
 	params *ProfileListControllerParams
 	query  *ProfileListControllerQuery
@@ -65,7 +65,11 @@ func NewProfileListController(db ports.Repository) *ProfileListController {
 func (w *ProfileListController) Prepare() error {
 	hx := w.Hx()
 
-	w.team = hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	w.params = NewDefaultProfileListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -82,7 +86,9 @@ func (w *ProfileListController) Prepare() error {
 		return err
 	}
 
-	profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, pagination)
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+
+	profiles, err := w.db.ListProfiles(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -93,13 +99,14 @@ func (w *ProfileListController) Prepare() error {
 
 // Get ...
 func (w *ProfileListController) Get() error {
-	fmt.Println(w.profiles.TotalRows)
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+
 	return w.Hx().RenderComp(
 		components.Page(
-			w.Hx(),
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				w.Hx(),
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -110,7 +117,7 @@ func (w *ProfileListController) Get() error {
 						ProfileListTableComponent(
 							ProfileListTableProps{
 								Profiles: w.profiles.Rows,
-								Team:     w.team,
+								Team:     team,
 								Offset:   w.query.Offset,
 								Limit:    w.query.Limit,
 								Total:    int(w.profiles.TotalRows),

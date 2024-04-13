@@ -14,7 +14,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -36,6 +36,7 @@ type LensEditController struct {
 	team   *authz.Team
 	params *LensEditControllerParams
 	lens   *models.Lens
+	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -49,8 +50,11 @@ func NewLensEditController(db ports.Repository) *LensEditController {
 
 // Prepare ...
 func (l *LensEditController) Prepare() error {
-	team := l.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
-	l.team = team
+	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
+	if err != nil {
+		return err
+	}
+	l.ctx = ctx
 
 	l.params = NewDefaultLensEditControllerParams()
 	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
@@ -106,11 +110,11 @@ func (l *LensEditController) Post() error {
 func (l *LensEditController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx(),
+			l.ctx,
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.Hx(),
+				l.ctx,
 				components.LayoutProps{},
 				cards.CardBordered(
 					cards.CardProps{},

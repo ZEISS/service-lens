@@ -4,6 +4,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // HelloWorld ...
@@ -13,9 +14,10 @@ func HelloWorld(children ...htmx.Node) htmx.Node {
 
 // DashboardIndexController ...
 type DashboardIndexController struct {
-	db ports.Repository
+	db  ports.Repository
+	ctx htmx.Ctx
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewDashboardIndexController ...
@@ -27,6 +29,12 @@ func NewDashboardController(db ports.Repository) *DashboardIndexController {
 
 // Prepare ...
 func (d *DashboardIndexController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(d.Hx().Ctx(), utils.Team(d.Hx().Ctx(), d.db), utils.User(d.Hx().Ctx(), d.db))
+	if err != nil {
+		return err
+	}
+	d.ctx = ctx
+
 	return nil
 }
 
@@ -34,10 +42,10 @@ func (d *DashboardIndexController) Prepare() error {
 func (d *DashboardIndexController) Get() error {
 	return d.Hx().RenderComp(
 		components.Page(
-			d.Hx(),
+			d.ctx,
 			components.PageProps{},
 			components.Layout(
-				d.Hx(),
+				d.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

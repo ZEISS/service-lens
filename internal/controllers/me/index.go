@@ -12,14 +12,28 @@ import (
 
 // MeIndexController ...
 type MeIndexController struct {
-	db ports.Repository
+	db  ports.Repository
+	ctx htmx.Ctx
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewMeIndexController ...
 func NewMeIndexController(db ports.Repository) *MeIndexController {
-	return &MeIndexController{db, htmx.UnimplementedController{}}
+	return &MeIndexController{
+		db: db,
+	}
+}
+
+// Prepare ...
+func (m *MeIndexController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(m.Hx().Ctx())
+	if err != nil {
+		return err
+	}
+	m.ctx = ctx
+
+	return nil
 }
 
 // Get ...
@@ -36,10 +50,10 @@ func (m *MeIndexController) Get() error {
 
 	return m.Hx().RenderComp(
 		components.Page(
-			m.Hx(),
+			m.ctx,
 			components.PageProps{},
 			components.Layout(
-				m.Hx(),
+				m.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

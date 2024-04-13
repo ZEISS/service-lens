@@ -15,7 +15,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -35,6 +35,7 @@ type WorkloadLensEditController struct {
 	lens     *models.Lens
 	question models.Question
 	answers  *models.WorkloadLensQuestionAnswer
+	ctx      htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -50,8 +51,11 @@ func NewWorkloadLensEditController(db ports.Repository) *WorkloadLensEditControl
 func (w *WorkloadLensEditController) Prepare() error {
 	hx := w.Hx()
 
-	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
-	w.team = team
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	params := &WorkloadLensEditControllerGetParams{}
 	if err := hx.Context().ParamsParser(params); err != nil {
@@ -87,10 +91,10 @@ func (w *WorkloadLensEditController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			hx,
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				hx,
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{

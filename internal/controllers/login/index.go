@@ -13,21 +13,35 @@ import (
 
 // LoginIndexController ...
 type LoginIndexController struct {
-	db ports.Repository
+	db  ports.Repository
+	ctx htmx.Ctx
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewLoginIndexController ...
 func NewLoginIndexController(db ports.Repository) *LoginIndexController {
-	return &LoginIndexController{db, htmx.UnimplementedController{}}
+	return &LoginIndexController{
+		db: db,
+	}
+}
+
+// Prepare ...
+func (l *LoginIndexController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx())
+	if err != nil {
+		return err
+	}
+	l.ctx = ctx
+
+	return nil
 }
 
 // Get ...
 func (l *LoginIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx(),
+			l.ctx,
 			components.PageProps{},
 			components.Wrap(
 				components.WrapProps{},

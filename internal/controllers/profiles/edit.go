@@ -12,7 +12,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // ProfileEditControllerParams ...
@@ -31,9 +31,9 @@ type ProfileEditController struct {
 	db      ports.Repository
 	params  *ProfileEditControllerParams
 	profile *models.Profile
-	team    *authz.Team
+	ctx     htmx.Ctx
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewProfileEditController ...
@@ -45,6 +45,12 @@ func NewProfileEditController(db ports.Repository) *ProfileEditController {
 
 // Prepare ...
 func (p *ProfileEditController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+	p.ctx = ctx
+
 	p.params = NewDefaultProfileEditControllerParams()
 	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
 		return err
@@ -55,7 +61,6 @@ func (p *ProfileEditController) Prepare() error {
 		return err
 	}
 	p.profile = profile
-	p.team = p.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
 
 	return nil
 }
@@ -74,7 +79,9 @@ func (p *ProfileEditController) Post() error {
 		return err
 	}
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", p.team.Slug, p.profile.ID))
+	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
+
+	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
 
 	return nil
 }
@@ -83,10 +90,10 @@ func (p *ProfileEditController) Post() error {
 func (p *ProfileEditController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx(),
+			p.ctx,
 			components.PageProps{},
 			components.Layout(
-				p.Hx(),
+				p.ctx,
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

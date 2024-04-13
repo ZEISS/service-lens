@@ -1,8 +1,6 @@
 package teams
 
 import (
-	"fmt"
-
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -10,14 +8,13 @@ import (
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TeamDashboardController ...
 type TeamDashboardController struct {
 	db                  ports.Repository
-	team                *authz.Team
+	ctx                 htmx.Ctx
 	totalCountWorkloads int
 	totalCountLenses    int
 	totalCountProfiles  int
@@ -34,21 +31,27 @@ func NewTeamDashboardController(db ports.Repository) *TeamDashboardController {
 
 // Prepare ...
 func (t *TeamDashboardController) Prepare() error {
-	t.team = t.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	ctx, err := htmx.NewDefaultContext(t.Hx().Ctx(), utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
+	if err != nil {
+		return err
+	}
+	t.ctx = ctx
 
-	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Hx().Context().Context(), t.team.Slug)
+	team := htmx.Locals[*authz.Team](t.ctx, utils.ValuesKeyTeam)
+
+	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Hx().Context().Context(), team.Slug)
 	if err != nil {
 		return err
 	}
 	t.totalCountWorkloads = totalCountWorkloads
 
-	totalCountLenses, err := t.db.TotalCountLenses(t.Hx().Context().Context(), t.team.Slug)
+	totalCountLenses, err := t.db.TotalCountLenses(t.Hx().Context().Context(), team.Slug)
 	if err != nil {
 		return err
 	}
 	t.totalCountLenses = totalCountLenses
 
-	totalCountProfiles, err := t.db.TotalCountProfiles(t.Hx().Context().Context(), t.team.Slug)
+	totalCountProfiles, err := t.db.TotalCountProfiles(t.Hx().Context().Context(), team.Slug)
 	if err != nil {
 		return err
 	}
@@ -59,8 +62,6 @@ func (t *TeamDashboardController) Prepare() error {
 
 // Error ...
 func (t *TeamDashboardController) Error(err error) error {
-	fmt.Println(err)
-
 	return err
 }
 
@@ -68,10 +69,10 @@ func (t *TeamDashboardController) Error(err error) error {
 func (t *TeamDashboardController) Get() error {
 	return t.Hx().RenderComp(
 		components.Page(
-			t.Hx(),
+			t.ctx,
 			components.PageProps{},
 			components.Layout(
-				t.Hx(),
+				t.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

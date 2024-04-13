@@ -1,6 +1,8 @@
-package resolvers
+package utils
 
 import (
+	"context"
+
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,8 +16,8 @@ const (
 )
 
 // User ...
-func User(db ports.Repository) htmx.ResolveFunc {
-	return func(c *fiber.Ctx) (interface{}, interface{}, error) {
+func User(c *fiber.Ctx, db ports.Repository) htmx.ContextFunc {
+	return func(ctx context.Context) (interface{}, interface{}, error) {
 		session, err := goth.SessionFromContext(c)
 		if err != nil {
 			return nil, nil, err

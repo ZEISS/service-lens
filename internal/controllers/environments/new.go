@@ -11,12 +11,13 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // EnvironmentNewController ...
 type EnvironmentNewController struct {
-	db ports.Repository
+	db  ports.Repository
+	ctx htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -39,11 +40,22 @@ func NewDefaultEnvironmentNewControllerQuery() *EnvironmentNewControllerQuery {
 	return &EnvironmentNewControllerQuery{}
 }
 
+// Prepare ...
+func (p *EnvironmentNewController) Prepare() error {
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+	p.ctx = ctx
+
+	return nil
+}
+
 // Post ...
 func (p *EnvironmentNewController) Post() error {
 	hx := p.Hx()
 
-	team := hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
 
 	query := NewDefaultEnvironmentNewControllerQuery()
 	if err := hx.Ctx().BodyParser(query); err != nil {
@@ -70,10 +82,10 @@ func (p *EnvironmentNewController) Post() error {
 func (p *EnvironmentNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx(),
+			p.ctx,
 			components.PageProps{},
 			components.Layout(
-				p.Hx(),
+				p.ctx,
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

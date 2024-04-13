@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LensIndexControllerParams ...
@@ -28,6 +29,7 @@ type LensIndexController struct {
 	db     ports.Repository
 	lens   *models.Lens
 	params *LensIndexControllerParams
+	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -52,6 +54,12 @@ func (l *LensIndexController) Prepare() error {
 	}
 	l.lens = lens
 
+	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
+	if err != nil {
+		return err
+	}
+	l.ctx = ctx
+
 	return nil
 }
 
@@ -59,10 +67,10 @@ func (l *LensIndexController) Prepare() error {
 func (l *LensIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx(),
+			l.ctx,
 			components.PageProps{},
 			components.Layout(
-				l.Hx(),
+				l.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

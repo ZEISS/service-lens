@@ -6,7 +6,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -46,7 +46,7 @@ func NewDefaultEnvironmentListControllerQuery() *EnvironmentListControllerQuery 
 type EnvironmentListController struct {
 	db           ports.Repository
 	Environments *models.Pagination[*models.Environment]
-	team         *authz.Team
+	ctx          htmx.Ctx
 
 	params *EnvironmentListControllerParams
 	query  *EnvironmentListControllerQuery
@@ -65,7 +65,11 @@ func NewEnvironmentListController(db ports.Repository) *EnvironmentListControlle
 func (w *EnvironmentListController) Prepare() error {
 	hx := w.Hx()
 
-	w.team = hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	w.params = NewDefaultEnvironmentListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -82,7 +86,9 @@ func (w *EnvironmentListController) Prepare() error {
 		return err
 	}
 
-	Environments, err := w.db.ListEnvironment(hx.Context().Context(), w.team.Slug, pagination)
+	team := htmx.Locals[*authz.Team](ctx, utils.ValuesKeyTeam)
+
+	Environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -93,13 +99,12 @@ func (w *EnvironmentListController) Prepare() error {
 
 // Get ...
 func (w *EnvironmentListController) Get() error {
-	fmt.Println(w.Environments.TotalRows)
 	return w.Hx().RenderComp(
 		components.Page(
-			w.Hx(),
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				w.Hx(),
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -110,7 +115,7 @@ func (w *EnvironmentListController) Get() error {
 						EnvironmentListTableComponent(
 							EnvironmentListTableProps{
 								Environments: w.Environments.Rows,
-								Team:         w.team,
+								Team:         htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam),
 								Offset:       w.query.Offset,
 								Limit:        w.query.Limit,
 								Total:        int(w.Environments.TotalRows),

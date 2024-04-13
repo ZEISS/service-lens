@@ -13,15 +13,15 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // LensNewController ...
 type LensNewController struct {
-	db   ports.Repository
-	team *authz.Team
+	db  ports.Repository
+	ctx htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -35,8 +35,11 @@ func NewLensNewController(db ports.Repository) *LensNewController {
 
 // Prepare ...
 func (l *LensNewController) Prepare() error {
-	team := l.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
-	l.team = team
+	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
+	if err != nil {
+		return err
+	}
+	l.ctx = ctx
 
 	return nil
 }
@@ -60,19 +63,21 @@ func (l *LensNewController) Post() error {
 		return err
 	}
 
+	team := htmx.Locals[*authz.Team](l.ctx, utils.ValuesKeyTeam)
+
 	lens := &models.Lens{}
 	err = lens.UnmarshalJSON(buf.Bytes())
 	if err != nil {
 		return err
 	}
-	lens.Team = *l.team
+	lens.Team = *team
 
 	lens, err = l.db.AddLens(hx.Ctx().Context(), lens)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/lenses/%s", l.team.Slug, lens.ID))
+	hx.Redirect(fmt.Sprintf("/%s/lenses/%s", team.Slug, lens.ID))
 
 	return nil
 }
@@ -81,11 +86,11 @@ func (l *LensNewController) Post() error {
 func (l *LensNewController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx(),
+			l.ctx,
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.Hx(),
+				l.ctx,
 				components.LayoutProps{},
 				cards.CardBordered(
 					cards.CardProps{},
@@ -98,7 +103,7 @@ func (l *LensNewController) Get() error {
 						htmx.FormElement(
 							htmx.ID("new-lens-form"),
 							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost(fmt.Sprintf("/%s/lenses/new", l.team.Slug)),
+							htmx.HxPost(fmt.Sprintf("/%s/lenses/new", htmx.Locals[*authz.Team](l.ctx, utils.ValuesKeyTeam).Slug)),
 							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
 							htmx.Div(
 								forms.FileInputBordered(

@@ -24,10 +24,11 @@ func NewDefaultTeamIndexControllerParams() *TeamIndexControllerParams {
 // TeamIndexController ...
 type TeamIndexController struct {
 	db     ports.Repository
+	ctx    htmx.Ctx
 	team   *authz.Team
 	params *TeamIndexControllerParams
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewTeamIndexController ...
@@ -44,6 +45,12 @@ func (l *TeamIndexController) Prepare() error {
 		return err
 	}
 
+	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
+	if err != nil {
+		return err
+	}
+	l.ctx = ctx
+
 	team, err := l.db.GetTeamByID(l.Hx().Ctx().Context(), l.params.ID)
 	if err != nil {
 		return err
@@ -57,10 +64,10 @@ func (l *TeamIndexController) Prepare() error {
 func (l *TeamIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.Hx(),
+			l.ctx,
 			components.PageProps{},
 			components.Layout(
-				l.Hx(),
+				l.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

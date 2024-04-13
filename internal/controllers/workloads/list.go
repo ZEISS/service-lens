@@ -6,7 +6,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
@@ -46,12 +46,12 @@ func NewDefaultWorkloadListControllerQuery() *WorkloadListControllerQuery {
 type WorkloadListController struct {
 	db        ports.Repository
 	workloads *models.Pagination[*models.Workload]
-	team      *authz.Team
+	ctx       htmx.Ctx
 
 	params *WorkloadListControllerParams
 	query  *WorkloadListControllerQuery
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewWorkloadListController ...
@@ -65,7 +65,11 @@ func NewWorkloadListController(db ports.Repository) *WorkloadListController {
 func (w *WorkloadListController) Prepare() error {
 	hx := w.Hx()
 
-	w.team = hx.Values(resolvers.ValuesKeyTeam).(*authz.Team)
+	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
+	if err != nil {
+		return err
+	}
+	w.ctx = ctx
 
 	w.params = NewDefaultWorkloadListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -82,7 +86,9 @@ func (w *WorkloadListController) Prepare() error {
 		return err
 	}
 
-	workloads, err := w.db.ListWorkloads(hx.Context().Context(), w.team.Slug, pagination)
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+
+	workloads, err := w.db.ListWorkloads(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -93,12 +99,14 @@ func (w *WorkloadListController) Prepare() error {
 
 // Get ...
 func (w *WorkloadListController) Get() error {
+	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+
 	return w.Hx().RenderComp(
 		components.Page(
-			w.Hx(),
+			w.ctx,
 			components.PageProps{},
 			components.Layout(
-				w.Hx(),
+				w.ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
@@ -109,7 +117,7 @@ func (w *WorkloadListController) Get() error {
 						WorkloadListTableComponent(
 							WorkloadListTableProps{
 								Workloads: w.workloads.Rows,
-								Team:      w.team,
+								Team:      team,
 								Offset:    w.workloads.GetOffset(),
 								Limit:     w.workloads.GetLimit(),
 								Total:     int(w.workloads.TotalRows),

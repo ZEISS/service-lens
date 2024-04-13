@@ -12,7 +12,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/resolvers"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // EnvironmentEditControllerParams ...
@@ -31,7 +31,7 @@ type EnvironmentEditController struct {
 	db          ports.Repository
 	params      *EnvironmentEditControllerParams
 	Environment *models.Environment
-	team        *authz.Team
+	ctx         htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -55,13 +55,20 @@ func (p *EnvironmentEditController) Prepare() error {
 		return err
 	}
 	p.Environment = Environment
-	p.team = p.Hx().Values(resolvers.ValuesKeyTeam).(*authz.Team)
+
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+	p.ctx = ctx
 
 	return nil
 }
 
 // Post ...
 func (p *EnvironmentEditController) Post() error {
+	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
+
 	query := NewDefaultEnvironmentNewControllerQuery()
 	if err := p.Hx().Ctx().BodyParser(query); err != nil {
 		return err
@@ -74,19 +81,24 @@ func (p *EnvironmentEditController) Post() error {
 		return err
 	}
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/environments/%s", p.team.Slug, p.Environment.ID))
+	p.Hx().Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.Environment.ID))
 
 	return nil
 }
 
 // New ...
 func (p *EnvironmentEditController) Get() error {
+	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
+	if err != nil {
+		return err
+	}
+
 	return p.Hx().RenderComp(
 		components.Page(
-			p.Hx(),
+			ctx,
 			components.PageProps{},
 			components.Layout(
-				p.Hx(),
+				ctx,
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),
