@@ -45,11 +45,9 @@ func (l *TeamIndexController) Prepare() error {
 		return err
 	}
 
-	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
-	if err != nil {
+	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
 		return err
 	}
-	l.ctx = ctx
 
 	team, err := l.db.GetTeamByID(l.Hx().Ctx().Context(), l.params.ID)
 	if err != nil {
@@ -64,10 +62,10 @@ func (l *TeamIndexController) Prepare() error {
 func (l *TeamIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.ctx,
+			l.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				l.ctx,
+				l.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

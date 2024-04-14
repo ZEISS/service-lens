@@ -20,10 +20,9 @@ import (
 
 // LensNewController ...
 type LensNewController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewLensNewController ...
@@ -35,11 +34,9 @@ func NewLensNewController(db ports.Repository) *LensNewController {
 
 // Prepare ...
 func (l *LensNewController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
-	if err != nil {
+	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
 		return err
 	}
-	l.ctx = ctx
 
 	return nil
 }
@@ -63,7 +60,7 @@ func (l *LensNewController) Post() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](l.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam)
 
 	lens := &models.Lens{}
 	err = lens.UnmarshalJSON(buf.Bytes())
@@ -86,11 +83,11 @@ func (l *LensNewController) Post() error {
 func (l *LensNewController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.ctx,
+			l.DefaultCtx(),
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.ctx,
+				l.DefaultCtx(),
 				components.LayoutProps{},
 				cards.CardBordered(
 					cards.CardProps{},
@@ -103,7 +100,7 @@ func (l *LensNewController) Get() error {
 						htmx.FormElement(
 							htmx.ID("new-lens-form"),
 							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost(fmt.Sprintf("/%s/lenses/new", htmx.Locals[*authz.Team](l.ctx, utils.ValuesKeyTeam).Slug)),
+							htmx.HxPost(fmt.Sprintf("/%s/lenses/new", htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam).Slug)),
 							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
 							htmx.Div(
 								forms.FileInputBordered(

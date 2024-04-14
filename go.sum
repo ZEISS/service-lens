@@ -651,8 +651,8 @@ github.com/zeiss/fiber-authz v1.0.13 h1:MturjY2zveVxL1GM+PuXqcytm22HZdPHMuSNK4x+
 github.com/zeiss/fiber-authz v1.0.13/go.mod h1:P2j6VvFQpIE2Jqb7AOjvllKGifIkfrvV24+FqbpS3wk=
 github.com/zeiss/fiber-goth v1.2.0 h1:7FWojoA7FAgI5MTkO3s44igkVW9WKSLWIgS3ewFXmMA=
 github.com/zeiss/fiber-goth v1.2.0/go.mod h1:ALeKuUS2Pw7mJOSD7v7rgH86cR/05PwAXrdwK0haoxc=
-github.com/zeiss/fiber-htmx v1.1.51 h1:KB36Do3AYDQ4Fmb6Wc7r0vItx3eBLRL1Ha1MOBRFmIM=
-github.com/zeiss/fiber-htmx v1.1.51/go.mod h1:hBWe3ICE1163f+kL464PbUPpn+j7rx5w94oRVkaAiY4=
+github.com/zeiss/fiber-htmx v1.1.53 h1:ewIS/pCQPcBw/CbZ8Yp3HKgSB9WsrIDbFlnMXEsvHdg=
+github.com/zeiss/fiber-htmx v1.1.53/go.mod h1:hBWe3ICE1163f+kL464PbUPpn+j7rx5w94oRVkaAiY4=
 github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429 h1:idDORYhTm4ssie6cQlYEp7kRP6t1+dmH93BqqWY953g=
 github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429/go.mod h1:CSH9oQip2zXD4874IoIU75Rc0w9+IStbM+rnwYz1Xts=
 gitlab.com/bosi/decorder v0.4.1 h1:VdsdfxhstabyhZovHafFw+9eJ6eU0d2CkFNJcZz/NU4=

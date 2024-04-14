@@ -9,8 +9,7 @@ import (
 
 // WorkloadSearchController ...
 type WorkloadSearchController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.UnimplementedController
 }
@@ -24,11 +23,9 @@ func NewWorkloadSearchController(db ports.Repository) *WorkloadSearchController 
 
 // Prepare ...
 func (w *WorkloadSearchController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	return nil
 }

@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"context"
-
 	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -19,14 +17,14 @@ func TeamFromContext(c *fiber.Ctx) (string, error) {
 }
 
 // Team ...
-func Team(c *fiber.Ctx, db ports.Repository) htmx.ContextFunc {
-	return func(ctx context.Context) (interface{}, interface{}, error) {
-		slug, err := TeamFromContext(c)
+func Team(db ports.Repository) htmx.ContextFunc {
+	return func(ctx *fiber.Ctx) (interface{}, interface{}, error) {
+		slug, err := TeamFromContext(ctx)
 		if err != nil {
 			return nil, nil, err
 		}
 
-		team, err := db.GetTeamBySlug(c.Context(), slug)
+		team, err := db.GetTeamBySlug(ctx.Context(), slug)
 		if err != nil {
 			return nil, nil, err
 		}

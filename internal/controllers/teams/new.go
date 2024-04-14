@@ -16,10 +16,9 @@ import (
 
 // TeamNewController ...
 type TeamNewController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewTeamNewController ...
@@ -43,11 +42,9 @@ func NewDefaultTeamNewControllerQuery() *TeamNewControllerQuery {
 
 // Prepare ...
 func (p *TeamNewController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
+	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
 	}
-	p.ctx = ctx
 
 	return nil
 }
@@ -61,7 +58,7 @@ func (p *TeamNewController) Post() error {
 		return err
 	}
 
-	user := htmx.Locals[*authz.User](p.ctx, utils.ValuesKeyUser)
+	user := htmx.Locals[*authz.User](p.DefaultCtx(), utils.ValuesKeyUser)
 
 	team := &authz.Team{
 		Name:        query.Name,
@@ -89,10 +86,10 @@ func (p *TeamNewController) Post() error {
 func (p *TeamNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.ctx,
+			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.ctx,
+				p.DefaultCtx(),
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

@@ -62,11 +62,9 @@ func NewTeamListController(db ports.Repository) *TeamListController {
 func (t *TeamListController) Prepare() error {
 	hx := t.Hx()
 
-	ctx, err := htmx.NewDefaultContext(t.Hx().Ctx(), utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
-	if err != nil {
+	if err := t.BindValues(utils.User(t.db), utils.Team(t.db)); err != nil {
 		return err
 	}
-	t.ctx = ctx
 
 	params := NewDefaultTeamListControllerParams()
 	if err := hx.Context().ParamsParser(params); err != nil {
@@ -115,10 +113,10 @@ func (w *TeamListController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

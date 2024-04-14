@@ -55,11 +55,9 @@ func (p *EnvironmentIndexController) Prepare() error {
 	}
 	p.Environment = Environment
 
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
+	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
 	}
-	p.ctx = ctx
 
 	return nil
 }
@@ -68,10 +66,10 @@ func (p *EnvironmentIndexController) Prepare() error {
 func (p *EnvironmentIndexController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.ctx,
+			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.ctx,
+				p.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

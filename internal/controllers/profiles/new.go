@@ -16,8 +16,7 @@ import (
 
 // ProfileNewController ...
 type ProfileNewController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -42,11 +41,9 @@ func NewDefaultProfileNewControllerQuery() *ProfileNewControllerQuery {
 
 // Prepare ...
 func (p *ProfileNewController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
+	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
 	}
-	p.ctx = ctx
 
 	return nil
 }
@@ -55,7 +52,7 @@ func (p *ProfileNewController) Prepare() error {
 func (p *ProfileNewController) Post() error {
 	hx := p.Hx()
 
-	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](p.DefaultCtx(), utils.ValuesKeyTeam)
 
 	query := NewDefaultProfileNewControllerQuery()
 	if err := hx.Ctx().BodyParser(query); err != nil {
@@ -82,10 +79,10 @@ func (p *ProfileNewController) Post() error {
 func (p *ProfileNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.ctx,
+			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.ctx,
+				p.DefaultCtx(),
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

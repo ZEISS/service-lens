@@ -9,12 +9,12 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LoginIndexController ...
 type LoginIndexController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -28,11 +28,9 @@ func NewLoginIndexController(db ports.Repository) *LoginIndexController {
 
 // Prepare ...
 func (l *LoginIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx())
-	if err != nil {
+	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
 		return err
 	}
-	l.ctx = ctx
 
 	return nil
 }
@@ -41,7 +39,7 @@ func (l *LoginIndexController) Prepare() error {
 func (l *LoginIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.ctx,
+			l.DefaultCtx(),
 			components.PageProps{},
 			components.Wrap(
 				components.WrapProps{},

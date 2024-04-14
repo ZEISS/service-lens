@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"context"
-
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,14 +14,14 @@ const (
 )
 
 // User ...
-func User(c *fiber.Ctx, db ports.Repository) htmx.ContextFunc {
-	return func(ctx context.Context) (interface{}, interface{}, error) {
-		session, err := goth.SessionFromContext(c)
+func User(db ports.Repository) htmx.ContextFunc {
+	return func(ctx *fiber.Ctx) (interface{}, interface{}, error) {
+		session, err := goth.SessionFromContext(ctx)
 		if err != nil {
 			return nil, nil, err
 		}
 
-		user, err := db.GetUserByID(c.Context(), session.UserID)
+		user, err := db.GetUserByID(ctx.Context(), session.UserID)
 		if err != nil {
 			return err, nil, err
 		}

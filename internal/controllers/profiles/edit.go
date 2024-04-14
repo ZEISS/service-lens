@@ -45,11 +45,9 @@ func NewProfileEditController(db ports.Repository) *ProfileEditController {
 
 // Prepare ...
 func (p *ProfileEditController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
+	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
 	}
-	p.ctx = ctx
 
 	p.params = NewDefaultProfileEditControllerParams()
 	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
@@ -90,10 +88,10 @@ func (p *ProfileEditController) Post() error {
 func (p *ProfileEditController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.ctx,
+			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.ctx,
+				p.DefaultCtx(),
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

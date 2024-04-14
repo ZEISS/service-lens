@@ -46,7 +46,6 @@ func NewDefaultWorkloadListControllerQuery() *WorkloadListControllerQuery {
 type WorkloadListController struct {
 	db        ports.Repository
 	workloads *models.Pagination[*models.Workload]
-	ctx       htmx.Ctx
 
 	params *WorkloadListControllerParams
 	query  *WorkloadListControllerQuery
@@ -65,11 +64,9 @@ func NewWorkloadListController(db ports.Repository) *WorkloadListController {
 func (w *WorkloadListController) Prepare() error {
 	hx := w.Hx()
 
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	w.params = NewDefaultWorkloadListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -86,7 +83,7 @@ func (w *WorkloadListController) Prepare() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	workloads, err := w.db.ListWorkloads(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
@@ -99,14 +96,14 @@ func (w *WorkloadListController) Prepare() error {
 
 // Get ...
 func (w *WorkloadListController) Get() error {
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	return w.Hx().RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				&w.DefaultController,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

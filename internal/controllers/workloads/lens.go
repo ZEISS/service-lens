@@ -17,7 +17,6 @@ import (
 type WorkloadLensController struct {
 	db   ports.Repository
 	lens *models.Lens
-	ctx  htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -33,11 +32,9 @@ func NewWorkloadLensController(db ports.Repository) *WorkloadLensController {
 func (w *WorkloadLensController) Prepare() error {
 	hx := w.Hx()
 
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	lensID, err := uuid.Parse(hx.Context().Params("lens"))
 	if err != nil {
@@ -75,10 +72,10 @@ func (w *WorkloadLensController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

@@ -8,12 +8,12 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // MeIndexController ...
 type MeIndexController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -27,11 +27,9 @@ func NewMeIndexController(db ports.Repository) *MeIndexController {
 
 // Prepare ...
 func (m *MeIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(m.Hx().Ctx())
-	if err != nil {
+	if err := m.BindValues(utils.User(m.db), utils.Team(m.db)); err != nil {
 		return err
 	}
-	m.ctx = ctx
 
 	return nil
 }
@@ -50,10 +48,10 @@ func (m *MeIndexController) Get() error {
 
 	return m.Hx().RenderComp(
 		components.Page(
-			m.ctx,
+			m.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				m.ctx,
+				m.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

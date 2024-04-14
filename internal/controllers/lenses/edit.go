@@ -50,11 +50,9 @@ func NewLensEditController(db ports.Repository) *LensEditController {
 
 // Prepare ...
 func (l *LensEditController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
-	if err != nil {
+	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
 		return err
 	}
-	l.ctx = ctx
 
 	l.params = NewDefaultLensEditControllerParams()
 	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
@@ -110,11 +108,11 @@ func (l *LensEditController) Post() error {
 func (l *LensEditController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.ctx,
+			l.DefaultCtx(),
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.ctx,
+				l.DefaultCtx(),
 				components.LayoutProps{},
 				cards.CardBordered(
 					cards.CardProps{},

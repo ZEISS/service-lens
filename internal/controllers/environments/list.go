@@ -65,11 +65,9 @@ func NewEnvironmentListController(db ports.Repository) *EnvironmentListControlle
 func (w *EnvironmentListController) Prepare() error {
 	hx := w.Hx()
 
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	w.params = NewDefaultEnvironmentListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -86,7 +84,7 @@ func (w *EnvironmentListController) Prepare() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	Environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
@@ -101,10 +99,10 @@ func (w *EnvironmentListController) Prepare() error {
 func (w *EnvironmentListController) Get() error {
 	return w.Hx().RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

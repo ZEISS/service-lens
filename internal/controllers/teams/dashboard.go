@@ -30,12 +30,11 @@ func NewTeamDashboardController(db ports.Repository) *TeamDashboardController {
 
 // Prepare ...
 func (t *TeamDashboardController) Prepare() error {
-	ctx, err := t.Ctx(utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
-	if err != nil {
+	if err := t.BindValues(utils.User(t.db), utils.Team(t.db)); err != nil {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](t.DefaultCtx(), utils.ValuesKeyTeam)
 
 	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Hx().Context().Context(), team.Slug)
 	if err != nil {
@@ -65,14 +64,12 @@ func (t *TeamDashboardController) Error(err error) error {
 
 // Get ...
 func (t *TeamDashboardController) Get() error {
-	ctx, _ := t.Ctx()
-
 	return t.Hx().RenderComp(
 		components.Page(
-			ctx,
+			t.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				ctx,
+				t.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

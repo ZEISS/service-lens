@@ -56,11 +56,9 @@ func (p *EnvironmentEditController) Prepare() error {
 	}
 	p.Environment = Environment
 
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
+	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
 	}
-	p.ctx = ctx
 
 	return nil
 }
@@ -88,17 +86,12 @@ func (p *EnvironmentEditController) Post() error {
 
 // New ...
 func (p *EnvironmentEditController) Get() error {
-	ctx, err := htmx.NewDefaultContext(p.Hx().Ctx(), utils.Team(p.Hx().Ctx(), p.db), utils.User(p.Hx().Ctx(), p.db))
-	if err != nil {
-		return err
-	}
-
 	return p.Hx().RenderComp(
 		components.Page(
-			ctx,
+			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				ctx,
+				p.DefaultCtx(),
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

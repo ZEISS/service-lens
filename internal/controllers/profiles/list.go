@@ -46,12 +46,11 @@ func NewDefaultProfileListControllerQuery() *ProfileListControllerQuery {
 type ProfileListController struct {
 	db       ports.Repository
 	profiles *models.Pagination[*models.Profile]
-	ctx      htmx.Ctx
 
 	params *ProfileListControllerParams
 	query  *ProfileListControllerQuery
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewProfileListController ...
@@ -65,11 +64,9 @@ func NewProfileListController(db ports.Repository) *ProfileListController {
 func (w *ProfileListController) Prepare() error {
 	hx := w.Hx()
 
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	w.params = NewDefaultProfileListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -86,7 +83,7 @@ func (w *ProfileListController) Prepare() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	profiles, err := w.db.ListProfiles(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
@@ -99,14 +96,14 @@ func (w *ProfileListController) Prepare() error {
 
 // Get ...
 func (w *ProfileListController) Get() error {
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	return w.Hx().RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

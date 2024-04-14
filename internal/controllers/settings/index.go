@@ -9,8 +9,7 @@ import (
 
 // SettingsIndexController ...
 type SettingsIndexController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -24,11 +23,9 @@ func NewSettingsIndexController(db ports.Repository) *SettingsIndexController {
 
 // Prepare ...
 func (m *SettingsIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(m.Hx().Ctx(), utils.Team(m.Hx().Ctx(), m.db), utils.User(m.Hx().Ctx(), m.db))
-	if err != nil {
+	if err := m.BindValues(utils.User(m.db), utils.Team(m.db)); err != nil {
 		return err
 	}
-	m.ctx = ctx
 
 	return nil
 }
@@ -37,10 +34,10 @@ func (m *SettingsIndexController) Prepare() error {
 func (m *SettingsIndexController) Get() error {
 	return m.Hx().RenderComp(
 		components.Page(
-			m.ctx,
+			m.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				m.ctx,
+				m.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

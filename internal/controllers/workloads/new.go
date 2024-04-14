@@ -32,10 +32,9 @@ func NewWorkloadNewControllerQuery() *WorkloadNewControllerQuery {
 
 // WorkloadNewController ...
 type WorkloadNewController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
-	htmx.UnimplementedController
+	htmx.DefaultController
 }
 
 // NewWorkloadsNewController ...
@@ -47,11 +46,9 @@ func NewWorkloadsNewController(db ports.Repository) *WorkloadNewController {
 
 // Prepare ...
 func (w *WorkloadNewController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	return nil
 }
@@ -69,7 +66,7 @@ func (w *WorkloadNewController) Post() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	workload := &models.Workload{
 		Description: query.Description,
@@ -121,10 +118,10 @@ func (w *WorkloadNewController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),

@@ -66,11 +66,9 @@ func NewLensListController(db ports.Repository) *LensListController {
 func (w *LensListController) Prepare() error {
 	hx := w.Hx()
 
-	ctx, err := htmx.NewDefaultContext(w.Hx().Ctx(), utils.Team(w.Hx().Ctx(), w.db), utils.User(w.Hx().Ctx(), w.db))
-	if err != nil {
+	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
-	w.ctx = ctx
 
 	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
 
@@ -102,10 +100,10 @@ func (w *LensListController) Prepare() error {
 func (w *LensListController) Get() error {
 	return w.Hx().RenderComp(
 		components.Page(
-			w.ctx,
+			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.ctx,
+				w.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

@@ -14,8 +14,7 @@ func HelloWorld(children ...htmx.Node) htmx.Node {
 
 // DashboardIndexController ...
 type DashboardIndexController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -29,11 +28,9 @@ func NewDashboardController(db ports.Repository) *DashboardIndexController {
 
 // Prepare ...
 func (d *DashboardIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(d.Hx().Ctx(), utils.User(d.Hx().Ctx(), d.db))
-	if err != nil {
+	if err := d.BindValues(utils.User(d.db)); err != nil {
 		return err
 	}
-	d.ctx = ctx
 
 	return nil
 }
@@ -42,10 +39,10 @@ func (d *DashboardIndexController) Prepare() error {
 func (d *DashboardIndexController) Get() error {
 	return d.Hx().RenderComp(
 		components.Page(
-			d.ctx,
+			d.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				d.ctx,
+				d.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

@@ -10,8 +10,7 @@ import (
 
 // HomeIndexController ...
 type HomeIndexController struct {
-	db  ports.Repository
-	ctx htmx.Ctx
+	db ports.Repository
 
 	htmx.DefaultController
 }
@@ -25,11 +24,9 @@ func NewHomeIndexController(db ports.Repository) *HomeIndexController {
 
 // Prepare ...
 func (h *HomeIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(h.Hx().Ctx(), utils.Team(h.Hx().Ctx(), h.db), utils.User(h.Hx().Ctx(), h.db))
-	if err != nil {
+	if err := h.BindValues(utils.User(h.db), utils.Team(h.db)); err != nil {
 		return err
 	}
-	h.ctx = ctx
 
 	return nil
 }
@@ -37,10 +34,10 @@ func (h *HomeIndexController) Prepare() error {
 // Get ...
 func (h *HomeIndexController) Get(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		h.ctx,
+		h.DefaultCtx(),
 		components.PageProps{},
 		components.Layout(
-			h.ctx,
+			h.DefaultCtx(),
 			components.LayoutProps{},
 			components.Wrap(
 				components.WrapProps{},

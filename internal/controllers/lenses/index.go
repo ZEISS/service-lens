@@ -54,11 +54,9 @@ func (l *LensIndexController) Prepare() error {
 	}
 	l.lens = lens
 
-	ctx, err := htmx.NewDefaultContext(l.Hx().Ctx(), utils.Team(l.Hx().Ctx(), l.db), utils.User(l.Hx().Ctx(), l.db))
-	if err != nil {
+	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
 		return err
 	}
-	l.ctx = ctx
 
 	return nil
 }
@@ -67,10 +65,10 @@ func (l *LensIndexController) Prepare() error {
 func (l *LensIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.ctx,
+			l.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				l.ctx,
+				l.DefaultCtx(),
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
