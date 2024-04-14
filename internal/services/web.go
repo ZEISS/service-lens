@@ -99,6 +99,85 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			),
 		)
 
+		profiles := team.Group("/profiles")
+		profiles.Get(
+			"/list",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileListController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Get(
+			"/new",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Post(
+			"/new",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Get(
+			"/:id",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Delete(
+			"/:id",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionDelete, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Get(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		profiles.Post(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(
+				controllers.NewProfileEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+
 		// teams.Get(
 		// 	"/:team/index",
 		// 	authz.NewTBACHandler(

@@ -14,7 +14,6 @@ import (
 // TeamDashboardController ...
 type TeamDashboardController struct {
 	db                  ports.Repository
-	ctx                 htmx.Ctx
 	totalCountWorkloads int
 	totalCountLenses    int
 	totalCountProfiles  int
@@ -31,13 +30,12 @@ func NewTeamDashboardController(db ports.Repository) *TeamDashboardController {
 
 // Prepare ...
 func (t *TeamDashboardController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(t.Hx().Ctx(), utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
+	ctx, err := t.Ctx(utils.Team(t.Hx().Ctx(), t.db), utils.User(t.Hx().Ctx(), t.db))
 	if err != nil {
 		return err
 	}
-	t.ctx = ctx
 
-	team := htmx.Locals[*authz.Team](t.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](ctx, utils.ValuesKeyTeam)
 
 	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Hx().Context().Context(), team.Slug)
 	if err != nil {
@@ -67,12 +65,14 @@ func (t *TeamDashboardController) Error(err error) error {
 
 // Get ...
 func (t *TeamDashboardController) Get() error {
+	ctx, _ := t.Ctx()
+
 	return t.Hx().RenderComp(
 		components.Page(
-			t.ctx,
+			ctx,
 			components.PageProps{},
 			components.Layout(
-				t.ctx,
+				ctx,
 				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},

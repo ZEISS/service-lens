@@ -29,7 +29,7 @@ func NewDashboardController(db ports.Repository) *DashboardIndexController {
 
 // Prepare ...
 func (d *DashboardIndexController) Prepare() error {
-	ctx, err := htmx.NewDefaultContext(d.Hx().Ctx(), utils.Team(d.Hx().Ctx(), d.db), utils.User(d.Hx().Ctx(), d.db))
+	ctx, err := htmx.NewDefaultContext(d.Hx().Ctx(), utils.User(d.Hx().Ctx(), d.db))
 	if err != nil {
 		return err
 	}
