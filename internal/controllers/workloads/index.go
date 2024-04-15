@@ -29,7 +29,6 @@ func NewDefaultWorkloadIndexControllerParams() *WorkloadIndexControllerParams {
 type WorkloadIndexController struct {
 	db       ports.Repository
 	workload *models.Workload
-	ctx      htmx.Ctx
 	params   *WorkloadIndexControllerParams
 
 	htmx.UnimplementedController

@@ -153,7 +153,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 			htmx.If(
 				team.Slug != "",
 				menus.MenuItem(
-					menus.MenuItemProps{},
+					menus.MenuItemProps{
+						ClassNames: htmx.ClassNames{
+							"hover:bg-base-300": false,
+						},
+					},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
 							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/workloads", team.Slug)),
@@ -163,7 +167,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							htmx.Text("Workloads"),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/workloads/new", team.Slug),
@@ -173,7 +181,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/workloads/list", team.Slug),
@@ -188,7 +200,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 			htmx.If(
 				team.Slug != "",
 				menus.MenuItem(
-					menus.MenuItemProps{},
+					menus.MenuItemProps{
+						ClassNames: htmx.ClassNames{
+							"hover:bg-base-300": false,
+						},
+					},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
 							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/lenses", team.Slug)),
@@ -198,7 +214,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							htmx.Text("Lenses"),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/lenses/new", team.Slug),
@@ -208,7 +228,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/lenses/list", team.Slug),
@@ -223,7 +247,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 			htmx.If(
 				team.Slug != "",
 				menus.MenuItem(
-					menus.MenuItemProps{},
+					menus.MenuItemProps{
+						ClassNames: htmx.ClassNames{
+							"hover:bg-base-300": false,
+						},
+					},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
 							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/profiles", team.Slug)),
@@ -233,7 +261,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							htmx.Text("Profiles"),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/profiles/new", team.Slug),
@@ -243,7 +275,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/profiles/list", team.Slug),
@@ -258,7 +294,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 			htmx.If(
 				team.Slug != "",
 				menus.MenuItem(
-					menus.MenuItemProps{},
+					menus.MenuItemProps{
+						ClassNames: htmx.ClassNames{
+							"hover:bg-base-300": false,
+						},
+					},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
 							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/environments", team.Slug)),
@@ -268,7 +308,11 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							htmx.Text("Environments"),
 						),
 						menus.MenuItem(
-							menus.MenuItemProps{},
+							menus.MenuItemProps{
+								ClassNames: htmx.ClassNames{
+									"hover:bg-base-300": false,
+								},
+							},
 							menus.MenuLink(
 								menus.MenuLinkProps{
 									Href:   fmt.Sprintf("/teams/%s/environments/new", team.Slug),

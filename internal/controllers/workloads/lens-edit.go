@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -31,11 +30,9 @@ type WorkloadLensEditControllerGetParams struct {
 // WorkloadLensEditController ...
 type WorkloadLensEditController struct {
 	db       ports.Repository
-	team     *authz.Team
 	lens     *models.Lens
 	question models.Question
 	answers  *models.WorkloadLensQuestionAnswer
-	ctx      htmx.Ctx
 
 	htmx.UnimplementedController
 }

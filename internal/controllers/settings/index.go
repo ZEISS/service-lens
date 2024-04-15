@@ -23,7 +23,7 @@ func NewSettingsIndexController(db ports.Repository) *SettingsIndexController {
 
 // Prepare ...
 func (m *SettingsIndexController) Prepare() error {
-	if err := m.BindValues(utils.User(m.db), utils.Team(m.db)); err != nil {
+	if err := m.BindValues(utils.User(m.db)); err != nil {
 		return err
 	}
 

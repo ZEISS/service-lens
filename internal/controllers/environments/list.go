@@ -154,7 +154,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/teams%s/environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams/%s/environments/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,

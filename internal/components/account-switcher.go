@@ -7,6 +7,7 @@ import (
 
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
@@ -60,6 +61,11 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 					),
 				)
 			}, *user.Teams...),
+			dividers.Divider(
+				dividers.DividerProps{
+					ClassNames: htmx.ClassNames{},
+				},
+			),
 			dropdowns.DropdownMenuItem(
 				dropdowns.DropdownMenuItemProps{},
 				links.Link(

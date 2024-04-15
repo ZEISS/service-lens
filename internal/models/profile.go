@@ -11,13 +11,13 @@ import (
 // Profile represents a business profile.
 type Profile struct {
 	ID          uuid.UUID         `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Name        string            `json:"name"`
+	Name        string            `json:"name" gorm:"uniqueIndex:idx_profile_name_team"`
 	Description string            `json:"description"`
 	Questions   []ProfileQuestion `json:"questions" gorm:"many2many:profiles_questions;"`
 
 	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;"`
 	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id"`
+	TeamID uuid.UUID  `json:"team_id" gorm:"uniqueIndex:idx_profile_name_team"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
