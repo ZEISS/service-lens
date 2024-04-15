@@ -19,17 +19,13 @@ const (
 
 const (
 	// RoleAdmin grants all permissions on a team
-	RoleAdmin = authz.AuthzAction("admin")
+	RoleAdmin = authz.AuthzAction("Admin")
 	// RoleSuperAdmin grants all permissions
-	RoleSuperAdmin = authz.AuthzAction("superadmin")
+	RoleSuperAdmin = authz.AuthzAction("Super Admin")
 	// RoleOwner grants all permissions
-	RoleOwner = authz.AuthzAction("owner")
-	// RoleCreate grants the ability to create
-	RoleCreate = authz.AuthzAction("create")
-	// RoleDelete grants the ability to delete
-	RoleDelete = authz.AuthzAction("delete")
-	// RoleEdit grants the ability to edit
-	RoleEdit = authz.AuthzAction("edit")
-	// RoleView grants the ability to read
-	RoleView = authz.AuthzAction("view")
+	RoleOwner = authz.AuthzAction("Owner")
+	// Editor grants the ability to edit
+	RoleEditor = authz.AuthzAction("Editor")
+	// RoleViewer grants the ability to read
+	RoleViewer = authz.AuthzAction("Viewer")
 )

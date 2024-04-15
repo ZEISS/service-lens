@@ -15,6 +15,7 @@ import (
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	utilz "github.com/zeiss/fiber-htmx/components/utils"
 )
 
 // WorkloadNewControllerQuery ...
@@ -89,6 +90,13 @@ func (w *WorkloadNewController) Post() error {
 // Get ...
 func (w *WorkloadNewController) Get() error {
 	hx := w.Hx()
+
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+
+	environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
+	if err != nil {
+		return err
+	}
 
 	// profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
 	// if err != nil {
@@ -283,6 +291,55 @@ func (w *WorkloadNewController) Get() error {
 								htmx.Attribute("name", "profile"),
 								htmx.Group(profilesItems...),
 							),
+						),
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Environment"),
+							),
+							utilz.Map(func(el *models.Environment) htmx.Node {
+								return forms.FormControl(
+									forms.FormControlProps{},
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"-my-4": true,
+												},
+											},
+											htmx.Text(el.Name),
+										),
+										forms.Radio(
+											forms.RadioProps{
+												Name:  "environment",
+												Value: el.ID.String(),
+											},
+										),
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+													"-my-4":            true,
+												},
+											},
+											htmx.Text(el.Description),
+										),
+									),
+								)
+							}, environments.Rows...),
 						),
 					),
 					cards.Body(

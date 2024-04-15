@@ -321,6 +321,99 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			),
 		)
 
+		// Workloads ...
+		workloads := team.Group("/workloads")
+		workloads.Get(
+			"/list",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Get(
+			"/new",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Post(
+			"/new",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Get(
+			"/:id",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Delete(
+			"/:id",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionDelete, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Get(
+			"/:id/lenses/:lens/edit",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Get(
+			"/:id/lenses/:lens/edit/:question",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Post(
+			"/:id/lenses/:lens/edit/:question",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadLensQuestionUpdateController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		workloads.Get(
+			"/:id/lenses/:lens/pillars/:pillar",
+			htmx.NewHxControllerHandler(controllers.NewWorkloadPillarController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+
 		// teams.Get(
 		// 	"/:team/index",
 		// 	authz.NewTBACHandler(
@@ -362,17 +455,6 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// lenses.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db), config))
 		// lenses.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
 		// lenses.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db), config))
-
-		// workloads := team.Group("/workloads")
-		// workloads.Get("/", htmx.NewHxControllerHandler(controllers.NewWorkloadListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// workloads.Get("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
-		// workloads.Post("/new", htmx.NewHxControllerHandler(controllers.NewWorkloadNewController(a.db), config))
-		// workloads.Get("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
-		// workloads.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewWorkloadIndexController(a.db), config))
-		// workloads.Get("/:id/lenses/:lens/edit", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
-		// workloads.Get("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensEditController(a.db), config))
-		// workloads.Post("/:id/lenses/:lens/edit/:question", htmx.NewHxControllerHandler(controllers.NewWorkloadLensQuestionUpdateController(a.db), config))
-		// workloads.Get("/:id/lenses/:lens/pillars/:pillar", htmx.NewHxControllerHandler(controllers.NewWorkloadPillarController(a.db), config))
 
 		site := app.Group("/site")
 		siteSettings := site.Group("/settings")

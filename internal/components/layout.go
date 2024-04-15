@@ -156,7 +156,7 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 					menus.MenuItemProps{},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
-							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/%s/workloads", team.Slug)),
+							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/workloads", team.Slug)),
 						},
 						menus.MenuCollapsibleSummary(
 							menus.MenuCollapsibleSummaryProps{},
@@ -166,8 +166,8 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							menus.MenuItemProps{},
 							menus.MenuLink(
 								menus.MenuLinkProps{
-									Href:   fmt.Sprintf("/%s/workloads/new", team.Slug),
-									Active: ctx.Path() == fmt.Sprintf("/%s/workloads/new", team.Slug),
+									Href:   fmt.Sprintf("/teams/%s/workloads/new", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/teams/%s/workloads/new", team.Slug),
 								},
 								htmx.Text("New workload"),
 							),
@@ -176,8 +176,8 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							menus.MenuItemProps{},
 							menus.MenuLink(
 								menus.MenuLinkProps{
-									Href:   fmt.Sprintf("/%s/workloads", team.Slug),
-									Active: ctx.Path() == fmt.Sprintf("/%s/workloads", team.Slug),
+									Href:   fmt.Sprintf("/teams/%s/workloads/list", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/teams/%s/workloads/list", team.Slug),
 								},
 								htmx.Text("List workload"),
 							),

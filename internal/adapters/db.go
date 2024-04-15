@@ -303,7 +303,7 @@ func (d *DB) CreateTeam(ctx context.Context, team *authz.Team, user *authz.User)
 
 		var role authz.Role
 		role.Name = utils.RoleOwner.String()
-		err = tx.First(&role).Error
+		err = tx.Where("name = ?", utils.RoleOwner.String()).First(&role).Error
 		if err != nil {
 			return err
 		}
