@@ -178,6 +178,83 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			),
 		)
 
+		environments := team.Group("/environments")
+		environments.Get(
+			"/list",
+			htmx.NewHxControllerHandler(
+				controllers.NewEnvironmentListController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Get(
+			"/new",
+			htmx.NewHxControllerHandler(
+				controllers.NewEnvironmentNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Post(
+			"/new",
+			htmx.NewHxControllerHandler(
+				controllers.NewEnvironmentNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Get(
+			"/:id",
+			htmx.NewHxControllerHandler(
+				controllers.NewEnvironmentIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Delete(
+			"/:id",
+			htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionDelete, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Get(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(
+				controllers.NewEnvironmentEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		environments.Post(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+
 		// teams.Get(
 		// 	"/:team/index",
 		// 	authz.NewTBACHandler(
@@ -201,15 +278,6 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// 		authz.Read, "team",
 		// 		authzConfig),
 		// )
-
-		// environments := team.Group("/environments")
-		// environments.Get("/list", htmx.NewHxControllerHandler(controllers.NewEnvironmentListController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Get("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Post("/new", htmx.NewHxControllerHandler(controllers.NewEnvironmentNewController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Get("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Delete("/:id", htmx.NewHxControllerHandler(controllers.NewEnvironmentIndexController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Get("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
-		// environments.Post("/:id/edit", htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db), utils.Resolvers(resolvers.Team(a.db), resolvers.User(a.db))))
 
 		// profiles := team.Group("/profiles")
 		// profiles.Get("/list", htmx.NewHxControllerHandler(controllers.NewProfileListController(a.db), config))

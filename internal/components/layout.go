@@ -261,7 +261,7 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 					menus.MenuItemProps{},
 					menus.MenuCollapsible(
 						menus.MenuCollapsibleProps{
-							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/%s/environments", team.Slug)),
+							Open: strings.HasPrefix(ctx.Path(), fmt.Sprintf("/teams/%s/environments", team.Slug)),
 						},
 						menus.MenuCollapsibleSummary(
 							menus.MenuCollapsibleSummaryProps{},
@@ -271,8 +271,8 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							menus.MenuItemProps{},
 							menus.MenuLink(
 								menus.MenuLinkProps{
-									Href:   fmt.Sprintf("/%s/environments/new", team.Slug),
-									Active: ctx.Path() == fmt.Sprintf("/%s/environments/new", team.Slug),
+									Href:   fmt.Sprintf("/teams/%s/environments/new", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/teams/%s/environments/new", team.Slug),
 								},
 								htmx.Text("New Environment"),
 							),
@@ -281,8 +281,8 @@ func MainMenu(ctx htmx.Ctx, p MainMenuProps, children ...htmx.Node) htmx.Node {
 							menus.MenuItemProps{},
 							menus.MenuLink(
 								menus.MenuLinkProps{
-									Href:   fmt.Sprintf("/%s/environments/list", team.Slug),
-									Active: ctx.Path() == fmt.Sprintf("/%s/environments/list", team.Slug),
+									Href:   fmt.Sprintf("/teams/%s/environments/list", team.Slug),
+									Active: ctx.Path() == fmt.Sprintf("/teams/%s/environments/list", team.Slug),
 								},
 								htmx.Text("List Environment"),
 							),

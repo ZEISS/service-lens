@@ -70,7 +70,7 @@ func (p *EnvironmentNewController) Post() error {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, Environment.ID))
+	hx.Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
 
 	return nil
 }

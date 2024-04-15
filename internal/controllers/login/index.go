@@ -9,7 +9,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LoginIndexController ...
@@ -28,10 +27,6 @@ func NewLoginIndexController(db ports.Repository) *LoginIndexController {
 
 // Prepare ...
 func (l *LoginIndexController) Prepare() error {
-	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
-		return err
-	}
-
 	return nil
 }
 

@@ -95,8 +95,16 @@ func (w *EnvironmentListController) Prepare() error {
 	return nil
 }
 
+// Error ...
+func (w *EnvironmentListController) Error(err error) error {
+	fmt.Println(err)
+	return err
+}
+
 // Get ...
 func (w *EnvironmentListController) Get() error {
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+
 	return w.Hx().RenderComp(
 		components.Page(
 			w.DefaultCtx(),
@@ -113,7 +121,7 @@ func (w *EnvironmentListController) Get() error {
 						EnvironmentListTableComponent(
 							EnvironmentListTableProps{
 								Environments: w.Environments.Rows,
-								Team:         htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam),
+								Team:         team,
 								Offset:       w.query.Offset,
 								Limit:        w.query.Limit,
 								Total:        int(w.Environments.TotalRows),
@@ -213,7 +221,7 @@ func EnvironmentListTableComponent(props EnvironmentListTableProps, children ...
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: fmt.Sprintf("/%s/Environments/%s", props.Team.Slug, row.ID.String()),
+									Href: fmt.Sprintf("/teams/%s/environments/%s", props.Team.Slug, row.ID.String()),
 								},
 								htmx.Text(row.Name),
 							),
@@ -233,7 +241,7 @@ func EnvironmentListTableComponent(props EnvironmentListTableProps, children ...
 									},
 								},
 
-								htmx.HxDelete(fmt.Sprintf("/%s/Environments/%s", props.Team.Slug, row.ID.String())),
+								htmx.HxDelete(fmt.Sprintf("/teams/%s/environments/%s", props.Team.Slug, row.ID.String())),
 								htmx.HxTarget("closest <tr />"),
 								htmx.HxConfirm("Are you sure you want to delete this Environment?"),
 								icons.TrashOutline(
