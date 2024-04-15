@@ -29,7 +29,6 @@ type LensIndexController struct {
 	db     ports.Repository
 	lens   *models.Lens
 	params *LensIndexControllerParams
-	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -148,7 +147,7 @@ func (l *LensIndexController) Delete() error {
 		return err
 	}
 
-	l.Hx().Redirect(fmt.Sprintf("/%s/lenses/list", l.params.Team))
+	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/list", l.params.Team))
 
 	return nil
 }

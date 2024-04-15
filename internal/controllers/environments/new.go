@@ -75,6 +75,12 @@ func (p *EnvironmentNewController) Post() error {
 	return nil
 }
 
+// Error ...
+func (p *EnvironmentNewController) Error(err error) error {
+	fmt.Println(err)
+	return nil
+}
+
 // New ...
 func (p *EnvironmentNewController) Get() error {
 	return p.Hx().RenderComp(

@@ -36,7 +36,6 @@ type LensEditController struct {
 	team   *authz.Team
 	params *LensEditControllerParams
 	lens   *models.Lens
-	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }

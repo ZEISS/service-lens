@@ -24,7 +24,6 @@ func NewDefaultTeamIndexControllerParams() *TeamIndexControllerParams {
 // TeamIndexController ...
 type TeamIndexController struct {
 	db     ports.Repository
-	ctx    htmx.Ctx
 	team   *authz.Team
 	params *TeamIndexControllerParams
 

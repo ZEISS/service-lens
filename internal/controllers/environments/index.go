@@ -30,7 +30,6 @@ type EnvironmentIndexController struct {
 	db          ports.Repository
 	Environment *models.Environment
 	params      *EnvironmentIndexControllerParams
-	ctx         htmx.Ctx
 
 	htmx.UnimplementedController
 }

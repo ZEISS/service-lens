@@ -47,7 +47,6 @@ func NewDefaultLensListControllerQuery() *LensListControllerQuery {
 type LensListController struct {
 	db     ports.Repository
 	lenses *models.Pagination[*models.Lens]
-	ctx    htmx.Ctx
 
 	params *LensListControllerParams
 	query  *LensListControllerQuery
@@ -70,7 +69,7 @@ func (w *LensListController) Prepare() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
 	w.params = NewDefaultLensListControllerParams()
 	if err := hx.Ctx().ParamsParser(w.params); err != nil {
@@ -98,6 +97,8 @@ func (w *LensListController) Prepare() error {
 
 // Get ...
 func (w *LensListController) Get() error {
+	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+
 	return w.Hx().RenderComp(
 		components.Page(
 			w.DefaultCtx(),
@@ -114,7 +115,7 @@ func (w *LensListController) Get() error {
 						LensListTableComponent(
 							LensListTableProps{
 								Lenses: w.lenses.Rows,
-								Team:   htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam),
+								Team:   team,
 								Offset: w.lenses.GetOffset(),
 								Limit:  w.lenses.GetLimit(),
 								Total:  int(w.lenses.TotalRows),
@@ -140,7 +141,7 @@ type LensListTablePaginationProps struct {
 func LensListTablePaginationComponent(props LensListTablePaginationProps, children ...htmx.Node) htmx.Node {
 	return tables.Pagination(
 		tables.PaginationProps{
-			URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
+			URL:    fmt.Sprintf("/teams/%s/lenses/list", props.Team.Slug),
 			Limit:  props.Limit,
 			Offset: props.Offset,
 			Target: props.Target,
@@ -148,7 +149,7 @@ func LensListTablePaginationComponent(props LensListTablePaginationProps, childr
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams/%s/lenses/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
@@ -157,7 +158,7 @@ func LensListTablePaginationComponent(props LensListTablePaginationProps, childr
 		),
 		tables.Select(
 			tables.SelectProps{
-				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams%s/lenses/list", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
@@ -167,7 +168,7 @@ func LensListTablePaginationComponent(props LensListTablePaginationProps, childr
 		),
 		tables.Next(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/lenses/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams/%s/lenses/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
@@ -246,7 +247,7 @@ func LensListTableComponent(props LensListTableProps, children ...htmx.Node) htm
 									},
 								},
 
-								htmx.HxDelete(fmt.Sprintf("/%s/lenses/%s", props.Team.Slug, row.ID.String())),
+								htmx.HxDelete(fmt.Sprintf("/teams/%s/lenses/%s", props.Team.Slug, row.ID.String())),
 								htmx.HxTarget("closest <tr />"),
 								htmx.HxConfirm("Are you sure you want to delete this lens?"),
 								icons.TrashOutline(

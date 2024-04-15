@@ -50,17 +50,6 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			CookieHTTPOnly: true,
 		}
 
-		// config := htmx.Config{
-		// 	Resolvers: []htmx.ResolveFunc{
-		// 		resolvers.Team(a.db),
-		// 		resolvers.User(a.db),
-		// 	},
-		// }
-
-		// authzConfig := authz.Config{
-		// 	Checker: a.adapter.(authz.AuthzChecker),
-		// }
-
 		app := fiber.New()
 		app.Use(requestid.New())
 		app.Use(logger.New())
@@ -86,6 +75,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		teams.Get("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
 		teams.Post("/new", htmx.NewHxControllerHandler(controllers.NewTeamNewController(a.db)))
 
+		// Team ...
 		team := teams.Group("/:team")
 		team.Get(
 			"/index",
@@ -99,6 +89,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			),
 		)
 
+		// Profiles ...
 		profiles := team.Group("/profiles")
 		profiles.Get(
 			"/list",
@@ -178,6 +169,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			),
 		)
 
+		// Environments ...
 		environments := team.Group("/environments")
 		environments.Get(
 			"/list",
@@ -247,6 +239,80 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		environments.Post(
 			"/:id/edit",
 			htmx.NewHxControllerHandler(controllers.NewEnvironmentEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+
+		// Lenses ...
+		lenses := team.Group("/lenses")
+		lenses.Get(
+			"/list",
+			htmx.NewHxControllerHandler(controllers.NewLensListController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Get(
+			"/new",
+			htmx.NewHxControllerHandler(
+				controllers.NewLensNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Post(
+			"/new",
+			htmx.NewHxControllerHandler(controllers.NewLensNewController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionCreate, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Get(
+			"/:id/index",
+			htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionView, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Delete(
+			"/:id",
+			htmx.NewHxControllerHandler(controllers.NewLensIndexController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionDelete, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Get(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db),
+				htmx.Config{
+					Filters: []htmx.FilterFunc{
+						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),
+					},
+				},
+			),
+		)
+		lenses.Post(
+			"/:id/edit",
+			htmx.NewHxControllerHandler(controllers.NewLensEditController(a.db),
 				htmx.Config{
 					Filters: []htmx.FilterFunc{
 						filters.NewAuthzParamFilter(utils.PermissionEdit, "team", a.adapter.(authz.AuthzChecker)),

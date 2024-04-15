@@ -26,15 +26,15 @@ const (
 // Lens is a model for a lens.
 type Lens struct {
 	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Version     int       `json:"version" gorm:"uniqueIndex:idx_lens_name_version"`
-	Name        string    `json:"name" gorm:"uniqueIndex:idx_lens_name_version"`
+	Version     int       `json:"version" gorm:"uniqueIndex:idx_lens_name_version_team"`
+	Name        string    `json:"name" gorm:"uniqueIndex:idx_lens_name_version_team"`
 	Description string    `json:"description"`
 	Pillars     []Pillar  `json:"pillars"`
 	IsDraft     bool      `json:"is_draft"`
 
 	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
 	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id"`
+	TeamID uuid.UUID  `json:"team_id" gorm:"type:uuid;uniqueIndex:idx_lens_name_version_team"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

@@ -45,8 +45,7 @@ func NewDefaultEnvironmentListControllerQuery() *EnvironmentListControllerQuery 
 // EnvironmentListController ...
 type EnvironmentListController struct {
 	db           ports.Repository
-	Environments *models.Pagination[*models.Environment]
-	ctx          htmx.Ctx
+	environments *models.Pagination[*models.Environment]
 
 	params *EnvironmentListControllerParams
 	query  *EnvironmentListControllerQuery
@@ -86,11 +85,11 @@ func (w *EnvironmentListController) Prepare() error {
 
 	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
 
-	Environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, pagination)
+	environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
-	w.Environments = Environments
+	w.environments = environments
 
 	return nil
 }
@@ -120,11 +119,11 @@ func (w *EnvironmentListController) Get() error {
 						},
 						EnvironmentListTableComponent(
 							EnvironmentListTableProps{
-								Environments: w.Environments.Rows,
+								Environments: w.environments.Rows,
 								Team:         team,
 								Offset:       w.query.Offset,
 								Limit:        w.query.Limit,
-								Total:        int(w.Environments.TotalRows),
+								Total:        int(w.environments.TotalRows),
 							},
 						),
 					),
@@ -147,7 +146,7 @@ type EnvironmentListTablePaginationProps struct {
 func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginationProps, children ...htmx.Node) htmx.Node {
 	return tables.Pagination(
 		tables.PaginationProps{
-			URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
+			URL:    fmt.Sprintf("/teams/%s/environments/list", props.Team.Slug),
 			Limit:  props.Limit,
 			Offset: props.Offset,
 			Target: props.Target,
@@ -155,7 +154,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		},
 		tables.Prev(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams%s/environments/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
@@ -164,7 +163,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		),
 		tables.Select(
 			tables.SelectProps{
-				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams/%s/environments/list", props.Team.Slug),
 				Limit:  props.Limit,
 				Offset: props.Offset,
 				Limits: tables.DefaultLimits,
@@ -174,7 +173,7 @@ func EnvironmentListTablePaginationComponent(props EnvironmentListTablePaginatio
 		),
 		tables.Next(
 			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/environments/list", props.Team.Slug),
+				URL:    fmt.Sprintf("/teams/%s/environments/list", props.Team.Slug),
 				Offset: props.Offset,
 				Limit:  props.Limit,
 				Target: props.Target,
@@ -197,7 +196,7 @@ type EnvironmentListTableProps struct {
 func EnvironmentListTableComponent(props EnvironmentListTableProps, children ...htmx.Node) htmx.Node {
 	return tables.Table[*models.Environment](
 		tables.TableProps[*models.Environment]{
-			ID: "Environments-tables",
+			ID: "environments-tables",
 			Columns: []tables.ColumnDef[*models.Environment]{
 				{
 					ID:          "id",
@@ -258,7 +257,7 @@ func EnvironmentListTableComponent(props EnvironmentListTableProps, children ...
 					Limit:  props.Limit,
 					Offset: props.Offset,
 					Total:  props.Total,
-					Target: "Environments-tables",
+					Target: "environments-tables",
 					Team:   props.Team,
 				},
 			),

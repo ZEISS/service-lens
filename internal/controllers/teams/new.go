@@ -42,7 +42,7 @@ func NewDefaultTeamNewControllerQuery() *TeamNewControllerQuery {
 
 // Prepare ...
 func (p *TeamNewController) Prepare() error {
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
+	if err := p.BindValues(utils.User(p.db)); err != nil {
 		return err
 	}
 
@@ -77,7 +77,7 @@ func (p *TeamNewController) Post() error {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/teams/%s", team.Slug))
+	hx.Redirect(fmt.Sprintf("/teams/%s/index", team.Slug))
 
 	return nil
 }

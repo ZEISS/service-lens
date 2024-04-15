@@ -46,7 +46,6 @@ type TeamListController struct {
 	params *TeamListControllerParams
 	query  *TeamListControllerQuery
 	teams  *models.Pagination[*authz.Team]
-	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }

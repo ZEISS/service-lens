@@ -74,7 +74,7 @@ func (l *LensNewController) Post() error {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/lenses/%s", team.Slug, lens.ID))
+	hx.Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
 
 	return nil
 }
@@ -100,7 +100,7 @@ func (l *LensNewController) Get() error {
 						htmx.FormElement(
 							htmx.ID("new-lens-form"),
 							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost(fmt.Sprintf("/%s/lenses/new", htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam).Slug)),
+							htmx.HxPost(fmt.Sprintf("/teams/%s/lenses/new", htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam).Slug)),
 							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
 							htmx.Div(
 								forms.FileInputBordered(
