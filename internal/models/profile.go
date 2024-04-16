@@ -24,26 +24,30 @@ type Profile struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
-// ProfileQuestion represents a business profile questions.
-type ProfileQuestions struct {
-	ProfileID  uuid.UUID `json:"profile_id" gorm:"primary_key"`
-	QuestionID int       `json:"question_id" gorm:"primary_key"`
+// Question represents a business profile question.
+type ProfileQuestion struct {
+	ID            int    `json:"id" gorm:"primary_key"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	MulipleChoice bool   `json:"multiple_choice"`
+
+	Choices   []ProfileQuestionChoice `json:"choices"`
+	ProfileID uuid.UUID               `json:"pillar_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
-// TableName ...
-func (ProfileQuestions) TableName() string {
-	return "profiles_questions"
-}
+// ProfileQuestionChoice is a model for a choice.
+type ProfileQuestionChoice struct {
+	ID          int         `json:"id" gorm:"primary_key"`
+	Ref         QuestionRef `json:"ref"`
+	Title       string      `json:"title"`
+	Description string      `json:"description"`
 
-// Question represents a business profile question.
-type ProfileQuestion struct {
-	ID          int    `json:"id" gorm:"primary_key"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	ProfileQuestion   ProfileQuestion `json:"profile_question" gorm:"foreignkey:ProfileQuestionID;"`
+	ProfileQuestionID int             `json:"profile_question_id"`
 
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

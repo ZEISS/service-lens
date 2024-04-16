@@ -48,6 +48,9 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			Adapter:        a.adapter,
 			Secret:         goth.GenerateKey(),
 			CookieHTTPOnly: true,
+			ResponseFilter: func(c *fiber.Ctx) error {
+				return c.Redirect("/")
+			},
 		}
 
 		app := fiber.New()
