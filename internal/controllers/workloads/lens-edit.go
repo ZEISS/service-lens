@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -46,24 +47,22 @@ func NewWorkloadLensEditController(db ports.Repository) *WorkloadLensEditControl
 
 // Prepare ...
 func (w *WorkloadLensEditController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
 	params := &WorkloadLensEditControllerGetParams{}
-	if err := hx.Context().ParamsParser(params); err != nil {
+	if err := w.BindParams(params); err != nil {
 		return nil
 	}
 
-	lens, err := w.db.GetLensByID(hx.Context().Context(), params.Lens)
+	lens, err := w.db.GetLensByID(w.Context(), params.Lens)
 	if err != nil {
 		return err
 	}
 	w.lens = lens
 
-	answers, err := w.db.ListAnswers(hx.Context().Context(), params.ID, params.Lens, params.Question)
+	answers, err := w.db.ListAnswers(w.Context(), params.ID, params.Lens, params.Question)
 	if err != nil {
 		return err
 	}
@@ -86,11 +85,12 @@ func (w *WorkloadLensEditController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{
 						ClassNames: htmx.ClassNames{

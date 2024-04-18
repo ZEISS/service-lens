@@ -62,30 +62,28 @@ func NewWorkloadListController(db ports.Repository) *WorkloadListController {
 
 // Prepare ...
 func (w *WorkloadListController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
 	w.params = NewDefaultWorkloadListControllerParams()
-	if err := hx.Ctx().ParamsParser(w.params); err != nil {
+	if err := w.BindParams(w.params); err != nil {
 		return err
 	}
 
 	w.query = NewDefaultWorkloadListControllerQuery()
-	if err := hx.Ctx().QueryParser(w.query); err != nil {
+	if err := w.BindQuery(w.query); err != nil {
 		return err
 	}
 
 	pagination := models.NewPagination[*models.Workload]()
-	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+	if err := w.BindQuery(&pagination); err != nil {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	workloads, err := w.db.ListWorkloads(hx.Context().Context(), team.Slug, pagination)
+	workloads, err := w.db.ListWorkloads(w.Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -96,15 +94,16 @@ func (w *WorkloadListController) Prepare() error {
 
 // Get ...
 func (w *WorkloadListController) Get() error {
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	return w.Hx().RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				&w.DefaultController,
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+          Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

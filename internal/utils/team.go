@@ -17,7 +17,7 @@ func TeamFromContext(c *fiber.Ctx) (string, error) {
 }
 
 // Team ...
-func Team(db ports.Repository) htmx.ContextFunc {
+func Team(db ports.Repository) htmx.BindFunc {
 	return func(ctx *fiber.Ctx) (interface{}, interface{}, error) {
 		slug, err := TeamFromContext(ctx)
 		if err != nil {

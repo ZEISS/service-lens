@@ -62,30 +62,28 @@ func NewEnvironmentListController(db ports.Repository) *EnvironmentListControlle
 
 // Prepare ...
 func (w *EnvironmentListController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
 	w.params = NewDefaultEnvironmentListControllerParams()
-	if err := hx.Ctx().ParamsParser(w.params); err != nil {
+	if err := w.BindParams(w.params); err != nil {
 		return err
 	}
 
 	w.query = NewDefaultEnvironmentListControllerQuery()
-	if err := hx.Ctx().QueryParser(w.query); err != nil {
+	if err := w.BindQuery(w.query); err != nil {
 		return err
 	}
 
 	pagination := models.NewPagination[*models.Environment]()
-	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+	if err := w.BindQuery(&pagination); err != nil {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, pagination)
+	environments, err := w.db.ListEnvironment(w.Context(), team.Slug, pagination)
 	if err != nil {
 		return err
 	}
@@ -102,15 +100,16 @@ func (w *EnvironmentListController) Error(err error) error {
 
 // Get ...
 func (w *EnvironmentListController) Get() error {
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	return w.Hx().RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

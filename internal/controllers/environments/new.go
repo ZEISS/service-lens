@@ -50,12 +50,10 @@ func (p *EnvironmentNewController) Prepare() error {
 
 // Post ...
 func (p *EnvironmentNewController) Post() error {
-	hx := p.Hx()
-
-	team := htmx.Locals[*authz.Team](p.DefaultCtx(), utils.ValuesKeyTeam)
+	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	query := NewDefaultEnvironmentNewControllerQuery()
-	if err := hx.Ctx().BodyParser(query); err != nil {
+	if err := p.BindBody(query); err != nil {
 		return err
 	}
 
@@ -65,12 +63,12 @@ func (p *EnvironmentNewController) Post() error {
 		Team:        *team,
 	}
 
-	err := p.db.NewEnvironment(hx.Ctx().Context(), Environment)
+	err := p.db.NewEnvironment(p.Context(), Environment)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
+	p.Hx().Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
 
 	return nil
 }
@@ -85,11 +83,12 @@ func (p *EnvironmentNewController) Error(err error) error {
 func (p *EnvironmentNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

@@ -41,13 +41,13 @@ func NewWorkloadLensQuestionUpdateController(db ports.Repository) *WorkloadLensQ
 // Prepare ...
 func (w *WorkloadLensQuestionUpdateController) Prepare() error {
 	params := &WorkloadLensQuestionUpdateControllerParams{}
-	if err := w.Hx().Context().ParamsParser(params); err != nil {
+	if err := w.BindParams(params); err != nil {
 		return nil
 	}
 	w.params = params
 
 	body := &WorkloadLensQuestionUpdateControllerBody{}
-	if err := w.Hx().Context().BodyParser(body); err != nil {
+	if err := w.BindBody(body); err != nil {
 		return nil
 	}
 	w.body = body
@@ -57,7 +57,7 @@ func (w *WorkloadLensQuestionUpdateController) Prepare() error {
 
 // Post ...
 func (w *WorkloadLensQuestionUpdateController) Post() error {
-	err := w.db.UpdateAnswers(w.Hx().Context().Context(), w.params.ID, w.params.Lens, w.params.Question, w.body.Choices, w.body.DoesNotApply, w.body.Notes)
+	err := w.db.UpdateAnswers(w.Context(), w.params.ID, w.params.Lens, w.params.Question, w.body.Choices, w.body.DoesNotApply, w.body.Notes)
 	if err != nil {
 		return err
 	}

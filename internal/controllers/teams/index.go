@@ -40,7 +40,7 @@ func NewTeamIndexController(db ports.Repository) *TeamIndexController {
 // Prepare ...
 func (l *TeamIndexController) Prepare() error {
 	l.params = NewDefaultTeamIndexControllerParams()
-	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
+	if err := l.BindParams(l.params); err != nil {
 		return err
 	}
 
@@ -48,7 +48,7 @@ func (l *TeamIndexController) Prepare() error {
 		return err
 	}
 
-	team, err := l.db.GetTeamByID(l.Hx().Ctx().Context(), l.params.ID)
+	team, err := l.db.GetTeamByID(l.Context(), l.params.ID)
 	if err != nil {
 		return err
 	}
@@ -61,11 +61,12 @@ func (l *TeamIndexController) Prepare() error {
 func (l *TeamIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				l.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: l.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -133,7 +134,7 @@ func (l *TeamIndexController) Get() error {
 
 // Delete ...
 func (l *TeamIndexController) Delete() error {
-	err := l.db.DeleteTeam(l.Hx().Ctx().Context(), l.params.ID)
+	err := l.db.DeleteTeam(l.Context(), l.params.ID)
 	if err != nil {
 		return err
 	}

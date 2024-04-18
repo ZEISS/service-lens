@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -28,7 +29,7 @@ func NewDefaultEnvironmentIndexControllerParams() *EnvironmentIndexControllerPar
 // EnvironmentIndexController ...
 type EnvironmentIndexController struct {
 	db          ports.Repository
-	Environment *models.Environment
+	environment *models.Environment
 	params      *EnvironmentIndexControllerParams
 
 	htmx.UnimplementedController
@@ -44,15 +45,15 @@ func NewEnvironmentIndexController(db ports.Repository) *EnvironmentIndexControl
 // Prepare ...
 func (p *EnvironmentIndexController) Prepare() error {
 	p.params = NewDefaultEnvironmentIndexControllerParams()
-	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
+	if err := p.BindParams(p.params); err != nil {
 		return err
 	}
 
-	Environment, err := p.db.GetEnvironment(p.Hx().Ctx().Context(), p.params.ID)
+	environment, err := p.db.GetEnvironment(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}
-	p.Environment = Environment
+	p.environment = environment
 
 	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
@@ -65,11 +66,12 @@ func (p *EnvironmentIndexController) Prepare() error {
 func (p *EnvironmentIndexController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -94,7 +96,7 @@ func (p *EnvironmentIndexController) Get() error {
 										htmx.Text("ID"),
 									),
 									htmx.H3(
-										htmx.Text(p.Environment.ID.String()),
+										htmx.Text(p.environment.ID.String()),
 									),
 								),
 								htmx.Div(
@@ -110,7 +112,7 @@ func (p *EnvironmentIndexController) Get() error {
 										htmx.Text("Name"),
 									),
 									htmx.H3(
-										htmx.Text(p.Environment.Name),
+										htmx.Text(p.environment.Name),
 									),
 								),
 								htmx.Div(
@@ -126,7 +128,7 @@ func (p *EnvironmentIndexController) Get() error {
 										htmx.Text("Description"),
 									),
 									htmx.H3(
-										htmx.Text(p.Environment.Description),
+										htmx.Text(p.environment.Description),
 									),
 								),
 								htmx.Div(
@@ -143,7 +145,7 @@ func (p *EnvironmentIndexController) Get() error {
 									),
 									htmx.H3(
 										htmx.Text(
-											p.Environment.CreatedAt.Format("2006-01-02 15:04:05"),
+											p.environment.CreatedAt.Format("2006-01-02 15:04:05"),
 										),
 									),
 								),
@@ -161,7 +163,7 @@ func (p *EnvironmentIndexController) Get() error {
 									),
 									htmx.H3(
 										htmx.Text(
-											p.Environment.UpdatedAt.Format("2006-01-02 15:04:05"),
+											p.environment.UpdatedAt.Format("2006-01-02 15:04:05"),
 										),
 									),
 								),
@@ -195,7 +197,7 @@ func (p *EnvironmentIndexController) Get() error {
 
 // Delete ...
 func (p *EnvironmentIndexController) Delete() error {
-	err := p.db.DeleteEnvironment(p.Hx().Ctx().Context(), p.params.ID)
+	err := p.db.DeleteEnvironment(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}

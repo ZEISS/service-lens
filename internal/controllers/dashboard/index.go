@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -35,15 +36,22 @@ func (d *DashboardIndexController) Prepare() error {
 	return nil
 }
 
+// Error ...
+func (d *DashboardIndexController) Error(err error) error {
+	return d.Hx().RenderComp(
+		htmx.Text(err.Error()),
+	)
+}
+
 // Get ...
 func (d *DashboardIndexController) Get() error {
 	return d.Hx().RenderComp(
 		components.Page(
-			d.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				d.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: d.Values(utils.ValuesKeyUser).(*authz.User),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Form(

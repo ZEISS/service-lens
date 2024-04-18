@@ -54,11 +54,11 @@ func (l *LensEditController) Prepare() error {
 	}
 
 	l.params = NewDefaultLensEditControllerParams()
-	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
+	if err := l.BindParams(l.params); err != nil {
 		return err
 	}
 
-	lens, err := l.db.GetLensByID(l.Hx().Ctx().Context(), l.params.ID)
+	lens, err := l.db.GetLensByID(l.Context(), l.params.ID)
 	if err != nil {
 		return err
 	}
@@ -69,9 +69,7 @@ func (l *LensEditController) Prepare() error {
 
 // Post ...
 func (l *LensEditController) Post() error {
-	hx := l.Hx()
-
-	spec, err := hx.Ctx().FormFile("spec")
+	spec, err := l.Ctx().FormFile("spec")
 	if err != nil {
 		return err
 	}
@@ -93,12 +91,12 @@ func (l *LensEditController) Post() error {
 	}
 	lens.Team = *l.team
 
-	lens, err = l.db.AddLens(hx.Ctx().Context(), lens)
+	lens, err = l.db.AddLens(l.Context(), lens)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/%s/lenses/%s", l.team.Slug, lens.ID))
+	l.Hx().Redirect(fmt.Sprintf("/%s/lenses/%s", l.team.Slug, lens.ID))
 
 	return nil
 }
@@ -107,12 +105,13 @@ func (l *LensEditController) Post() error {
 func (l *LensEditController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.DefaultCtx(),
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: l.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				cards.CardBordered(
 					cards.CardProps{},
 					cards.Body(

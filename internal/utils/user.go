@@ -14,7 +14,7 @@ const (
 )
 
 // User ...
-func User(db ports.Repository) htmx.ContextFunc {
+func User(db ports.Repository) htmx.BindFunc {
 	return func(ctx *fiber.Ctx) (interface{}, interface{}, error) {
 		session, err := goth.SessionFromContext(ctx)
 		if err != nil {

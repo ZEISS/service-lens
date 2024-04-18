@@ -1,31 +1,28 @@
 package components
 
 import (
-	"fmt"
-
 	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // UserNavProps ...
-type UserNavProps struct{}
+type UserNavProps struct {
+	// User ...
+	User *authz.User
+}
 
 // UserNav ...
-func UserNav(ctx htmx.Ctx, p UserNavProps) htmx.Node {
-	user, ok := ctx.Values(utils.ValuesKeyUser).(*authz.User)
-	if !ok {
-		return htmx.Text("User not found")
+func UserNav(p UserNavProps) htmx.Node {
+	if p.User == nil {
+		return nil
 	}
 
 	users := []htmx.Node{}
-	for _, u := range *user.Teams {
+	for _, u := range *p.User.Teams {
 		users = append(users, htmx.Li(htmx.Text(u.Name)))
 	}
-
-	fmt.Println(user.Teams)
 
 	return htmx.Div(
 		htmx.ClassNames{"dropdown": true, "dropdown-end": true},

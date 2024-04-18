@@ -1,6 +1,7 @@
 package me
 
 import (
+	authz "github.com/zeiss/fiber-authz"
 	goth "github.com/zeiss/fiber-goth"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -36,23 +37,23 @@ func (m *MeIndexController) Prepare() error {
 
 // Get ...
 func (m *MeIndexController) Get() error {
-	session, err := goth.SessionFromContext(m.Hx().Context())
+	session, err := goth.SessionFromContext(m.Ctx())
 	if err != nil {
 		return err
 	}
 
-	user, err := m.db.GetUserByID(m.Hx().Context().Context(), session.UserID)
+	user, err := m.db.GetUserByID(m.Context(), session.UserID)
 	if err != nil {
 		return err
 	}
 
 	return m.Hx().RenderComp(
 		components.Page(
-			m.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				m.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: m.Values(utils.ValuesKeyUser).(*authz.User),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(

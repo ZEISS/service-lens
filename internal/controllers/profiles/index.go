@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -30,7 +31,6 @@ type ProfileIndexController struct {
 	db      ports.Repository
 	profile *models.Profile
 	params  *ProfileIndexControllerParams
-	ctx     htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -49,11 +49,11 @@ func (p *ProfileIndexController) Prepare() error {
 	}
 
 	p.params = NewDefaultProfileIndexControllerParams()
-	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
+	if err := p.BindParams(p.params); err != nil {
 		return err
 	}
 
-	profile, err := p.db.GetProfileByID(p.Hx().Ctx().Context(), p.params.ID)
+	profile, err := p.db.GetProfileByID(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}
@@ -66,11 +66,12 @@ func (p *ProfileIndexController) Prepare() error {
 func (p *ProfileIndexController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -196,7 +197,7 @@ func (p *ProfileIndexController) Get() error {
 
 // Delete ...
 func (p *ProfileIndexController) Delete() error {
-	err := p.db.DestroyProfile(p.Hx().Ctx().Context(), p.params.ID)
+	err := p.db.DestroyProfile(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}

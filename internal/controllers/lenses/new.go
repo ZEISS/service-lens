@@ -43,9 +43,7 @@ func (l *LensNewController) Prepare() error {
 
 // Post ...
 func (l *LensNewController) Post() error {
-	hx := l.Hx()
-
-	spec, err := hx.Ctx().FormFile("spec")
+	spec, err := l.Ctx().FormFile("spec")
 	if err != nil {
 		return err
 	}
@@ -60,7 +58,7 @@ func (l *LensNewController) Post() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam)
+	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	lens := &models.Lens{}
 	err = lens.UnmarshalJSON(buf.Bytes())
@@ -69,26 +67,29 @@ func (l *LensNewController) Post() error {
 	}
 	lens.Team = *team
 
-	lens, err = l.db.AddLens(hx.Ctx().Context(), lens)
+	lens, err = l.db.AddLens(l.Context(), lens)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
+	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
 
 	return nil
 }
 
 // Get ...
 func (l *LensNewController) Get() error {
+	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
+
 	return l.Hx().RenderComp(
 		components.Page(
-			l.DefaultCtx(),
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
-				l.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: l.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				cards.CardBordered(
 					cards.CardProps{},
 					cards.Body(
@@ -100,7 +101,7 @@ func (l *LensNewController) Get() error {
 						htmx.FormElement(
 							htmx.ID("new-lens-form"),
 							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost(fmt.Sprintf("/teams/%s/lenses/new", htmx.Locals[*authz.Team](l.DefaultCtx(), utils.ValuesKeyTeam).Slug)),
+							htmx.HxPost(fmt.Sprintf("/teams/%s/lenses/new", team.Slug)),
 							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
 							htmx.Div(
 								forms.FileInputBordered(

@@ -9,14 +9,11 @@ type PageProps struct {
 	Title    string
 	Path     string
 	Children []htmx.Node
-
-	htmx.Ctx
 }
 
 // Page is a whole document to output.
-func Page(ctx htmx.Ctx, props PageProps, children ...htmx.Node) htmx.Node {
+func Page(props PageProps, children ...htmx.Node) htmx.Node {
 	return htmx.HTML5(
-		ctx,
 		htmx.HTML5Props{
 			Title:    props.Title,
 			Language: "en",

@@ -1,6 +1,7 @@
 package settings
 
 import (
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -34,11 +35,11 @@ func (m *SettingsIndexController) Prepare() error {
 func (m *SettingsIndexController) Get() error {
 	return m.Hx().RenderComp(
 		components.Page(
-			m.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				m.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: m.Values(utils.ValuesKeyUser).(*authz.User),
+				},
 				components.Wrap(
 					components.WrapProps{},
 				),

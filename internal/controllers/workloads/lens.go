@@ -3,6 +3,7 @@ package workloads
 import (
 	"fmt"
 
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -30,18 +31,16 @@ func NewWorkloadLensController(db ports.Repository) *WorkloadLensController {
 
 // Prepare ...
 func (w *WorkloadLensController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
-	lensID, err := uuid.Parse(hx.Context().Params("lens"))
+	lensID, err := uuid.Parse(w.Ctx().Params("lens"))
 	if err != nil {
 		return err
 	}
 
-	lens, err := w.db.GetLensByID(hx.Context().Context(), lensID)
+	lens, err := w.db.GetLensByID(w.Context(), lensID)
 	if err != nil {
 		return err
 	}
@@ -72,11 +71,12 @@ func (w *WorkloadLensController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

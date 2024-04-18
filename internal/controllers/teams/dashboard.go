@@ -34,21 +34,21 @@ func (t *TeamDashboardController) Prepare() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](t.DefaultCtx(), utils.ValuesKeyTeam)
+	team := t.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Hx().Context().Context(), team.Slug)
+	totalCountWorkloads, err := t.db.TotalCountWorkloads(t.Context(), team.Slug)
 	if err != nil {
 		return err
 	}
 	t.totalCountWorkloads = totalCountWorkloads
 
-	totalCountLenses, err := t.db.TotalCountLenses(t.Hx().Context().Context(), team.Slug)
+	totalCountLenses, err := t.db.TotalCountLenses(t.Context(), team.Slug)
 	if err != nil {
 		return err
 	}
 	t.totalCountLenses = totalCountLenses
 
-	totalCountProfiles, err := t.db.TotalCountProfiles(t.Hx().Context().Context(), team.Slug)
+	totalCountProfiles, err := t.db.TotalCountProfiles(t.Context(), team.Slug)
 	if err != nil {
 		return err
 	}
@@ -66,11 +66,12 @@ func (t *TeamDashboardController) Error(err error) error {
 func (t *TeamDashboardController) Get() error {
 	return t.Hx().RenderComp(
 		components.Page(
-			t.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				t.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: t.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: t.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(

@@ -31,7 +31,6 @@ type ProfileEditController struct {
 	db      ports.Repository
 	params  *ProfileEditControllerParams
 	profile *models.Profile
-	ctx     htmx.Ctx
 
 	htmx.DefaultController
 }
@@ -50,11 +49,11 @@ func (p *ProfileEditController) Prepare() error {
 	}
 
 	p.params = NewDefaultProfileEditControllerParams()
-	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
+	if err := p.BindParams(p.params); err != nil {
 		return err
 	}
 
-	profile, err := p.db.GetProfileByID(p.Hx().Ctx().Context(), p.params.ID)
+	profile, err := p.db.GetProfileByID(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}
@@ -66,18 +65,18 @@ func (p *ProfileEditController) Prepare() error {
 // Post ...
 func (p *ProfileEditController) Post() error {
 	query := NewDefaultProfileNewControllerQuery()
-	if err := p.Hx().Ctx().BodyParser(query); err != nil {
+	if err := p.BindQuery(query); err != nil {
 		return err
 	}
 
 	p.profile.Description = query.Description
 
-	err := p.db.UpdateProfile(p.Hx().Ctx().Context(), p.profile)
+	err := p.db.UpdateProfile(p.Context(), p.profile)
 	if err != nil {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
+	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
 
@@ -88,11 +87,12 @@ func (p *ProfileEditController) Post() error {
 func (p *ProfileEditController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

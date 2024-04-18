@@ -16,7 +16,6 @@ import (
 type WorkloadPillarController struct {
 	db     ports.Repository
 	pillar *models.Pillar
-	ctx    htmx.Ctx
 
 	htmx.UnimplementedController
 }
@@ -30,25 +29,23 @@ func NewWorkloadPillarController(db ports.Repository) *WorkloadPillarController 
 
 // Prepare ...
 func (w *WorkloadPillarController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
-	lensID, err := uuid.Parse(hx.Context().Params("lens"))
+	lensID, err := uuid.Parse(w.Ctx().Params("lens"))
 	if err != nil {
 		return err
 	}
 
-	pillarId, err := hx.Context().ParamsInt("pillar")
+	pillarId, err := w.Ctx().ParamsInt("pillar")
 	if err != nil {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.ctx, utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	pillar, err := w.db.GetPillarById(hx.Context().Context(), team.Slug, lensID, pillarId)
+	pillar, err := w.db.GetPillarById(w.Context(), team.Slug, lensID, pillarId)
 	if err != nil {
 		return err
 	}
@@ -82,11 +79,12 @@ func (w *WorkloadPillarController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.H1(

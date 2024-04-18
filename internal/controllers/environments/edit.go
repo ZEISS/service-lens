@@ -30,8 +30,7 @@ func NewDefaultEnvironmentEditControllerParams() *EnvironmentEditControllerParam
 type EnvironmentEditController struct {
 	db          ports.Repository
 	params      *EnvironmentEditControllerParams
-	Environment *models.Environment
-	ctx         htmx.Ctx
+	environment *models.Environment
 
 	htmx.UnimplementedController
 }
@@ -46,15 +45,15 @@ func NewEnvironmentEditController(db ports.Repository) *EnvironmentEditControlle
 // Prepare ...
 func (p *EnvironmentEditController) Prepare() error {
 	p.params = NewDefaultEnvironmentEditControllerParams()
-	if err := p.Hx().Ctx().ParamsParser(p.params); err != nil {
+	if err := p.BindParams(p.params); err != nil {
 		return err
 	}
 
-	Environment, err := p.db.GetEnvironment(p.Hx().Ctx().Context(), p.params.ID)
+	environment, err := p.db.GetEnvironment(p.Context(), p.params.ID)
 	if err != nil {
 		return err
 	}
-	p.Environment = Environment
+	p.environment = environment
 
 	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
 		return err
@@ -65,21 +64,20 @@ func (p *EnvironmentEditController) Prepare() error {
 
 // Post ...
 func (p *EnvironmentEditController) Post() error {
-	team := htmx.Locals[*authz.Team](p.ctx, utils.ValuesKeyTeam)
+	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	query := NewDefaultEnvironmentNewControllerQuery()
-	if err := p.Hx().Ctx().BodyParser(query); err != nil {
+	if err := p.BindBody(query); err != nil {
 		return err
 	}
+	p.environment.Description = query.Description
 
-	p.Environment.Description = query.Description
-
-	err := p.db.UpdateEnvironment(p.Hx().Ctx().Context(), p.Environment)
+	err := p.db.UpdateEnvironment(p.Context(), p.environment)
 	if err != nil {
 		return err
 	}
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.Environment.ID))
+	p.Hx().Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.environment.ID))
 
 	return nil
 }
@@ -88,11 +86,12 @@ func (p *EnvironmentEditController) Post() error {
 func (p *EnvironmentEditController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(
@@ -139,7 +138,7 @@ func (p *EnvironmentEditController) Get() error {
 								forms.TextInputBordered(
 									forms.TextInputProps{
 										Name:     "name",
-										Value:    p.Environment.Name,
+										Value:    p.environment.Name,
 										Disabled: true,
 									},
 								),
@@ -185,7 +184,7 @@ func (p *EnvironmentEditController) Get() error {
 									forms.TextInputBordered(
 										forms.TextInputProps{
 											Name:  "description",
-											Value: p.Environment.Description,
+											Value: p.environment.Description,
 										},
 									),
 									forms.FormControlLabel(

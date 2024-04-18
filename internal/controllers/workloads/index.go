@@ -3,6 +3,7 @@ package workloads
 import (
 	"fmt"
 
+	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -43,19 +44,17 @@ func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
 
 // Prepare ...
 func (w *WorkloadIndexController) Prepare() error {
-	hx := w.Hx()
-
 	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
 		return err
 	}
 
 	params := NewDefaultWorkloadIndexControllerParams()
-	if err := hx.Ctx().ParamsParser(params); err != nil {
+	if err := w.BindParams(params); err != nil {
 		return err
 	}
 	w.params = params
 
-	workload, err := w.db.IndexWorkload(hx.Context().Context(), params.ID)
+	workload, err := w.db.IndexWorkload(w.Context(), params.ID)
 	if err != nil {
 		return err
 	}
@@ -85,11 +84,12 @@ func (w *WorkloadIndexController) Get() error {
 
 	return hx.RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{
 						ClassNames: htmx.ClassNames{
@@ -277,7 +277,7 @@ func (w *WorkloadIndexController) Get() error {
 
 // Delete ...
 func (w *WorkloadIndexController) Delete() error {
-	err := w.db.DestroyWorkload(w.Hx().Ctx().Context(), w.workload.ID)
+	err := w.db.DestroyWorkload(w.Context(), w.workload.ID)
 	if err != nil {
 		return err
 	}

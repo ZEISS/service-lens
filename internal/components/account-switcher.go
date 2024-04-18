@@ -3,8 +3,6 @@ package components
 import (
 	"fmt"
 
-	u "github.com/zeiss/service-lens/internal/utils"
-
 	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
@@ -18,13 +16,15 @@ import (
 type AccountSwitcherProps struct {
 	// ClassNames ...
 	ClassNames htmx.ClassNames
-
-	htmx.Ctx
+	// User ...
+	User *authz.User
 }
 
 // AccountSwitcher ...
 func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Node {
-	user := props.Ctx.Values(u.ValuesKeyUser).(*authz.User)
+	if props.User == nil {
+		return nil
+	}
 
 	return dropdowns.Dropdown(
 		dropdowns.DropdownProps{},
@@ -60,7 +60,7 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 						htmx.Text(el.Name),
 					),
 				)
-			}, *user.Teams...),
+			}, *props.User.Teams...),
 			dividers.Divider(
 				dividers.DividerProps{
 					ClassNames: htmx.ClassNames{},

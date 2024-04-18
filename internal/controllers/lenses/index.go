@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -43,11 +44,11 @@ func NewLensIndexController(db ports.Repository) *LensIndexController {
 // Prepare ...
 func (l *LensIndexController) Prepare() error {
 	l.params = NewDefaultLensIndexControllerParams()
-	if err := l.Hx().Ctx().ParamsParser(l.params); err != nil {
+	if err := l.BindParams(l.params); err != nil {
 		return err
 	}
 
-	lens, err := l.db.GetLensByID(l.Hx().Ctx().Context(), l.params.ID)
+	lens, err := l.db.GetLensByID(l.Context(), l.params.ID)
 	if err != nil {
 		return err
 	}
@@ -64,11 +65,12 @@ func (l *LensIndexController) Prepare() error {
 func (l *LensIndexController) Get() error {
 	return l.Hx().RenderComp(
 		components.Page(
-			l.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				l.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: l.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -142,7 +144,7 @@ func (l *LensIndexController) Get() error {
 
 // Delete ...
 func (l *LensIndexController) Delete() error {
-	err := l.db.DestroyLens(l.Hx().Ctx().Context(), l.params.ID)
+	err := l.db.DestroyLens(l.Context(), l.params.ID)
 	if err != nil {
 		return err
 	}

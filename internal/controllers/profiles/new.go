@@ -50,12 +50,10 @@ func (p *ProfileNewController) Prepare() error {
 
 // Post ...
 func (p *ProfileNewController) Post() error {
-	hx := p.Hx()
-
-	team := htmx.Locals[*authz.Team](p.DefaultCtx(), utils.ValuesKeyTeam)
+	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	query := NewDefaultProfileNewControllerQuery()
-	if err := hx.Ctx().BodyParser(query); err != nil {
+	if err := p.BindBody(query); err != nil {
 		return err
 	}
 
@@ -65,12 +63,12 @@ func (p *ProfileNewController) Post() error {
 		Team:        *team,
 	}
 
-	err := p.db.NewProfile(hx.Ctx().Context(), profile)
+	err := p.db.NewProfile(p.Context(), profile)
 	if err != nil {
 		return err
 	}
 
-	hx.Redirect(fmt.Sprintf("/teams/%s/profiles/%s", team.Slug, profile.ID))
+	p.Hx().Redirect(fmt.Sprintf("/teams/%s/profiles/%s", team.Slug, profile.ID))
 
 	return nil
 }
@@ -79,11 +77,12 @@ func (p *ProfileNewController) Post() error {
 func (p *ProfileNewController) Get() error {
 	return p.Hx().RenderComp(
 		components.Page(
-			p.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				p.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: p.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

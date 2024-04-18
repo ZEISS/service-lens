@@ -57,7 +57,7 @@ func (w *WorkloadNewController) Prepare() error {
 // Post ...
 func (w *WorkloadNewController) Post() error {
 	query := NewWorkloadNewControllerQuery()
-	if err := w.Hx().Ctx().BodyParser(query); err != nil {
+	if err := w.BindQuery(query); err != nil {
 		return err
 	}
 
@@ -67,7 +67,7 @@ func (w *WorkloadNewController) Post() error {
 		return err
 	}
 
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
 	workload := &models.Workload{
 		Description: query.Description,
@@ -77,7 +77,7 @@ func (w *WorkloadNewController) Post() error {
 		Team:        *team,
 	}
 
-	err = w.db.CreateWorkload(w.Hx().Ctx().Context(), workload)
+	err = w.db.CreateWorkload(w.Context(), workload)
 	if err != nil {
 		return err
 	}
@@ -89,11 +89,9 @@ func (w *WorkloadNewController) Post() error {
 
 // Get ...
 func (w *WorkloadNewController) Get() error {
-	hx := w.Hx()
+	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	team := htmx.Locals[*authz.Team](w.DefaultCtx(), utils.ValuesKeyTeam)
-
-	environments, err := w.db.ListEnvironment(hx.Context().Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
+	environments, err := w.db.ListEnvironment(w.Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
 	if err != nil {
 		return err
 	}
@@ -124,13 +122,14 @@ func (w *WorkloadNewController) Get() error {
 	// 	)
 	// }
 
-	return hx.RenderComp(
+	return w.Hx().RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

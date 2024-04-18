@@ -59,30 +59,28 @@ func NewTeamListController(db ports.Repository) *TeamListController {
 
 // Prepare ...
 func (t *TeamListController) Prepare() error {
-	hx := t.Hx()
-
 	if err := t.BindValues(utils.User(t.db), utils.Team(t.db)); err != nil {
 		return err
 	}
 
 	params := NewDefaultTeamListControllerParams()
-	if err := hx.Context().ParamsParser(params); err != nil {
+	if err := t.BindParams(params); err != nil {
 		return err
 	}
 	t.params = params
 
 	query := NewDefaultTeamListControllerQuery()
-	if err := hx.Context().QueryParser(query); err != nil {
+	if err := t.BindQuery(query); err != nil {
 		return err
 	}
 	t.query = query
 
 	pagination := models.NewPagination[*authz.Team]()
-	if err := hx.Ctx().QueryParser(&pagination); err != nil {
+	if err := t.BindQuery(&pagination); err != nil {
 		return err
 	}
 
-	teams, err := t.db.ListTeams(hx.Context().Context(), pagination)
+	teams, err := t.db.ListTeams(t.Context(), pagination)
 	if err != nil {
 		return err
 	}
@@ -93,12 +91,10 @@ func (t *TeamListController) Prepare() error {
 
 // Get ...
 func (w *TeamListController) Get() error {
-	hx := w.Hx()
+	if w.Hx().HxRequest() {
+		w.Hx().ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", w.Ctx().Path(), w.query.Limit, w.query.Offset))
 
-	if hx.IsHxRequest() {
-		hx.ReplaceURL(fmt.Sprintf("%s?limit=%d&offset=%d", hx.Ctx().Path(), w.query.Limit, w.query.Offset))
-
-		return hx.RenderComp(
+		return w.Hx().RenderComp(
 			TeamListTableComponent(
 				TeamListTableProps{
 					Teams:  w.teams.Rows,
@@ -110,13 +106,14 @@ func (w *TeamListController) Get() error {
 		)
 	}
 
-	return hx.RenderComp(
+	return w.Hx().RenderComp(
 		components.Page(
-			w.DefaultCtx(),
 			components.PageProps{},
 			components.Layout(
-				w.DefaultCtx(),
-				components.LayoutProps{},
+				components.LayoutProps{
+					User: w.Values(utils.ValuesKeyUser).(*authz.User),
+					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

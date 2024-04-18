@@ -2,6 +2,7 @@ package home
 
 import (
 	"github.com/gofiber/fiber/v2"
+	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -34,11 +35,12 @@ func (h *HomeIndexController) Prepare() error {
 // Get ...
 func (h *HomeIndexController) Get(c *fiber.Ctx) (htmx.Node, error) {
 	return components.Page(
-		h.DefaultCtx(),
 		components.PageProps{},
 		components.Layout(
-			h.DefaultCtx(),
-			components.LayoutProps{},
+			components.LayoutProps{
+				User: h.Values(utils.ValuesKeyUser).(*authz.User),
+				Team: h.Values(utils.ValuesKeyTeam).(*authz.Team),
+			},
 			components.Wrap(
 				components.WrapProps{},
 				htmx.Div(
