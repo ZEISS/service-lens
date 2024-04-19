@@ -13,22 +13,22 @@ func HelloWorld(children ...htmx.Node) htmx.Node {
 	return htmx.Element("hello-world", children...)
 }
 
-// DashboardIndexController ...
-type DashboardIndexController struct {
+// ShowDashboardController ...
+type ShowDashboardController struct {
 	db ports.Repository
 
 	htmx.DefaultController
 }
 
-// NewDashboardIndexController ...
-func NewDashboardController(db ports.Repository) *DashboardIndexController {
-	return &DashboardIndexController{
+// NewShowDashboardController ...
+func NewShowDashboardController(db ports.Repository) *ShowDashboardController {
+	return &ShowDashboardController{
 		db: db,
 	}
 }
 
 // Prepare ...
-func (d *DashboardIndexController) Prepare() error {
+func (d *ShowDashboardController) Prepare() error {
 	if err := d.BindValues(utils.User(d.db)); err != nil {
 		return err
 	}
@@ -36,26 +36,18 @@ func (d *DashboardIndexController) Prepare() error {
 	return nil
 }
 
-// Error ...
-func (d *DashboardIndexController) Error(err error) error {
-	return d.Hx().RenderComp(
-		htmx.Text(err.Error()),
-	)
-}
-
 // Get ...
-func (d *DashboardIndexController) Get() error {
+func (d *ShowDashboardController) Get() error {
 	return d.Hx().RenderComp(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: d.Values(utils.ValuesKeyUser).(*authz.User),
+					User: htmx.AsValue[*authz.User](d.Values(utils.ValuesKeyUser)),
 				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Form(
-						// htmx.Attribute("data-target", "hello-world.form"),
 						htmx.Attribute("is", "chat-input"),
 						htmx.Input(
 							htmx.Attribute("type", "text"),

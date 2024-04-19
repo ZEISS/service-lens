@@ -13,9 +13,9 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
-// NewDashboardIndexController ...
-func NewDashboardController(db ports.Repository) *dashboard.DashboardIndexController {
-	return dashboard.NewDashboardController(db)
+// NewShowDashboardController ...
+func NewShowDashboardController(db ports.Repository) *dashboard.ShowDashboardController {
+	return dashboard.NewShowDashboardController(db)
 }
 
 // NewLoginIndexController ...

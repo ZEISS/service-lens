@@ -88,7 +88,6 @@ func (p *TeamNewController) Get() error {
 			components.Layout(
 				components.LayoutProps{
 					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
 				},
 				htmx.FormElement(
 					htmx.HxPost(""),

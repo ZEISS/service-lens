@@ -64,7 +64,7 @@ func (a *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(goth.NewProtectMiddleware(gothConfig))
 		app.Use(authz.SetAuthzHandler(authz.NewNoopObjectResolver(), authz.NewNoopActionResolver(), authz.NewGothAuthzPrincipalResolver()))
 
-		app.Get("/", htmx.NewHxControllerHandler(controllers.NewDashboardController(a.db)))
+		app.Get("/", htmx.NewHxControllerHandler(controllers.NewShowDashboardController(a.db)))
 		app.Get("/login", htmx.NewHxControllerHandler(controllers.NewLoginIndexController(a.db)))
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
