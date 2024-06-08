@@ -113,7 +113,12 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
+
+		// Me ...
 		app.Get("/me", handlers.Me())
+
+		// Profiles ...
+		app.Get("/profiles", handlers.ListProfiles())
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {

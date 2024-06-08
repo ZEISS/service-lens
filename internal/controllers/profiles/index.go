@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -12,7 +11,6 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // ProfileIndexControllerParams ...
@@ -44,9 +42,9 @@ func NewProfileIndexController(db ports.Repository) *ProfileIndexController {
 
 // Prepare ...
 func (p *ProfileIndexController) Prepare() error {
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-		return err
-	}
+	// if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
+	// 	return err
+	// }
 
 	p.params = NewDefaultProfileIndexControllerParams()
 	if err := p.BindParams(p.params); err != nil {
@@ -64,14 +62,11 @@ func (p *ProfileIndexController) Prepare() error {
 
 // Get ...
 func (p *ProfileIndexController) Get() error {
-	return p.Hx().RenderComp(
+	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -202,7 +197,7 @@ func (p *ProfileIndexController) Delete() error {
 		return err
 	}
 
-	p.Hx().Redirect("list")
+	// p.Hx().Redirect("list")
 
 	return nil
 }

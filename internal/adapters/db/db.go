@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -111,4 +112,9 @@ type datastoreTx struct {
 // GetProfile is a method that returns the profile of the current user
 func (t *datastoreTx) GetProfile(ctx context.Context, user *adapters.GothUser) error {
 	return t.tx.First(user).Error
+}
+
+// ListProfiles is a method that returns a list of profiles
+func (t *datastoreTx) ListProfiles(ctx context.Context, pagination *tables.Results[models.Profile]) error {
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
 }

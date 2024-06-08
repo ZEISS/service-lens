@@ -1,0 +1,161 @@
+package profiles
+
+import (
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/service-lens/internal/models"
+)
+
+// ProfilesTableProps ...
+type ProfilesTableProps struct {
+	Profiles []*models.Profile
+	Offset   int
+	Limit    int
+	Total    int
+}
+
+// ProfilesTable ...
+func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
+	return htmx.Div(
+		htmx.ClassNames{},
+		tables.Table(
+			tables.TableProps{
+				ID: "profiles-tables",
+				Pagination: tables.TablePagination(
+					tables.TablePaginationProps{
+						Pagination: tables.Pagination(
+							tables.PaginationProps{
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								Total:  props.Total,
+							},
+							tables.Prev(
+								tables.PaginationProps{
+									Total:  props.Total,
+									Offset: props.Offset,
+									Limit:  props.Limit,
+									URL:    "/profiles",
+								},
+							),
+
+							tables.Select(
+								tables.SelectProps{
+									Total:  props.Total,
+									Offset: props.Offset,
+									Limit:  props.Limit,
+									Limits: tables.DefaultLimits,
+									URL:    "/profiles",
+								},
+							),
+							tables.Next(
+								tables.PaginationProps{
+									Total:  props.Total,
+									Offset: props.Offset,
+									Limit:  props.Limit,
+									URL:    "/profiles",
+								},
+							),
+						),
+					},
+				),
+				Toolbar: tables.TableToolbar(
+					tables.TableToolbarProps{
+						ClassNames: htmx.ClassNames{
+							"flex":            true,
+							"items-center":    true,
+							"justify-between": true,
+							"px-5":            true,
+							"pt-5":            true,
+						},
+					},
+					htmx.Div(
+						htmx.ClassNames{
+							"inline-flex":  true,
+							"items-center": true,
+							"gap-3":        true,
+						},
+						forms.TextInputBordered(
+							forms.TextInputProps{
+								ClassNames: htmx.ClassNames{
+									"input-sm": true,
+								},
+								Placeholder: "Search ...",
+							},
+						),
+					),
+					htmx.A(
+						htmx.Href("/profiles/new"),
+						buttons.Outline(
+							buttons.ButtonProps{
+								ClassNames: htmx.ClassNames{
+									"btn-sm": true,
+								},
+							},
+							htmx.Text("Create Profile"),
+						),
+					),
+				),
+			},
+			[]tables.ColumnDef[*models.Profile]{
+				{
+					ID:          "id",
+					AccessorKey: "id",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("ID"))
+					},
+					Cell: func(p tables.TableProps, row *models.Profile) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.ID.String()),
+						)
+					},
+				},
+				{
+					ID:          "name",
+					AccessorKey: "name",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Name"))
+					},
+					Cell: func(p tables.TableProps, row *models.Profile) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: "/profiles/" + row.ID.String(),
+								},
+								htmx.Text(row.Name),
+							),
+						)
+					},
+				},
+				{
+					Header: func(p tables.TableProps) htmx.Node {
+						return nil
+					},
+					Cell: func(p tables.TableProps, row *models.Profile) htmx.Node {
+						return htmx.Td(
+							buttons.Button(
+								buttons.ButtonProps{
+									ClassNames: htmx.ClassNames{
+										"btn-square": true,
+									},
+								},
+							),
+						)
+					},
+				},
+			},
+			props.Profiles,
+			// Pagination: ProfileListTablePaginationComponent(
+			// 	ProfileListTablePaginationProps{
+			// 		Limit:  props.Limit,
+			// 		Offset: props.Offset,
+			// 		Total:  props.Total,
+			// 		Target: "profiles-tables",
+			// 		Team:   props.Team,
+			// 	},
+			// ),
+		),
+	)
+}

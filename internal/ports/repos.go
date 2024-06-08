@@ -5,6 +5,8 @@ import (
 	"io"
 
 	"github.com/zeiss/fiber-goth/adapters"
+	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/service-lens/internal/models"
 )
 
 // Migration is a method that runs the migration.
@@ -28,6 +30,8 @@ type Datastore interface {
 type ReadTx interface {
 	// GetProfile is a method that returns the profile of the current user
 	GetProfile(ctx context.Context, user *adapters.GothUser) error
+	// ListProfiles is a method that returns a list of profiles
+	ListProfiles(ctx context.Context, profiles *tables.Results[models.Profile]) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.

@@ -1,10 +1,7 @@
 package profiles
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -12,7 +9,6 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // ProfileEditControllerParams ...
@@ -44,9 +40,9 @@ func NewProfileEditController(db ports.Repository) *ProfileEditController {
 
 // Prepare ...
 func (p *ProfileEditController) Prepare() error {
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-		return err
-	}
+	// if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
+	// 	return err
+	// }
 
 	p.params = NewDefaultProfileEditControllerParams()
 	if err := p.BindParams(p.params); err != nil {
@@ -76,23 +72,20 @@ func (p *ProfileEditController) Post() error {
 		return err
 	}
 
-	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
+	// team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
+	// p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
 
 	return nil
 }
 
 // New ...
 func (p *ProfileEditController) Get() error {
-	return p.Hx().RenderComp(
+	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

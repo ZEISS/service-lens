@@ -1,259 +1,64 @@
 package profiles
 
 import (
-	"fmt"
+	"context"
 
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/profiles"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/icons"
-	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
-// ProfileListControllerParams ...
-type ProfileListControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
-}
-
-// NewDefaultProfileListControllerParams ...
-func NewDefaultProfileListControllerParams() *ProfileListControllerParams {
-	return &ProfileListControllerParams{}
-}
-
-// ProfileListControllerQuery ...
-type ProfileListControllerQuery struct {
-	Limit  int `json:"limit" xml:"limit" form:"limit"`
-	Offset int `json:"offset" xml:"offset" form:"offset"`
-}
-
-// NewDefaultProfileListControllerQuery ...
-func NewDefaultProfileListControllerQuery() *ProfileListControllerQuery {
-	return &ProfileListControllerQuery{
-		Limit:  10,
-		Offset: 0,
-	}
-}
-
-// ProfileListController ...
-type ProfileListController struct {
-	db       ports.Repository
-	profiles *models.Pagination[*models.Profile]
-
-	params *ProfileListControllerParams
-	query  *ProfileListControllerQuery
-
+// ProfileListControllerImpl ...
+type ProfileListControllerImpl struct {
+	profiles tables.Results[models.Profile]
+	store    ports.Datastore
 	htmx.DefaultController
 }
 
-// NewProfileListController ...
-func NewProfileListController(db ports.Repository) *ProfileListController {
-	return &ProfileListController{
-		db: db,
-	}
+// NewProfilesListController ...
+func NewProfilesListController(store ports.Datastore) *ProfileListControllerImpl {
+	return &ProfileListControllerImpl{store: store}
 }
 
 // Prepare ...
-func (w *ProfileListController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
+func (w *ProfileListControllerImpl) Prepare() error {
+	if err := w.BindQuery(&w.profiles); err != nil {
 		return err
 	}
 
-	w.params = NewDefaultProfileListControllerParams()
-	if err := w.BindParams(w.params); err != nil {
-		return err
-	}
-
-	w.query = NewDefaultProfileListControllerQuery()
-	if err := w.BindQuery(w.query); err != nil {
-		return err
-	}
-
-	pagination := models.NewPagination[*models.Profile]()
-	if err := w.BindQuery(&pagination); err != nil {
-		return err
-	}
-
-	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	profiles, err := w.db.ListProfiles(w.Context(), team.Slug, pagination)
-	if err != nil {
-		return err
-	}
-	w.profiles = profiles
-
-	return nil
+	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.ListProfiles(ctx, &w.profiles)
+	})
 }
 
 // Get ...
-func (w *ProfileListController) Get() error {
-	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	return w.Hx().RenderComp(
+func (w *ProfileListControllerImpl) Get() error {
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-          Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(
 						htmx.ClassNames{
 							"overflow-x-auto": true,
 						},
-						ProfileListTableComponent(
-							ProfileListTableProps{
-								Profiles: w.profiles.Rows,
-								Team:     team,
-								Offset:   w.query.Offset,
-								Limit:    w.query.Limit,
-								Total:    int(w.profiles.TotalRows),
+						profiles.ProfilesTable(
+							profiles.ProfilesTableProps{
+								Profiles: w.profiles.GetRows(),
+								Offset:   w.profiles.GetOffset(),
+								Limit:    w.profiles.GetLimit(),
+								Total:    w.profiles.GetTotalRows(),
 							},
 						),
 					),
 				),
 			),
 		),
-	)
-}
-
-// ProfileListTablePaginationProps ...
-type ProfileListTablePaginationProps struct {
-	Limit  int
-	Offset int
-	Total  int
-	Target string
-	Team   *authz.Team
-}
-
-// ProfileListTablePaginationComponent ...
-func ProfileListTablePaginationComponent(props ProfileListTablePaginationProps, children ...htmx.Node) htmx.Node {
-	return tables.Pagination(
-		tables.PaginationProps{
-			URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
-			Limit:  props.Limit,
-			Offset: props.Offset,
-			Target: props.Target,
-			Total:  props.Total,
-		},
-		tables.Prev(
-			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
-				Offset: props.Offset,
-				Limit:  props.Limit,
-				Target: props.Target,
-				Total:  props.Total,
-			},
-		),
-		tables.Select(
-			tables.SelectProps{
-				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
-				Limit:  props.Limit,
-				Offset: props.Offset,
-				Limits: tables.DefaultLimits,
-				Target: props.Target,
-				Total:  props.Total,
-			},
-		),
-		tables.Next(
-			tables.PaginationProps{
-				URL:    fmt.Sprintf("/%s/profiles/list", props.Team.Slug),
-				Offset: props.Offset,
-				Limit:  props.Limit,
-				Target: props.Target,
-				Total:  props.Total,
-			},
-		),
-	)
-}
-
-// ProfileListTableProps ...
-type ProfileListTableProps struct {
-	Profiles []*models.Profile
-	Team     *authz.Team
-	Offset   int
-	Limit    int
-	Total    int
-}
-
-// ProfileListTableComponent ...
-func ProfileListTableComponent(props ProfileListTableProps, children ...htmx.Node) htmx.Node {
-	return tables.Table[*models.Profile](
-		tables.TableProps[*models.Profile]{
-			ID: "profiles-tables",
-			Columns: []tables.ColumnDef[*models.Profile]{
-				{
-					ID:          "id",
-					AccessorKey: "id",
-					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-						return htmx.Th(htmx.Text("ID"))
-					},
-					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-						return htmx.Td(
-							htmx.Text(row.ID.String()),
-						)
-					},
-				},
-				{
-					ID:          "name",
-					AccessorKey: "name",
-					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-						return htmx.Th(htmx.Text("Name"))
-					},
-					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-						return htmx.Td(
-							links.Link(
-								links.LinkProps{
-									Href: fmt.Sprintf("/%s/profiles/%s", props.Team.Slug, row.ID.String()),
-								},
-								htmx.Text(row.Name),
-							),
-						)
-					},
-				},
-				{
-					Header: func(p tables.TableProps[*models.Profile]) htmx.Node {
-						return nil
-					},
-					Cell: func(p tables.TableProps[*models.Profile], row *models.Profile) htmx.Node {
-						return htmx.Td(
-							buttons.Button(
-								buttons.ButtonProps{
-									ClassNames: htmx.ClassNames{
-										"btn-square": true,
-									},
-								},
-
-								htmx.HxDelete(fmt.Sprintf("/%s/profiles/%s", props.Team.Slug, row.ID.String())),
-								htmx.HxTarget("closest <tr />"),
-								htmx.HxConfirm("Are you sure you want to delete this profile?"),
-								icons.TrashOutline(
-									icons.IconProps{},
-								),
-							),
-						)
-					},
-				},
-			},
-			Rows: tables.NewRows(props.Profiles),
-			Pagination: ProfileListTablePaginationComponent(
-				ProfileListTablePaginationProps{
-					Limit:  props.Limit,
-					Offset: props.Offset,
-					Total:  props.Total,
-					Target: "profiles-tables",
-					Team:   props.Team,
-				},
-			),
-		},
 	)
 }

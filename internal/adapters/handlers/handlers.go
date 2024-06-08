@@ -6,6 +6,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/login"
 	"github.com/zeiss/service-lens/internal/controllers/me"
+	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
@@ -43,6 +44,13 @@ func (a *handlers) Dashboard() fiber.Handler {
 func (a *handlers) Me() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return me.NewMeController(a.store)
+	})
+}
+
+// ListProfiles ...
+func (a *handlers) ListProfiles() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewProfilesListController(a.store)
 	})
 }
 
