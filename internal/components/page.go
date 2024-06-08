@@ -22,13 +22,17 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 			},
 			Head: []htmx.Node{
 				htmx.Link(
-					htmx.Attribute("href", "/static/output.css"),
+					htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui/dist/full.css"),
 					htmx.Attribute("rel", "stylesheet"),
 					htmx.Attribute("type", "text/css"),
 				),
 				htmx.Script(
-					htmx.Attribute("src", "/static/output.js"),
-					htmx.Attribute("type", "application/javascript"),
+					htmx.Attribute("src", "https://cdn.tailwindcss.com"),
+				),
+				htmx.Script(
+					htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.12"),
+					htmx.Integrity("sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"),
+					htmx.CrossOrigin("anonymous"),
 				),
 			},
 		},

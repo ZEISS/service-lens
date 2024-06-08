@@ -77,9 +77,7 @@ func (p *EnvironmentEditController) Post() error {
 		return err
 	}
 
-	p.Hx().Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.environment.ID))
-
-	return nil
+	return p.Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.environment.ID))
 }
 
 // New ...

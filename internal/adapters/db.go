@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/zeiss/service-lens/internal/models"
-	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/google/uuid"
@@ -44,8 +43,6 @@ func (d *DB) RunMigration() error {
 		&models.WorkloadLensQuestionAnswer{},
 	)
 }
-
-var _ ports.Repository = (*DB)(nil)
 
 // NewDB ...
 func NewDB(conn *gorm.DB) *DB {
@@ -366,21 +363,21 @@ func (d *DB) GetTeamByID(ctx context.Context, id uuid.UUID) (*authz.Team, error)
 	return team, err
 }
 
-// GetUserByID ...
-func (d *DB) GetUserByID(ctx context.Context, id uuid.UUID) (*authz.User, error) {
-	user := &authz.User{
-		User: &adapters.User{
-			ID: id,
-		},
-	}
+// // GetUserByID ...
+// func (d *DB) GetUserByID(ctx context.Context, id uuid.UUID) (*authz.User, error) {
+// 	user := &authz.User{
+// 		User: &adapters.User{
+// 			ID: id,
+// 		},
+// 	}
 
-	err := d.conn.WithContext(ctx).Preload("Teams").Find(&user).Error
-	if err != nil {
-		return nil, err
-	}
+// 	err := d.conn.WithContext(ctx).Preload("Teams").Find(&user).Error
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	return user, err
-}
+// 	return user, err
+// }
 
 // ListUsers ...
 func (d *DB) ListUsers(ctx context.Context, pagination models.Pagination[*authz.User]) (*models.Pagination[*authz.User], error) {

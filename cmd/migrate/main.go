@@ -22,24 +22,24 @@ var seeds = []seed.Seed{
 		Name: "create permissions",
 		Run: func(db *gorm.DB) error {
 			return db.Create([]authz.Permission{
-				{
-					Slug: utils.PermissionSuperAdmin.String(),
-				},
-				{
-					Slug: utils.PermissionAdmin.String(),
-				},
-				{
-					Slug: utils.PermissionCreate.String(),
-				},
-				{
-					Slug: utils.PermissionEdit.String(),
-				},
-				{
-					Slug: utils.PermissionDelete.String(),
-				},
-				{
-					Slug: utils.PermissionView.String(),
-				},
+				// {
+				// 	Slug: utils.PermissionSuperAdmin.String(),
+				// },
+				// {
+				// 	Slug: utils.PermissionAdmin.String(),
+				// },
+				// {
+				// 	Slug: utils.PermissionCreate.String(),
+				// },
+				// {
+				// 	Slug: utils.PermissionEdit.String(),
+				// },
+				// {
+				// 	Slug: utils.PermissionDelete.String(),
+				// },
+				// {
+				// 	Slug: utils.PermissionView.String(),
+				// },
 			}).Error
 		},
 	},

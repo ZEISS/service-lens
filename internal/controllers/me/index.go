@@ -1,58 +1,53 @@
 package me
 
 import (
-	authz "github.com/zeiss/fiber-authz"
-	goth "github.com/zeiss/fiber-goth"
+	"context"
+
+	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/ports"
+
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// MeIndexController ...
-type MeIndexController struct {
-	db ports.Repository
+// MeController ...
+type MeController struct {
+	User adapters.GothUser
 
+	store ports.Datastore
 	htmx.DefaultController
 }
 
 // NewMeIndexController ...
-func NewMeIndexController(db ports.Repository) *MeIndexController {
-	return &MeIndexController{
-		db: db,
+func NewMeController(store ports.Datastore) *MeController {
+	return &MeController{
+		User:              adapters.GothUser{},
+		store:             store,
+		DefaultController: htmx.DefaultController{},
 	}
 }
 
 // Prepare ...
-func (m *MeIndexController) Prepare() error {
-	if err := m.BindValues(utils.User(m.db)); err != nil {
-		return err
-	}
-
-	return nil
+func (m *MeController) Prepare() error {
+	return m.store.ReadTx(m.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetProfile(m.Context(), &m.User)
+	})
 }
 
 // Get ...
-func (m *MeIndexController) Get() error {
-	session, err := goth.SessionFromContext(m.Ctx())
-	if err != nil {
-		return err
-	}
-
-	user, err := m.db.GetUserByID(m.Context(), session.UserID)
-	if err != nil {
-		return err
-	}
-
-	return m.Hx().RenderComp(
+func (m *MeController) Get() error {
+	return htmx.RenderComp(
+		m.Ctx(),
 		components.Page(
-			components.PageProps{},
+			components.PageProps{
+				Title: "Profile",
+			},
 			components.Layout(
 				components.LayoutProps{
-					User: m.Values(utils.ValuesKeyUser).(*authz.User),
+					Path: m.Ctx().Path(),
 				},
 				components.Wrap(
 					components.WrapProps{},
@@ -79,7 +74,7 @@ func (m *MeIndexController) Get() error {
 									forms.TextInputBordered(
 										forms.TextInputProps{
 											Name:     "username",
-											Value:    user.Name,
+											Value:    m.User.Name,
 											Disabled: true,
 										},
 									),
@@ -107,7 +102,7 @@ func (m *MeIndexController) Get() error {
 									forms.TextInputBordered(
 										forms.TextInputProps{
 											Name:     "email",
-											Value:    user.Email,
+											Value:    m.User.Email,
 											Disabled: true,
 										},
 									),

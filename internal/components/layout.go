@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	authz "github.com/zeiss/fiber-authz"
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/drawers"
@@ -16,7 +17,7 @@ import (
 type LayoutProps struct {
 	Children []htmx.Node
 	Team     *authz.Team
-	User     *authz.User
+	User     adapters.GothUser
 	Path     string
 }
 

@@ -1,49 +1,45 @@
 package dashboard
 
 import (
-	authz "github.com/zeiss/fiber-authz"
-	htmx "github.com/zeiss/fiber-htmx"
+	"context"
+
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
-)
 
-// HelloWorld ...
-func HelloWorld(children ...htmx.Node) htmx.Node {
-	return htmx.Element("hello-world", children...)
-}
+	"github.com/zeiss/fiber-goth/adapters"
+	htmx "github.com/zeiss/fiber-htmx"
+)
 
 // ShowDashboardController ...
 type ShowDashboardController struct {
-	db ports.Repository
-
+	User  adapters.GothUser
+	store ports.Datastore
 	htmx.DefaultController
 }
 
 // NewShowDashboardController ...
-func NewShowDashboardController(db ports.Repository) *ShowDashboardController {
+func NewShowDashboardController(store ports.Datastore) *ShowDashboardController {
 	return &ShowDashboardController{
-		db: db,
+		User:  adapters.GothUser{},
+		store: store,
 	}
 }
 
 // Prepare ...
 func (d *ShowDashboardController) Prepare() error {
-	if err := d.BindValues(utils.User(d.db)); err != nil {
-		return err
-	}
-
-	return nil
+	return d.store.ReadTx(d.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetProfile(ctx, &d.User)
+	})
 }
 
 // Get ...
 func (d *ShowDashboardController) Get() error {
-	return d.Hx().RenderComp(
+	return d.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: htmx.AsValue[*authz.User](d.Values(utils.ValuesKeyUser)),
+					User: d.User,
 				},
 				components.Wrap(
 					components.WrapProps{},

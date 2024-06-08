@@ -1,38 +1,34 @@
 package login
 
 import (
+	"github.com/zeiss/service-lens/internal/components"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/links"
-	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/ports"
 )
 
-// LoginIndexController ...
-type LoginIndexController struct {
-	db ports.Repository
-
+// IndexLoginController ...
+type IndexLoginController struct {
 	htmx.DefaultController
 }
 
-// NewLoginIndexController ...
-func NewLoginIndexController(db ports.Repository) *LoginIndexController {
-	return &LoginIndexController{
-		db: db,
-	}
+// NewIndexLoginController ...
+func NewIndexLoginController() *IndexLoginController {
+	return &IndexLoginController{}
 }
 
 // Prepare ...
-func (l *LoginIndexController) Prepare() error {
+func (l *IndexLoginController) Prepare() error {
 	return nil
 }
 
 // Get ...
-func (l *LoginIndexController) Get() error {
-	return l.Hx().RenderComp(
+func (l *IndexLoginController) Get() error {
+	return l.Render(
 		components.Page(
 			components.PageProps{},
 			components.Wrap(
