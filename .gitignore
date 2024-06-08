@@ -155,8 +155,7 @@ fabric.properties
 /build
 
 # misc
-.DS_Store
-*.pem
+.DS_Storew
 
 # debug
 npm-debug.log*
