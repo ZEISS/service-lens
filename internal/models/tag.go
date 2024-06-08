@@ -25,7 +25,10 @@ type Tag struct {
 	TaggableID   uuid.UUID    `json:"taggable_id"`
 	TaggableType TaggableType `json:"taggable_type"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }

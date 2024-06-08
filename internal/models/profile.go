@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -15,12 +14,13 @@ type Profile struct {
 	Description string            `json:"description"`
 	Questions   []ProfileQuestion `json:"questions" gorm:"many2many:profiles_questions;"`
 
-	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;"`
-	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id" gorm:"uniqueIndex:idx_profile_name_team"`
+	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
@@ -34,8 +34,11 @@ type ProfileQuestion struct {
 	Choices   []ProfileQuestionChoice `json:"choices"`
 	ProfileID uuid.UUID               `json:"pillar_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
@@ -49,8 +52,11 @@ type ProfileQuestionChoice struct {
 	ProfileQuestion   ProfileQuestion `json:"profile_question" gorm:"foreignkey:ProfileQuestionID;"`
 	ProfileQuestionID int             `json:"profile_question_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
@@ -64,7 +70,10 @@ type ProfileQuestionAnswer struct {
 	Question   ProfileQuestion `json:"question" gorm:"foreignkey:QuestionID;"`
 	QuestionID int             `json:"question_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }

@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -21,15 +20,16 @@ type Workload struct {
 
 	Answers []*WorkloadLensQuestionAnswer `json:"answers" gorm:"foreignKey:WorkloadID;"`
 
-	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:workload;"`
-	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id"`
+	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:workload;"`
 
 	ReviewOwner string `json:"review_owner" validate:"required,min=1,max=255"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // WorkloadLensQuestionAnswer represents a business profile question answer.
@@ -50,7 +50,10 @@ type WorkloadLensQuestionAnswer struct {
 
 	Choices []*Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }

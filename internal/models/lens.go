@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
@@ -32,13 +31,14 @@ type Lens struct {
 	Pillars     []Pillar  `json:"pillars"`
 	IsDraft     bool      `json:"is_draft"`
 
-	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
-	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id" gorm:"type:uuid;uniqueIndex:idx_lens_name_version_team"`
+	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // Pillar is a model for a pillar.
@@ -50,9 +50,12 @@ type Pillar struct {
 	Resources   []Resource `json:"resources" gorm:"foreignKey:ResourceID"`
 	LensID      uuid.UUID  `json:"lens_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // Question is a model for a question.
@@ -66,9 +69,12 @@ type Question struct {
 	Risks       []Risk     `json:"risks"`
 	PillarID    int        `json:"pillar_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // Resource is a model for a resource.
@@ -79,9 +85,12 @@ type Resource struct {
 	ResourceID   int    `json:"resource_id"`
 	ResourceType string `json:"resource_type"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // Choice is a model for a choice.
@@ -92,9 +101,12 @@ type Choice struct {
 	Description string      `json:"description"`
 	QuestionID  int         `json:"question_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // Risk is a model for a risk.
@@ -105,9 +117,12 @@ type Risk struct {
 	Condition  string `json:"condition"`
 	QuestionID int    `json:"question_id"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
 // UnmarshalJSON ...

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 )
 
@@ -14,7 +15,7 @@ type Profiles interface {
 	// FetchProfile fetches a profile by its ID.
 	FetchProfile(ctx context.Context, id uuid.UUID) (*models.Profile, error)
 	// ListProfiles lists all profiles.
-	ListProfiles(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Profile]) (*models.Pagination[*models.Profile], error)
+	ListProfiles(ctx context.Context, teamSlug string, pagination tables.Results[*models.Profile]) (*tables.Results[*models.Profile], error)
 	// GetProfileByID fetches a profile by its ID.
 	GetProfileByID(ctx context.Context, id uuid.UUID) (*models.Profile, error)
 	// UpdateProfile updates a profile.

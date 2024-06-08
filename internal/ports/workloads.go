@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 )
 
 // Workloads ...
 type Workloads interface {
 	// ListWorkloads returns a list of workloads.
-	ListWorkloads(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Workload]) (*models.Pagination[*models.Workload], error)
+	ListWorkloads(ctx context.Context, teamSlug string, pagination tables.Results[*models.Workload]) (*tables.Results[*models.Workload], error)
 	IndexWorkload(ctx context.Context, id uuid.UUID) (*models.Workload, error)
 	// CreateWorkload creates a new workload.
 	CreateWorkload(ctx context.Context, workload *models.Workload) error

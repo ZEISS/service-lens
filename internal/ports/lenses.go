@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 )
 
@@ -14,7 +15,7 @@ type Lenses interface {
 	// GetPillarById is a method that retrieves a pillar from the database by its ID.
 	GetPillarById(ctx context.Context, teamSlug string, lensId uuid.UUID, id int) (*models.Pillar, error)
 	AddLens(ctx context.Context, lens *models.Lens) (*models.Lens, error)
-	ListLenses(ctx context.Context, teamSlug string, pagination models.Pagination[*models.Lens]) (*models.Pagination[*models.Lens], error)
+	ListLenses(ctx context.Context, teamSlug string, pagination tables.Results[*models.Lens]) (*tables.Results[*models.Lens], error)
 	// DestroyLens is a method that deletes a lens from the database.
 	DestroyLens(ctx context.Context, id uuid.UUID) error
 }

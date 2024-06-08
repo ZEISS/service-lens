@@ -4,21 +4,25 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	"gorm.io/gorm"
 )
 
 // Environment ...
 type Environment struct {
-	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Name        string    `json:"name" gorm:"uniqueIndex:idx_environment_name_team"`
-	Description string    `json:"description"`
+	// ID is the primary key
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	// Name of the environment
+	Name string `json:"name" validate:"required,min=3,max=255"`
+	// Description of the environment
+	Description string `json:"description" validate:"max=1024"`
 
-	Tags   []*Tag     `json:"tags" gorm:"polymorphic:Taggable;"`
-	Team   authz.Team `json:"team" gorm:"foreignKey:TeamID;"`
-	TeamID uuid.UUID  `json:"team_id" gorm:"uniqueIndex:idx_environment_name_team"`
+	// Tags are the tags associated with the environment
+	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
 
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	// CreatedAt ...
+	CreatedAt time.Time `json:"created_at"`
+	// UpdatedAt ...
+	UpdatedAt time.Time `json:"updated_at"`
+	// DeletedAt ...
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }

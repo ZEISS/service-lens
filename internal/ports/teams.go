@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	authz "github.com/zeiss/fiber-authz"
-	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
 // Teams ...
@@ -17,7 +17,7 @@ type Teams interface {
 	// CreateTeam ...
 	CreateTeam(ctx context.Context, team *authz.Team, user *authz.User) (*authz.Team, error)
 	// ListTeams ...
-	ListTeams(ctx context.Context, pagination models.Pagination[*authz.Team]) (*models.Pagination[*authz.Team], error)
+	ListTeams(ctx context.Context, pagination tables.Results[*authz.Team]) (*tables.Results[*authz.Team], error)
 	// DeleteTeam
 	DeleteTeam(ctx context.Context, id uuid.UUID) error
 	// TotalCountWorkloads returns the total number of workloads.
