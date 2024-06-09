@@ -25,38 +25,15 @@ func NewEnvironmentController(store ports.Datastore) *EnvironmentControllerImpl 
 	}
 }
 
-// // Post ...
-// func (p *EnvironmentNewController) Post() error {
-// 	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-// 	query := NewDefaultEnvironmentNewControllerQuery()
-// 	if err := p.BindBody(query); err != nil {
-// 		return err
-// 	}
-
-// 	Environment := &models.Environment{
-// 		Name:        query.Name,
-// 		Description: query.Description,
-// 		Team:        *team,
-// 	}
-
-// 	err := p.db.NewEnvironment(p.Context(), Environment)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	p.Hx().Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
-
-// 	return nil
-// }
-
 // New ...
 func (p *EnvironmentControllerImpl) Get() error {
 	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{},
+				components.LayoutProps{
+					Path: p.Path(),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

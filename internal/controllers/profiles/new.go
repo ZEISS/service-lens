@@ -26,7 +26,9 @@ func (p *NewProfileControllerImpl) Get() error {
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{},
+				components.LayoutProps{
+					Path: p.Path(),
+				},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

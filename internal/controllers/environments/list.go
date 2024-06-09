@@ -44,7 +44,9 @@ func (w *EnvironmentListControllerImpl) Get() error {
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{},
+				components.LayoutProps{
+					Path: w.Path(),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					htmx.Div(

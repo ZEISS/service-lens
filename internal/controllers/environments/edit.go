@@ -46,7 +46,9 @@ func (p *EnvironmentEditControllerImpl) Get() error {
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{},
+				components.LayoutProps{
+					Path: p.Path(),
+				},
 				htmx.FormElement(
 					htmx.HxPut(fmt.Sprintf("/environments/%s", p.environment.ID)),
 					cards.CardBordered(
