@@ -1,7 +1,8 @@
 package profiles
 
 import (
-	"github.com/google/uuid"
+	"context"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -11,73 +12,53 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
-// ProfileEditControllerParams ...
-type ProfileEditControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
-}
-
-// NewDefaultProfileEditControllerParams ...
-func NewDefaultProfileEditControllerParams() *ProfileEditControllerParams {
-	return &ProfileEditControllerParams{}
-}
-
 // ProfileEditController ...
 type ProfileEditController struct {
-	db      ports.Repository
-	params  *ProfileEditControllerParams
-	profile *models.Profile
-
+	profile models.Profile
+	store   ports.Datastore
 	htmx.DefaultController
 }
 
 // NewProfileEditController ...
-func NewProfileEditController(db ports.Repository) *ProfileEditController {
+func NewProfileEditController(store ports.Datastore) *ProfileEditController {
 	return &ProfileEditController{
-		db: db,
+		profile: models.Profile{},
+		store:   store,
 	}
 }
 
 // Prepare ...
 func (p *ProfileEditController) Prepare() error {
-	// if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-	// 	return err
-	// }
-
-	p.params = NewDefaultProfileEditControllerParams()
-	if err := p.BindParams(p.params); err != nil {
-		return err
-	}
-
-	profile, err := p.db.GetProfileByID(p.Context(), p.params.ID)
-	if err != nil {
-		return err
-	}
-	p.profile = profile
-
-	return nil
-}
-
-// Post ...
-func (p *ProfileEditController) Post() error {
-	query := NewDefaultProfileNewControllerQuery()
-	if err := p.BindQuery(query); err != nil {
-		return err
-	}
-
-	p.profile.Description = query.Description
-
-	err := p.db.UpdateProfile(p.Context(), p.profile)
+	err := p.BindParams(p.profile)
 	if err != nil {
 		return err
 	}
 
-	// team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	// p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
-
-	return nil
+	return p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetProfile(ctx, &p.profile)
+	})
 }
+
+// // Post ...
+// func (p *ProfileEditController) Post() error {
+// 	query := NewDefaultProfileNewControllerQuery()
+// 	if err := p.BindQuery(query); err != nil {
+// 		return err
+// 	}
+
+// 	p.profile.Description = query.Description
+
+// 	err := p.db.UpdateProfile(p.Context(), p.profile)
+// 	if err != nil {
+// 		return err
+// 	}
+
+// 	// team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
+
+// 	// p.Hx().Redirect(fmt.Sprintf("/%s/profiles/%s", team.Slug, p.profile.ID))
+
+// 	return nil
+// }
 
 // New ...
 func (p *ProfileEditController) Get() error {
@@ -147,60 +128,60 @@ func (p *ProfileEditController) Get() error {
 										htmx.Text("The name must be from 3 to 100 characters. At least 3 characters must be non-whitespace."),
 									),
 								),
-								forms.FormControl(
-									forms.FormControlProps{
-										ClassNames: htmx.ClassNames{
-											"py-4": true,
-										},
+							),
+							forms.FormControl(
+								forms.FormControlProps{
+									ClassNames: htmx.ClassNames{
+										"py-4": true,
 									},
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"-my-4": true,
-												},
+								},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"-my-4": true,
 											},
-											htmx.Text("Description"),
-										),
-									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-												},
-											},
-											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
-										),
-									),
-									forms.TextInputBordered(
-										forms.TextInputProps{
-											Name:  "description",
-											Value: p.profile.Description,
 										},
+										htmx.Text("Description"),
 									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-												},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
 											},
-											htmx.Text("The description must be from 3 to 1024 characters."),
-										),
+										},
+										htmx.Text("A brief description of the workload to document its scope and intended purpose."),
+									),
+								),
+								forms.TextInputBordered(
+									forms.TextInputProps{
+										Name:  "description",
+										Value: p.profile.Description,
+									},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("The description must be from 3 to 1024 characters."),
 									),
 								),
 							),
 						),
 					),
-					buttons.OutlinePrimary(
-						buttons.ButtonProps{},
-						htmx.Attribute("type", "submit"),
-						htmx.Text("Update Profile"),
-					),
+				),
+				buttons.OutlinePrimary(
+					buttons.ButtonProps{},
+					htmx.Attribute("type", "submit"),
+					htmx.Text("Update Profile"),
 				),
 			),
 		),

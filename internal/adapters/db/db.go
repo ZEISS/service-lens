@@ -109,12 +109,27 @@ type datastoreTx struct {
 	tx *gorm.DB
 }
 
-// GetProfile is a method that returns the profile of the current user
-func (t *datastoreTx) GetProfile(ctx context.Context, user *adapters.GothUser) error {
+// GetUser is a method that returns the profile of the current user
+func (t *datastoreTx) GetUser(ctx context.Context, user *adapters.GothUser) error {
 	return t.tx.First(user).Error
 }
 
 // ListProfiles is a method that returns a list of profiles
 func (t *datastoreTx) ListProfiles(ctx context.Context, pagination *tables.Results[models.Profile]) error {
 	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+}
+
+// GetProfile is a method that returns a profile by ID
+func (t *datastoreTx) GetProfile(ctx context.Context, profile *models.Profile) error {
+	return t.tx.First(profile).Error
+}
+
+// CreateProfile is a method that creates a profile
+func (t *datastoreTx) CreateProfile(ctx context.Context, profile *models.Profile) error {
+	return t.tx.Create(profile).Error
+}
+
+// UpdateProfile is a method that updates a profile
+func (t *datastoreTx) UpdateProfile(ctx context.Context, profile *models.Profile) error {
+	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(profile).Error
 }

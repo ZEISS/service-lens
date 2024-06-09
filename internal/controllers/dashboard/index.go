@@ -12,7 +12,7 @@ import (
 
 // ShowDashboardController ...
 type ShowDashboardController struct {
-	User  adapters.GothUser
+	user  adapters.GothUser
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -20,7 +20,7 @@ type ShowDashboardController struct {
 // NewShowDashboardController ...
 func NewShowDashboardController(store ports.Datastore) *ShowDashboardController {
 	return &ShowDashboardController{
-		User:  adapters.GothUser{},
+		user:  adapters.GothUser{},
 		store: store,
 	}
 }
@@ -28,7 +28,7 @@ func NewShowDashboardController(store ports.Datastore) *ShowDashboardController 
 // Prepare ...
 func (d *ShowDashboardController) Prepare() error {
 	return d.store.ReadTx(d.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetProfile(ctx, &d.User)
+		return tx.GetUser(ctx, &d.user)
 	})
 }
 
@@ -39,7 +39,7 @@ func (d *ShowDashboardController) Get() error {
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: d.User,
+					User: d.user,
 				},
 				components.Wrap(
 					components.WrapProps{},

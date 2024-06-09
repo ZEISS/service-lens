@@ -54,6 +54,34 @@ func (a *handlers) ListProfiles() fiber.Handler {
 	})
 }
 
+// NewProfile ...
+func (a *handlers) NewProfile() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewProfileController(a.store)
+	})
+}
+
+// GetProfile ...
+func (a *handlers) GetProfile() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewProfileController(a.store)
+	})
+}
+
+// EditProfile ...
+func (a *handlers) EditProfile() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewProfileEditController(a.store)
+	})
+}
+
+// CreateProfile ...
+func (a *handlers) CreateProfile() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewCreateProfileController(a.store)
+	})
+}
+
 // // Team ...
 
 // 		teams := app.Group("/teams")

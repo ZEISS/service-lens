@@ -9,67 +9,19 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
-// ProfileNewController ...
-type ProfileNewController struct {
-	db ports.Repository
-
+// NewProfileControllerImpl ...
+type NewProfileControllerImpl struct {
+	store ports.Datastore
 	htmx.DefaultController
 }
 
-// NewProfileNewController ...
-func NewProfileNewController(db ports.Repository) *ProfileNewController {
-	return &ProfileNewController{
-		db: db,
-	}
-}
-
-// ProfileNewControllerQuery ...
-type ProfileNewControllerQuery struct {
-	Name        string `json:"name" xml:"name" form:"name"`
-	Description string `json:"description" xml:"description" form:"description"`
-}
-
-// NewDefaultProfileNewControllerQuery ...
-func NewDefaultProfileNewControllerQuery() *ProfileNewControllerQuery {
-	return &ProfileNewControllerQuery{}
-}
-
-// Prepare ...
-func (p *ProfileNewController) Prepare() error {
-	// if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-	// 	return err
-	// }
-
-	return nil
-}
-
-// Post ...
-func (p *ProfileNewController) Post() error {
-	// team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	// query := NewDefaultProfileNewControllerQuery()
-	// if err := p.BindBody(query); err != nil {
-	// 	return err
-	// }
-
-	// profile := &models.Profile{
-	// 	Name:        query.Name,
-	// 	Description: query.Description,
-	// 	Team:        *team,
-	// }
-
-	// err := p.db.NewProfile(p.Context(), profile)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// p.Hx().Redirect(fmt.Sprintf("/teams/%s/profiles/%s", team.Slug, profile.ID))
-
-	return nil
+// NewProfileController ...
+func NewProfileController(store ports.Datastore) *NewProfileControllerImpl {
+	return &NewProfileControllerImpl{store: store}
 }
 
 // New ...
-func (p *ProfileNewController) Get() error {
+func (p *NewProfileControllerImpl) Get() error {
 	return p.Render(
 		components.Page(
 			components.PageProps{},

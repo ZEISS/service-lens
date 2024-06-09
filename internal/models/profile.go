@@ -9,10 +9,14 @@ import (
 
 // Profile represents a business profile.
 type Profile struct {
-	ID          uuid.UUID         `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Name        string            `json:"name" gorm:"uniqueIndex:idx_profile_name_team"`
-	Description string            `json:"description"`
-	Questions   []ProfileQuestion `json:"questions" gorm:"many2many:profiles_questions;"`
+	// ID ...
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" query:"id" param:"id"`
+	// Name of the profile.
+	Name string `json:"name" gorm:"uniqueIndex:idx_profile_name_team" form:"name" validate:"required,min=3,max=100"`
+	// Description of the profile.
+	Description string `json:"description" form:"description" validate:"required,min=3,max=1024"`
+	// Questions ...
+	Questions []ProfileQuestion `json:"questions" gorm:"many2many:profiles_questions;" form:"questions"`
 
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
 

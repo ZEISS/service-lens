@@ -119,6 +119,10 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		// Profiles ...
 		app.Get("/profiles", handlers.ListProfiles())
+		app.Get("/profiles/new", handlers.NewProfile())
+		app.Post("/profiles/new", handlers.CreateProfile())
+		app.Get("/profiles/:id", handlers.GetProfile())
+		app.Put("/profiles/:id", handlers.GetProfile())
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {
