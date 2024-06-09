@@ -48,6 +48,8 @@ type ReadWriteTx interface {
 	CreateProfile(ctx context.Context, profile *models.Profile) error
 	// UpdateProfile is a method that updates a profile
 	UpdateProfile(ctx context.Context, profile *models.Profile) error
+	// DeleteProfile is a method that deletes a profile
+	DeleteProfile(ctx context.Context, profile *models.Profile) error
 	// CreateEnvironment is a method that creates an environment
 	CreateEnvironment(ctx context.Context, environment *models.Environment) error
 	// UpdateEnvironment is a method that updates an environment

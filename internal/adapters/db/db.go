@@ -134,6 +134,11 @@ func (t *datastoreTx) UpdateProfile(ctx context.Context, profile *models.Profile
 	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(profile).Error
 }
 
+// DeleteProfile is a method that deletes a profile
+func (t *datastoreTx) DeleteProfile(ctx context.Context, profile *models.Profile) error {
+	return t.tx.Delete(profile).Error
+}
+
 // ListEnvironments is a method that returns a list of environments
 func (t *datastoreTx) ListEnvironments(ctx context.Context, pagination *tables.Results[models.Environment]) error {
 	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error

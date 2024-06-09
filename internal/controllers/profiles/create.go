@@ -3,7 +3,6 @@ package profiles
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -28,13 +27,6 @@ func NewCreateProfileController(store ports.Datastore) *CreateProfileControllerI
 		store:             store,
 		DefaultController: htmx.DefaultController{},
 	}
-}
-
-// Error
-func (l *CreateProfileControllerImpl) Error(err error) error {
-	log.Print(err)
-
-	return err
 }
 
 // Prepare ...

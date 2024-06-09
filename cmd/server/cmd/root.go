@@ -123,6 +123,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Post("/profiles/new", handlers.CreateProfile())
 		app.Get("/profiles/:id", handlers.GetProfile())
 		app.Put("/profiles/:id", handlers.GetProfile())
+		app.Delete("/profiles/:id", handlers.DeleteProfile())
 
 		// Environments ...
 		app.Get("/environments", handlers.ListEnvironments())

@@ -85,6 +85,13 @@ func (a *handlers) CreateProfile() fiber.Handler {
 	})
 }
 
+// DeleteProfile ...
+func (a *handlers) DeleteProfile() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return profiles.NewProfileDeleteController(a.store)
+	})
+}
+
 // ListEnvironments ...
 func (a *handlers) ListEnvironments() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
