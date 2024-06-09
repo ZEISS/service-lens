@@ -124,6 +124,15 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/profiles/:id", handlers.GetProfile())
 		app.Put("/profiles/:id", handlers.GetProfile())
 
+		// Environments ...
+		app.Get("/environments", handlers.ListEnvironments())
+		app.Get("/environments/new", handlers.NewEnvironment())
+		app.Post("/environments/new", handlers.CreateEnvironment())
+		app.Get("/environments/:id", handlers.ShowEnvironment())
+		app.Get("/environments/:id/edit", handlers.EditEnvironment())
+		app.Put("/environments/:id", handlers.UpdateEnvironment())
+		app.Delete("/environments/:id", handlers.DeleteEnvironment())
+
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {
 			return err

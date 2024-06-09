@@ -133,3 +133,28 @@ func (t *datastoreTx) CreateProfile(ctx context.Context, profile *models.Profile
 func (t *datastoreTx) UpdateProfile(ctx context.Context, profile *models.Profile) error {
 	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(profile).Error
 }
+
+// ListEnvironments is a method that returns a list of environments
+func (t *datastoreTx) ListEnvironments(ctx context.Context, pagination *tables.Results[models.Environment]) error {
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+}
+
+// GetEnvironment is a method that returns an environment by ID
+func (t *datastoreTx) GetEnvironment(ctx context.Context, environment *models.Environment) error {
+	return t.tx.First(environment).Error
+}
+
+// CreateEnvironment is a method that creates an environment
+func (t *datastoreTx) CreateEnvironment(ctx context.Context, environment *models.Environment) error {
+	return t.tx.Create(environment).Error
+}
+
+// UpdateEnvironment is a method that updates an environment
+func (t *datastoreTx) UpdateEnvironment(ctx context.Context, environment *models.Environment) error {
+	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(environment).Error
+}
+
+// DeleteEnvironment is a method that deletes an environment
+func (t *datastoreTx) DeleteEnvironment(ctx context.Context, environment *models.Environment) error {
+	return t.tx.Delete(environment).Error
+}

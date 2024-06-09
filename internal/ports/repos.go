@@ -34,6 +34,10 @@ type ReadTx interface {
 	ListProfiles(ctx context.Context, profiles *tables.Results[models.Profile]) error
 	// GetProfile is a method that returns a profile by ID
 	GetProfile(ctx context.Context, profile *models.Profile) error
+	// ListEnvironments is a method that returns a list of environments
+	ListEnvironments(ctx context.Context, environments *tables.Results[models.Environment]) error
+	// GetEnvironment is a method that returns an environment by ID
+	GetEnvironment(ctx context.Context, environment *models.Environment) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -44,6 +48,12 @@ type ReadWriteTx interface {
 	CreateProfile(ctx context.Context, profile *models.Profile) error
 	// UpdateProfile is a method that updates a profile
 	UpdateProfile(ctx context.Context, profile *models.Profile) error
+	// CreateEnvironment is a method that creates an environment
+	CreateEnvironment(ctx context.Context, environment *models.Environment) error
+	// UpdateEnvironment is a method that updates an environment
+	UpdateEnvironment(ctx context.Context, environment *models.Environment) error
+	// DeleteEnvironment is a method that deletes an environment
+	DeleteEnvironment(ctx context.Context, environment *models.Environment) error
 }
 
 // Repository is the interface that wraps the basic methods to interact with the database.

@@ -1,10 +1,9 @@
 package environments
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -12,86 +11,44 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// EnvironmentEditControllerParams ...
-type EnvironmentEditControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
-}
-
-// NewDefaultEnvironmentEditControllerParams ...
-func NewDefaultEnvironmentEditControllerParams() *EnvironmentEditControllerParams {
-	return &EnvironmentEditControllerParams{}
-}
-
-// EnvironmentEditController ...
-type EnvironmentEditController struct {
-	db          ports.Repository
-	params      *EnvironmentEditControllerParams
-	environment *models.Environment
-
-	htmx.UnimplementedController
+// EnvironmentEditControllerImpl ...
+type EnvironmentEditControllerImpl struct {
+	environment models.Environment
+	store       ports.Datastore
+	htmx.DefaultController
 }
 
 // NewEnvironmentEditController ...
-func NewEnvironmentEditController(db ports.Repository) *EnvironmentEditController {
-	return &EnvironmentEditController{
-		db: db,
+func NewEnvironmentEditController(store ports.Datastore) *EnvironmentEditControllerImpl {
+	return &EnvironmentEditControllerImpl{
+		environment: models.Environment{},
+		store:       store,
 	}
 }
 
 // Prepare ...
-func (p *EnvironmentEditController) Prepare() error {
-	p.params = NewDefaultEnvironmentEditControllerParams()
-	if err := p.BindParams(p.params); err != nil {
-		return err
-	}
-
-	environment, err := p.db.GetEnvironment(p.Context(), p.params.ID)
-	if err != nil {
-		return err
-	}
-	p.environment = environment
-
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Post ...
-func (p *EnvironmentEditController) Post() error {
-	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	query := NewDefaultEnvironmentNewControllerQuery()
-	if err := p.BindBody(query); err != nil {
-		return err
-	}
-	p.environment.Description = query.Description
-
-	err := p.db.UpdateEnvironment(p.Context(), p.environment)
+func (p *EnvironmentEditControllerImpl) Prepare() error {
+	err := p.BindParams(&p.environment)
 	if err != nil {
 		return err
 	}
 
-	return p.Redirect(fmt.Sprintf("/%s/environments/%s", team.Slug, p.environment.ID))
+	return p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetEnvironment(ctx, &p.environment)
+	})
 }
 
 // New ...
-func (p *EnvironmentEditController) Get() error {
-	return p.Hx().RenderComp(
+func (p *EnvironmentEditControllerImpl) Get() error {
+	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				htmx.FormElement(
-					htmx.HxPost(""),
+					htmx.HxPut(fmt.Sprintf("/environments/%s", p.environment.ID)),
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{

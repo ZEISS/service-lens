@@ -4,11 +4,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
+	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/login"
 	"github.com/zeiss/service-lens/internal/controllers/me"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/ports"
 )
+
+var _ ports.Handlers = (*handlers)(nil)
 
 type handlers struct {
 	store ports.Datastore
@@ -79,6 +82,55 @@ func (a *handlers) EditProfile() fiber.Handler {
 func (a *handlers) CreateProfile() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return profiles.NewCreateProfileController(a.store)
+	})
+}
+
+// ListEnvironments ...
+func (a *handlers) ListEnvironments() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentListController(a.store)
+	})
+}
+
+// NewEnvironment ...
+func (a *handlers) NewEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentController(a.store)
+	})
+}
+
+// ShowEnvironment ...
+func (a *handlers) ShowEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentShowController(a.store)
+	})
+}
+
+// EditEnvironment ...
+func (a *handlers) EditEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentEditController(a.store)
+	})
+}
+
+// UpdateEnvironment ...
+func (a *handlers) UpdateEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentUpdateController(a.store)
+	})
+}
+
+// DeleteEnvironment ...
+func (a *handlers) DeleteEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewEnvironmentDeleteController(a.store)
+	})
+}
+
+// CreateEnvironment ...
+func (a *handlers) CreateEnvironment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return environments.NewCreateEnvironmentController(a.store)
 	})
 }
 

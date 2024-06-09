@@ -10,11 +10,11 @@ import (
 // Environment ...
 type Environment struct {
 	// ID is the primary key
-	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" param:"id"`
 	// Name of the environment
-	Name string `json:"name" validate:"required,min=3,max=255"`
+	Name string `json:"name" form:"name" validate:"required,min=3,max=255"`
 	// Description of the environment
-	Description string `json:"description" validate:"max=1024"`
+	Description string `json:"description" form:"description" validate:"max=1024"`
 
 	// Tags are the tags associated with the environment
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`

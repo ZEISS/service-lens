@@ -1,10 +1,9 @@
 package environments
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -12,66 +11,37 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// EnvironmentIndexControllerParams ...
-type EnvironmentIndexControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
-}
-
-// NewDefaultEnvironmentIndexControllerParams ...
-func NewDefaultEnvironmentIndexControllerParams() *EnvironmentIndexControllerParams {
-	return &EnvironmentIndexControllerParams{}
-}
-
-// EnvironmentIndexController ...
-type EnvironmentIndexController struct {
-	db          ports.Repository
-	environment *models.Environment
-	params      *EnvironmentIndexControllerParams
-
+// EnvironmentShowControllerImpl ...
+type EnvironmentShowControllerImpl struct {
+	environment models.Environment
+	store       ports.Datastore
 	htmx.UnimplementedController
 }
 
-// NewEnvironmentIndexController ...
-func NewEnvironmentIndexController(db ports.Repository) *EnvironmentIndexController {
-	return &EnvironmentIndexController{
-		db: db,
+// NewEnvironmentShowController ...
+func NewEnvironmentShowController(store ports.Datastore) *EnvironmentShowControllerImpl {
+	return &EnvironmentShowControllerImpl{
+		environment: models.Environment{},
+		store:       store,
 	}
 }
 
 // Prepare ...
-func (p *EnvironmentIndexController) Prepare() error {
-	p.params = NewDefaultEnvironmentIndexControllerParams()
-	if err := p.BindParams(p.params); err != nil {
-		return err
-	}
-
-	environment, err := p.db.GetEnvironment(p.Context(), p.params.ID)
-	if err != nil {
-		return err
-	}
-	p.environment = environment
-
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-		return err
-	}
-
-	return nil
+func (p *EnvironmentShowControllerImpl) Prepare() error {
+	return p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetEnvironment(ctx, &p.environment)
+	})
 }
 
 // Get ...
-func (p *EnvironmentIndexController) Get() error {
-	return p.Hx().RenderComp(
+func (p *EnvironmentShowControllerImpl) Get() error {
+	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(
@@ -176,7 +146,7 @@ func (p *EnvironmentIndexController) Get() error {
 											"btn-outline": true,
 											"btn-primary": true,
 										},
-										Href: fmt.Sprintf("%s/edit", p.params.ID),
+										Href: fmt.Sprintf("%s/edit", p.environment.ID),
 									},
 									htmx.Text("Edit"),
 								),
@@ -193,16 +163,4 @@ func (p *EnvironmentIndexController) Get() error {
 			),
 		),
 	)
-}
-
-// Delete ...
-func (p *EnvironmentIndexController) Delete() error {
-	err := p.db.DeleteEnvironment(p.Context(), p.params.ID)
-	if err != nil {
-		return err
-	}
-
-	p.Hx().Redirect("list")
-
-	return nil
 }

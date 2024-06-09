@@ -1,9 +1,6 @@
 package environments
 
 import (
-	"fmt"
-
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -11,84 +8,55 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// EnvironmentNewController ...
-type EnvironmentNewController struct {
-	db ports.Repository
-
+// EnvironmentControllerImpl ...
+type EnvironmentControllerImpl struct {
+	environment models.Environment
+	store       ports.Datastore
 	htmx.DefaultController
 }
 
-// NewEnvironmentNewController ...
-func NewEnvironmentNewController(db ports.Repository) *EnvironmentNewController {
-	return &EnvironmentNewController{
-		db: db,
+// NewEnvironmentController ...
+func NewEnvironmentController(store ports.Datastore) *EnvironmentControllerImpl {
+	return &EnvironmentControllerImpl{
+		environment: models.Environment{},
+		store:       store,
 	}
 }
 
-// EnvironmentNewControllerQuery ...
-type EnvironmentNewControllerQuery struct {
-	Name        string `json:"name" xml:"name" form:"name"`
-	Description string `json:"description" xml:"description" form:"description"`
-}
+// // Post ...
+// func (p *EnvironmentNewController) Post() error {
+// 	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-// NewDefaultEnvironmentNewControllerQuery ...
-func NewDefaultEnvironmentNewControllerQuery() *EnvironmentNewControllerQuery {
-	return &EnvironmentNewControllerQuery{}
-}
+// 	query := NewDefaultEnvironmentNewControllerQuery()
+// 	if err := p.BindBody(query); err != nil {
+// 		return err
+// 	}
 
-// Prepare ...
-func (p *EnvironmentNewController) Prepare() error {
-	if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-		return err
-	}
+// 	Environment := &models.Environment{
+// 		Name:        query.Name,
+// 		Description: query.Description,
+// 		Team:        *team,
+// 	}
 
-	return nil
-}
+// 	err := p.db.NewEnvironment(p.Context(), Environment)
+// 	if err != nil {
+// 		return err
+// 	}
 
-// Post ...
-func (p *EnvironmentNewController) Post() error {
-	team := p.Values(utils.ValuesKeyTeam).(*authz.Team)
+// 	p.Hx().Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
 
-	query := NewDefaultEnvironmentNewControllerQuery()
-	if err := p.BindBody(query); err != nil {
-		return err
-	}
-
-	Environment := &models.Environment{
-		Name:        query.Name,
-		Description: query.Description,
-		Team:        *team,
-	}
-
-	err := p.db.NewEnvironment(p.Context(), Environment)
-	if err != nil {
-		return err
-	}
-
-	p.Hx().Redirect(fmt.Sprintf("/teams/%s/environments/%s", team.Slug, Environment.ID))
-
-	return nil
-}
-
-// Error ...
-func (p *EnvironmentNewController) Error(err error) error {
-	fmt.Println(err)
-	return nil
-}
+// 	return nil
+// }
 
 // New ...
-func (p *EnvironmentNewController) Get() error {
-	return p.Hx().RenderComp(
+func (p *EnvironmentControllerImpl) Get() error {
+	return p.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{
-					User: p.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: p.Values(utils.ValuesKeyTeam).(*authz.Team),
-				},
+				components.LayoutProps{},
 				htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(

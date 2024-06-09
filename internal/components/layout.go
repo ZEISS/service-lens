@@ -12,6 +12,8 @@ import (
 	"github.com/zeiss/fiber-htmx/components/menus"
 )
 
+const ()
+
 // LayoutProps is the properties for the Layout component.
 type LayoutProps struct {
 	Children []htmx.Node
@@ -299,8 +301,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								// Href:   fmt.Sprintf("/teams/%s/environments/new", p.Team.Slug),
-								// Active: p.Path == fmt.Sprintf("/teams/%s/environments/new", p.Team.Slug),
+								Href:   "/environments/new",
+								Active: p.Path == "/environments/new",
 							},
 							htmx.Text("New Environment"),
 						),
@@ -309,8 +311,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								// Href:   fmt.Sprintf("/teams/%s/environments/list", p.Team.Slug),
-								// Active: p.Path == fmt.Sprintf("/teams/%s/environments/list", p.Team.Slug),
+								Href:   "/environments",
+								Active: p.Path == "/environments/list",
 							},
 							htmx.Text("List Environment"),
 						),
