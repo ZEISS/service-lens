@@ -168,3 +168,28 @@ func (t *datastoreTx) UpdateEnvironment(ctx context.Context, environment *models
 func (t *datastoreTx) DeleteEnvironment(ctx context.Context, environment *models.Environment) error {
 	return t.tx.Delete(environment).Error
 }
+
+// ListLenses is a method that returns a list of lenses
+func (t *datastoreTx) ListLenses(ctx context.Context, pagination *tables.Results[models.Lens]) error {
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+}
+
+// GetLens is a method that returns a lens by ID
+func (t *datastoreTx) GetLens(ctx context.Context, lens *models.Lens) error {
+	return t.tx.First(lens).Error
+}
+
+// CreateLens is a method that creates a lens
+func (t *datastoreTx) CreateLens(ctx context.Context, lens *models.Lens) error {
+	return t.tx.Create(lens).Error
+}
+
+// UpdateLens is a method that updates a lens
+func (t *datastoreTx) UpdateLens(ctx context.Context, lens *models.Lens) error {
+	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(lens).Error
+}
+
+// DeleteLens is a method that deletes a lens
+func (t *datastoreTx) DeleteLens(ctx context.Context, lens *models.Lens) error {
+	return t.tx.Delete(lens).Error
+}

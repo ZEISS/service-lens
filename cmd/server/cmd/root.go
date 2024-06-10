@@ -134,6 +134,15 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Put("/environments/:id", handlers.UpdateEnvironment())
 		app.Delete("/environments/:id", handlers.DeleteEnvironment())
 
+		// Lenses ...
+		app.Get("/lenses", handlers.ListLenses())
+		app.Get("/lenses/new", handlers.NewLens())
+		app.Post("/lenses/new", handlers.CreateLens())
+		app.Get("/lenses/:id", handlers.ShowLens())
+		app.Get("/lenses/:id/edit", handlers.EditLens())
+		app.Put("/lenses/:id", handlers.UpdateLens())
+		app.Delete("/lenses/:id", handlers.DeleteLens())
+
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {
 			return err

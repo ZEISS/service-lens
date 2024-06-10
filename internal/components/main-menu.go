@@ -88,7 +88,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				},
 				menus.MenuCollapsible(
 					menus.MenuCollapsibleProps{
-						Open: false,
+						Open: strings.HasPrefix(p.Path, "/lenses"),
 					},
 					menus.MenuCollapsibleSummary(
 						menus.MenuCollapsibleSummaryProps{},
@@ -102,8 +102,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								// Href:   fmt.Sprintf("/teams/%s/lenses/new", p.Team.Slug),
-								// Active: p.Path == fmt.Sprintf("/teams/%s/lenses/new", p.Team.Slug),
+								Href:   "/lenses/new",
+								Active: p.Path == "/lenses/new",
 							},
 							htmx.Text("New Lens"),
 						),
@@ -116,8 +116,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								// Href:   fmt.Sprintf("/teams/%s/lenses/list", p.Team.Slug),
-								// Active: p.Path == fmt.Sprintf("/teams/%s/lenses/list", p.Team.Slug),
+								Href:   "/lenses",
+								Active: p.Path == "/lenses",
 							},
 							htmx.Text("List Lens"),
 						),

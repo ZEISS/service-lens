@@ -1,75 +1,50 @@
 package lenses
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// LensIndexControllerParams ...
-type LensIndexControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
+// LensShowControllerImpl ...
+type LensShowControllerImpl struct {
+	lens  models.Lens
+	store ports.Datastore
+	htmx.DefaultController
 }
 
-// NewDefaultLensIndexControllerParams ...
-func NewDefaultLensIndexControllerParams() *LensIndexControllerParams {
-	return &LensIndexControllerParams{}
-}
-
-// LensIndexController ...
-type LensIndexController struct {
-	db     ports.Repository
-	lens   *models.Lens
-	params *LensIndexControllerParams
-
-	htmx.UnimplementedController
-}
-
-// NewLensIndexController ...
-func NewLensIndexController(db ports.Repository) *LensIndexController {
-	return &LensIndexController{
-		db: db,
+// NewLensShowController ...
+func NewLensShowController(store ports.Datastore) *LensShowControllerImpl {
+	return &LensShowControllerImpl{
+		store: store,
 	}
 }
 
 // Prepare ...
-func (l *LensIndexController) Prepare() error {
-	l.params = NewDefaultLensIndexControllerParams()
-	if err := l.BindParams(l.params); err != nil {
-		return err
-	}
-
-	lens, err := l.db.GetLensByID(l.Context(), l.params.ID)
+func (l *LensShowControllerImpl) Prepare() error {
+	err := l.BindParams(&l.lens)
 	if err != nil {
 		return err
 	}
-	l.lens = lens
 
-	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
-		return err
-	}
-
-	return nil
+	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetLens(ctx, &l.lens)
+	})
 }
 
 // Get ...
-func (l *LensIndexController) Get() error {
-	return l.Hx().RenderComp(
+func (l *LensShowControllerImpl) Get() error {
+	return l.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: l.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: l.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{},
@@ -142,14 +117,14 @@ func (l *LensIndexController) Get() error {
 	)
 }
 
-// Delete ...
-func (l *LensIndexController) Delete() error {
-	err := l.db.DestroyLens(l.Context(), l.params.ID)
-	if err != nil {
-		return err
-	}
+// // Delete ...
+// func (l *LensIndexController) Delete() error {
+// 	err := l.db.DestroyLens(l.Context(), l.params.ID)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/list", l.params.Team))
+// 	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/list", l.params.Team))
 
-	return nil
-}
+// 	return nil
+// }

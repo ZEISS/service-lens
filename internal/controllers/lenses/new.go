@@ -1,94 +1,74 @@
 package lenses
 
 import (
-	"bytes"
-	"fmt"
-	"io"
-
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/progress"
 	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // LensNewController ...
-type LensNewController struct {
-	db ports.Repository
-
+type LensNewControllerImpl struct {
+	store ports.Datastore
 	htmx.DefaultController
 }
 
 // NewLensNewController ...
-func NewLensNewController(db ports.Repository) *LensNewController {
-	return &LensNewController{
-		db: db,
+func NewLensController(store ports.Datastore) *LensNewControllerImpl {
+	return &LensNewControllerImpl{
+		store: store,
 	}
 }
 
-// Prepare ...
-func (l *LensNewController) Prepare() error {
-	if err := l.BindValues(utils.User(l.db), utils.Team(l.db)); err != nil {
-		return err
-	}
+// // Post ...
+// func (l *LensNewControllerImpl) Post() error {
+// 	spec, err := l.Ctx().FormFile("spec")
+// 	if err != nil {
+// 		return err
+// 	}
+// 	file, err := spec.Open()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer file.Close()
 
-	return nil
-}
+// 	buf := bytes.NewBuffer(nil)
+// 	if _, err := io.Copy(buf, file); err != nil {
+// 		return err
+// 	}
 
-// Post ...
-func (l *LensNewController) Post() error {
-	spec, err := l.Ctx().FormFile("spec")
-	if err != nil {
-		return err
-	}
-	file, err := spec.Open()
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+// 	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	buf := bytes.NewBuffer(nil)
-	if _, err := io.Copy(buf, file); err != nil {
-		return err
-	}
+// 	lens := &models.Lens{}
+// 	err = lens.UnmarshalJSON(buf.Bytes())
+// 	if err != nil {
+// 		return err
+// 	}
+// 	lens.Team = *team
 
-	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
+// 	lens, err = l.db.AddLens(l.Context(), lens)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	lens := &models.Lens{}
-	err = lens.UnmarshalJSON(buf.Bytes())
-	if err != nil {
-		return err
-	}
-	lens.Team = *team
+// 	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
 
-	lens, err = l.db.AddLens(l.Context(), lens)
-	if err != nil {
-		return err
-	}
-
-	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
-
-	return nil
-}
+// 	return nil
+// }
 
 // Get ...
-func (l *LensNewController) Get() error {
-	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	return l.Hx().RenderComp(
+func (l *LensNewControllerImpl) Get() error {
+	return l.Render(
 		components.Page(
 			components.PageProps{},
 			htmx.DataAttribute("theme", "light"),
 			components.Layout(
 				components.LayoutProps{
-					User: l.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: l.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: l.Path(),
 				},
 				cards.CardBordered(
 					cards.CardProps{},
@@ -101,7 +81,7 @@ func (l *LensNewController) Get() error {
 						htmx.FormElement(
 							htmx.ID("new-lens-form"),
 							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost(fmt.Sprintf("/teams/%s/lenses/new", team.Slug)),
+							htmx.HxPost("/lenses/new"),
 							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
 							htmx.Div(
 								forms.FileInputBordered(

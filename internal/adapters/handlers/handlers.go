@@ -5,6 +5,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
+	"github.com/zeiss/service-lens/internal/controllers/lenses"
 	"github.com/zeiss/service-lens/internal/controllers/login"
 	"github.com/zeiss/service-lens/internal/controllers/me"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
@@ -138,6 +139,55 @@ func (a *handlers) DeleteEnvironment() fiber.Handler {
 func (a *handlers) CreateEnvironment() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return environments.NewCreateEnvironmentController(a.store)
+	})
+}
+
+// ListLenses ...
+func (a *handlers) ListLenses() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensListController(a.store)
+	})
+}
+
+// NewLens ...
+func (a *handlers) NewLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensController(a.store)
+	})
+}
+
+// ShowLens ...
+func (a *handlers) ShowLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensShowController(a.store)
+	})
+}
+
+// EditLens ...
+func (a *handlers) EditLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensEditController(a.store)
+	})
+}
+
+// UpdateLens ...
+func (a *handlers) UpdateLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensEditController(a.store)
+	})
+}
+
+// DeleteLens ...
+func (a *handlers) DeleteLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensDeleteController(a.store)
+	})
+}
+
+// CreateLens ...
+func (a *handlers) CreateLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewCreateLensController(a.store)
 	})
 }
 

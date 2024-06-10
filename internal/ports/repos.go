@@ -40,6 +40,10 @@ type ReadTx interface {
 	ListEnvironments(ctx context.Context, environments *tables.Results[models.Environment]) error
 	// GetEnvironment is a method that returns an environment by ID
 	GetEnvironment(ctx context.Context, environment *models.Environment) error
+	// ListLenses is a method that returns a list of lenses
+	ListLenses(ctx context.Context, lenses *tables.Results[models.Lens]) error
+	// GetLens is a method that returns a lens by ID
+	GetLens(ctx context.Context, lens *models.Lens) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -58,6 +62,12 @@ type ReadWriteTx interface {
 	UpdateEnvironment(ctx context.Context, environment *models.Environment) error
 	// DeleteEnvironment is a method that deletes an environment
 	DeleteEnvironment(ctx context.Context, environment *models.Environment) error
+	// CreateLens is a method that creates a lens
+	CreateLens(ctx context.Context, lens *models.Lens) error
+	// UpdateLens is a method that updates a lens
+	UpdateLens(ctx context.Context, lens *models.Lens) error
+	// DeleteLens is a method that deletes a lens
+	DeleteLens(ctx context.Context, lens *models.Lens) error
 }
 
 // Repository is the interface that wraps the basic methods to interact with the database.
