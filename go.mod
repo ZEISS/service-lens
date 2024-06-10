@@ -223,11 +223,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
-<<<<<<< HEAD
-	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
-=======
 	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
->>>>>>> 8397027 (wip: profile question create)
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.26.0 // indirect
