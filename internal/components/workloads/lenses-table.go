@@ -1,10 +1,9 @@
-package lenses
+package workloads
 
 import (
 	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
@@ -15,14 +14,15 @@ import (
 
 const (
 	deleteProfileURL = "/profiles/%s"
+	workloadLensURL  = "/workloads/%s/lenses/%s"
 )
 
 // LensesTableProps ...
 type LensesTableProps struct {
-	Lenses []*models.Lens
-	Offset int
-	Limit  int
-	Total  int
+	Workload *models.Workload
+	Offset   int
+	Limit    int
+	Total    int
 }
 
 // LensesTable ...
@@ -101,17 +101,6 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							},
 						),
 					),
-					htmx.A(
-						htmx.Href("/lenses/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
-							},
-							htmx.Text("Create Lens"),
-						),
-					),
 				),
 			},
 			[]tables.ColumnDef[*models.Lens]{
@@ -137,7 +126,7 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: "/lenses/" + row.ID.String(),
+									Href: fmt.Sprintf(workloadLensURL, props.Workload.ID, row.ID),
 								},
 								htmx.Text(row.Name),
 							),
@@ -158,24 +147,24 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 										icons.IconProps{},
 									),
 								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{},
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
-										buttons.Error(
-											buttons.ButtonProps{},
-											htmx.HxDelete(fmt.Sprintf(deleteProfileURL, row.ID)),
-											htmx.HxConfirm("Are you sure you want to delete this lens?"),
-											htmx.Text("Delete"),
-										),
-									),
-								),
+								// dropdowns.DropdownMenuItems(
+								// 	dropdowns.DropdownMenuItemsProps{},
+								// 	dropdowns.DropdownMenuItem(
+								// 		dropdowns.DropdownMenuItemProps{},
+								// 		buttons.Error(
+								// 			buttons.ButtonProps{},
+								// 			htmx.HxDelete(fmt.Sprintf(deleteProfileURL, props.Workload.ID, row.ID)),
+								// 			htmx.HxConfirm("Are you sure you want to delete this lens?"),
+								// 			htmx.Text("Delete"),
+								// 		),
+								// 	),
+								// ),
 							),
 						)
 					},
 				},
 			},
-			props.Lenses,
+			props.Workload.Lenses,
 			// Pagination: ProfileListTablePaginationComponent(
 			// 	ProfileListTablePaginationProps{
 			// 		Limit:  props.Limit,

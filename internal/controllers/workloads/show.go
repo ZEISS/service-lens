@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -137,25 +138,31 @@ func (w *WorkloadShowControllerImpl) Get() error {
 								cards.TitleProps{},
 								htmx.Text("Lenses"),
 							),
-							htmx.Div(
-								htmx.ClassNames{
-									"overflow-x-auto": true,
+							workloads.LensesTable(
+								workloads.LensesTableProps{
+									Workload: &w.workload,
 								},
-								htmx.Table(
-									htmx.ClassNames{
-										"table": true,
-									},
-									htmx.THead(
-										htmx.Tr(
-											htmx.Th(htmx.Text("ID")),
-											htmx.Th(htmx.Text("Lens")),
-										),
-									),
-									// htmx.TBody(
-									// 	htmx.Group(lenses...),
-									// ),
-								),
 							),
+							// htmx.Div(
+							// 	htmx.ClassNames{
+							// 		"overflow-x-auto": true,
+							// 	},
+
+							// 	htmx.Table(
+							// 		htmx.ClassNames{
+							// 			"table": true,
+							// 		},
+							// 		htmx.THead(
+							// 			htmx.Tr(
+							// 				htmx.Th(htmx.Text("ID")),
+							// 				htmx.Th(htmx.Text("Lens")),
+							// 			),
+							// 		),
+							// 		// htmx.TBody(
+							// 		// 	htmx.Group(lenses...),
+							// 		// ),
+							// 	),
+							// ),
 						),
 					),
 				),

@@ -41,6 +41,18 @@ type Lens struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
+// GetPillars ...
+func (l *Lens) GetPillars() []*Pillar {
+	pillars := make([]*Pillar, len(l.Pillars))
+	for i, pillar := range l.Pillars {
+		pillar := pillar
+		pillars[i] = &pillar
+	}
+
+	return pillars
+
+}
+
 // Pillar is a model for a pillar.
 type Pillar struct {
 	ID          int        `json:"id" gorm:"primary_key"`
@@ -56,6 +68,17 @@ type Pillar struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
+}
+
+// GetQuestions ...
+func (p *Pillar) GetQuestions() []*Question {
+	questions := make([]*Question, len(p.Questions))
+	for i, question := range p.Questions {
+		question := question
+		questions[i] = &question
+	}
+
+	return questions
 }
 
 // Question is a model for a question.

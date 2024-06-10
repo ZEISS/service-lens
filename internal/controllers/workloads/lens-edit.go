@@ -1,77 +1,59 @@
 package workloads
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/drawers"
+	"github.com/zeiss/fiber-htmx/components/menus"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
-// WorkloadLensEditControllerGetParams ...
-type WorkloadLensEditControllerGetParams struct {
-	ID       uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team     string    `json:"team" xml:"team" form:"team"`
-	Lens     uuid.UUID `json:"lens" xml:"lens" form:"lens"`
-	Question int       `json:"question" xml:"question" form:"question"`
-}
-
-// WorkloadLensEditController ...
-type WorkloadLensEditController struct {
-	db ports.Repository
-	// lens     *models.Lens
-	question models.Question
-	// answers  *models.WorkloadLensQuestionAnswer
-
-	htmx.UnimplementedController
+// WorkloadLensEditControllerImpl ...
+type WorkloadLensEditControllerImpl struct {
+	workload models.Workload
+	lens     models.Lens
+	store    ports.Datastore
+	htmx.DefaultController
 }
 
 // NewWorkloadLensEditController ...
-func NewWorkloadLensEditController(db ports.Repository) *WorkloadLensEditController {
-	return &WorkloadLensEditController{
-		db: db,
+func NewWorkloadLensEditController(store ports.Datastore) *WorkloadLensEditControllerImpl {
+	return &WorkloadLensEditControllerImpl{
+		store: store,
 	}
 }
 
 // Prepare ...
-func (w *WorkloadLensEditController) Prepare() error {
-	// if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-	// 	return err
-	// }
+func (w *WorkloadLensEditControllerImpl) Prepare() error {
+	err := w.BindParams(&w.workload)
+	if err != nil {
+		return err
+	}
 
-	// params := &WorkloadLensEditControllerGetParams{}
-	// if err := w.BindParams(params); err != nil {
-	// 	return nil
-	// }
+	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		if err := tx.GetWorkload(ctx, &w.workload); err != nil {
+			return err
+		}
 
-	// lens, err := w.db.GetLensByID(w.Context(), params.Lens)
-	// if err != nil {
-	// 	return err
-	// }
-	// w.lens = lens
+		id, err := uuid.Parse(w.Ctx().Params("lens"))
+		if err != nil {
+			return err
+		}
+		w.lens.ID = id
 
-	// answers, err := w.db.ListAnswers(w.Context(), params.ID, params.Lens, params.Question)
-	// if err != nil {
-	// 	return err
-	// }
-	// w.answers = answers
-
-	// for _, pillar := range lens.Pillars {
-	// 	for _, question := range pillar.Questions {
-	// 		if question.ID == params.Question {
-	// 			w.question = question
-	// 		}
-	// 	}
-	// }
-
-	return nil
+		return tx.GetLens(ctx, &w.lens)
+	})
 }
 
 // Get ...
-func (w *WorkloadLensEditController) Get() error {
+func (w *WorkloadLensEditControllerImpl) Get() error {
 	return w.Render(
 		components.Page(
 			components.PageProps{},
@@ -109,27 +91,28 @@ func (w *WorkloadLensEditController) Get() error {
 									cards.BodyProps{},
 									cards.Title(
 										cards.TitleProps{},
-										htmx.Text(w.question.Title),
+										htmx.Text(w.lens.Name),
 									),
-									components.CardDataBlock(
-										&components.CardDataBlockProps{
-											Title: "Description",
-											Data:  w.question.Description,
-										},
-									),
-									// AdditionalInformationComponent(
-									// 	AdditionalInformationProps{
-									// 		Description: w.question.Description,
-									// 	},
-									// ),
 								),
+								// cards.Body(
+								// 	cards.BodyProps{},
+								// 	cards.Title(
+								// 		cards.TitleProps{},
+								// 		htmx.Text(w.question.Title),
+								// 	),
+								// 	components.CardDataBlock(
+								// 		&components.CardDataBlockProps{
+								// 			Title: "Description",
+								// 			Data:  w.question.Description,
+								// 		},
+								// 	),
+								// 	// AdditionalInformationComponent(
+								// 	// 	AdditionalInformationProps{
+								// 	// 		Description: w.question.Description,
+								// 	// 	},
+								// 	// ),
+								// ),
 							),
-							// EditFormComponent(
-							// 	EditFormProps{
-							// 		Question: w.question,
-							// 		Answer:   w.answers,
-							// 	},
-							// ),
 						),
 						drawers.DrawerSide(
 							drawers.DrawerSideProps{
@@ -139,11 +122,47 @@ func (w *WorkloadLensEditController) Get() error {
 									"bg-base-300":     true,
 								},
 							},
-							// EditMenuComponent(
-							// 	EditMenuProps{
-							// 		Lens: w.lens,
-							// 	},
-							// ),
+							htmx.Nav(
+								htmx.Merge(
+									htmx.ClassNames{},
+								),
+								menus.Menu(
+									menus.MenuProps{
+										ClassNames: htmx.ClassNames{
+											"w-full": true,
+										},
+									},
+									htmx.Group(
+										htmx.ForEach(w.lens.GetPillars(), func(p *models.Pillar, pillarIdx int) htmx.Node {
+											return menus.MenuItem(
+												menus.MenuItemProps{},
+												menus.MenuCollapsible(
+													menus.MenuCollapsibleProps{
+														Open: pillarIdx == 0,
+													},
+													menus.MenuCollapsibleSummary(
+														menus.MenuCollapsibleSummaryProps{},
+														htmx.Text(p.Name),
+													),
+													htmx.Group(
+														htmx.ForEach(p.GetQuestions(), func(q *models.Question, questionIdx int) htmx.Node {
+															return menus.MenuItem(
+																menus.MenuItemProps{},
+																menus.MenuLink(
+																	menus.MenuLinkProps{
+																		Href: "/workloads/" + w.workload.ID.String() + "/lens/" + w.lens.ID.String() + "/question/" + utils.IntStr(q.ID),
+																	},
+																	htmx.Text(q.Title),
+																),
+															)
+														})...,
+													),
+												),
+											)
+										})...,
+									),
+								),
+							),
 						),
 					),
 				),
@@ -152,16 +171,16 @@ func (w *WorkloadLensEditController) Get() error {
 	)
 }
 
-// Post ...
-func (w *WorkloadLensEditController) Post() error {
-	return nil
-}
+// // Post ...
+// func (w *WorkloadLensEditController) Post() error {
+// 	return nil
+// }
 
-// EditFormProps ...
-type EditFormProps struct {
-	Question models.Question
-	Answer   *models.WorkloadLensQuestionAnswer
-}
+// // EditFormProps ...
+// type EditFormProps struct {
+// 	Question models.Question
+// 	Answer   *models.WorkloadLensQuestionAnswer
+// }
 
 // // EditFormComponent ...
 // func EditFormComponent(p EditFormProps) htmx.Node {

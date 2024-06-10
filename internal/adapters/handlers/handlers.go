@@ -257,3 +257,17 @@ func (a *handlers) ListProfilesPartial() fiber.Handler {
 		return partials.NewProfilePartialListController(a.store)
 	})
 }
+
+// ShowWorkloadLens ...
+func (a *handlers) ShowWorkloadLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workloads.NewWorkloadLensController(a.store)
+	})
+}
+
+// EditWorkloadLens ...
+func (a *handlers) EditWorkloadLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workloads.NewWorkloadLensEditController(a.store)
+	})
+}

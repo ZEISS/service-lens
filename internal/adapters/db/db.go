@@ -178,7 +178,10 @@ func (t *datastoreTx) ListLenses(ctx context.Context, pagination *tables.Results
 
 // GetLens is a method that returns a lens by ID
 func (t *datastoreTx) GetLens(ctx context.Context, lens *models.Lens) error {
-	return t.tx.First(lens).Error
+	return t.tx.
+		Preload("Pillars").
+		Preload("Pillars.Questions").
+		First(lens).Error
 }
 
 // CreateLens is a method that creates a lens
