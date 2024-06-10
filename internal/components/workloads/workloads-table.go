@@ -1,12 +1,19 @@
 package workloads
 
 import (
+	"fmt"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+)
+
+const (
+	profileShowURL     = "/profiles/%s"
+	environmentShowURL = "/environments/%s"
 )
 
 // WorkloadsTableProps ...
@@ -125,6 +132,40 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 									Href: "/workloads/" + row.ID.String(),
 								},
 								htmx.Text(row.Name),
+							),
+						)
+					},
+				},
+				{
+					ID:          "profile",
+					AccessorKey: "profile",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Profile"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf(profileShowURL, row.Profile.ID),
+								},
+								htmx.Text(row.Profile.Name),
+							),
+						)
+					},
+				},
+				{
+					ID:          "environment",
+					AccessorKey: "environment",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Environment"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf(environmentShowURL, row.Environment.ID),
+								},
+								htmx.Text(row.Environment.Name),
 							),
 						)
 					},

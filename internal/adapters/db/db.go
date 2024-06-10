@@ -196,7 +196,11 @@ func (t *datastoreTx) DeleteLens(ctx context.Context, lens *models.Lens) error {
 
 // ListWorkloads is a method that returns a list of workloads
 func (t *datastoreTx) ListWorkloads(ctx context.Context, pagination *tables.Results[models.Workload]) error {
-	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).
+		Preload("Lenses").
+		Preload("Profile").
+		Preload("Environment").
+		Find(&pagination.Rows).Error
 }
 
 // GetWorkload is a method that returns a workload by ID

@@ -39,7 +39,9 @@ func (w *WorkloadListControllerImpl) Prepare() error {
 func (w *WorkloadListControllerImpl) Get() error {
 	return w.Render(
 		components.Page(
-			components.PageProps{},
+			components.PageProps{
+				Title: "Workloads",
+			},
 			components.Layout(
 				components.LayoutProps{
 					Path: w.Path(),
