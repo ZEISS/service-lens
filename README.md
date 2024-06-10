@@ -13,36 +13,17 @@ Service Lens is an enterprise service management tool. It allows you to manage y
 
 ![preview](assets/screenshot_1.png)
 
+It is build on [fiber-htmx](https://github.com/ZEISS/fiber-htmx) and uses a 3-tier architecture.
+
 ## Development
 
-The projects has mutiple packages.
+Please, set all environment variables in `.env`. `docker compose up db` will launch a local development database.
 
 ```
-├── packages/app
-├── packages/docs
-├── packages/tools
+air
 ```
 
-The `packages/app` contains the servie lens app. The `docs` folder contains the documentation of the project and `tools` the shared tooling of the project.
-
-Please create a `.env.local` file from the `.env.example` file. You need to [create a OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) on GitHub to get the `GITHUB_ID` and `GITHUB_SECRET`.
-
-```bash
-# Install dependencies
-npm i
-
-# Run Postgres
-docker compose up
-
-# Run migrations
-npm run migrate:up
-
-# Run seeds
-npm run db:seed
-
-# Run the server
-npm run dev
-```
+This launches a development instance of the application.
 
 # License
 
