@@ -10,8 +10,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/menus"
 )
 
-const ()
-
 // LayoutProps is the properties for the Layout component.
 type LayoutProps struct {
 	Children []htmx.Node

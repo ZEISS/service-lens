@@ -49,20 +49,21 @@ func (w *WorkloadLensController) Prepare() error {
 // Get ...
 func (w *WorkloadLensController) Get() error {
 	pillars := make([]htmx.Node, len(w.lens.Pillars))
-	for _, pillar := range w.lens.Pillars {
-		tr := htmx.Tr(
-			htmx.Td(
-				links.Link(
-					links.LinkProps{
-						Href: fmt.Sprintf("%s/pillars/%d", w.lens.ID, pillar.ID),
-					},
-					htmx.Text(pillar.Name),
-				),
-			),
-		)
+	// for _, pillar := range w.lens.Pillars {
+	// 	pillar := pillar
+	// 	tr := htmx.Tr(
+	// 		htmx.Td(
+	// 			links.Link(
+	// 				links.LinkProps{
+	// 					Href: fmt.Sprintf("%s/pillars/%d", w.lens.ID, pillar.ID),
+	// 				},
+	// 				htmx.Text(pillar.Name),
+	// 			),
+	// 		),
+	// 	)
 
-		pillars = append(pillars, tr)
-	}
+	// 	pillars = append(pillars, tr)
+	// }
 
 	return w.Render(
 		components.Page(

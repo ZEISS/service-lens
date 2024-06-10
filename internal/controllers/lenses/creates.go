@@ -33,6 +33,16 @@ func NewCreateLensController(store ports.Datastore) *CreateLensControllerImpl {
 func (l *CreateLensControllerImpl) Prepare() error {
 	validate = validator.New()
 
+	err := l.BindQuery(&l.lens)
+	if err != nil {
+		return err
+	}
+
+	err = validate.Struct(&l.lens)
+	if err != nil {
+		return err
+	}
+
 	spec, err := l.Ctx().FormFile("spec")
 	if err != nil {
 		return err

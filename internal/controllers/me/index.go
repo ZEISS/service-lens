@@ -30,14 +30,13 @@ func NewMeController(store ports.Datastore) *MeController {
 // Prepare ...
 func (m *MeController) Prepare() error {
 	return m.store.ReadTx(m.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetUser(m.Context(), &m.user)
+		return tx.GetUser(ctx, &m.user)
 	})
 }
 
 // Get ...
 func (m *MeController) Get() error {
-	return htmx.RenderComp(
-		m.Ctx(),
+	return m.Render(
 		components.Page(
 			components.PageProps{
 				Title: "Profile",

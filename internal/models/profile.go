@@ -31,11 +31,11 @@ type Profile struct {
 func (p *Profile) GetAnswers() []*ProfileQuestionAnswer {
 	answers := make([]*ProfileQuestionAnswer, len(p.Answers))
 	for i, answer := range p.Answers {
+		answer := answer
 		answers[i] = &answer
 	}
 
 	return answers
-
 }
 
 // IsChoosen returns true if the question is answered.
@@ -73,6 +73,7 @@ type ProfileQuestion struct {
 func (q *ProfileQuestion) GetChoices() []*ProfileQuestionChoice {
 	choices := make([]*ProfileQuestionChoice, len(q.Choices))
 	for i, choice := range q.Choices {
+		choice := choice
 		choices[i] = &choice
 	}
 	return choices

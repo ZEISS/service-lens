@@ -42,13 +42,13 @@ func NewWorkloadLensQuestionUpdateController(db ports.Repository) *WorkloadLensQ
 func (w *WorkloadLensQuestionUpdateController) Prepare() error {
 	params := &WorkloadLensQuestionUpdateControllerParams{}
 	if err := w.BindParams(params); err != nil {
-		return nil
+		return err
 	}
 	w.params = params
 
 	body := &WorkloadLensQuestionUpdateControllerBody{}
 	if err := w.BindBody(body); err != nil {
-		return nil
+		return err
 	}
 	w.body = body
 
