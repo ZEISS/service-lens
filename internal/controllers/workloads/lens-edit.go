@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -15,7 +14,6 @@ import (
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -47,49 +45,46 @@ func NewWorkloadLensEditController(db ports.Repository) *WorkloadLensEditControl
 
 // Prepare ...
 func (w *WorkloadLensEditController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-		return err
-	}
+	// if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
+	// 	return err
+	// }
 
-	params := &WorkloadLensEditControllerGetParams{}
-	if err := w.BindParams(params); err != nil {
-		return nil
-	}
+	// params := &WorkloadLensEditControllerGetParams{}
+	// if err := w.BindParams(params); err != nil {
+	// 	return nil
+	// }
 
-	lens, err := w.db.GetLensByID(w.Context(), params.Lens)
-	if err != nil {
-		return err
-	}
-	w.lens = lens
+	// lens, err := w.db.GetLensByID(w.Context(), params.Lens)
+	// if err != nil {
+	// 	return err
+	// }
+	// w.lens = lens
 
-	answers, err := w.db.ListAnswers(w.Context(), params.ID, params.Lens, params.Question)
-	if err != nil {
-		return err
-	}
-	w.answers = answers
+	// answers, err := w.db.ListAnswers(w.Context(), params.ID, params.Lens, params.Question)
+	// if err != nil {
+	// 	return err
+	// }
+	// w.answers = answers
 
-	for _, pillar := range lens.Pillars {
-		for _, question := range pillar.Questions {
-			if question.ID == params.Question {
-				w.question = question
-			}
-		}
-	}
+	// for _, pillar := range lens.Pillars {
+	// 	for _, question := range pillar.Questions {
+	// 		if question.ID == params.Question {
+	// 			w.question = question
+	// 		}
+	// 	}
+	// }
 
 	return nil
 }
 
 // Get ...
 func (w *WorkloadLensEditController) Get() error {
-	hx := w.Hx()
-
-	return hx.RenderComp(
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: w.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{

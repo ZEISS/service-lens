@@ -1,13 +1,10 @@
 package workloads
 
 import (
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 )
@@ -29,35 +26,33 @@ func NewWorkloadPillarController(db ports.Repository) *WorkloadPillarController 
 
 // Prepare ...
 func (w *WorkloadPillarController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-		return err
-	}
+	// if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
+	// 	return err
+	// }
 
-	lensID, err := uuid.Parse(w.Ctx().Params("lens"))
-	if err != nil {
-		return err
-	}
+	// lensID, err := uuid.Parse(w.Ctx().Params("lens"))
+	// if err != nil {
+	// 	return err
+	// }
 
-	pillarId, err := w.Ctx().ParamsInt("pillar")
-	if err != nil {
-		return err
-	}
+	// pillarId, err := w.Ctx().ParamsInt("pillar")
+	// if err != nil {
+	// 	return err
+	// }
 
-	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
+	// team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	pillar, err := w.db.GetPillarById(w.Context(), team.Slug, lensID, pillarId)
-	if err != nil {
-		return err
-	}
-	w.pillar = pillar
+	// pillar, err := w.db.GetPillarById(w.Context(), team.Slug, lensID, pillarId)
+	// if err != nil {
+	// 	return err
+	// }
+	// w.pillar = pillar
 
 	return nil
 }
 
 // Get ...
 func (w *WorkloadPillarController) Get() error {
-	hx := w.Hx()
-
 	questions := make([]htmx.Node, len(w.pillar.Questions))
 	for i, question := range w.pillar.Questions {
 		questions[i] = cards.Card(
@@ -77,13 +72,12 @@ func (w *WorkloadPillarController) Get() error {
 		)
 	}
 
-	return hx.RenderComp(
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: w.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{},

@@ -3,14 +3,11 @@ package workloads
 import (
 	"fmt"
 
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -31,28 +28,26 @@ func NewWorkloadLensController(db ports.Repository) *WorkloadLensController {
 
 // Prepare ...
 func (w *WorkloadLensController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-		return err
-	}
+	// if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
+	// 	return err
+	// }
 
-	lensID, err := uuid.Parse(w.Ctx().Params("lens"))
-	if err != nil {
-		return err
-	}
+	// lensID, err := uuid.Parse(w.Ctx().Params("lens"))
+	// if err != nil {
+	// 	return err
+	// }
 
-	lens, err := w.db.GetLensByID(w.Context(), lensID)
-	if err != nil {
-		return err
-	}
-	w.lens = lens
+	// lens, err := w.db.GetLensByID(w.Context(), lensID)
+	// if err != nil {
+	// 	return err
+	// }
+	// w.lens = lens
 
 	return nil
 }
 
 // Get ...
 func (w *WorkloadLensController) Get() error {
-	hx := w.Hx()
-
 	pillars := make([]htmx.Node, len(w.lens.Pillars))
 	for _, pillar := range w.lens.Pillars {
 		tr := htmx.Tr(
@@ -69,13 +64,12 @@ func (w *WorkloadLensController) Get() error {
 		pillars = append(pillars, tr)
 	}
 
-	return hx.RenderComp(
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: w.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{},

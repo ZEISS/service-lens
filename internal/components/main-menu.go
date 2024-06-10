@@ -72,8 +72,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								// Href:   fmt.Sprintf("/teams/%s/workloads/list", p.Team.Slug),
-								// Active: p.Path == fmt.Sprintf("/teams/%s/workloads/list", p.Team.Slug),
+								Href:   "/workloads",
+								Active: p.Path == "/workloads",
 							},
 							htmx.Text("List workload"),
 						),

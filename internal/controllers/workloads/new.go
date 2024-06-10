@@ -1,100 +1,70 @@
 package workloads
 
 import (
-	"fmt"
-
-	"github.com/go-playground/validator/v10"
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	utilz "github.com/zeiss/fiber-htmx/components/utils"
 )
 
-// WorkloadNewControllerQuery ...
-type WorkloadNewControllerQuery struct {
-	Profile     uuid.UUID `json:"profile" xml:"profile" form:"profile" validate:"required,uuid"`
-	Lens        uuid.UUID `json:"lens" xml:"lens" form:"lens" validate:"required,uuid"`
-	Description string    `json:"description" xml:"description" form:"description" validate:"required,min=3,max=1024"`
-	Name        string    `json:"name" xml:"name" form:"name" validate:"required,min=3,max=100"`
-}
-
-// NewWorkloadNewControllerQuery ...
-func NewWorkloadNewControllerQuery() *WorkloadNewControllerQuery {
-	return &WorkloadNewControllerQuery{}
-}
-
-// WorkloadNewController ...
-type WorkloadNewController struct {
-	db ports.Repository
-
+// WorkloadNewControllerImpl ...
+type WorkloadNewControllerImpl struct {
+	store ports.Datastore
 	htmx.DefaultController
 }
 
-// NewWorkloadsNewController ...
-func NewWorkloadsNewController(db ports.Repository) *WorkloadNewController {
-	return &WorkloadNewController{
-		db: db,
-	}
+// NewWorkloadController ...
+func NewWorkloadController(store ports.Datastore) *WorkloadNewControllerImpl {
+	return &WorkloadNewControllerImpl{store: store}
 }
 
-// Prepare ...
-func (w *WorkloadNewController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-		return err
-	}
+// // Post ...
+// func (w *WorkloadNewControllerImpl) Post() error {
+// 	query := NewWorkloadNewControllerQuery()
+// 	if err := w.BindQuery(query); err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	validate := validator.New(validator.WithRequiredStructEnabled())
+// 	err := validate.Struct(query)
+// 	if err != nil {
+// 		return err
+// 	}
 
-// Post ...
-func (w *WorkloadNewController) Post() error {
-	query := NewWorkloadNewControllerQuery()
-	if err := w.BindQuery(query); err != nil {
-		return err
-	}
+// 	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
 
-	validate := validator.New(validator.WithRequiredStructEnabled())
-	err := validate.Struct(query)
-	if err != nil {
-		return err
-	}
+// 	workload := &models.Workload{
+// 		Description: query.Description,
+// 		Lenses:      []*models.Lens{{ID: query.Lens}},
+// 		Name:        query.Name,
+// 		ProfileID:   query.Profile,
+// 		Team:        *team,
+// 	}
 
-	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
+// 	err = w.db.CreateWorkload(w.Context(), workload)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	workload := &models.Workload{
-		Description: query.Description,
-		Lenses:      []*models.Lens{{ID: query.Lens}},
-		Name:        query.Name,
-		ProfileID:   query.Profile,
-		Team:        *team,
-	}
+// 	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", team.Slug, workload.ID))
 
-	err = w.db.CreateWorkload(w.Context(), workload)
-	if err != nil {
-		return err
-	}
-
-	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", team.Slug, workload.ID))
-
-	return nil
-}
+// 	return nil
+// }
 
 // Get ...
-func (w *WorkloadNewController) Get() error {
-	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
+func (w *WorkloadNewControllerImpl) Get() error {
 
-	environments, err := w.db.ListEnvironment(w.Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
-	if err != nil {
-		return err
-	}
+	// team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
+
+	// environments, err := w.db.ListEnvironment(w.Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
+	// if err != nil {
+	// 	return err
+	// }
 
 	// profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
 	// if err != nil {
@@ -122,13 +92,12 @@ func (w *WorkloadNewController) Get() error {
 	// 	)
 	// }
 
-	return w.Hx().RenderComp(
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: w.Path(),
 				},
 				htmx.FormElement(
 					htmx.HxPost(""),
@@ -338,7 +307,7 @@ func (w *WorkloadNewController) Get() error {
 										),
 									),
 								)
-							}, environments.Rows...),
+							}),
 						),
 					),
 					cards.Body(

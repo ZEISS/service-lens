@@ -146,6 +146,15 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Put("/lenses/:id", handlers.UpdateLens())
 		app.Delete("/lenses/:id", handlers.DeleteLens())
 
+		// Workloads ...
+		app.Get("/workloads", handlers.ListWorkloads())
+		app.Get("/workloads/new", handlers.NewWorkload())
+		app.Post("/workloads/new", handlers.CreateWorkload())
+		app.Get("/workloads/:id", handlers.ShowWorkload())
+		app.Get("/workloads/:id/edit", handlers.EditWorkload())
+		// app.Put("/workloads/:id", handlers.UpdateWorkload())
+		app.Delete("/workloads/:id", handlers.DeleteWorkload())
+
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {
 			return err

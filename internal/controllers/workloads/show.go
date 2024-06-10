@@ -1,94 +1,50 @@
 package workloads
 
 import (
-	"fmt"
+	"context"
 
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
-	links "github.com/zeiss/fiber-htmx/components/links"
 )
 
-// WorkloadIndexControllerParams ...
-type WorkloadIndexControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
+// WorkloadShowControllerImpl ...
+type WorkloadShowControllerImpl struct {
+	workload models.Workload
+	store    ports.Datastore
+	htmx.DefaultController
 }
 
-// NewDefaultWorkloadIndexControllerParams ...
-func NewDefaultWorkloadIndexControllerParams() *WorkloadIndexControllerParams {
-	return &WorkloadIndexControllerParams{}
-}
-
-// WorkloadIndexController ...
-type WorkloadIndexController struct {
-	db       ports.Repository
-	workload *models.Workload
-	params   *WorkloadIndexControllerParams
-
-	htmx.UnimplementedController
-}
-
-// NewWorkloadIndexController ...
-func NewWorkloadIndexController(db ports.Repository) *WorkloadIndexController {
-	return &WorkloadIndexController{
-		db: db,
+// NewWorkloadShowController ...
+func NewWorkloadShowController(store ports.Datastore) *WorkloadShowControllerImpl {
+	return &WorkloadShowControllerImpl{
+		store: store,
 	}
 }
 
 // Prepare ...
-func (w *WorkloadIndexController) Prepare() error {
-	if err := w.BindValues(utils.User(w.db), utils.Team(w.db)); err != nil {
-		return err
-	}
-
-	params := NewDefaultWorkloadIndexControllerParams()
-	if err := w.BindParams(params); err != nil {
-		return err
-	}
-	w.params = params
-
-	workload, err := w.db.IndexWorkload(w.Context(), params.ID)
+func (w *WorkloadShowControllerImpl) Prepare() error {
+	err := w.BindParams(&w.workload)
 	if err != nil {
 		return err
 	}
-	w.workload = workload
 
-	return nil
+	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetWorkload(ctx, &w.workload)
+	})
 }
 
 // Get ...
-func (w *WorkloadIndexController) Get() error {
-	hx := w.Hx()
-
-	lenses := make([]htmx.Node, len(w.workload.Lenses))
-	for i, lens := range w.workload.Lenses {
-		lenses[i] = htmx.Tr(
-			htmx.Th(htmx.Text(lens.ID.String())),
-			htmx.Td(
-				links.Link(
-					links.LinkProps{
-						Href: fmt.Sprintf("%s/lenses/%s", w.workload.ID, lens.ID.String()),
-					},
-					htmx.Text(lens.Name),
-				),
-			),
-		)
-	}
-
-	return hx.RenderComp(
+func (w *WorkloadShowControllerImpl) Get() error {
+	return w.Render(
 		components.Page(
 			components.PageProps{},
 			components.Layout(
 				components.LayoutProps{
-					User: w.Values(utils.ValuesKeyUser).(*authz.User),
-					Team: w.Values(utils.ValuesKeyTeam).(*authz.Team),
+					Path: w.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{
@@ -191,9 +147,9 @@ func (w *WorkloadIndexController) Get() error {
 											htmx.Th(htmx.Text("Lens")),
 										),
 									),
-									htmx.TBody(
-										htmx.Group(lenses...),
-									),
+									// htmx.TBody(
+									// 	htmx.Group(lenses...),
+									// ),
 								),
 							),
 						),
@@ -273,14 +229,4 @@ func (w *WorkloadIndexController) Get() error {
 			),
 		),
 	)
-}
-
-// Delete ...
-func (w *WorkloadIndexController) Delete() error {
-	err := w.db.DestroyWorkload(w.Context(), w.workload.ID)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

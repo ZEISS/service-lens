@@ -193,3 +193,28 @@ func (t *datastoreTx) UpdateLens(ctx context.Context, lens *models.Lens) error {
 func (t *datastoreTx) DeleteLens(ctx context.Context, lens *models.Lens) error {
 	return t.tx.Delete(lens).Error
 }
+
+// ListWorkloads is a method that returns a list of workloads
+func (t *datastoreTx) ListWorkloads(ctx context.Context, pagination *tables.Results[models.Workload]) error {
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+}
+
+// GetWorkload is a method that returns a workload by ID
+func (t *datastoreTx) GetWorkload(ctx context.Context, workload *models.Workload) error {
+	return t.tx.First(workload).Error
+}
+
+// CreateWorkload is a method that creates a workload
+func (t *datastoreTx) CreateWorkload(ctx context.Context, workload *models.Workload) error {
+	return t.tx.Create(workload).Error
+}
+
+// UpdateWorkload is a method that updates a workload
+func (t *datastoreTx) UpdateWorkload(ctx context.Context, workload *models.Workload) error {
+	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(workload).Error
+}
+
+// DeleteWorkload is a method that deletes a workload
+func (t *datastoreTx) DeleteWorkload(ctx context.Context, workload *models.Workload) error {
+	return t.tx.Delete(workload).Error
+}
