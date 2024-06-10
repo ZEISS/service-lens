@@ -25,6 +25,12 @@ func NewCreateWorkloadController(store ports.Datastore) *CreateWorkloadControlle
 	return &CreateWorkloadControllerImpl{store: store}
 }
 
+// Error ...
+func (l *CreateWorkloadControllerImpl) Error(err error) error {
+	fmt.Println(err)
+	return err
+}
+
 // Prepare ...
 func (l *CreateWorkloadControllerImpl) Prepare() error {
 	validate = validator.New()

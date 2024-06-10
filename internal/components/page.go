@@ -34,6 +34,10 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.Integrity("sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"),
 					htmx.CrossOrigin("anonymous"),
 				),
+				htmx.Script(
+					htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"),
+					htmx.Attribute("type", "text/javascript"),
+				),
 			},
 		},
 		htmx.Body(

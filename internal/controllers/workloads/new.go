@@ -3,13 +3,12 @@ package workloads
 import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	utilz "github.com/zeiss/fiber-htmx/components/utils"
 )
 
 // WorkloadNewControllerImpl ...
@@ -58,40 +57,6 @@ func NewWorkloadController(store ports.Datastore) *WorkloadNewControllerImpl {
 
 // Get ...
 func (w *WorkloadNewControllerImpl) Get() error {
-
-	// team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-	// environments, err := w.db.ListEnvironment(w.Context(), team.Slug, models.Pagination[*models.Environment]{Limit: 10, Offset: 0})
-	// if err != nil {
-	// 	return err
-	// }
-
-	// profiles, err := w.db.ListProfiles(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
-	// if err != nil {
-	// 	return err
-	// }
-
-	profilesItems := make([]htmx.Node, 0)
-	// for i, profile := range profiles {
-	// 	profilesItems[i] = htmx.Option(
-	// 		htmx.Attribute("value", profile.ID.String()),
-	// 		htmx.Text(profile.Name),
-	// 	)
-	// }
-
-	// lenses, err := w.db.ListLenses(hx.Context().Context(), w.team.Slug, &models.Pagination{Limit: 10, Offset: 0})
-	// if err != nil {
-	// 	return err
-	// }
-
-	lensesItems := make([]htmx.Node, 0)
-	// for i, lens := range lenses {
-	// 	lensesItems[i] = htmx.Option(
-	// 		htmx.Attribute("value", lens.ID.String()),
-	// 		htmx.Text(lens.Name),
-	// 	)
-	// }
-
 	return w.Render(
 		components.Page(
 			components.PageProps{},
@@ -203,61 +168,51 @@ func (w *WorkloadNewControllerImpl) Get() error {
 										),
 									),
 								),
-							),
-						),
-					),
-					cards.CardBordered(
-						cards.CardProps{
-							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
-							},
-						},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Profile"),
-							),
-							components.MultiSelect(
-								components.MultiSelectProps{},
-							),
-							// dropdowns.Dropdown(
-							// 	dropdowns.DropdownProps{},
-							// 	htmx.Input(
-							// 		htmx.Attribute("type", "hidden"),
-							// 		htmx.ID("profile-input"),
-							// 		htmx.Attribute("name", "profile"),
-							// 		htmx.Value("good"),
-							// 		htmx.HyperScript("on newprofile set @value to 'tag'"),
-							// 	),
-							// 	dropdowns.DropdownButton(
-							// 		dropdowns.DropdownButtonProps{
-							// 			ClassNames: htmx.ClassNames{
-							// 				"m-1": true,
-							// 			},
-							// 		},
-							// 		htmx.Role("button"),
-							// 		htmx.Text("Select Profile"),
-							// 	),
-							// 	dropdowns.DropdownMenuItems(
-							// 		dropdowns.DropdownMenuItemsProps{},
-							// 		dropdowns.DropdownMenuItem(
-							// 			dropdowns.DropdownMenuItemProps{},
-							// 			htmx.Text("Profile One"),
-							// 			htmx.DataAttribute("profile", "1"),
-							// 			// htmx.HyperScript("on click send newprofile(tag: ()) to #profile-input"),
-							// 		),
-							// 	),
-
-							htmx.Select(
-								htmx.ClassNames{
-									"select":   true,
-									"max-w-xs": true,
-									"block":    true,
-								},
-								htmx.Attribute("name", "profile"),
-								htmx.Group(profilesItems...),
+								forms.FormControl(
+									forms.FormControlProps{
+										ClassNames: htmx.ClassNames{
+											"py-4": true,
+										},
+									},
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"-my-4": true,
+												},
+											},
+											htmx.Text("Review Owner"),
+										),
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("The email address of the person responsible for reviewing the workload."),
+										),
+									),
+									forms.TextInputBordered(
+										forms.TextInputProps{
+											Name: "review_owner",
+										},
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("The description must be from 3 to 1024 characters."),
+										),
+									),
+								),
 							),
 						),
 					),
@@ -274,40 +229,75 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								cards.TitleProps{},
 								htmx.Text("Environment"),
 							),
-							utilz.Map(func(el *models.Environment) htmx.Node {
-								return forms.FormControl(
-									forms.FormControlProps{},
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"-my-4": true,
-												},
-											},
-											htmx.Text(el.Name),
-										),
-										forms.Radio(
-											forms.RadioProps{
-												Name:  "environment",
-												Value: el.ID.String(),
-											},
-										),
+							htmx.Input(
+								htmx.Attribute("type", "hidden"),
+								htmx.ID("environment"),
+								htmx.Attribute("name", "environment_id"),
+								htmx.Value(""),
+							),
+							dropdowns.Dropdown(
+								dropdowns.DropdownProps{},
+								htmx.HyperScript("on click from (closest <a/>) set (previous <input/>).value to 'test'"),
+								dropdowns.DropdownButton(
+									dropdowns.DropdownButtonProps{},
+									htmx.Text("Select Environment"),
+									htmx.HxGet("/workloads/partials/environments"),
+									htmx.HxTarget("#environments-list"),
+									htmx.HxSwap("innerHTML"),
+									htmx.ID("environments-button"),
+								),
+								dropdowns.DropdownMenuItems(
+									dropdowns.DropdownMenuItemsProps{
+										TabIndex: 1,
+									},
+									htmx.ID("environments-list"),
+									dropdowns.DropdownMenuItem(
+										dropdowns.DropdownMenuItemProps{},
 									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-													"-my-4":            true,
-												},
-											},
-											htmx.Text(el.Description),
-										),
+								),
+							),
+						),
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Profile"),
+							),
+							htmx.Input(
+								htmx.Attribute("type", "hidden"),
+								htmx.ID("profile"),
+								htmx.Attribute("name", "profile_id"),
+								htmx.Value(""),
+							),
+							dropdowns.Dropdown(
+								dropdowns.DropdownProps{},
+								htmx.HyperScript("on click from (closest <a/>) set (previous <input/>).value to 'test'"),
+								dropdowns.DropdownButton(
+									dropdowns.DropdownButtonProps{},
+									htmx.Text("Select Profile"),
+									htmx.HxGet("/workloads/partials/profiles"),
+									htmx.HxTarget("#profiles-list"),
+									htmx.HxSwap("innerHTML"),
+									htmx.ID("profiles-button"),
+								),
+								dropdowns.DropdownMenuItems(
+									dropdowns.DropdownMenuItemsProps{
+										TabIndex: 1,
+									},
+									htmx.ID("profiles-list"),
+									dropdowns.DropdownMenuItem(
+										dropdowns.DropdownMenuItemProps{},
 									),
-								)
-							}),
+								),
+							),
 						),
 					),
 					cards.Body(
@@ -334,15 +324,6 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								),
 							),
 						),
-					),
-					htmx.Select(
-						htmx.ClassNames{
-							"select":   true,
-							"max-w-xs": true,
-							"block":    true,
-						},
-						htmx.Attribute("name", "lens"),
-						htmx.Group(lensesItems...),
 					),
 					buttons.OutlinePrimary(
 						buttons.ButtonProps{},

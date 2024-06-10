@@ -154,6 +154,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/workloads/:id/edit", handlers.EditWorkload())
 		// app.Put("/workloads/:id", handlers.UpdateWorkload())
 		app.Delete("/workloads/:id", handlers.DeleteWorkload())
+		app.Get("/workloads/partials/environments", handlers.ListEnvironmentsPartial())
+		app.Get("/workloads/partials/profiles", handlers.ListProfilesPartial())
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {

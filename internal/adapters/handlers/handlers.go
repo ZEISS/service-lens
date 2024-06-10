@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
@@ -11,6 +12,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/settings"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
+	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
@@ -239,5 +241,19 @@ func (a *handlers) EditWorkload() fiber.Handler {
 func (a *handlers) DeleteWorkload() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return workloads.NewWorkloadDeleteController(a.store)
+	})
+}
+
+// ListEnvironmentsPartial ...
+func (a *handlers) ListEnvironmentsPartial() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return partials.NewEnvironmentPartialListController(a.store)
+	})
+}
+
+// ListProfilesPartial ...
+func (a *handlers) ListProfilesPartial() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return partials.NewProfilePartialListController(a.store)
 	})
 }
