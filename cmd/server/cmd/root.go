@@ -117,6 +117,9 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// Me ...
 		app.Get("/me", handlers.Me())
 
+		// Settings ...
+		app.Get("/settings", handlers.ShowSettings())
+
 		// Profiles ...
 		app.Get("/profiles", handlers.ListProfiles())
 		app.Get("/profiles/new", handlers.NewProfile())

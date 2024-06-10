@@ -15,8 +15,7 @@ import (
 
 // MeController ...
 type MeController struct {
-	User adapters.GothUser
-
+	user  adapters.GothUser
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -24,16 +23,14 @@ type MeController struct {
 // NewMeIndexController ...
 func NewMeController(store ports.Datastore) *MeController {
 	return &MeController{
-		User:              adapters.GothUser{},
-		store:             store,
-		DefaultController: htmx.DefaultController{},
+		store: store,
 	}
 }
 
 // Prepare ...
 func (m *MeController) Prepare() error {
 	return m.store.ReadTx(m.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetUser(m.Context(), &m.User)
+		return tx.GetUser(m.Context(), &m.user)
 	})
 }
 
@@ -74,7 +71,7 @@ func (m *MeController) Get() error {
 									forms.TextInputBordered(
 										forms.TextInputProps{
 											Name:     "username",
-											Value:    m.User.Name,
+											Value:    m.user.Name,
 											Disabled: true,
 										},
 									),
@@ -102,7 +99,7 @@ func (m *MeController) Get() error {
 									forms.TextInputBordered(
 										forms.TextInputProps{
 											Name:     "email",
-											Value:    m.User.Email,
+											Value:    m.user.Email,
 											Disabled: true,
 										},
 									),

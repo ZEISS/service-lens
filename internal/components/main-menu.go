@@ -244,8 +244,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						menus.MenuItemProps{},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href:   "/site/settings",
-								Active: p.Path == "/site/settings",
+								Href:   "/settings",
+								Active: p.Path == "/settings",
 							},
 							htmx.Text("Settings"),
 						),

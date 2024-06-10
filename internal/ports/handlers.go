@@ -50,4 +50,6 @@ type Handlers interface {
 	DeleteLens() fiber.Handler
 	// CreateLens ...
 	CreateLens() fiber.Handler
+	// ShowSettings ...
+	ShowSettings() fiber.Handler
 }
