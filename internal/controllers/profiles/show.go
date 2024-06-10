@@ -1,67 +1,57 @@
 package profiles
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
-// ProfileIndexControllerParams ...
-type ProfileIndexControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
+// ProfileShowControllerImpl ...
+type ProfileShowControllerImpl struct {
+	questions tables.Results[models.ProfileQuestion]
+	profile   models.Profile
+	store     ports.Datastore
+	htmx.DefaultController
 }
 
-// NewDefaultProfileIndexControllerParams ...
-func NewDefaultProfileIndexControllerParams() *ProfileIndexControllerParams {
-	return &ProfileIndexControllerParams{}
-}
-
-// ProfileIndexController ...
-type ProfileIndexController struct {
-	db      ports.Repository
-	profile *models.Profile
-	params  *ProfileIndexControllerParams
-
-	htmx.UnimplementedController
-}
-
-// NewProfileIndexController ...
-func NewProfileIndexController(db ports.Repository) *ProfileIndexController {
-	return &ProfileIndexController{
-		db: db,
+// NewProfileShowController ...
+func NewProfileShowController(store ports.Datastore) *ProfileShowControllerImpl {
+	return &ProfileShowControllerImpl{
+		store: store,
 	}
 }
 
 // Prepare ...
-func (p *ProfileIndexController) Prepare() error {
-	// if err := p.BindValues(utils.User(p.db), utils.Team(p.db)); err != nil {
-	// 	return err
-	// }
-
-	p.params = NewDefaultProfileIndexControllerParams()
-	if err := p.BindParams(p.params); err != nil {
-		return err
-	}
-
-	profile, err := p.db.GetProfileByID(p.Context(), p.params.ID)
+func (p *ProfileShowControllerImpl) Prepare() error {
+	err := p.BindParams(&p.profile)
 	if err != nil {
 		return err
 	}
-	p.profile = profile
 
-	return nil
+	err = p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.ListProfileQuestions(ctx, &p.questions)
+	})
+	if err != nil {
+		return err
+	}
+
+	return p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetProfile(ctx, &p.profile)
+	})
 }
 
 // Get ...
-func (p *ProfileIndexController) Get() error {
+func (p *ProfileShowControllerImpl) Get() error {
 	return p.Render(
 		components.Page(
 			components.PageProps{},
@@ -171,7 +161,7 @@ func (p *ProfileIndexController) Get() error {
 											"btn-outline": true,
 											"btn-primary": true,
 										},
-										Href: fmt.Sprintf("%s/edit", p.params.ID),
+										Href: fmt.Sprintf("%s/edit", p.profile.ID),
 									},
 									htmx.Text("Edit"),
 								),
@@ -184,20 +174,50 @@ func (p *ProfileIndexController) Get() error {
 							),
 						),
 					),
+					htmx.Group(
+						htmx.ForEach(p.questions.GetRows(), func(q *models.ProfileQuestion, profileIdx int) htmx.Node {
+							return cards.CardBordered(
+								cards.CardProps{
+									ClassNames: htmx.ClassNames{
+										"w-full": true,
+										"my-4":   true,
+									},
+								},
+								cards.Body(
+									cards.BodyProps{},
+									htmx.Group(
+										cards.Title(
+											cards.TitleProps{},
+											htmx.Text(q.Title),
+										),
+										htmx.Group(
+											htmx.ForEach(q.GetChoices(), func(c *models.ProfileQuestionChoice, choiceIdx int) htmx.Node {
+												return forms.FormControl(
+													forms.FormControlProps{},
+													forms.FormControlLabel(
+														forms.FormControlLabelProps{},
+														forms.FormControlLabelText(
+															forms.FormControlLabelTextProps{},
+															htmx.Text(c.Title),
+														),
+														forms.Radio(
+															forms.RadioProps{
+																Name:     fmt.Sprintf("answers.%d.ChoiceID", profileIdx),
+																Value:    utils.IntStr(c.ID),
+																Checked:  p.profile.IsChoosen(c.ID),
+																Disabled: true,
+															},
+														),
+													),
+												)
+											})...),
+									),
+								),
+							)
+						})...,
+					),
 				),
 			),
 		),
 	)
-}
-
-// Delete ...
-func (p *ProfileIndexController) Delete() error {
-	err := p.db.DestroyProfile(p.Context(), p.params.ID)
-	if err != nil {
-		return err
-	}
-
-	// p.Hx().Redirect("list")
-
-	return nil
 }

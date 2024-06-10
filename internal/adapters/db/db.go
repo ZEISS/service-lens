@@ -121,7 +121,7 @@ func (t *datastoreTx) ListProfiles(ctx context.Context, pagination *tables.Resul
 
 // GetProfile is a method that returns a profile by ID
 func (t *datastoreTx) GetProfile(ctx context.Context, profile *models.Profile) error {
-	return t.tx.First(profile).Error
+	return t.tx.Preload("Answers").First(profile).Error
 }
 
 // CreateProfile is a method that creates a profile
@@ -137,6 +137,11 @@ func (t *datastoreTx) UpdateProfile(ctx context.Context, profile *models.Profile
 // DeleteProfile is a method that deletes a profile
 func (t *datastoreTx) DeleteProfile(ctx context.Context, profile *models.Profile) error {
 	return t.tx.Delete(profile).Error
+}
+
+// ListProfileQuestions is a method that returns a list of profile questions
+func (t *datastoreTx) ListProfileQuestions(ctx context.Context, pagination *tables.Results[models.ProfileQuestion]) error {
+	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Preload("Choices").Find(&pagination.Rows).Error
 }
 
 // ListEnvironments is a method that returns a list of environments

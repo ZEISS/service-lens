@@ -5,118 +5,71 @@ import (
 	"log"
 	"os"
 
-	authz "github.com/zeiss/fiber-authz"
-	"github.com/zeiss/service-lens/internal/adapters"
+	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/configs"
-	"github.com/zeiss/service-lens/internal/utils"
+	"github.com/zeiss/service-lens/internal/models"
 
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
 	seed "github.com/zeiss/gorm-seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 var seeds = []seed.Seed{
 	{
-		Name: "create permissions",
+		Name: "create profile questions",
 		Run: func(db *gorm.DB) error {
-			return db.Create([]authz.Permission{
-				// {
-				// 	Slug: utils.PermissionSuperAdmin.String(),
-				// },
-				// {
-				// 	Slug: utils.PermissionAdmin.String(),
-				// },
-				// {
-				// 	Slug: utils.PermissionCreate.String(),
-				// },
-				// {
-				// 	Slug: utils.PermissionEdit.String(),
-				// },
-				// {
-				// 	Slug: utils.PermissionDelete.String(),
-				// },
-				// {
-				// 	Slug: utils.PermissionView.String(),
-				// },
+			return db.Create([]models.ProfileQuestion{
+				{
+					Title:         "What is the current cloud adoption phase for the organization architecting or operating the workloads in this profile?",
+					Description:   "The cloud adoption phase is a measure of the maturity of the organization in adopting cloud technologies.",
+					MulipleChoice: false,
+					Choices: []models.ProfileQuestionChoice{
+						{
+							Title: "Envision Phase",
+						},
+						{
+							Title: "Align Adoption Phase",
+						},
+						{
+							Title: "Launch Adoption Phase",
+						},
+						{
+							Title: "Scale Adoption Phase",
+						},
+						{
+							Title: "Post-Adoption Phase",
+						},
+					},
+				},
+				{
+					Title:         "What is the business value that workloads in this profile represent for your team, organization, or company?",
+					Description:   "The business value is a measure of the value that the workloads in this profile provide to the organization.",
+					MulipleChoice: false,
+					Choices: []models.ProfileQuestionChoice{
+						{
+							Title: "Business-Critical Workloads",
+						},
+						{
+							Title: "Strategic External-facing Workloads",
+						},
+						{
+							Title: "Strategic Internal-facing Workloads",
+						},
+						{
+							Title: "Internal Business Workloads",
+						},
+						{
+							Title: "General Use Workloads",
+						},
+						{
+							Title: "Experimentation or Testing Workloads",
+						},
+					},
+				},
 			}).Error
-		},
-	},
-	{
-		Name: "create roles",
-		Run: func(db *gorm.DB) error {
-			var permissions *[]authz.Permission
-			if err := db.Where("slug IN ?", []string{utils.PermissionSuperAdmin.String(), utils.PermissionAdmin.String(), utils.PermissionCreate.String(), utils.PermissionEdit.String(), utils.PermissionDelete.String(), utils.PermissionView.String()}).Find(&permissions).Error; err != nil {
-				return err
-			}
-
-			role := &authz.Role{
-				Name:        "Super Admin",
-				Permissions: permissions,
-			}
-
-			if err := db.Save(role).Error; err != nil {
-				return err
-			}
-
-			permissions = &[]authz.Permission{}
-			if err := db.Where("slug IN ?", []string{utils.PermissionAdmin.String(), utils.PermissionCreate.String(), utils.PermissionEdit.String(), utils.PermissionDelete.String(), utils.PermissionView.String()}).Find(&permissions).Error; err != nil {
-				return err
-			}
-
-			role = &authz.Role{
-				Name:        "Admin",
-				Permissions: permissions,
-			}
-
-			if err := db.Save(role).Error; err != nil {
-				return err
-			}
-
-			permissions = &[]authz.Permission{}
-			if err := db.Where("slug IN ?", []string{utils.PermissionAdmin.String(), utils.PermissionCreate.String(), utils.PermissionEdit.String(), utils.PermissionDelete.String(), utils.PermissionView.String()}).Find(&permissions).Error; err != nil {
-				return err
-			}
-
-			role = &authz.Role{
-				Name:        "Owner",
-				Permissions: permissions,
-			}
-
-			if err := db.Save(role).Error; err != nil {
-				return err
-			}
-
-			permissions = &[]authz.Permission{}
-			if err := db.Where("slug IN ?", []string{utils.PermissionCreate.String(), utils.PermissionEdit.String(), utils.PermissionDelete.String(), utils.PermissionView.String()}).Find(&permissions).Error; err != nil {
-				return err
-			}
-
-			role = &authz.Role{
-				Name:        "Editor",
-				Permissions: permissions,
-			}
-
-			if err := db.Save(role).Error; err != nil {
-				return err
-			}
-
-			permissions = &[]authz.Permission{}
-			if err := db.Where("slug IN ?", []string{utils.PermissionView.String()}).Find(&permissions).Error; err != nil {
-				return err
-			}
-
-			role = &authz.Role{
-				Name:        "Viewer",
-				Permissions: permissions,
-			}
-
-			if err := db.Save(role).Error; err != nil {
-				return err
-			}
-
-			return nil
 		},
 	},
 }
@@ -152,13 +105,21 @@ func run(ctx context.Context) error {
 	logger.RedirectStdLog(logger.LogSink)
 
 	dsn := "host=host.docker.internal user=example password=example dbname=example port=5432 sslmode=disable"
-	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix: "service_lens_",
+		},
+	})
 	if err != nil {
 		return err
 	}
 
-	db := adapters.NewDB(conn)
-	err = db.RunMigration()
+	db, err := db.NewDB(conn)
+	if err != nil {
+		return err
+	}
+
+	err = db.Migrate(ctx)
 	if err != nil {
 		return err
 	}

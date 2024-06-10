@@ -32,6 +32,8 @@ type ReadTx interface {
 	GetUser(ctx context.Context, user *adapters.GothUser) error
 	// ListProfiles is a method that returns a list of profiles
 	ListProfiles(ctx context.Context, profiles *tables.Results[models.Profile]) error
+	// ListProfileQuestions is a method that returns a list of profile questions
+	ListProfileQuestions(ctx context.Context, questions *tables.Results[models.ProfileQuestion]) error
 	// GetProfile is a method that returns a profile by ID
 	GetProfile(ctx context.Context, profile *models.Profile) error
 	// ListEnvironments is a method that returns a list of environments

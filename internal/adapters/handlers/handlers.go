@@ -64,10 +64,10 @@ func (a *handlers) NewProfile() fiber.Handler {
 	})
 }
 
-// GetProfile ...
-func (a *handlers) GetProfile() fiber.Handler {
+// ShowProfile ...
+func (a *handlers) ShowProfile() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return profiles.NewProfileController(a.store)
+		return profiles.NewProfileShowController(a.store)
 	})
 }
 

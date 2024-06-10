@@ -38,9 +38,8 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 		return err
 	}
 
-	err = validate.Struct(l)
+	err = validate.Struct(&l.profile)
 	if err != nil {
-
 		return err
 	}
 

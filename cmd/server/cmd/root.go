@@ -121,8 +121,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/profiles", handlers.ListProfiles())
 		app.Get("/profiles/new", handlers.NewProfile())
 		app.Post("/profiles/new", handlers.CreateProfile())
-		app.Get("/profiles/:id", handlers.GetProfile())
-		app.Put("/profiles/:id", handlers.GetProfile())
+		app.Get("/profiles/:id", handlers.ShowProfile())
+		app.Put("/profiles/:id", handlers.EditProfile())
 		app.Delete("/profiles/:id", handlers.DeleteProfile())
 
 		// Environments ...

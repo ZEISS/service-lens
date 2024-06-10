@@ -39,7 +39,7 @@ func (p *EnvironmentUpdateControllerImpl) Prepare() error {
 		return err
 	}
 
-	err = validate.Struct(p)
+	err = validate.Struct(&p.environment)
 	if err != nil {
 		return err
 	}

@@ -16,7 +16,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/zeiss/fiber-authz v1.0.24
 	github.com/zeiss/fiber-goth v1.2.1
-	github.com/zeiss/fiber-htmx v1.3.12
+	github.com/zeiss/fiber-htmx v1.3.13-0.20240610074751-3a512b2b7530
 	github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
@@ -69,7 +69,7 @@ require (
 	github.com/firefart/nonamedreturns v1.0.5 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/fzipp/gocyclo v0.6.0 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.4 // indirect
 	github.com/getkin/kin-openapi v0.124.0 // indirect
 	github.com/ghostiam/protogetter v0.3.6 // indirect
 	github.com/go-critic/go-critic v0.11.4 // indirect
@@ -223,7 +223,11 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.24.0 // indirect
+<<<<<<< HEAD
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
+=======
+	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
+>>>>>>> 8397027 (wip: profile question create)
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.26.0 // indirect

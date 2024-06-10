@@ -38,9 +38,8 @@ func (l *CreateEnvironmentControllerImpl) Prepare() error {
 		return err
 	}
 
-	err = validate.Struct(l)
+	err = validate.Struct(&l.environment)
 	if err != nil {
-
 		return err
 	}
 
