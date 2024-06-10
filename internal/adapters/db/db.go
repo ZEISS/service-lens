@@ -207,7 +207,11 @@ func (t *datastoreTx) ListWorkloads(ctx context.Context, pagination *tables.Resu
 
 // GetWorkload is a method that returns a workload by ID
 func (t *datastoreTx) GetWorkload(ctx context.Context, workload *models.Workload) error {
-	return t.tx.First(workload).Error
+	return t.tx.
+		Preload("Lenses").
+		Preload("Profile").
+		Preload("Environment").
+		First(workload).Error
 }
 
 // CreateWorkload is a method that creates a workload

@@ -42,7 +42,9 @@ func (w *LensListController) Prepare() error {
 func (w *LensListController) Get() error {
 	return w.Render(
 		components.Page(
-			components.PageProps{},
+			components.PageProps{
+				Title: "Lenses",
+			},
 			components.Layout(
 				components.LayoutProps{
 					Path: w.Path(),

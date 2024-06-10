@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -36,7 +37,9 @@ func (d *ShowDashboardController) Prepare() error {
 func (d *ShowDashboardController) Get() error {
 	return d.Render(
 		components.Page(
-			components.PageProps{},
+			components.PageProps{
+				Title: fmt.Sprintf("Dashboard - %s", d.user.Name),
+			},
 			components.Layout(
 				components.LayoutProps{
 					User: d.user,

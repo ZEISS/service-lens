@@ -42,7 +42,9 @@ func (w *EnvironmentListControllerImpl) Prepare() error {
 func (w *EnvironmentListControllerImpl) Get() error {
 	return w.Render(
 		components.Page(
-			components.PageProps{},
+			components.PageProps{
+				Title: "Environments",
+			},
 			components.Layout(
 				components.LayoutProps{
 					Path: w.Path(),
