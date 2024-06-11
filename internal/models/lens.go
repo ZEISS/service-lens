@@ -128,11 +128,16 @@ type Resource struct {
 
 // Choice is a model for a choice.
 type Choice struct {
-	ID          int         `json:"id" gorm:"primary_key"`
-	Ref         QuestionRef `json:"ref"`
-	Title       string      `json:"title"`
-	Description string      `json:"description"`
-	QuestionID  int         `json:"question_id"`
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key" form:"id" query:"id" params:"id" validate:"required"`
+	// Ref is the choice reference.
+	Ref QuestionRef `json:"ref"`
+	// Title is the choice title.
+	Title string `json:"title"`
+	// Description is the choice description.
+	Description string `json:"description"`
+	// QuestionID is the question ID.
+	QuestionID int `json:"question_id"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

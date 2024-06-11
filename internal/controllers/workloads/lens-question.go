@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -28,18 +29,12 @@ func NewWorkloadLensEditQuestionController(store ports.Datastore) *WorkloadLensE
 	}
 }
 
-// Error ...
-func (w *WorkloadLensEditQuestionControllerImpl) Error(err error) error {
-	return err
-}
-
 // Prepare ...
 func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 	err := w.BindParams(&w.question)
 	if err != nil {
 		return err
 	}
-	fmt.Println(w.question)
 
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.GetLensQuestion(ctx, &w.question)
@@ -49,7 +44,8 @@ func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 // Get ...
 func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 	return w.Render(
-		htmx.Fragment(
+		htmx.Form(
+			htmx.HxPut(""),
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{
@@ -124,7 +120,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 								),
 								forms.Checkbox(
 									forms.CheckboxProps{
-										Name:    fmt.Sprintf("answers.%d.ChoiceID", choiceIdx),
+										Name:    fmt.Sprintf("Choices.%d.ID", choiceIdx),
 										Value:   utils.IntStr(choice.ID),
 										Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
 									},
@@ -159,6 +155,14 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 						forms.FormControlLabelAltText(
 							forms.FormControlLabelAltTextProps{},
 							htmx.Text("Optional - Can be from 3 to 2048 characters."),
+						),
+					),
+					cards.Actions(
+						cards.ActionsProps{},
+						buttons.Outline(
+							buttons.ButtonProps{},
+							htmx.Attribute("type", "submit"),
+							htmx.Text("Save & Next"),
 						),
 					),
 				),
