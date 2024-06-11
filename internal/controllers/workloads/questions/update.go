@@ -15,6 +15,7 @@ import (
 // QuestionForm ...
 type QuestionForm struct {
 	Choices            []string `form:"choices"`
+	Notes              string   `form:"notes"`
 	DoesNotApply       bool     `form:"does_not_apply"`
 	DoesNotApplyReason string   `form:"does_not_apply_reason"`
 }
@@ -68,6 +69,7 @@ func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 	}
 	w.answer.DoesNotApply = form.DoesNotApply
 	w.answer.DoesNotApplyReason = form.DoesNotApplyReason
+	w.answer.Notes = form.Notes
 
 	for _, choice := range form.Choices {
 		w.answer.Choices = append(w.answer.Choices, models.Choice{
