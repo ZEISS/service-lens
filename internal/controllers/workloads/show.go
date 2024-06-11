@@ -12,10 +12,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 )
 
-const (
-	showProfileURL = "/profiles/%s"
-)
-
 // WorkloadShowControllerImpl ...
 type WorkloadShowControllerImpl struct {
 	workload models.Workload

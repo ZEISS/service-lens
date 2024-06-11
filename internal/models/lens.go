@@ -55,7 +55,6 @@ func (l *Lens) GetPillars() []*Pillar {
 	}
 
 	return pillars
-
 }
 
 // Pillar is a model for a pillar.
