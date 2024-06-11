@@ -10,7 +10,7 @@ import (
 // Environment ...
 type Environment struct {
 	// ID is the primary key
-	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" param:"id"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" params:"id"`
 	// Name of the environment
 	Name string `json:"name" form:"name" validate:"required,min=3,max=255"`
 	// Description of the environment

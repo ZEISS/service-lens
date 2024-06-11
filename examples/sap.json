@@ -54,6 +54,160 @@
               "condition": "default"
             }
           ]
+        },
+        {
+          "ref": "question_2",
+          "title": "Question 2 - A longer title for the lens.",
+          "description": "Question 1 asks about operational exelence",
+          "resources": [
+            {
+              "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+              "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+            }
+          ],
+          "choices": [
+            {
+              "ref": "choice_1",
+              "title": "Choice 1",
+              "description": "Choice 1 is provding a good choice."
+            },
+            {
+              "ref": "choice_2",
+              "title": "Choice 2",
+              "description": "Choice 2 is provding a good choice."
+            },
+            {
+              "ref": "choice_3",
+              "title": "Choice 3",
+              "description": "Choice 3 is provding a good choice."
+            },
+            {
+              "ref": "none_of_these",
+              "title": "None of these",
+              "description": "None of these"
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "choice_1 && choice_2 && choice_3"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "(choice_1 || choice_2) && choice_3"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+          "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+        }
+      ]
+    },
+    {
+      "ref": "cost_optimization",
+      "name": "Cost Optimization",
+      "description": "This is the evalution against optimizing for costs",
+      "questions": [
+        {
+          "ref": "question_1",
+          "title": "Question 1 - A longer title for the lens.",
+          "description": "Question 1 asks about operational exelence",
+          "resources": [
+            {
+              "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+              "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+            }
+          ],
+          "choices": [
+            {
+              "ref": "choice_1",
+              "title": "Choice 1",
+              "description": "Choice 1 is provding a good choice."
+            },
+            {
+              "ref": "choice_2",
+              "title": "Choice 2",
+              "description": "Choice 2 is provding a good choice."
+            },
+            {
+              "ref": "choice_3",
+              "title": "Choice 3",
+              "description": "Choice 3 is provding a good choice."
+            },
+            {
+              "ref": "none_of_these",
+              "title": "None of these",
+              "description": "None of these"
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "choice_1 && choice_2 && choice_3"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "(choice_1 || choice_2) && choice_3"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        },
+        {
+          "ref": "question_2",
+          "title": "Question 2 - A longer title for the lens.",
+          "description": "Question 1 asks about operational exelence",
+          "resources": [
+            {
+              "url": "https://de.wikipedia.org/wiki/Operational_Excellence",
+              "description": "Operational excellence is a mindset that embraces certain principles and tools to create a culture of excellence within an organization. Operational excellence means every employee can see, deliver, and improve the flow of value to a customer."
+            }
+          ],
+          "choices": [
+            {
+              "ref": "choice_1",
+              "title": "Choice 1",
+              "description": "Choice 1 is provding a good choice."
+            },
+            {
+              "ref": "choice_2",
+              "title": "Choice 2",
+              "description": "Choice 2 is provding a good choice."
+            },
+            {
+              "ref": "choice_3",
+              "title": "Choice 3",
+              "description": "Choice 3 is provding a good choice."
+            },
+            {
+              "ref": "none_of_these",
+              "title": "None of these",
+              "description": "None of these"
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "choice_1 && choice_2 && choice_3"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "(choice_1 || choice_2) && choice_3"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
         }
       ],
       "resources": [

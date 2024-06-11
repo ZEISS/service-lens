@@ -73,6 +73,20 @@ func (l *LensShowControllerImpl) Get() error {
 										htmx.ClassNames{
 											"text-gray-500": true,
 										},
+										htmx.Text("ID"),
+									),
+									htmx.H3(htmx.Text(l.lens.ID.String())),
+								),
+								htmx.Div(
+									htmx.ClassNames{
+										"flex":     true,
+										"flex-col": true,
+										"py-2":     true,
+									},
+									htmx.H4(
+										htmx.ClassNames{
+											"text-gray-500": true,
+										},
 										htmx.Text("Created at"),
 									),
 									htmx.H3(

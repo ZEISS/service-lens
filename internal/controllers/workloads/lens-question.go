@@ -4,170 +4,161 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/drawers"
-	"github.com/zeiss/fiber-htmx/components/menus"
-	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/fiber-htmx/components/collapsible"
+	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
-const (
-	showLensQuestionURL = "/workloads/%s/lenses/%s/question/%d"
-)
-
-// WorkloadLensEditControllerImpl ...
-type WorkloadLensEditControllerImpl struct {
-	workload models.Workload
-	lens     models.Lens
+// WorkloadLensEditQuestionControllerImpl ...
+type WorkloadLensEditQuestionControllerImpl struct {
+	question models.Question
 	store    ports.Datastore
 	htmx.DefaultController
 }
 
-// NewWorkloadLensEditController ...
-func NewWorkloadLensEditController(store ports.Datastore) *WorkloadLensEditControllerImpl {
-	return &WorkloadLensEditControllerImpl{
+// NewWorkloadLensEditQuestionController ...
+func NewWorkloadLensEditQuestionController(store ports.Datastore) *WorkloadLensEditQuestionControllerImpl {
+	return &WorkloadLensEditQuestionControllerImpl{
 		store: store,
 	}
 }
 
+// Error ...
+func (w *WorkloadLensEditQuestionControllerImpl) Error(err error) error {
+	return err
+}
+
 // Prepare ...
-func (w *WorkloadLensEditControllerImpl) Prepare() error {
-	err := w.BindParams(&w.workload)
+func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
+	err := w.BindParams(&w.question)
 	if err != nil {
 		return err
 	}
+	fmt.Println(w.question)
 
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		if err := tx.GetWorkload(ctx, &w.workload); err != nil {
-			return err
-		}
-
-		id, err := uuid.Parse(w.Ctx().Params("lens"))
-		if err != nil {
-			return err
-		}
-		w.lens.ID = id
-
-		return tx.GetLens(ctx, &w.lens)
+		return tx.GetLensQuestion(ctx, &w.question)
 	})
 }
 
 // Get ...
-func (w *WorkloadLensEditControllerImpl) Get() error {
+func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
-				},
-				components.Wrap(
-					components.WrapProps{
-						ClassNames: htmx.ClassNames{
-							"-m-6": true,
-						},
+		htmx.Fragment(
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-4": true,
 					},
-					drawers.Drawer(
-						drawers.DrawerProps{
-							ID: "pillars-drawer",
-							ClassNames: htmx.ClassNames{
-								"drawer-open": true,
-							},
-						},
-						drawers.DrawerContent(
-							drawers.DrawerContentProps{
-								ClassNames: htmx.ClassNames{
-									"px-8": true,
+				},
+				cards.Body(
+					cards.BodyProps{},
+					cards.Title(
+						cards.TitleProps{},
+						htmx.Text(w.question.Title),
+					),
+				),
+			),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-4": true,
+					},
+				},
+				cards.Body(
+					cards.BodyProps{},
+					collapsible.CollapseArrow(
+						collapsible.CollapseProps{},
+						collapsible.CollapseCheckbox(
+							collapsible.CollapseCheckboxProps{},
+						),
+						collapsible.CollapseTitle(
+							collapsible.CollapseTitleProps{},
+							htmx.Text("Additional Information"),
+						),
+						collapsible.CollapseContent(
+							collapsible.CollapseContentProps{},
+							htmx.Text(w.question.Description),
+						),
+					),
+				),
+			),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-4": true,
+					},
+				},
+				cards.Body(
+					cards.BodyProps{},
+					forms.FormControl(
+						forms.FormControlProps{},
+						forms.FormControlLabel(
+							forms.FormControlLabelProps{},
+							forms.FormControlLabelText(
+								forms.FormControlLabelTextProps{},
+								htmx.Text("Question does not apply to this workload"),
+							),
+							forms.Toggle(
+								forms.ToggleProps{
+									Name:  "does_not_apply",
+									Value: "1",
 								},
-							},
-							htmx.ID("pillars-drawer-content"),
-							cards.CardBordered(
-								cards.CardProps{
-									ClassNames: htmx.ClassNames{
-										"my-4": true,
-									},
-								},
-								cards.Body(
-									cards.BodyProps{},
-									cards.Title(
-										cards.TitleProps{},
-										htmx.Text(w.lens.Name),
-									),
-								),
-								// cards.Body(
-								// 	cards.BodyProps{},
-								// 	cards.Title(
-								// 		cards.TitleProps{},
-								// 		htmx.Text(w.question.Title),
-								// 	),
-								// 	components.CardDataBlock(
-								// 		&components.CardDataBlockProps{
-								// 			Title: "Description",
-								// 			Data:  w.question.Description,
-								// 		},
-								// 	),
-								// 	// AdditionalInformationComponent(
-								// 	// 	AdditionalInformationProps{
-								// 	// 		Description: w.question.Description,
-								// 	// 	},
-								// 	// ),
-								// ),
+								htmx.HyperScript("on change if me.checked set disabled of <input[type=checkbox][name=choices]/> to true else set disabled of <input[type=checkbox][name=choices]/> to false"),
 							),
 						),
-						drawers.DrawerSide(
-							drawers.DrawerSideProps{
-								ClassNames: htmx.ClassNames{
-									"h-screen":        true,
-									"overflow-y-auto": true,
-									"bg-base-300":     true,
-								},
-							},
-							htmx.Nav(
-								htmx.Merge(
-									htmx.ClassNames{},
+					),
+					htmx.Group(htmx.ForEach(w.question.Choices, func(choice models.Choice, choiceIdx int) htmx.Node {
+						return forms.FormControl(
+							forms.FormControlProps{},
+							forms.FormControlLabel(
+								forms.FormControlLabelProps{},
+								forms.FormControlLabelText(
+									forms.FormControlLabelTextProps{},
+									htmx.Text(choice.Title),
 								),
-								menus.Menu(
-									menus.MenuProps{
-										ClassNames: htmx.ClassNames{
-											"w-full": true,
-										},
+								forms.Checkbox(
+									forms.CheckboxProps{
+										Name:    fmt.Sprintf("answers.%d.ChoiceID", choiceIdx),
+										Value:   utils.IntStr(choice.ID),
+										Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
 									},
-									htmx.Group(
-										htmx.ForEach(w.lens.GetPillars(), func(p *models.Pillar, pillarIdx int) htmx.Node {
-											return menus.MenuItem(
-												menus.MenuItemProps{},
-												menus.MenuCollapsible(
-													menus.MenuCollapsibleProps{
-														Open: pillarIdx == 0,
-													},
-													menus.MenuCollapsibleSummary(
-														menus.MenuCollapsibleSummaryProps{},
-														htmx.Text(p.Name),
-													),
-													htmx.Group(
-														htmx.ForEach(p.GetQuestions(), func(q *models.Question, questionIdx int) htmx.Node {
-															return menus.MenuItem(
-																menus.MenuItemProps{},
-																menus.MenuLink(
-																	menus.MenuLinkProps{},
-																	htmx.Text(q.Title),
-																	htmx.HxTarget("#pillars-drawer-content"),
-																	htmx.HxGet(fmt.Sprintf(showLensQuestionURL, w.workload.ID, w.lens.ID, q.ID)),
-																	htmx.HxSwap("innerHTML"),
-																),
-															)
-														})...,
-													),
-												),
-											)
-										})...,
-									),
 								),
 							),
+						)
+					})...),
+				),
+			),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-4": true,
+					},
+				},
+				cards.Body(
+					cards.BodyProps{},
+					forms.FormControl(
+						forms.FormControlProps{},
+						forms.FormControlLabel(
+							forms.FormControlLabelProps{},
+							forms.FormControlLabelText(
+								forms.FormControlLabelTextProps{},
+								htmx.Text("Notes"),
+							),
+						),
+						forms.TextareaBordered(
+							forms.TextareaProps{
+								Name: "notes",
+							},
+						),
+						forms.FormControlLabelAltText(
+							forms.FormControlLabelAltTextProps{},
+							htmx.Text("Optional - Can be from 3 to 2048 characters."),
 						),
 					),
 				),

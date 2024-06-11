@@ -10,7 +10,7 @@ import (
 // Profile represents a business profile.
 type Profile struct {
 	// ID ...
-	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" query:"id" param:"id"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" query:"id" params:"id"`
 	// Name of the profile.
 	Name string `json:"name" form:"name" validate:"required,min=3,max=100"`
 	// Description of the profile.

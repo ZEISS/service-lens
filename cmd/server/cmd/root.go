@@ -158,6 +158,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/workloads/partials/profiles", handlers.ListProfilesPartial())
 		app.Get("/workloads/:id/lenses/:lens", handlers.ShowWorkloadLens())
 		app.Get("/workloads/:id/lenses/:lens/edit", handlers.EditWorkloadLens())
+		app.Get("/workloads/:workload/lenses/:lens/question/:question", handlers.ShowLensQuestion())
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {

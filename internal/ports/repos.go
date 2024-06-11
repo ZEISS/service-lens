@@ -48,6 +48,8 @@ type ReadTx interface {
 	ListWorkloads(ctx context.Context, workloads *tables.Results[models.Workload]) error
 	// GetWorkload is a method that returns a workload by ID
 	GetWorkload(ctx context.Context, workload *models.Workload) error
+	// GetLensQuestion is a method that returns a lens question by ID
+	GetLensQuestion(ctx context.Context, question *models.Question) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -78,10 +80,4 @@ type ReadWriteTx interface {
 	UpdateWorkload(ctx context.Context, workload *models.Workload) error
 	// DeleteWorkload is a method that deletes a workload
 	DeleteWorkload(ctx context.Context, workload *models.Workload) error
-}
-
-// Repository is the interface that wraps the basic methods to interact with the database.
-type Repository interface {
-	Teams
-	Workloads
 }

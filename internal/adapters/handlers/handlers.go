@@ -271,3 +271,10 @@ func (a *handlers) EditWorkloadLens() fiber.Handler {
 		return workloads.NewWorkloadLensEditController(a.store)
 	})
 }
+
+// ShowLensQuestion ...
+func (a *handlers) ShowLensQuestion() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workloads.NewWorkloadLensEditQuestionController(a.store)
+	})
+}

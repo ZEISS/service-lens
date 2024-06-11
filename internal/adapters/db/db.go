@@ -184,6 +184,11 @@ func (t *datastoreTx) GetLens(ctx context.Context, lens *models.Lens) error {
 		First(lens).Error
 }
 
+// GetLensQuestion is a method that returns a lens question by ID
+func (t *datastoreTx) GetLensQuestion(ctx context.Context, question *models.Question) error {
+	return t.tx.Preload("Choices").First(question).Error
+}
+
 // CreateLens is a method that creates a lens
 func (t *datastoreTx) CreateLens(ctx context.Context, lens *models.Lens) error {
 	return t.tx.Create(lens).Error

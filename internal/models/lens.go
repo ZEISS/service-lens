@@ -55,13 +55,18 @@ func (l *Lens) GetPillars() []*Pillar {
 
 // Pillar is a model for a pillar.
 type Pillar struct {
-	ID          int        `json:"id" gorm:"primary_key"`
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Questions   []Question `json:"questions"`
-	Resources   []Resource `json:"resources" gorm:"foreignKey:ResourceID"`
-	LensID      uuid.UUID  `json:"lens_id"`
-
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key"`
+	// Name is the lens pillar name.
+	Name string `json:"name"`
+	// Description is the lens pillar description.
+	Description string `json:"description"`
+	// Questions are the lens pillar questions.
+	Questions []Question `json:"questions"`
+	// Resources are the lens pillar resources.
+	Resources []Resource `json:"resources" gorm:"many2many:pillar_resources;"`
+	// LensID is the lens ID.
+	LensID uuid.UUID `json:"lens_id"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
@@ -83,15 +88,20 @@ func (p *Pillar) GetQuestions() []*Question {
 
 // Question is a model for a question.
 type Question struct {
-	ID          int        `json:"id" gorm:"primary_key"`
-	Ref         string     `json:"ref"`
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-	Resources   []Resource `json:"resources" gorm:"foreignKey:ResourceID"`
-	Choices     []Choice   `json:"choices"`
-	Risks       []Risk     `json:"risks"`
-	PillarID    int        `json:"pillar_id"`
-
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key" params:"question" query:"question"`
+	// Ref is the question reference.
+	Ref string `json:"ref"`
+	// Title is the question title.
+	Title string `json:"title"`
+	// Description is the question description.
+	Description string `json:"description"`
+	// Resources are the question resources.
+	Resources []Resource `json:"resources" gorm:"many2many:question_resources;"`
+	Choices   []Choice   `json:"choices"`
+	Risks     []Risk     `json:"risks"`
+	// PillarID is the pillar ID.
+	PillarID int `json:"pillar_id"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
@@ -102,12 +112,12 @@ type Question struct {
 
 // Resource is a model for a resource.
 type Resource struct {
-	ID           int    `json:"id" gorm:"primary_key"`
-	URL          string `json:"url"`
-	Description  string `json:"description"`
-	ResourceID   int    `json:"resource_id"`
-	ResourceType string `json:"resource_type"`
-
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key"`
+	// URL is the URL of the resource.
+	URL string `json:"url"`
+	// Description is the description of the resource.
+	Description string `json:"description"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
@@ -123,7 +133,6 @@ type Choice struct {
 	Title       string      `json:"title"`
 	Description string      `json:"description"`
 	QuestionID  int         `json:"question_id"`
-
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
