@@ -76,4 +76,6 @@ type Handlers interface {
 	EditWorkloadLens() fiber.Handler
 	// ShowLensQuestion ...
 	ShowLensQuestion() fiber.Handler
+	// UpdateWorkloadAnswer ...
+	UpdateWorkloadAnswer() fiber.Handler
 }

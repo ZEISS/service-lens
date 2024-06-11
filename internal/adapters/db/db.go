@@ -11,6 +11,7 @@ import (
 
 	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type database struct {
@@ -235,4 +236,23 @@ func (t *datastoreTx) UpdateWorkload(ctx context.Context, workload *models.Workl
 // DeleteWorkload is a method that deletes a workload
 func (t *datastoreTx) DeleteWorkload(ctx context.Context, workload *models.Workload) error {
 	return t.tx.Delete(workload).Error
+}
+
+// UpdateWorkloadAnswer is a method that updates a workload answer
+func (t *datastoreTx) UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error {
+	err := t.tx.
+		Session(&gorm.Session{FullSaveAssociations: true}).
+		Clauses(clause.OnConflict{UpdateAll: true}).
+		Omit("Choices.*").
+		Create(answer).Error
+	if err != nil {
+		return err
+	}
+
+	return t.tx.Model(answer).Association("Choices").Replace(answer.Choices)
+}
+
+// GetWorkloadAnswer is a method that returns a workload answer by ID
+func (t *datastoreTx) GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error {
+	return t.tx.Where(answer).First(answer).Error
 }

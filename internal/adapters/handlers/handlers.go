@@ -13,6 +13,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/settings"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
+	"github.com/zeiss/service-lens/internal/controllers/workloads/questions"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
@@ -276,5 +277,12 @@ func (a *handlers) EditWorkloadLens() fiber.Handler {
 func (a *handlers) ShowLensQuestion() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return workloads.NewWorkloadLensEditQuestionController(a.store)
+	})
+}
+
+// UpdateWorkloadAnswer ...
+func (a *handlers) UpdateWorkloadAnswer() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return questions.NewWorkloadUpdateAnswerController(a.store)
 	})
 }

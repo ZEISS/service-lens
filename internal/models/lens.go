@@ -24,15 +24,20 @@ const (
 
 // Lens is a model for a lens.
 type Lens struct {
-	ID          uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Version     int       `json:"version" gorm:"uniqueIndex:idx_lens_name_version_team"`
-	Name        string    `json:"name" gorm:"uniqueIndex:idx_lens_name_version_team"`
-	Description string    `json:"description"`
-	Pillars     []Pillar  `json:"pillars"`
-	IsDraft     bool      `json:"is_draft"`
-
+	// ID is the primary key.
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	// Version is the lens version.
+	Version int `json:"version" gorm:"uniqueIndex:idx_lens_name_version_team"`
+	// Name is the lens name.
+	Name string `json:"name" gorm:"uniqueIndex:idx_lens_name_version_team"`
+	// Description is the lens description.
+	Description string `json:"description"`
+	// Pillars are the lens pillars.
+	Pillars []Pillar `json:"pillars"`
+	// IsDraft is the lens draft status.
+	IsDraft bool `json:"is_draft"`
+	// Tags are the tags associated with the lens.
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
-
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
@@ -98,8 +103,10 @@ type Question struct {
 	Description string `json:"description"`
 	// Resources are the question resources.
 	Resources []Resource `json:"resources" gorm:"many2many:question_resources;"`
-	Choices   []Choice   `json:"choices"`
-	Risks     []Risk     `json:"risks"`
+	// Choices are the question choices.
+	Choices []Choice `json:"choices"`
+	// Risks are the question risks.
+	Risks []Risk `json:"risks"`
 	// PillarID is the pillar ID.
 	PillarID int `json:"pillar_id"`
 	// CreatedAt ...

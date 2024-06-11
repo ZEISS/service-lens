@@ -15,9 +15,15 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
+const (
+	updateWorkloadAnswerURL = "/workloads/%s/lenses/%s/question/%d"
+)
+
 // WorkloadLensEditQuestionControllerImpl ...
 type WorkloadLensEditQuestionControllerImpl struct {
 	question models.Question
+	workload models.Workload
+	lens     models.Lens
 	store    ports.Datastore
 	htmx.DefaultController
 }
@@ -36,8 +42,26 @@ func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 		return err
 	}
 
+	err = w.BindParams(&w.workload)
+	if err != nil {
+		return err
+	}
+
+	err = w.BindParams(&w.lens)
+	if err != nil {
+		return err
+	}
+
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetLensQuestion(ctx, &w.question)
+		if err := tx.GetLensQuestion(ctx, &w.question); err != nil {
+			return err
+		}
+
+		if err := tx.GetWorkload(ctx, &w.workload); err != nil {
+			return err
+		}
+
+		return tx.GetLens(ctx, &w.lens)
 	})
 }
 
@@ -45,7 +69,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 	return w.Render(
 		htmx.Form(
-			htmx.HxPut(""),
+			htmx.HxPut(fmt.Sprintf(updateWorkloadAnswerURL, w.workload.ID, w.lens.ID, w.question.ID)),
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{
@@ -120,7 +144,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 								),
 								forms.Checkbox(
 									forms.CheckboxProps{
-										Name:    fmt.Sprintf("Choices.%d.ID", choiceIdx),
+										Name:    "choices",
 										Value:   utils.IntStr(choice.ID),
 										Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
 									},

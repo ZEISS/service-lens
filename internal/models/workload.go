@@ -42,24 +42,25 @@ type WorkloadLensQuestionAnswer struct {
 	// ID is the primary key.
 	ID int `json:"id" gorm:"primary_key"`
 	// DoesNotApply is a flag to indicate if the question does not apply.
-	DoesNotApply bool `json:"does_not_apply"`
+	DoesNotApply bool `json:"does_not_apply" form:"does_not_apply"`
 	// DoesNotApplyReason is the reason the question does not apply.
-	DoesNotApplyReason string `json:"does_not_apply_reason"`
-	Notes              string `json:"notes"`
+	DoesNotApplyReason string `json:"does_not_apply_reason" form:"does_not_apply_reason" validate:"max=1024"`
+	// Notes are additional notes.
+	Notes string `json:"notes" form:"notes" validate:"max=2048"`
 	// QuestionID is the foreign key for the question.
-	QuestionID int `json:"question_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
+	QuestionID int `json:"question_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;" params:"question" form:"question_id" validate:"required"`
 	// Question is the question.
 	Question Question `json:"question"`
 	// LensID is the foreign key for the lens.
-	LensID uuid.UUID `json:"lens_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
+	LensID uuid.UUID `json:"lens_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;" params:"lens" form:"lens_id" validate:"required,uuid"`
 	// Lens is the lens.
 	Lens Lens `json:"lens"`
 	// WorkloadID is the foreign key for the workload.
-	WorkloadID uuid.UUID `json:"workload_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;"`
+	WorkloadID uuid.UUID `json:"workload_id" gorm:"uniqueIndex:idx_workload_lens_question_answer;" params:"workload" form:"workload_id" validate:"required,uuid"`
 	// Workload is the workload.
-	Workload Workload `json:"workload" `
+	Workload Workload `json:"workload" validate:"-"`
 	// Choices are the selected choices.
-	Choices []*Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;"`
+	Choices []Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;" form:"choices"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

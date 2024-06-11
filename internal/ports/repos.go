@@ -50,6 +50,8 @@ type ReadTx interface {
 	GetWorkload(ctx context.Context, workload *models.Workload) error
 	// GetLensQuestion is a method that returns a lens question by ID
 	GetLensQuestion(ctx context.Context, question *models.Question) error
+	// GetWorkloadAnswer is a method that returns a workload answer by ID
+	GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -80,4 +82,6 @@ type ReadWriteTx interface {
 	UpdateWorkload(ctx context.Context, workload *models.Workload) error
 	// DeleteWorkload is a method that deletes a workload
 	DeleteWorkload(ctx context.Context, workload *models.Workload) error
+	// UpdateWorkloadAnswer is a method that updates a workload answer
+	UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
 }

@@ -22,3 +22,9 @@ func PtrStr(s *string) string {
 func IntStr(i int) string {
 	return strconv.Itoa(i)
 }
+
+// StrInt converts the given string to an int.
+func StrInt(s string) int {
+	i, _ := strconv.Atoi(s)
+	return i
+}
