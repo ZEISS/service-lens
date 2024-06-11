@@ -126,14 +126,13 @@ func (w *WorkloadLensEditControllerImpl) Get() error {
 									"bg-base-300":     true,
 								},
 							},
-							htmx.Nav(
-								htmx.Merge(
-									htmx.ClassNames{},
-								),
+							htmx.Div(
+								htmx.Role("navigation"),
 								menus.Menu(
 									menus.MenuProps{
 										ClassNames: htmx.ClassNames{
-											"w-full": true,
+											"w-full":      true,
+											"bg-base-200": false,
 										},
 									},
 									htmx.Group(

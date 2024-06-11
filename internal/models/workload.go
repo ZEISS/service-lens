@@ -68,3 +68,13 @@ type WorkloadLensQuestionAnswer struct {
 	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
+
+// IsChecked ...
+func (a *WorkloadLensQuestionAnswer) IsChecked(choiceID int) bool {
+	for _, c := range a.Choices {
+		if c.ID == choiceID {
+			return true
+		}
+	}
+	return false
+}

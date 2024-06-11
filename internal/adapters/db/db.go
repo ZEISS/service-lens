@@ -216,11 +216,7 @@ func (t *datastoreTx) ListWorkloads(ctx context.Context, pagination *tables.Resu
 
 // GetWorkload is a method that returns a workload by ID
 func (t *datastoreTx) GetWorkload(ctx context.Context, workload *models.Workload) error {
-	return t.tx.
-		Preload("Lenses").
-		Preload("Profile").
-		Preload("Environment").
-		First(workload).Error
+	return t.tx.Preload(clause.Associations).First(workload).Error
 }
 
 // CreateWorkload is a method that creates a workload
@@ -243,8 +239,9 @@ func (t *datastoreTx) UpdateWorkloadAnswer(ctx context.Context, answer *models.W
 	err := t.tx.
 		Session(&gorm.Session{FullSaveAssociations: true}).
 		Clauses(clause.OnConflict{UpdateAll: true}).
+		Where(&models.WorkloadLensQuestionAnswer{WorkloadID: answer.WorkloadID, LensID: answer.LensID, QuestionID: answer.QuestionID}).
 		Omit("Choices.*").
-		Create(answer).Error
+		FirstOrCreate(answer).Error
 	if err != nil {
 		return err
 	}
@@ -254,5 +251,8 @@ func (t *datastoreTx) UpdateWorkloadAnswer(ctx context.Context, answer *models.W
 
 // GetWorkloadAnswer is a method that returns a workload answer by ID
 func (t *datastoreTx) GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error {
-	return t.tx.Where(answer).First(answer).Error
+	return t.tx.
+		Where(&models.WorkloadLensQuestionAnswer{WorkloadID: answer.WorkloadID, LensID: answer.LensID, QuestionID: answer.QuestionID}).
+		Preload(clause.Associations).
+		First(answer).Error
 }

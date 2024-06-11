@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -19,11 +20,18 @@ const (
 	updateWorkloadAnswerURL = "/workloads/%s/lenses/%s/question/%d"
 )
 
+// LensQuestionParams
+type LensQuestionParams struct {
+	QuestionID int       `params:"question"`
+	WorkloadID uuid.UUID `params:"workload"`
+	LensID     uuid.UUID `params:"lens"`
+}
+
 // WorkloadLensEditQuestionControllerImpl ...
 type WorkloadLensEditQuestionControllerImpl struct {
+	params   LensQuestionParams
 	question models.Question
-	workload models.Workload
-	lens     models.Lens
+	answer   models.WorkloadLensQuestionAnswer
 	store    ports.Datastore
 	htmx.DefaultController
 }
@@ -37,31 +45,21 @@ func NewWorkloadLensEditQuestionController(store ports.Datastore) *WorkloadLensE
 
 // Prepare ...
 func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
-	err := w.BindParams(&w.question)
+	err := w.BindParams(&w.params)
 	if err != nil {
 		return err
 	}
-
-	err = w.BindParams(&w.workload)
-	if err != nil {
-		return err
-	}
-
-	err = w.BindParams(&w.lens)
-	if err != nil {
-		return err
-	}
+	w.answer.LensID = w.params.LensID
+	w.answer.WorkloadID = w.params.WorkloadID
+	w.answer.QuestionID = w.params.QuestionID
 
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		if err := tx.GetLensQuestion(ctx, &w.question); err != nil {
+		err := tx.GetLensQuestion(ctx, &w.question)
+		if err != nil {
 			return err
 		}
 
-		if err := tx.GetWorkload(ctx, &w.workload); err != nil {
-			return err
-		}
-
-		return tx.GetLens(ctx, &w.lens)
+		return tx.GetWorkloadAnswer(ctx, &w.answer)
 	})
 }
 
@@ -69,7 +67,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 	return w.Render(
 		htmx.Form(
-			htmx.HxPut(fmt.Sprintf(updateWorkloadAnswerURL, w.workload.ID, w.lens.ID, w.question.ID)),
+			htmx.HxPut(fmt.Sprintf(updateWorkloadAnswerURL, w.params.WorkloadID, w.params.LensID, w.params.QuestionID)),
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{
@@ -146,7 +144,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 									forms.CheckboxProps{
 										Name:    "choices",
 										Value:   utils.IntStr(choice.ID),
-										Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
+										Checked: w.answer.IsChecked(choice.ID), // todo(katallaxie): should be a default option in the model
 									},
 								),
 							),

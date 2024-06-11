@@ -2,9 +2,11 @@ package questions
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -12,18 +14,27 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
-// QuestionForm ...
-type QuestionForm struct {
+// QuestionUpdateForm ...
+type QuestionUpdateForm struct {
 	Choices            []string `form:"choices"`
 	Notes              string   `form:"notes"`
 	DoesNotApply       bool     `form:"does_not_apply"`
 	DoesNotApplyReason string   `form:"does_not_apply_reason"`
 }
 
+// QuestionUpdateParams ...
+type QuestionUpdateParams struct {
+	QuestionID int       `params:"question"`
+	WorkloadID uuid.UUID `params:"workload"`
+	LensID     uuid.UUID `params:"lens"`
+}
+
 var validate *validator.Validate
 
 // WorkloadUpdateAnswerControllerImpl ...
 type WorkloadUpdateAnswerControllerImpl struct {
+	params QuestionUpdateParams
+	form   QuestionUpdateForm
 	answer models.WorkloadLensQuestionAnswer
 	store  ports.Datastore
 	htmx.DefaultController
@@ -45,33 +56,30 @@ func (w *WorkloadUpdateAnswerControllerImpl) Error(err error) error {
 func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 	validate = validator.New()
 
-	err := w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		err := w.BindParams(&w.answer)
-		if err != nil {
-			return err
-		}
+	err := w.BindParams(&w.params)
+	if err != nil {
+		return err
+	}
+	w.answer.WorkloadID = w.params.WorkloadID
+	w.answer.LensID = w.params.LensID
+	w.answer.QuestionID = w.params.QuestionID
 
-		return tx.GetWorkloadAnswer(ctx, &w.answer)
-	})
+	fmt.Println(w.params)
+
+	err = w.BindBody(&w.form)
 	if err != nil {
 		return err
 	}
 
-	var form QuestionForm
-	err = w.BindBody(&form)
+	err = validate.Struct(&w.form)
 	if err != nil {
 		return err
 	}
+	w.answer.DoesNotApply = w.form.DoesNotApply
+	w.answer.DoesNotApplyReason = w.form.DoesNotApplyReason
+	w.answer.Notes = w.form.Notes
 
-	err = validate.Struct(&form)
-	if err != nil {
-		return err
-	}
-	w.answer.DoesNotApply = form.DoesNotApply
-	w.answer.DoesNotApplyReason = form.DoesNotApplyReason
-	w.answer.Notes = form.Notes
-
-	for _, choice := range form.Choices {
+	for _, choice := range w.form.Choices {
 		w.answer.Choices = append(w.answer.Choices, models.Choice{
 			ID: utils.StrInt(choice),
 		})
