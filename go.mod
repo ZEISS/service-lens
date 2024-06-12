@@ -18,7 +18,7 @@ require (
 	github.com/zeiss/fiber-goth v1.2.1
 	github.com/zeiss/fiber-htmx v1.3.13-0.20240610074751-3a512b2b7530
 	github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429
-	gorm.io/driver/postgres v1.5.7
+	gorm.io/driver/postgres v1.5.8
 	gorm.io/gorm v1.25.10
 	mvdan.cc/gofumpt v0.6.0
 )
@@ -110,7 +110,7 @@ require (
 	github.com/invopop/yaml v0.2.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.5.4 // indirect
+	github.com/jackc/pgx/v5 v5.5.5 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jgautheron/goconst v1.7.1 // indirect
 	github.com/jingyugao/rowserrcheck v1.1.1 // indirect
