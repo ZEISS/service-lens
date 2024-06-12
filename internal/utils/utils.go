@@ -28,3 +28,14 @@ func StrInt(s string) int {
 	i, _ := strconv.Atoi(s)
 	return i
 }
+
+// StrBool converts the given string to a bool.
+func StrBool(s string) bool {
+	b, _ := strconv.ParseBool(s)
+	return b
+}
+
+// BoolStr converts the given bool to a string.
+func BoolStr(b bool) string {
+	return strconv.FormatBool(b)
+}

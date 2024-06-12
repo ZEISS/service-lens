@@ -2,7 +2,6 @@ package questions
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -63,8 +62,6 @@ func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 	w.answer.WorkloadID = w.params.WorkloadID
 	w.answer.LensID = w.params.LensID
 	w.answer.QuestionID = w.params.QuestionID
-
-	fmt.Println(w.params)
 
 	err = w.BindBody(&w.form)
 	if err != nil {

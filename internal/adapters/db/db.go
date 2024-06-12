@@ -237,11 +237,15 @@ func (t *datastoreTx) DeleteWorkload(ctx context.Context, workload *models.Workl
 // UpdateWorkloadAnswer is a method that updates a workload answer
 func (t *datastoreTx) UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error {
 	err := t.tx.
+		Debug().
 		Session(&gorm.Session{FullSaveAssociations: true}).
-		Clauses(clause.OnConflict{UpdateAll: true}).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "workload_id"}, {Name: "lens_id"}, {Name: "question_id"}},
+			UpdateAll: true,
+		}).
 		Where(&models.WorkloadLensQuestionAnswer{WorkloadID: answer.WorkloadID, LensID: answer.LensID, QuestionID: answer.QuestionID}).
 		Omit("Choices.*").
-		FirstOrCreate(answer).Error
+		Save(answer).Error
 	if err != nil {
 		return err
 	}

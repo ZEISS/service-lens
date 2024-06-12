@@ -115,20 +115,81 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 				cards.Body(
 					cards.BodyProps{},
 					forms.FormControl(
-						forms.FormControlProps{},
+						forms.FormControlProps{
+							ClassNames: htmx.ClassNames{
+								"flex":            true,
+								"justify-between": true,
+								"flex-row":        true,
+							},
+						},
 						forms.FormControlLabel(
 							forms.FormControlLabelProps{},
 							forms.FormControlLabelText(
 								forms.FormControlLabelTextProps{},
 								htmx.Text("Question does not apply to this workload"),
 							),
-							forms.Toggle(
-								forms.ToggleProps{
-									Name:  "does_not_apply",
-									Value: "1",
+						),
+						forms.Toggle(
+							forms.ToggleProps{
+								Name:    "does_not_apply",
+								Value:   "true",
+								Checked: w.answer.DoesNotApply,
+							},
+							htmx.HyperScript(`on change if me.checked set disabled of <input[type=checkbox][name=choices]/> to true
+								remove .hidden from next <label/>
+								else set disabled of <input[type=checkbox][name=choices]/> to false
+								add .hidden to next <label/>`),
+						),
+					),
+					forms.FormControl(
+						forms.FormControlProps{
+							ClassNames: htmx.ClassNames{
+								"hidden": !w.answer.DoesNotApply,
+							},
+						},
+						htmx.ID("does-not-apply-reason"),
+						forms.SelectBordered(
+							forms.SelectProps{
+								ClassNames: htmx.ClassNames{
+									"w-full": true,
 								},
-								htmx.HyperScript("on change if me.checked set disabled of <input[type=checkbox][name=choices]/> to true else set disabled of <input[type=checkbox][name=choices]/> to false"),
+							},
+							forms.Option(
+								forms.OptionProps{
+									Selected: w.answer.DoesNotApplyReason == "",
+									Disabled: true,
+								},
+								htmx.Text("Select a reason"),
 							),
+							forms.Option(
+								forms.OptionProps{
+									Selected: w.answer.DoesNotApplyReason == "OUT_OF_SCOPE",
+								},
+								htmx.Text("Out of scope"),
+								htmx.Value("OUT_OF_SCOPE"),
+							),
+							forms.Option(
+								forms.OptionProps{
+									Selected: w.answer.DoesNotApplyReason == "BUSINESS_PRIORITIES",
+								},
+								htmx.Text("Business Priorities"),
+								htmx.Value("BUSINESS_PRIORITIES"),
+							),
+							forms.Option(
+								forms.OptionProps{
+									Selected: w.answer.DoesNotApplyReason == "ARCHITECTURE_CONSTRAINTS",
+								},
+								htmx.Text("Architecture Constraints"),
+								htmx.Value("ARCHITECTURE_CONSTRAINTS"),
+							),
+							forms.Option(
+								forms.OptionProps{
+									Selected: w.answer.DoesNotApplyReason == "OTHER",
+								},
+								htmx.Text("Other"),
+								htmx.Value("OTHER"),
+							),
+							htmx.Name("does_not_apply_reason"),
 						),
 					),
 					htmx.Group(htmx.ForEach(w.question.Choices, func(choice models.Choice, choiceIdx int) htmx.Node {
@@ -142,9 +203,10 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 								),
 								forms.Checkbox(
 									forms.CheckboxProps{
-										Name:    "choices",
-										Value:   utils.IntStr(choice.ID),
-										Checked: w.answer.IsChecked(choice.ID), // todo(katallaxie): should be a default option in the model
+										Name:     "choices",
+										Value:    utils.IntStr(choice.ID),
+										Checked:  w.answer.IsChecked(choice.ID), // todo(katallaxie): should be a default option in the model
+										Disabled: w.answer.DoesNotApply || (choice.Ref == models.NoneOfTheseQuestionRef && w.answer.DoesNotApply),
 									},
 								),
 							),
@@ -171,8 +233,10 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 						),
 						forms.TextareaBordered(
 							forms.TextareaProps{
-								Name: "notes",
+								Name:        "notes",
+								Placeholder: "Optional notes",
 							},
+							htmx.Text(w.answer.Notes),
 						),
 						forms.FormControlLabelAltText(
 							forms.FormControlLabelAltTextProps{},
