@@ -31,7 +31,7 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 					"justify-between": true,
 				},
 			},
-			htmx.Text("CIT-CA"),
+			htmx.Text("ZEISS"),
 			icons.ChevronUpDownOutline(icons.IconProps{}),
 		),
 		dropdowns.DropdownMenuItems(
