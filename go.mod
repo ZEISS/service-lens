@@ -18,7 +18,7 @@ require (
 	github.com/zeiss/fiber-goth v1.2.1
 	github.com/zeiss/fiber-htmx v1.3.13-0.20240610074751-3a512b2b7530
 	github.com/zeiss/gorm-seed v0.0.0-20240412050857-600ebf3db429
-	gorm.io/driver/postgres v1.5.8
+	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10
 	mvdan.cc/gofumpt v0.6.0
 )
