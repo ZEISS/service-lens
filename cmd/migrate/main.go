@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
@@ -18,6 +19,18 @@ import (
 )
 
 var seeds = []seed.Seed{
+	{
+		Name: "create teams",
+		Run: func(db *gorm.DB) error {
+			return db.Create([]models.Team{
+				{
+					Name:        "Super Admins",
+					Slug:        "superadmins",
+					Description: utils.StrPtr("Super Admins have access to all features and can manage all resources."),
+				},
+			}).Error
+		},
+	},
 	{
 		Name: "create profile questions",
 		Run: func(db *gorm.DB) error {

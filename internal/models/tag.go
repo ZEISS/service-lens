@@ -19,12 +19,18 @@ const (
 
 // Tag ...
 type Tag struct {
-	ID   int    `json:"id" gorm:"primary_key"`
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key"`
+	// Name is the tag name.
 	Name string `json:"name"`
-
-	TaggableID   uuid.UUID    `json:"taggable_id"`
+	// TaggableID is the foreign key of the taggable
+	TaggableID uuid.UUID `json:"taggable_id"`
+	// TaggableType is the type of the taggable
 	TaggableType TaggableType `json:"taggable_type"`
-
+	// Team is the team that owns the environment
+	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	// TeamID is the foreign key of the owner
+	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

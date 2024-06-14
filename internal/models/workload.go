@@ -61,6 +61,10 @@ type WorkloadLensQuestionAnswer struct {
 	Workload Workload `json:"workload" validate:"-"`
 	// Choices are the selected choices.
 	Choices []Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;" form:"choices"`
+	// Team is the team that owns the environment
+	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	// TeamID is the foreign key of the owner
+	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

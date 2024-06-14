@@ -38,6 +38,10 @@ type Lens struct {
 	IsDraft bool `json:"is_draft"`
 	// Tags are the tags associated with the lens.
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
+	// Team is the team that owns the environment
+	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	// TeamID is the foreign key of the owner
+	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

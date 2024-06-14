@@ -1,6 +1,47 @@
-version: '3.1'
-
 services:
+
+  crdb:
+    restart: always
+    image: cockroachdb/cockroach:latest-v24.1
+    ports:
+      - "26257:26257"
+      - "8082:8080"
+    command: start-single-node --insecure
+    volumes:
+      - "crdb:/cockroach/cockroach-data"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+  
+  migrate:
+    depends_on:
+      crdb:
+        condition: service_healthy
+    image: openfga/openfga:latest
+    container_name: migrate
+    command: migrate
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://root@crdb:26257/defaultdb?sslmode=disable
+  
+  openfga:
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    image: openfga/openfga:latest
+    container_name: openfga
+    environment:
+      - OPENFGA_DATASTORE_ENGINE=postgres
+      - OPENFGA_DATASTORE_URI=postgres://root@crdb:26257/defaultdb?sslmode=disable
+      - OPENFGA_LOG_FORMAT=json
+    command: run
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "3000:3000"
+
   db:
     image: postgres
     restart: always
@@ -12,4 +53,4 @@ services:
       - "5432:5432"
 
 volumes:
-  postgres_data: {}
+  crdb: {}

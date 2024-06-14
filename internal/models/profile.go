@@ -19,6 +19,10 @@ type Profile struct {
 	Answers []ProfileQuestionAnswer `json:"answers" form:"answers" gorm:"many2many:profiles_answers;"`
 	// Tags ...
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
+	// Team is the team that owns the environment
+	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	// TeamID is the foreign key of the owner
+	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
