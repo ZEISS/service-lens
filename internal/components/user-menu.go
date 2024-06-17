@@ -1,7 +1,6 @@
 package components
 
 import (
-	authz "github.com/zeiss/fiber-authz"
 	"github.com/zeiss/fiber-htmx/components/links"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -9,21 +8,10 @@ import (
 
 // UserNavProps ...
 type UserNavProps struct {
-	// User ...
-	User *authz.User
 }
 
 // UserNav ...
 func UserNav(p UserNavProps) htmx.Node {
-	if p.User == nil {
-		return nil
-	}
-
-	users := []htmx.Node{}
-	for _, u := range *p.User.Teams {
-		users = append(users, htmx.Li(htmx.Text(u.Name)))
-	}
-
 	return htmx.Div(
 		htmx.ClassNames{"dropdown": true, "dropdown-end": true},
 		htmx.Div(
@@ -59,7 +47,7 @@ func UserNav(p UserNavProps) htmx.Node {
 				"rounded-box":      true,
 				"w-52":             true,
 			},
-			htmx.Group(users...),
+			// htmx.Group(users...),
 			htmx.Li(
 				htmx.A(
 					htmx.ClassNames{"justify-between": true},

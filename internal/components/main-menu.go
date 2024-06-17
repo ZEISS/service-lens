@@ -124,7 +124,6 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 					),
 				),
 			),
-
 			menus.MenuItem(
 				menus.MenuItemProps{
 					ClassNames: htmx.ClassNames{

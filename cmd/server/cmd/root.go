@@ -15,8 +15,8 @@ import (
 	requestid "github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/katallaxie/pkg/server"
 	"github.com/spf13/cobra"
-	authz "github.com/zeiss/fiber-authz"
 	goth "github.com/zeiss/fiber-goth"
+	adapter "github.com/zeiss/fiber-goth/adapters/gorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -88,10 +88,13 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return err
 		}
 
-		tbac := authz.NewTBAC(conn)
+		gorm, err := adapter.New(conn)
+		if err != nil {
+			return err
+		}
 
 		gothConfig := goth.Config{
-			Adapter:        tbac,
+			Adapter:        gorm,
 			Secret:         goth.GenerateKey(),
 			CookieHTTPOnly: true,
 			ResponseFilter: func(c *fiber.Ctx) error {
@@ -106,13 +109,18 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Use(logger.New())
 
 		app.Use(goth.NewProtectMiddleware(gothConfig))
-		app.Use(authz.SetAuthzHandler(authz.NewNoopObjectResolver(), authz.NewNoopActionResolver(), authz.NewGothAuthzPrincipalResolver()))
 
 		app.Get("/", handlers.Dashboard())
 		app.Get("/login", handlers.Login())
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
+
+		// Site ...
+		site := app.Group("/site")
+		site.Get("/teams", handlers.ListTeams())
+		site.Get("/teams/new", handlers.NewTeam())
+		site.Get("/teams/:id", handlers.ShowTeam())
 
 		// Me ...
 		app.Get("/me", handlers.Me())

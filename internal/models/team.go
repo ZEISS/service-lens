@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -17,6 +18,8 @@ type Team struct {
 	Slug string `json:"slug" gorm:"uniqueIndex" form:"slug"  validate:"required,alphanum,gt=3,lt=255,lowercase"`
 	// Description is the description of the team.
 	Description *string `json:"description" form:"description" validate:"omitempty,max=255"`
+	// Users are the users in the team.
+	Users []adapters.GothUser `json:"users" gorm:"many2many:team_users;"`
 	// CreatedAt is the time the team was created.
 	CreatedAt time.Time
 	// UpdatedAt is the time the team was last updated.

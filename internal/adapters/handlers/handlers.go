@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/me"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/settings"
+	"github.com/zeiss/service-lens/internal/controllers/teams"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/questions"
@@ -284,5 +285,40 @@ func (a *handlers) ShowLensQuestion() fiber.Handler {
 func (a *handlers) UpdateWorkloadAnswer() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return questions.NewWorkloadUpdateAnswerController(a.store)
+	})
+}
+
+// ListTeams ...
+func (a *handlers) ListTeams() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewTeamListController(a.store)
+	})
+}
+
+// NewTeam ...
+func (a *handlers) NewTeam() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewTeamController(a.store)
+	})
+}
+
+// DeleteTeam ...
+func (a *handlers) DeleteTeam() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewTeamDeleteController(a.store)
+	})
+}
+
+// EditTeam ...
+func (a *handlers) EditTeam() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewTeamEditController(a.store)
+	})
+}
+
+// ShowTeam ...
+func (a *handlers) ShowTeam() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewTeamShowController(a.store)
 	})
 }
