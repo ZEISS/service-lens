@@ -38,7 +38,7 @@ func (p *ProfileShowControllerImpl) Prepare() error {
 		return err
 	}
 
-	team := utils.FromContextTeam(p.Ctx())
+	team := p.Session().User.TeamBySlug(p.Ctx().Params("t_slug"))
 	p.profile.TeamID = team.ID
 
 	err = p.store.ReadTx(p.Context(), func(ctx context.Context, tx ports.ReadTx) error {

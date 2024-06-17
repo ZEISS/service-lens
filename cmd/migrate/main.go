@@ -5,10 +5,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/configs"
 	"github.com/zeiss/service-lens/internal/models"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/katallaxie/pkg/logger"
 	"github.com/spf13/cobra"
@@ -22,11 +22,11 @@ var seeds = []seed.Seed{
 	{
 		Name: "create teams",
 		Run: func(db *gorm.DB) error {
-			return db.Create([]models.Team{
+			return db.Create([]adapters.GothTeam{
 				{
 					Name:        "Super Admins",
 					Slug:        "superadmins",
-					Description: utils.StrPtr("Super Admins have access to all features and can manage all resources."),
+					Description: "Super Admins have access to all features and can manage all resources.",
 				},
 			}).Error
 		},

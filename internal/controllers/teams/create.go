@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/go-playground/validator/v10"
@@ -19,7 +19,7 @@ var validate *validator.Validate
 
 // CreateTeamControllerImpl ...
 type CreateTeamControllerImpl struct {
-	team  models.Team
+	team  adapters.GothTeam
 	store ports.Datastore
 	htmx.DefaultController
 }

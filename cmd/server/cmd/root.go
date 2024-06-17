@@ -9,7 +9,6 @@ import (
 	"github.com/zeiss/fiber-goth/providers/github"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -98,9 +97,6 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			Adapter:        gorm,
 			Secret:         goth.GenerateKey(),
 			CookieHTTPOnly: true,
-			ResponseFilter: func(c *fiber.Ctx) error {
-				return c.Redirect("/")
-			},
 		}
 
 		handlers := handlers.New(store)
@@ -125,7 +121,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		site.Get("/teams/:id", handlers.ShowTeam())
 
 		// Team ...
-		team := app.Group("/teams/:t_slug", utils.ResolveTeam(conn))
+		team := app.Group("/teams/:t_slug")
 
 		team.Get("/profiles", handlers.ListProfiles())
 		team.Get("/profiles/new", handlers.NewProfile())

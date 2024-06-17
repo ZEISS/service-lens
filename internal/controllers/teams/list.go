@@ -2,10 +2,11 @@ package teams
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/teams"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -14,7 +15,7 @@ import (
 
 // TeamListControllerImpl ...
 type TeamListControllerImpl struct {
-	teams tables.Results[models.Team]
+	teams tables.Results[adapters.GothTeam]
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -22,6 +23,13 @@ type TeamListControllerImpl struct {
 // NewTeamListController ...
 func NewTeamListController(store ports.Datastore) *TeamListControllerImpl {
 	return &TeamListControllerImpl{store: store}
+}
+
+// Error ...
+func (w *TeamListControllerImpl) Error(err error) error {
+	fmt.Println(err)
+
+	return err
 }
 
 // Prepare ...
@@ -43,6 +51,7 @@ func (w *TeamListControllerImpl) Get() error {
 			components.Layout(
 				components.LayoutProps{
 					Path: w.Path(),
+					User: w.Session().User,
 				},
 				components.Wrap(
 					components.WrapProps{},

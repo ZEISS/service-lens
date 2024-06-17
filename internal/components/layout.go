@@ -14,7 +14,6 @@ type LayoutProps struct {
 	Children []htmx.Node
 	User     adapters.GothUser
 	Path     string
-	Team     string
 }
 
 // WrapProps ...

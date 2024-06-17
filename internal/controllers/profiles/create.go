@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	goth "github.com/zeiss/fiber-goth"
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -22,6 +23,7 @@ var validate *validator.Validate
 type CreateProfileControllerImpl struct {
 	profile models.Profile
 	store   ports.Datastore
+	team    adapters.GothTeam
 	htmx.DefaultController
 }
 
@@ -49,8 +51,12 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 		return err
 	}
 
-	team := utils.FromContextTeam(l.Ctx())
-	l.profile.TeamID = team.ID
+	session, err := goth.SessionFromContext(l.Ctx())
+	if err != nil {
+		return err
+	}
+	l.profile.TeamID = session.User.TeamBySlug(l.Ctx().Params("t_slug")).ID
+	l.team = session.User.TeamBySlug(l.Ctx().Params("t_slug"))
 
 	err = validate.Struct(&l.profile)
 	if err != nil {
@@ -64,5 +70,5 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 
 // Post ...
 func (l *CreateProfileControllerImpl) Post() error {
-	return l.Redirect(fmt.Sprintf(listProfilesURL, utils.FromContextTeam(l.Ctx()).Slug))
+	return l.Redirect(fmt.Sprintf(listProfilesURL, l.team.ID))
 }

@@ -1,12 +1,15 @@
 package components
 
 import (
+	"fmt"
+
 	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/utils"
 )
 
 // AccountSwitcherProps ...
@@ -40,20 +43,20 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 					"w-full": true,
 				},
 			},
-			// utils.Map(func(el authz.Team) htmx.Node {
-			// 	return dropdowns.DropdownMenuItem(
-			// 		dropdowns.DropdownMenuItemProps{},
-			// 		links.Link(
-			// 			links.LinkProps{
-			// 				ClassNames: htmx.ClassNames{
-			// 					"link": false,
-			// 				},
-			// 				Href: fmt.Sprintf("/teams/%s/index", el.Slug),
-			// 			},
-			// 			htmx.Text(el.Name),
-			// 		),
-			// 	)
-			// }, *props.User.Teams...),
+			utils.Map(func(el adapters.GothTeam) htmx.Node {
+				return dropdowns.DropdownMenuItem(
+					dropdowns.DropdownMenuItemProps{},
+					links.Link(
+						links.LinkProps{
+							ClassNames: htmx.ClassNames{
+								"link": false,
+							},
+							Href: fmt.Sprintf("/teams/%s", el.Slug),
+						},
+						htmx.Text(el.Name),
+					),
+				)
+			}, *props.User.Teams...),
 			dividers.Divider(
 				dividers.DividerProps{
 					ClassNames: htmx.ClassNames{},

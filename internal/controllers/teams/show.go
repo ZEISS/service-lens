@@ -4,19 +4,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TeamShowControllerImpl ...
 type TeamShowControllerImpl struct {
-	team  models.Team
+	team  adapters.GothTeam
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -48,6 +47,7 @@ func (p *TeamShowControllerImpl) Get() error {
 			components.Layout(
 				components.LayoutProps{
 					Path: p.Path(),
+					User: p.Session().User,
 				},
 				components.Wrap(
 					components.WrapProps{},
@@ -105,7 +105,7 @@ func (p *TeamShowControllerImpl) Get() error {
 										htmx.Text("Description"),
 									),
 									htmx.H3(
-										htmx.Text(utils.PtrStr(p.team.Description)),
+										htmx.Text(p.team.Description),
 									),
 								),
 								htmx.Div(

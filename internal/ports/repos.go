@@ -54,9 +54,9 @@ type ReadTx interface {
 	// GetWorkloadAnswer is a method that returns a workload answer by ID
 	GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
 	// ListTeams is a method that returns a list of teams
-	ListTeams(ctx context.Context, teams *tables.Results[models.Team]) error
+	ListTeams(ctx context.Context, teams *tables.Results[adapters.GothTeam]) error
 	// GetTeam is a method that returns a team by ID
-	GetTeam(ctx context.Context, team *models.Team) error
+	GetTeam(ctx context.Context, team *adapters.GothTeam) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -90,9 +90,9 @@ type ReadWriteTx interface {
 	// UpdateWorkloadAnswer is a method that updates a workload answer
 	UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
 	// CreateTeam is a method that creates a team
-	CreateTeam(ctx context.Context, team *models.Team) error
+	CreateTeam(ctx context.Context, team *adapters.GothTeam) error
 	// UpdateTeam is a method that updates a team
-	UpdateTeam(ctx context.Context, team *models.Team) error
+	UpdateTeam(ctx context.Context, team *adapters.GothTeam) error
 	// DeleteTeam is a method that deletes a team
-	DeleteTeam(ctx context.Context, team *models.Team) error
+	DeleteTeam(ctx context.Context, team *adapters.GothTeam) error
 }

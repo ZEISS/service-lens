@@ -3,19 +3,18 @@ package teams
 import (
 	"context"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TeamEditControllerImpl ...
 type TeamEditControllerImpl struct {
-	team  models.Team
+	team  adapters.GothTeam
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -23,7 +22,7 @@ type TeamEditControllerImpl struct {
 // NewTeamEditController ...
 func NewTeamEditController(store ports.Datastore) *TeamEditControllerImpl {
 	return &TeamEditControllerImpl{
-		team:  models.Team{},
+		team:  adapters.GothTeam{},
 		store: store,
 	}
 }
@@ -140,7 +139,7 @@ func (p *TeamEditControllerImpl) Get() error {
 								forms.TextInputBordered(
 									forms.TextInputProps{
 										Name:  "description",
-										Value: utils.PtrStr(p.team.Description),
+										Value: p.team.Description,
 									},
 								),
 								forms.FormControlLabel(

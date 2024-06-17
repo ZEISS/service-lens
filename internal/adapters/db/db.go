@@ -43,10 +43,10 @@ func (d *database) Migrate(ctx context.Context) error {
 		&adapters.GothAccount{},
 		&adapters.GothSession{},
 		&adapters.GothVerificationToken{},
+		&adapters.GothTeam{},
 		&models.ProfileQuestion{},
 		&models.ProfileQuestionChoice{},
 		&models.ProfileQuestionAnswer{},
-		&models.Team{},
 		&models.Environment{},
 		&models.Profile{},
 		&models.Lens{},
@@ -270,26 +270,26 @@ func (t *datastoreTx) GetWorkloadAnswer(ctx context.Context, answer *models.Work
 }
 
 // GetTeam is a method that returns a team by ID
-func (t *datastoreTx) GetTeam(ctx context.Context, team *models.Team) error {
+func (t *datastoreTx) GetTeam(ctx context.Context, team *adapters.GothTeam) error {
 	return t.tx.First(team).Error
 }
 
 // ListTeams is a method that returns a list of teams
-func (t *datastoreTx) ListTeams(ctx context.Context, pagination *tables.Results[models.Team]) error {
+func (t *datastoreTx) ListTeams(ctx context.Context, pagination *tables.Results[adapters.GothTeam]) error {
 	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
 }
 
 // CreateTeam is a method that creates a team
-func (t *datastoreTx) CreateTeam(ctx context.Context, team *models.Team) error {
+func (t *datastoreTx) CreateTeam(ctx context.Context, team *adapters.GothTeam) error {
 	return t.tx.Create(team).Error
 }
 
 // UpdateTeam is a method that updates a team
-func (t *datastoreTx) UpdateTeam(ctx context.Context, team *models.Team) error {
+func (t *datastoreTx) UpdateTeam(ctx context.Context, team *adapters.GothTeam) error {
 	return t.tx.Session(&gorm.Session{FullSaveAssociations: true}).Save(team).Error
 }
 
 // DeleteTeam is a method that deletes a team
-func (t *datastoreTx) DeleteTeam(ctx context.Context, team *models.Team) error {
+func (t *datastoreTx) DeleteTeam(ctx context.Context, team *adapters.GothTeam) error {
 	return t.tx.Delete(team).Error
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -39,7 +40,7 @@ type Lens struct {
 	// Tags are the tags associated with the lens.
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
 	// Team is the team that owns the environment
-	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	Team adapters.GothTeam `json:"owner" gorm:"foreignKey:TeamID"`
 	// TeamID is the foreign key of the owner
 	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
 	// CreatedAt ...

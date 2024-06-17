@@ -3,14 +3,14 @@ package teams
 import (
 	"context"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
 // TeamDeleteControllerImpl ...
 type TeamDeleteControllerImpl struct {
-	team  models.Team
+	team  adapters.GothTeam
 	store ports.Datastore
 	htmx.DefaultController
 }
@@ -18,7 +18,7 @@ type TeamDeleteControllerImpl struct {
 // NewTeamDeleteController ...
 func NewTeamDeleteController(store ports.Datastore) *TeamDeleteControllerImpl {
 	return &TeamDeleteControllerImpl{
-		team:  models.Team{},
+		team:  adapters.GothTeam{},
 		store: store,
 	}
 }

@@ -5,7 +5,6 @@ import (
 
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
@@ -33,7 +32,7 @@ func (w *ProfilePartialListControllerImpl) Prepare() error {
 		return err
 	}
 
-	team := utils.FromContextTeam(w.Ctx())
+	team := w.Session().User.TeamBySlug(w.Ctx().Params("t_slug"))
 
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.ListProfiles(ctx, team.ID, &w.profiles)
