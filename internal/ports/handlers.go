@@ -88,4 +88,6 @@ type Handlers interface {
 	EditTeam() fiber.Handler
 	// DeleteTeam ...
 	DeleteTeam() fiber.Handler
+	// CreateTeam ...
+	CreateTeam() fiber.Handler
 }

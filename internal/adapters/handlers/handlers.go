@@ -322,3 +322,10 @@ func (a *handlers) ShowTeam() fiber.Handler {
 		return teams.NewTeamShowController(a.store)
 	})
 }
+
+// CreateTeam ...
+func (a *handlers) CreateTeam() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return teams.NewCreateTeamController(a.store)
+	})
+}

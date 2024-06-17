@@ -11,7 +11,7 @@ import (
 // Team is a group of users. Teams can be used to group lenses, reviews, profiles.
 type Team struct {
 	// ID is the primary key of the team.
-	ID uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()" params:"id" validate:"require,uuid"`
+	ID uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid()" params:"id"`
 	// Name is the name of the team.
 	Name string `json:"name" form:"name" validate:"required,alphanum,gt=3,lt=255"`
 	// Slug is the unique identifier of the team.

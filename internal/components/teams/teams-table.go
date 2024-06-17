@@ -1,12 +1,18 @@
 package teams
 
 import (
+	"fmt"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+)
+
+const (
+	showTeamURL = "/site/teams/%s"
 )
 
 // TeamsTableProps ...
@@ -87,7 +93,7 @@ func TeamsTable(props TeamsTableProps, children ...htmx.Node) htmx.Node {
 						),
 					),
 					htmx.A(
-						htmx.Href("/environments/new"),
+						htmx.Href("/site/teams/new"),
 						buttons.Outline(
 							buttons.ButtonProps{
 								ClassNames: htmx.ClassNames{
@@ -122,7 +128,7 @@ func TeamsTable(props TeamsTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: "/teams/" + row.ID.String(),
+									Href: fmt.Sprintf(showTeamURL, row.ID),
 								},
 								htmx.Text(row.Name),
 							),

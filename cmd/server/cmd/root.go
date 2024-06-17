@@ -121,6 +121,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		site := app.Group("/site")
 		site.Get("/teams", handlers.ListTeams())
 		site.Get("/teams/new", handlers.NewTeam())
+		site.Post("/teams/new", handlers.CreateTeam())
 		site.Get("/teams/:id", handlers.ShowTeam())
 
 		// Team ...

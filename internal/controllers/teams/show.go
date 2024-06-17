@@ -46,7 +46,9 @@ func (p *TeamShowControllerImpl) Get() error {
 		components.Page(
 			components.PageProps{},
 			components.Layout(
-				components.LayoutProps{},
+				components.LayoutProps{
+					Path: p.Path(),
+				},
 				components.Wrap(
 					components.WrapProps{},
 					cards.CardBordered(

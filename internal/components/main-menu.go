@@ -1,6 +1,7 @@
 package components
 
 import (
+	"fmt"
 	"strings"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -11,6 +12,7 @@ import (
 type MainMenuProps struct {
 	ClassNames htmx.ClassNames
 	Path       string
+	Team       string
 }
 
 // MainMenu ...
@@ -132,7 +134,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				},
 				menus.MenuCollapsible(
 					menus.MenuCollapsibleProps{
-						Open: strings.HasPrefix(p.Path, "/profiles"),
+						Open: strings.HasPrefix(p.Path, fmt.Sprintf("/teams/%s/profiles", p.Team)),
 					},
 					menus.MenuCollapsibleSummary(
 						menus.MenuCollapsibleSummaryProps{},
@@ -146,8 +148,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 						},
 						menus.MenuLink(
 							menus.MenuLinkProps{
-								Href:   "/profiles/new",
-								Active: p.Path == "/profiles/new",
+								Href:   fmt.Sprintf("/teams/%s/profiles/new", p.Team),
+								Active: p.Path == fmt.Sprintf("/teams/%s/profiles/new", p.Team),
 							},
 							htmx.Text("New Profile"),
 						),
