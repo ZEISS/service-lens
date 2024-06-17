@@ -13,7 +13,7 @@ require (
 	github.com/katallaxie/pkg v0.6.5
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	github.com/zeiss/fiber-authz v1.0.27
 	github.com/zeiss/fiber-goth v1.2.1
 	github.com/zeiss/fiber-htmx v1.3.13-0.20240610074751-3a512b2b7530
