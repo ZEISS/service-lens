@@ -20,9 +20,9 @@ type Profile struct {
 	// Tags ...
 	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
 	// Team is the team that owns the environment
-	Team Team `json:"owner" gorm:"foreignKey:TeamID"`
+	Team Team `json:"owner" gorm:"foreignKey:TeamID" validate:"-"`
 	// TeamID is the foreign key of the owner
-	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
+	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index" validate:"-"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

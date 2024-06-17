@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
@@ -31,7 +32,7 @@ type ReadTx interface {
 	// GetUser is a method that returns the profile of the current user
 	GetUser(ctx context.Context, user *adapters.GothUser) error
 	// ListProfiles is a method that returns a list of profiles
-	ListProfiles(ctx context.Context, profiles *tables.Results[models.Profile]) error
+	ListProfiles(ctx context.Context, team uuid.UUID, profiles *tables.Results[models.Profile]) error
 	// ListProfileQuestions is a method that returns a list of profile questions
 	ListProfileQuestions(ctx context.Context, questions *tables.Results[models.ProfileQuestion]) error
 	// GetProfile is a method that returns a profile by ID

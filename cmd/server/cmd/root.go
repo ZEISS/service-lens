@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/fiber-goth/providers/github"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -122,52 +123,54 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		site.Get("/teams/new", handlers.NewTeam())
 		site.Get("/teams/:id", handlers.ShowTeam())
 
+		// Team ...
+		team := app.Group("/teams/:t_slug", utils.ResolveTeam(conn))
+
+		team.Get("/profiles", handlers.ListProfiles())
+		team.Get("/profiles/new", handlers.NewProfile())
+		team.Post("/profiles/new", handlers.CreateProfile())
+		team.Get("/profiles/:id", handlers.ShowProfile())
+		team.Put("/profiles/:id", handlers.EditProfile())
+		team.Delete("/profiles/:id", handlers.DeleteProfile())
+
+		// Environments ...
+		team.Get("/environments", handlers.ListEnvironments())
+		team.Get("/environments/new", handlers.NewEnvironment())
+		team.Post("/environments/new", handlers.CreateEnvironment())
+		team.Get("/environments/:id", handlers.ShowEnvironment())
+		team.Get("/environments/:id/edit", handlers.EditEnvironment())
+		team.Put("/environments/:id", handlers.UpdateEnvironment())
+		team.Delete("/environments/:id", handlers.DeleteEnvironment())
+
+		// Lenses ...
+		team.Get("/lenses", handlers.ListLenses())
+		team.Get("/lenses/new", handlers.NewLens())
+		team.Post("/lenses/new", handlers.CreateLens())
+		team.Get("/lenses/:id", handlers.ShowLens())
+		team.Get("/lenses/:id/edit", handlers.EditLens())
+		team.Put("/lenses/:id", handlers.UpdateLens())
+		team.Delete("/lenses/:id", handlers.DeleteLens())
+
+		// Workloads ...
+		team.Get("/workloads", handlers.ListWorkloads())
+		team.Get("/workloads/new", handlers.NewWorkload())
+		team.Post("/workloads/new", handlers.CreateWorkload())
+		team.Get("/workloads/:id", handlers.ShowWorkload())
+		team.Get("/workloads/:id/edit", handlers.EditWorkload())
+		// app.Put("/workloads/:id", handlers.UpdateWorkload())
+		team.Delete("/workloads/:id", handlers.DeleteWorkload())
+		team.Get("/workloads/partials/environments", handlers.ListEnvironmentsPartial())
+		team.Get("/workloads/partials/profiles", handlers.ListProfilesPartial())
+		team.Get("/workloads/:id/lenses/:lens", handlers.ShowWorkloadLens())
+		team.Get("/workloads/:id/lenses/:lens/edit", handlers.EditWorkloadLens())
+		team.Get("/workloads/:workload/lenses/:lens/question/:question", handlers.ShowLensQuestion())
+		team.Put("/workloads/:workload/lenses/:lens/question/:question", handlers.UpdateWorkloadAnswer())
+
 		// Me ...
 		app.Get("/me", handlers.Me())
 
 		// Settings ...
 		app.Get("/settings", handlers.ShowSettings())
-
-		// Profiles ...
-		app.Get("/profiles", handlers.ListProfiles())
-		app.Get("/profiles/new", handlers.NewProfile())
-		app.Post("/profiles/new", handlers.CreateProfile())
-		app.Get("/profiles/:id", handlers.ShowProfile())
-		app.Put("/profiles/:id", handlers.EditProfile())
-		app.Delete("/profiles/:id", handlers.DeleteProfile())
-
-		// Environments ...
-		app.Get("/environments", handlers.ListEnvironments())
-		app.Get("/environments/new", handlers.NewEnvironment())
-		app.Post("/environments/new", handlers.CreateEnvironment())
-		app.Get("/environments/:id", handlers.ShowEnvironment())
-		app.Get("/environments/:id/edit", handlers.EditEnvironment())
-		app.Put("/environments/:id", handlers.UpdateEnvironment())
-		app.Delete("/environments/:id", handlers.DeleteEnvironment())
-
-		// Lenses ...
-		app.Get("/lenses", handlers.ListLenses())
-		app.Get("/lenses/new", handlers.NewLens())
-		app.Post("/lenses/new", handlers.CreateLens())
-		app.Get("/lenses/:id", handlers.ShowLens())
-		app.Get("/lenses/:id/edit", handlers.EditLens())
-		app.Put("/lenses/:id", handlers.UpdateLens())
-		app.Delete("/lenses/:id", handlers.DeleteLens())
-
-		// Workloads ...
-		app.Get("/workloads", handlers.ListWorkloads())
-		app.Get("/workloads/new", handlers.NewWorkload())
-		app.Post("/workloads/new", handlers.CreateWorkload())
-		app.Get("/workloads/:id", handlers.ShowWorkload())
-		app.Get("/workloads/:id/edit", handlers.EditWorkload())
-		// app.Put("/workloads/:id", handlers.UpdateWorkload())
-		app.Delete("/workloads/:id", handlers.DeleteWorkload())
-		app.Get("/workloads/partials/environments", handlers.ListEnvironmentsPartial())
-		app.Get("/workloads/partials/profiles", handlers.ListProfilesPartial())
-		app.Get("/workloads/:id/lenses/:lens", handlers.ShowWorkloadLens())
-		app.Get("/workloads/:id/lenses/:lens/edit", handlers.EditWorkloadLens())
-		app.Get("/workloads/:workload/lenses/:lens/question/:question", handlers.ShowLensQuestion())
-		app.Put("/workloads/:workload/lenses/:lens/question/:question", handlers.UpdateWorkloadAnswer())
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {

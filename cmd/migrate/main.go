@@ -137,7 +137,7 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	seeder := seed.NewSeeder(seed.WithDatabase(conn))
+	seeder := seed.NewSeeder(conn)
 	err = seeder.Seed(ctx, seeds...)
 	if err != nil {
 		panic(err)

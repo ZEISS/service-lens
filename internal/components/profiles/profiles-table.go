@@ -1,6 +1,8 @@
 package profiles
 
 import (
+	"fmt"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -9,9 +11,15 @@ import (
 	"github.com/zeiss/service-lens/internal/models"
 )
 
+const (
+	createProfileURL = "/teams/%s/profiles/new"
+	showProfileURL   = "/teams/%s/profiles/%s"
+)
+
 // ProfilesTableProps ...
 type ProfilesTableProps struct {
 	Profiles []*models.Profile
+	Team     string
 	Offset   int
 	Limit    int
 	Total    int
@@ -87,7 +95,7 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 						),
 					),
 					htmx.A(
-						htmx.Href("/profiles/new"),
+						htmx.Href(fmt.Sprintf(createProfileURL, props.Team)),
 						buttons.Outline(
 							buttons.ButtonProps{
 								ClassNames: htmx.ClassNames{
@@ -122,7 +130,7 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: "/profiles/" + row.ID.String(),
+									Href: fmt.Sprintf(showProfileURL, props.Team, row.ID.String()),
 								},
 								htmx.Text(row.Name),
 							),

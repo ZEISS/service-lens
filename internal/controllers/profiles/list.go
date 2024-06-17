@@ -7,6 +7,7 @@ import (
 	"github.com/zeiss/service-lens/internal/components/profiles"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -30,8 +31,10 @@ func (w *ProfileListControllerImpl) Prepare() error {
 		return err
 	}
 
+	team := utils.FromContextTeam(w.Ctx())
+
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListProfiles(ctx, &w.profiles)
+		return tx.ListProfiles(ctx, team.ID, &w.profiles)
 	})
 }
 
@@ -52,6 +55,7 @@ func (w *ProfileListControllerImpl) Get() error {
 						},
 						profiles.ProfilesTable(
 							profiles.ProfilesTableProps{
+								Team:     utils.FromContextTeam(w.Ctx()).Slug,
 								Profiles: w.profiles.GetRows(),
 								Offset:   w.profiles.GetOffset(),
 								Limit:    w.profiles.GetLimit(),

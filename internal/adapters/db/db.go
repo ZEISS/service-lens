@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -119,13 +120,19 @@ func (t *datastoreTx) GetUser(ctx context.Context, user *adapters.GothUser) erro
 }
 
 // ListProfiles is a method that returns a list of profiles
-func (t *datastoreTx) ListProfiles(ctx context.Context, pagination *tables.Results[models.Profile]) error {
-	return t.tx.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).Find(&pagination.Rows).Error
+func (t *datastoreTx) ListProfiles(ctx context.Context, team uuid.UUID, pagination *tables.Results[models.Profile]) error {
+	return t.tx.
+		Scopes(tables.PaginatedResults(&pagination.Rows, pagination, t.tx)).
+		Where("team_id = ?", team).
+		Find(&pagination.Rows).Error
 }
 
 // GetProfile is a method that returns a profile by ID
 func (t *datastoreTx) GetProfile(ctx context.Context, profile *models.Profile) error {
-	return t.tx.Preload("Answers").First(profile).Error
+	return t.tx.
+		Preload("Answers").
+		Where(profile).
+		First(profile).Error
 }
 
 // CreateProfile is a method that creates a profile
