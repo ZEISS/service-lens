@@ -491,14 +491,12 @@ github.com/yuin/goldmark v1.4.1/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/zeiss/fiber-authz v1.0.27 h1:vm8oorWm2Kj8LG34mI68I1tFL5DB/Qk4vNRmP1lynCs=
 github.com/zeiss/fiber-authz v1.0.27/go.mod h1:wC7CT4M+oLTQMhwZLbKZDAqSYBcla967jpOC+fwMf2c=
-github.com/zeiss/fiber-goth v1.2.4 h1:tzuS4iXhCC9elEzVNVKILB4fBMa+wkaSqe8kr6jLA4c=
-github.com/zeiss/fiber-goth v1.2.4/go.mod h1:TkapFI+7LOvbb093zF8cP/CH2PcQJSBQWQZDzgGoygE=
 github.com/zeiss/fiber-goth v1.2.5-0.20240617202320-5c9e19c3cac1 h1:remNQlG6mqdgCBM2CejZ4rsdY8/waXQ90iCSowNLCfw=
 github.com/zeiss/fiber-goth v1.2.5-0.20240617202320-5c9e19c3cac1/go.mod h1:TkapFI+7LOvbb093zF8cP/CH2PcQJSBQWQZDzgGoygE=
 github.com/zeiss/fiber-htmx v1.3.14-0.20240617201626-08cb677ed1b1 h1:lGyS9adJc1CozNEgMvshzXBfvp3DMDeduWuZPAhl9fk=
 github.com/zeiss/fiber-htmx v1.3.14-0.20240617201626-08cb677ed1b1/go.mod h1:SvNPGf7l72gG1rAW++gan7QNkJc/8tKWqyMStUqUpgM=
-github.com/zeiss/gorm-seed v0.1.0 h1:0pdXHyytd30Bv8dasssWQzVo80d7RpvB0M8uZRdevCc=
-github.com/zeiss/gorm-seed v0.1.0/go.mod h1:Tli6ekFpRjtQY8S6VoNiLgRnX1DVEvHJkf+UI85kV+E=
+github.com/zeiss/gorm-seed v0.1.1 h1:7+HIEhMaUZgs2r+rztqy+oMjmeKK9lg2ihayHudIPE0=
+github.com/zeiss/gorm-seed v0.1.1/go.mod h1:Tli6ekFpRjtQY8S6VoNiLgRnX1DVEvHJkf+UI85kV+E=
 gitlab.com/bosi/decorder v0.4.2 h1:qbQaV3zgwnBZ4zPMhGLW4KZe7A7NwxEhJx39R3shffo=
 gitlab.com/bosi/decorder v0.4.2/go.mod h1:muuhHoaJkA9QLcYHq4Mj8FJUwDZ+EirSHRiaTcTf6T8=
 go-simpler.org/assert v0.9.0 h1:PfpmcSvL7yAnWyChSjOz6Sp6m9j5lyK8Ok9pEL31YkQ=
