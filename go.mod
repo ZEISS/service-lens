@@ -15,7 +15,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.1
 	github.com/zeiss/fiber-authz v1.0.31
-	github.com/zeiss/fiber-goth v1.2.5-0.20240617202320-5c9e19c3cac1
+	github.com/zeiss/fiber-goth v1.2.5
 	github.com/zeiss/fiber-htmx v1.3.17
 	github.com/zeiss/gorm-seed v0.1.2
 	gorm.io/driver/postgres v1.5.9
