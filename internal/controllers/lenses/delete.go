@@ -4,6 +4,7 @@ import (
 	"context"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -11,12 +12,12 @@ import (
 // LensDeleteControllerImpl ...
 type LensDeleteControllerImpl struct {
 	lens  models.Lens
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewLensDeleteController ...
-func NewLensDeleteController(store ports.Datastore) *LensDeleteControllerImpl {
+func NewLensDeleteController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensDeleteControllerImpl {
 	return &LensDeleteControllerImpl{
 		store: store,
 	}

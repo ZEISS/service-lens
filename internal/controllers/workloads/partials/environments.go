@@ -3,6 +3,7 @@ package partials
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -14,12 +15,12 @@ import (
 // EnvironmentPartialListControllerImpl ...
 type EnvironmentParialListControllerImpl struct {
 	environments tables.Results[models.Environment]
-	store        ports.Datastore
+	store        seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.UnimplementedController
 }
 
 // NewEnvironmentPartialListController ...
-func NewEnvironmentPartialListController(store ports.Datastore) *EnvironmentParialListControllerImpl {
+func NewEnvironmentPartialListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *EnvironmentParialListControllerImpl {
 	return &EnvironmentParialListControllerImpl{
 		store: store,
 	}

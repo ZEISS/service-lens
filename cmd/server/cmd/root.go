@@ -2,13 +2,16 @@ package cmd
 
 import (
 	"context"
+	"log"
 	"os"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/github"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
+	"github.com/zeiss/service-lens/internal/cfg"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -22,28 +25,33 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+var config *cfg.Config
+
 func init() {
-	Root.PersistentFlags().StringVar(&cfg.Flags.Addr, "addr", ":3000", "addr")
-	Root.PersistentFlags().StringVar(&cfg.Flags.DB.Database, "db-database", cfg.Flags.DB.Database, "Database name")
-	Root.PersistentFlags().StringVar(&cfg.Flags.DB.Username, "db-username", cfg.Flags.DB.Username, "Database user")
-	Root.PersistentFlags().StringVar(&cfg.Flags.DB.Password, "db-password", cfg.Flags.DB.Password, "Database password")
-	Root.PersistentFlags().IntVar(&cfg.Flags.DB.Port, "db-port", cfg.Flags.DB.Port, "Database port")
-	Root.PersistentFlags().StringVar(&cfg.Flags.DB.Addr, "db-host", cfg.Flags.DB.Addr, "Database host")
+	config = cfg.New()
+
+	err := envconfig.Process("", config.Flags)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	Root.AddCommand(Migrate)
+
+	Root.PersistentFlags().StringVar(&config.Flags.Addr, "addr", config.Flags.Addr, "addr")
+	Root.PersistentFlags().StringVar(&config.Flags.DatabaseURI, "db-uri", config.Flags.DatabaseURI, "Database URI")
+	Root.PersistentFlags().StringVar(&config.Flags.DatabaseTablePrefix, "db-table-prefix", config.Flags.DatabaseTablePrefix, "Database table prefix")
+	Root.PersistentFlags().StringVar(&config.Flags.FGAApiUrl, "fga-api-url", config.Flags.FGAApiUrl, "FGA API URL")
+	Root.PersistentFlags().StringVar(&config.Flags.FGAStoreID, "fga-store-id", config.Flags.FGAStoreID, "FGA Store ID")
+	Root.PersistentFlags().StringVar(&config.Flags.FGAAuthorizationModelID, "fga-authorization-model-id", config.Flags.FGAAuthorizationModelID, "FGA Authorization Model ID")
+	Root.PersistentFlags().StringVar(&config.Flags.OIDCIssuer, "oidc-issuer", config.Flags.OIDCIssuer, "OIDC Issuer")
+	Root.PersistentFlags().StringVar(&config.Flags.OIDCAudience, "oidc-audience", config.Flags.OIDCAudience, "OIDC Audience")
 
 	Root.SilenceUsage = true
 }
 
 var Root = &cobra.Command{
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		err := envconfig.Process("", cfg.Flags)
-		if err != nil {
-			return err
-		}
-
-		return nil
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		srv := NewWebSrv(cfg)
+		srv := NewWebSrv(config)
 
 		s, _ := server.WithContext(cmd.Context())
 		s.Listen(srv, false)
@@ -56,11 +64,11 @@ var _ server.Listener = (*WebSrv)(nil)
 
 // WebSrv is the server that implements the Noop interface.
 type WebSrv struct {
-	cfg *Config
+	cfg *cfg.Config
 }
 
 // NewWebSrv returns a new instance of NoopSrv.
-func NewWebSrv(cfg *Config) *WebSrv {
+func NewWebSrv(cfg *cfg.Config) *WebSrv {
 	return &WebSrv{cfg}
 }
 
@@ -69,16 +77,16 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 	return func() error {
 		providers.RegisterProvider(github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"))
 
-		conn, err := gorm.Open(postgres.Open(cfg.DSN()), &gorm.Config{
+		conn, err := gorm.Open(postgres.Open(s.cfg.Flags.DatabaseURI), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix: "service_lens_",
+				TablePrefix: s.cfg.Flags.DatabaseTablePrefix,
 			},
 		})
 		if err != nil {
 			return err
 		}
 
-		store, err := db.NewDB(conn)
+		store, err := seed.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
 		if err != nil {
 			return err
 		}
@@ -88,10 +96,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return err
 		}
 
-		gorm, err := adapter.New(conn)
-		if err != nil {
-			return err
-		}
+		gorm := adapter.New(conn)
 
 		gothConfig := goth.Config{
 			Adapter:        gorm,

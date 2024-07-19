@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -35,12 +36,12 @@ type WorkloadUpdateAnswerControllerImpl struct {
 	params QuestionUpdateParams
 	form   QuestionUpdateForm
 	answer models.WorkloadLensQuestionAnswer
-	store  ports.Datastore
+	store  seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadUpdateAnswerController ...
-func NewWorkloadUpdateAnswerController(store ports.Datastore) *WorkloadUpdateAnswerControllerImpl {
+func NewWorkloadUpdateAnswerController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadUpdateAnswerControllerImpl {
 	return &WorkloadUpdateAnswerControllerImpl{
 		store: store,
 	}

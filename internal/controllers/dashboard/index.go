@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -14,12 +15,12 @@ import (
 // ShowDashboardController ...
 type ShowDashboardController struct {
 	user  adapters.GothUser
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewShowDashboardController ...
-func NewShowDashboardController(store ports.Datastore) *ShowDashboardController {
+func NewShowDashboardController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ShowDashboardController {
 	return &ShowDashboardController{
 		user:  adapters.GothUser{},
 		store: store,

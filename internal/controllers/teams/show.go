@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -16,12 +17,12 @@ import (
 // TeamShowControllerImpl ...
 type TeamShowControllerImpl struct {
 	team  adapters.GothTeam
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewTeamShowController ...
-func NewTeamShowController(store ports.Datastore) *TeamShowControllerImpl {
+func NewTeamShowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *TeamShowControllerImpl {
 	return &TeamShowControllerImpl{
 		store: store,
 	}

@@ -3,6 +3,7 @@ package me
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -16,12 +17,12 @@ import (
 // MeController ...
 type MeController struct {
 	user  adapters.GothUser
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewMeIndexController ...
-func NewMeController(store ports.Datastore) *MeController {
+func NewMeController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *MeController {
 	return &MeController{
 		store: store,
 	}

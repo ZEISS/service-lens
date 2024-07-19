@@ -3,6 +3,7 @@ package workloads
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
@@ -15,12 +16,12 @@ import (
 // WorkloadListControllerImpl ...
 type WorkloadListControllerImpl struct {
 	workloads tables.Results[models.Workload]
-	store     ports.Datastore
+	store     seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadListController ...
-func NewWorkloadListController(store ports.Datastore) *WorkloadListControllerImpl {
+func NewWorkloadListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadListControllerImpl {
 	return &WorkloadListControllerImpl{store: store}
 }
 

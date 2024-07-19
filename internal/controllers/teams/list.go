@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-goth/adapters"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/teams"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -16,12 +17,12 @@ import (
 // TeamListControllerImpl ...
 type TeamListControllerImpl struct {
 	teams tables.Results[adapters.GothTeam]
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewTeamListController ...
-func NewTeamListController(store ports.Datastore) *TeamListControllerImpl {
+func NewTeamListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *TeamListControllerImpl {
 	return &TeamListControllerImpl{store: store}
 }
 

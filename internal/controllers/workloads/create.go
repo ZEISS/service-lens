@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -16,12 +17,12 @@ var validate *validator.Validate
 // CreateWorkloadControllerImpl ...
 type CreateWorkloadControllerImpl struct {
 	workload models.Workload
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewCreateWorkloadController ...
-func NewCreateWorkloadController(store ports.Datastore) *CreateWorkloadControllerImpl {
+func NewCreateWorkloadController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateWorkloadControllerImpl {
 	return &CreateWorkloadControllerImpl{store: store}
 }
 

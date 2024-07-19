@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -18,12 +19,12 @@ var validate *validator.Validate
 // CreateLensControllerImpl ...
 type CreateLensControllerImpl struct {
 	lens  models.Lens
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewCreateLensController ...
-func NewCreateLensController(store ports.Datastore) *CreateLensControllerImpl {
+func NewCreateLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateLensControllerImpl {
 	return &CreateLensControllerImpl{
 		store: store,
 	}

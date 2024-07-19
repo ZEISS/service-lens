@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
@@ -21,11 +22,11 @@ import (
 var _ ports.Handlers = (*handlers)(nil)
 
 type handlers struct {
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 }
 
 // New ...
-func New(store ports.Datastore) *handlers {
+func New(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *handlers {
 	return &handlers{store}
 }
 

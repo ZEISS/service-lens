@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/zeiss/fiber-goth/adapters"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/profiles"
 	"github.com/zeiss/service-lens/internal/models"
@@ -17,12 +18,12 @@ import (
 type ProfileListControllerImpl struct {
 	profiles tables.Results[models.Profile]
 	team     adapters.GothTeam
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewProfilesListController ...
-func NewProfilesListController(store ports.Datastore) *ProfileListControllerImpl {
+func NewProfilesListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ProfileListControllerImpl {
 	return &ProfileListControllerImpl{store: store}
 }
 

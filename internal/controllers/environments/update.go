@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -13,12 +14,12 @@ import (
 // EnvironmentUpdateControllerImpl ...
 type EnvironmentUpdateControllerImpl struct {
 	environment models.Environment
-	store       ports.Datastore
+	store       seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewEnvironmentUpdateController ...
-func NewEnvironmentUpdateController(store ports.Datastore) *EnvironmentUpdateControllerImpl {
+func NewEnvironmentUpdateController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *EnvironmentUpdateControllerImpl {
 	return &EnvironmentUpdateControllerImpl{
 		environment: models.Environment{},
 		store:       store,

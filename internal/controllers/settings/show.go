@@ -2,18 +2,19 @@ package settings
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
 // SettingsShowControllerImpl ...
 type SettingsShowControllerImpl struct {
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewSettingsShowController ...
-func NewSettingsShowController(store ports.Datastore) *SettingsShowControllerImpl {
+func NewSettingsShowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *SettingsShowControllerImpl {
 	return &SettingsShowControllerImpl{
 		store: store,
 	}

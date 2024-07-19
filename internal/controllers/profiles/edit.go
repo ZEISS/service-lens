@@ -7,6 +7,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -15,12 +16,12 @@ import (
 // ProfileEditController ...
 type ProfileEditController struct {
 	profile models.Profile
-	store   ports.Datastore
+	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewProfileEditController ...
-func NewProfileEditController(store ports.Datastore) *ProfileEditController {
+func NewProfileEditController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ProfileEditController {
 	return &ProfileEditController{
 		profile: models.Profile{},
 		store:   store,

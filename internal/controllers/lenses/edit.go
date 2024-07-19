@@ -6,6 +6,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/progress"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -25,12 +26,12 @@ func NewDefaultLensEditControllerParams() *LensEditControllerParams {
 
 // LensEditController ...
 type LensEditController struct {
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewLensEditController ...
-func NewLensEditController(store ports.Datastore) *LensEditController {
+func NewLensEditController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensEditController {
 	return &LensEditController{
 		store: store,
 	}

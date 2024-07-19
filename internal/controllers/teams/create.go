@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-goth/adapters"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/go-playground/validator/v10"
@@ -20,12 +21,12 @@ var validate *validator.Validate
 // CreateTeamControllerImpl ...
 type CreateTeamControllerImpl struct {
 	team  adapters.GothTeam
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewCreateTeamController ...
-func NewCreateTeamController(store ports.Datastore) *CreateTeamControllerImpl {
+func NewCreateTeamController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateTeamControllerImpl {
 	return &CreateTeamControllerImpl{
 		store: store,
 	}

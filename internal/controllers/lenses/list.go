@@ -3,6 +3,7 @@ package lenses
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/lenses"
 	"github.com/zeiss/service-lens/internal/models"
@@ -15,12 +16,12 @@ import (
 // LensListController ...
 type LensListController struct {
 	lenses tables.Results[models.Lens]
-	store  ports.Datastore
+	store  seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewLensListController ...
-func NewLensListController(store ports.Datastore) *LensListController {
+func NewLensListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensListController {
 	return &LensListController{
 		store: store,
 	}

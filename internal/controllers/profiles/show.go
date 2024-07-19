@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -20,12 +21,12 @@ import (
 type ProfileShowControllerImpl struct {
 	questions tables.Results[models.ProfileQuestion]
 	profile   models.Profile
-	store     ports.Datastore
+	store     seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewProfileShowController ...
-func NewProfileShowController(store ports.Datastore) *ProfileShowControllerImpl {
+func NewProfileShowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ProfileShowControllerImpl {
 	return &ProfileShowControllerImpl{
 		store: store,
 	}

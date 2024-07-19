@@ -4,6 +4,7 @@ import (
 	"context"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -11,12 +12,12 @@ import (
 // EnvironmentDeleteControllerImpl ...
 type EnvironmentDeleteControllerImpl struct {
 	environment models.Environment
-	store       ports.Datastore
+	store       seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewEnvironmentDeleteController ...
-func NewEnvironmentDeleteController(store ports.Datastore) *EnvironmentDeleteControllerImpl {
+func NewEnvironmentDeleteController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *EnvironmentDeleteControllerImpl {
 	return &EnvironmentDeleteControllerImpl{
 		environment: models.Environment{},
 		store:       store,

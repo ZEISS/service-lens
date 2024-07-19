@@ -36,41 +36,40 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 			tables.TableProps{
 				ID: "workloads-tables",
 				Pagination: tables.TablePagination(
-					tables.TablePaginationProps{
-						Pagination: tables.Pagination(
+					tables.TablePaginationProps{},
+					tables.Pagination(
+						tables.PaginationProps{
+							Offset: props.Offset,
+							Limit:  props.Limit,
+							Total:  props.Total,
+						},
+						tables.Prev(
 							tables.PaginationProps{
+								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								Total:  props.Total,
+								URL:    "/workloads",
 							},
-							tables.Prev(
-								tables.PaginationProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									URL:    "/workloads",
-								},
-							),
-
-							tables.Select(
-								tables.SelectProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									Limits: tables.DefaultLimits,
-									URL:    "/workloads",
-								},
-							),
-							tables.Next(
-								tables.PaginationProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									URL:    "/workloads",
-								},
-							),
 						),
-					},
+
+						tables.Select(
+							tables.SelectProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								Limits: tables.DefaultLimits,
+								URL:    "/workloads",
+							},
+						),
+						tables.Next(
+							tables.PaginationProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								URL:    "/workloads",
+							},
+						),
+					),
 				),
 				Toolbar: tables.TableToolbar(
 					tables.TableToolbarProps{

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -16,12 +17,12 @@ var validate *validator.Validate
 // CreateEnvironmentControllerImpl ...
 type CreateEnvironmentControllerImpl struct {
 	environment models.Environment
-	store       ports.Datastore
+	store       seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewCreateEnvironmentController ...
-func NewCreateEnvironmentController(store ports.Datastore) *CreateEnvironmentControllerImpl {
+func NewCreateEnvironmentController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateEnvironmentControllerImpl {
 	return &CreateEnvironmentControllerImpl{
 		environment:       models.Environment{},
 		store:             store,

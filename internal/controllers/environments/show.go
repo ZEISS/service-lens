@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -16,12 +17,12 @@ import (
 // EnvironmentShowControllerImpl ...
 type EnvironmentShowControllerImpl struct {
 	environment models.Environment
-	store       ports.Datastore
+	store       seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.UnimplementedController
 }
 
 // NewEnvironmentShowController ...
-func NewEnvironmentShowController(store ports.Datastore) *EnvironmentShowControllerImpl {
+func NewEnvironmentShowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *EnvironmentShowControllerImpl {
 	return &EnvironmentShowControllerImpl{
 		environment: models.Environment{},
 		store:       store,

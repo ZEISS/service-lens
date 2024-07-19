@@ -6,6 +6,7 @@ import (
 
 	goth "github.com/zeiss/fiber-goth"
 	"github.com/zeiss/fiber-goth/adapters"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -22,17 +23,16 @@ var validate *validator.Validate
 // CreateProfileControllerImpl ...
 type CreateProfileControllerImpl struct {
 	profile models.Profile
-	store   ports.Datastore
+	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	team    adapters.GothTeam
 	htmx.DefaultController
 }
 
 // NewCreateProfileController ...
-func NewCreateProfileController(store ports.Datastore) *CreateProfileControllerImpl {
+func NewCreateProfileController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateProfileControllerImpl {
 	return &CreateProfileControllerImpl{
-		profile:           models.Profile{},
-		store:             store,
-		DefaultController: htmx.DefaultController{},
+		profile: models.Profile{},
+		store:   store,
 	}
 }
 

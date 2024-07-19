@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -23,12 +24,12 @@ const (
 type WorkloadLensEditControllerImpl struct {
 	workload models.Workload
 	lens     models.Lens
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadLensEditController ...
-func NewWorkloadLensEditController(store ports.Datastore) *WorkloadLensEditControllerImpl {
+func NewWorkloadLensEditController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadLensEditControllerImpl {
 	return &WorkloadLensEditControllerImpl{
 		store: store,
 	}

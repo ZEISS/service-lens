@@ -5,18 +5,19 @@ import (
 
 	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/ports"
 )
 
 // TeamDeleteControllerImpl ...
 type TeamDeleteControllerImpl struct {
 	team  adapters.GothTeam
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewTeamDeleteController ...
-func NewTeamDeleteController(store ports.Datastore) *TeamDeleteControllerImpl {
+func NewTeamDeleteController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *TeamDeleteControllerImpl {
 	return &TeamDeleteControllerImpl{
 		team:  adapters.GothTeam{},
 		store: store,

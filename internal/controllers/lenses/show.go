@@ -6,6 +6,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -14,12 +15,12 @@ import (
 // LensShowControllerImpl ...
 type LensShowControllerImpl struct {
 	lens  models.Lens
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewLensShowController ...
-func NewLensShowController(store ports.Datastore) *LensShowControllerImpl {
+func NewLensShowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensShowControllerImpl {
 	return &LensShowControllerImpl{
 		store: store,
 	}

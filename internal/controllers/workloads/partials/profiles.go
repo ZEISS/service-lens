@@ -3,6 +3,7 @@ package partials
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -14,12 +15,12 @@ import (
 // ProfilePartialListControllerImpl ...
 type ProfilePartialListControllerImpl struct {
 	profiles tables.Results[models.Profile]
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.UnimplementedController
 }
 
 // NewProfilePartialListController ...
-func NewProfilePartialListController(store ports.Datastore) *ProfilePartialListControllerImpl {
+func NewProfilePartialListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ProfilePartialListControllerImpl {
 	return &ProfilePartialListControllerImpl{
 		store: store,
 	}

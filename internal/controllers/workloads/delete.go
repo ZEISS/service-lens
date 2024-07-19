@@ -4,6 +4,7 @@ import (
 	"context"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -11,12 +12,12 @@ import (
 // WorkloadDeleteControllerImpl ...
 type WorkloadDeleteControllerImpl struct {
 	workload models.Workload
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadDeleteController ...
-func NewWorkloadDeleteController(store ports.Datastore) *WorkloadDeleteControllerImpl {
+func NewWorkloadDeleteController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadDeleteControllerImpl {
 	return &WorkloadDeleteControllerImpl{
 		store: store,
 	}

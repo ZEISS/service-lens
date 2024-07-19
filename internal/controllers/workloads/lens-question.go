@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -32,12 +33,12 @@ type WorkloadLensEditQuestionControllerImpl struct {
 	params   LensQuestionParams
 	question models.Question
 	answer   models.WorkloadLensQuestionAnswer
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadLensEditQuestionController ...
-func NewWorkloadLensEditQuestionController(store ports.Datastore) *WorkloadLensEditQuestionControllerImpl {
+func NewWorkloadLensEditQuestionController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadLensEditQuestionControllerImpl {
 	return &WorkloadLensEditQuestionControllerImpl{
 		store: store,
 	}

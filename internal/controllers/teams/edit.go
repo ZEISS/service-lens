@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -15,12 +16,12 @@ import (
 // TeamEditControllerImpl ...
 type TeamEditControllerImpl struct {
 	team  adapters.GothTeam
-	store ports.Datastore
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewTeamEditController ...
-func NewTeamEditController(store ports.Datastore) *TeamEditControllerImpl {
+func NewTeamEditController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *TeamEditControllerImpl {
 	return &TeamEditControllerImpl{
 		team:  adapters.GothTeam{},
 		store: store,

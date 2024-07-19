@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
@@ -19,12 +20,12 @@ import (
 type WorkloadLensController struct {
 	workload models.Workload
 	lens     models.Lens
-	store    ports.Datastore
+	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadLensController ...
-func NewWorkloadLensController(store ports.Datastore) *WorkloadLensController {
+func NewWorkloadLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadLensController {
 	return &WorkloadLensController{
 		store: store,
 	}

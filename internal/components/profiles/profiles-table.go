@@ -33,41 +33,40 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 			tables.TableProps{
 				ID: "profiles-tables",
 				Pagination: tables.TablePagination(
-					tables.TablePaginationProps{
-						Pagination: tables.Pagination(
+					tables.TablePaginationProps{},
+					tables.Pagination(
+						tables.PaginationProps{
+							Offset: props.Offset,
+							Limit:  props.Limit,
+							Total:  props.Total,
+						},
+						tables.Prev(
 							tables.PaginationProps{
+								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								Total:  props.Total,
+								URL:    "/profiles",
 							},
-							tables.Prev(
-								tables.PaginationProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									URL:    "/profiles",
-								},
-							),
-
-							tables.Select(
-								tables.SelectProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									Limits: tables.DefaultLimits,
-									URL:    "/profiles",
-								},
-							),
-							tables.Next(
-								tables.PaginationProps{
-									Total:  props.Total,
-									Offset: props.Offset,
-									Limit:  props.Limit,
-									URL:    "/profiles",
-								},
-							),
 						),
-					},
+
+						tables.Select(
+							tables.SelectProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								Limits: tables.DefaultLimits,
+								URL:    "/profiles",
+							},
+						),
+						tables.Next(
+							tables.PaginationProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								URL:    "/profiles",
+							},
+						),
+					),
 				),
 				Toolbar: tables.TableToolbar(
 					tables.TableToolbarProps{

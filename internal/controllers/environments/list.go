@@ -3,6 +3,7 @@ package environments
 import (
 	"context"
 
+	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/environments"
 	"github.com/zeiss/service-lens/internal/models"
@@ -15,12 +16,12 @@ import (
 // EnvironmentListControllerImpl ...
 type EnvironmentListControllerImpl struct {
 	environments tables.Results[models.Environment]
-	store        ports.Datastore
+	store        seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.UnimplementedController
 }
 
 // NewEnvironmentListController ...
-func NewEnvironmentListController(store ports.Datastore) *EnvironmentListControllerImpl {
+func NewEnvironmentListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *EnvironmentListControllerImpl {
 	return &EnvironmentListControllerImpl{
 		store: store,
 	}
