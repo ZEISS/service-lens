@@ -14,6 +14,9 @@ type Flags struct {
 	FGAAuthorizationModelID string `envconfig:"SERVICE_LENS_FGA_AUTHORIZATION_MODEL_ID" default:""`
 	OIDCIssuer              string `envconfig:"SERVICE_LENS_OIDC_ISSUER" default:""`
 	OIDCAudience            string `envconfig:"SERVICE_LENS_OIDC_AUDIENCE" default:""`
+	GitHubCallbackURL       string `envconfig:"SERVICE_LENS_GITHUB_CALLBACK_URL" default:"http://localhost:8084/auth/github/callback"`
+	GitHubClientID          string `envconfig:"SERVICE_LENS_GITHUB_CLIENT_ID" default:""`
+	GitHubClientSecret      string `envconfig:"SERVICE_LENS_GITHUB_CLIENT_SECRET" default:""`
 }
 
 // NewFlags returns a new instance of Flags.

@@ -44,6 +44,7 @@ func (d *ShowDashboardController) Get() error {
 			components.Layout(
 				components.LayoutProps{
 					User: d.user,
+					Path: d.Path(),
 				},
 				components.Wrap(
 					components.WrapProps{},

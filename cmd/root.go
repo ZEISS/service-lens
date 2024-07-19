@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"log"
-	"os"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/zeiss/fiber-goth/providers"
@@ -75,7 +74,7 @@ func NewWebSrv(cfg *cfg.Config) *WebSrv {
 // Start starts the server.
 func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.RunFunc) func() error {
 	return func() error {
-		providers.RegisterProvider(github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), "http://localhost:3000/auth/github/callback"))
+		providers.RegisterProvider(github.New(s.cfg.Flags.GitHubClientID, s.cfg.Flags.GitHubClientSecret, s.cfg.Flags.GitHubCallbackURL))
 
 		conn, err := gorm.Open(postgres.Open(s.cfg.Flags.DatabaseURI), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
