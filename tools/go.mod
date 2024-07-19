@@ -1,8 +1,6 @@
 module tools
 
-go 1.22
-
-toolchain go1.22.5
+go 1.22.5
 
 require (
 	github.com/deepmap/oapi-codegen/v2 v2.1.0

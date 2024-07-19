@@ -1,8 +1,6 @@
 module github.com/zeiss/service-lens
 
-go 1.22.1
-
-toolchain go1.22.2
+go 1.22.5
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0
