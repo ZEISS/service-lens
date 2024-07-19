@@ -10,7 +10,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  IMAGE_NAME: zeiss/typhoon
+  IMAGE_NAME: zeiss/service-lens
   REGISTRY: ghcr.io
 
 jobs:
@@ -47,3 +47,31 @@ jobs:
           key: ${{ github.job }}-${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ github.job }}-${{ runner.os }}-go-
+      - id: image-tag
+        run: |
+          IMAGE_TAG=${GITHUB_SHA}
+          [[ ${GITHUB_REF_TYPE} == "tag" ]] && IMAGE_TAG=${GITHUB_REF_NAME}
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_OUTPUT
+      - run: sudo apt-get update && sudo apt install -y libxml2-dev libxslt1-dev liblzma-dev zlib1g-dev
+      - run: |
+          IMAGE_TAG=${{ steps.image-tag.outputs.IMAGE_TAG }} make release
+        env:
+          KO_DOCKER_REPO: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          DIST_DIR: /tmp/dist
+        if: success()
+      - run: |
+          go run internal/tools/updater/main.go --file helm/charts/service-lens/Chart.yaml --version ${{ env.RELEASE_VERSION }}
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.11.2
+      - uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: helm/charts
+          config: helm/cr.yaml
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manifests
+          path: /tmp/dist
+          retention-days: 14

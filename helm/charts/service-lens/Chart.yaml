@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 0.1.0
+description: A helm chart for Service Lens
+name: service-lens
+keywords:
+  - productivity
+version: 0.1.0
+sources:
+  - https://github.com/zeiss/service-lens
+home: http://github.com/zeiss/service-lens

@@ -1,26 +1,17 @@
 .DEFAULT_GOAL := build
 
-BASE_DIR		?= $(CURDIR)
-OUTPUT_DIR      ?= $(BASE_DIR)/dist
-
 GO 				?= go
-GO_RUN_TOOLS	?= $(GO) run -modfile ./tools/go.mod
+GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
 GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
 GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
-GO_KO 			?= $(GO_RUN_TOOLS) github.com/google/ko
 GO_MOD 			?= $(shell ${GO} list -m)
 
-COMMANDS		:= $(notdir $(wildcard cmd/*))
-
-IMAGE_TAG       ?= $(shell git rev-parse HEAD)
-TAG_REGEX       := ^v([0-9]{1,}\.){2}[0-9]{1,}$
-KOFLAGS         ?=
+# Module name
+MODULE_NAME ?= github.com/katallaxie/template-go
 
 .PHONY: build
-build: $(COMMANDS) ## Build the application.
-
-$(filter-out $(CUSTOM_BUILD_BINARIES), $(COMMANDS)): ## Build artifact
-	$(GO) build -ldflags "$(LDFLAGS_STATIC)" -o $(BIN_OUTPUT_DIR)/$@ ./cmd/$@
+build: ## Build the binary file.
+	$(GO_RELEASER) build --snapshot --clean
 
 .PHONY: generate
 generate: ## Generate code.
@@ -39,6 +30,14 @@ test: fmt vet ## Run tests.
 	mkdir -p .test/reports
 	$(GO_TEST) --junitfile .test/reports/unit-test.xml -- -race ./... -count=1 -short -cover -coverprofile .test/reports/unit-test-coverage.out
 
+.PHONY: snapshot
+snapshot: ## Create a snapshot release
+	$(GO_RELEASER) release --clean --snapshot
+
+.PHONY: release
+release: ## Create a release
+	$(GO_RELEASER) release --clean
+
 .PHONY: lint
 lint: ## Run lint.
 	$(GO_RUN_TOOLS) github.com/golangci/golangci-lint/cmd/golangci-lint run --timeout 5m -c .golangci.yml
@@ -49,9 +48,10 @@ clean: ## Remove previous build.
 	find . -type f -name '*.gen.go' -exec rm {} +
 	git checkout go.mod
 
-.PHONY: release
-release: ## Release the application.
-	echo "Release $(IMAGE_TAG)"
+.PHONY: docs
+docs: ## Generate documentation.
+	npx @redocly/cli build-docs api/api.yml
+	mv redoc-static.html public/index.html
 
 .PHONY: help
 help: ## Display this help screen.
