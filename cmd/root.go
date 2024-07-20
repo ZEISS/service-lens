@@ -134,6 +134,14 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		team.Put("/profiles/:id", handlers.EditProfile())
 		team.Delete("/profiles/:id", handlers.DeleteProfile())
 
+		// Designs ...
+		team.Get("/designs", handlers.ListDesigns())
+		team.Get("/designs/new", handlers.NewDesign())
+		team.Post("/designs/new", handlers.CreateDesign())
+		team.Get("/designs/:id", handlers.ShowDesign())
+		team.Put("/designs/:id", handlers.UpdateDesign())
+		team.Delete("/designs/:id", handlers.DeleteDesign())
+
 		// Environments ...
 		team.Get("/environments", handlers.ListEnvironments())
 		team.Get("/environments/new", handlers.NewEnvironment())

@@ -3,8 +3,6 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
-	htmx "github.com/zeiss/fiber-htmx"
-	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
@@ -17,6 +15,9 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/questions"
 	"github.com/zeiss/service-lens/internal/ports"
+
+	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 )
 
 var _ ports.Handlers = (*handlers)(nil)
@@ -55,6 +56,48 @@ func (a *handlers) Dashboard() fiber.Handler {
 func (a *handlers) Me() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return me.NewMeController(a.store)
+	})
+}
+
+// ListDesigns ...
+func (a *handlers) ListDesigns() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
+	})
+}
+
+// NewDesign ...
+func (a *handlers) NewDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
+	})
+}
+
+// ShowDesign ...
+func (a *handlers) ShowDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
+	})
+}
+
+// CreateDesign ...
+func (a *handlers) CreateDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
+	})
+}
+
+// UpdateDesign ...
+func (a *handlers) UpdateDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
+	})
+}
+
+// DeleteDesign ...
+func (a *handlers) DeleteDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return nil
 	})
 }
 
