@@ -1,74 +1,47 @@
 package components
 
 import (
-	"github.com/zeiss/fiber-htmx/components/links"
+	"strings"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/menus"
 )
 
-// UserNavProps ...
-type UserNavProps struct {
+// UserMenuProps ...
+type UserMenuProps struct {
+	ClassNames htmx.ClassNames
+	Path       string
 }
 
-// UserNav ...
-func UserNav(p UserNavProps) htmx.Node {
-	return htmx.Div(
-		htmx.ClassNames{"dropdown": true, "dropdown-end": true},
-		htmx.Div(
-			htmx.Attribute("tabindex", "0"),
-			htmx.ClassNames{
-				"btn":        true,
-				"btn-ghost":  true,
-				"btn-circle": true,
-				"avatar":     true,
-			},
-			htmx.Div(
-				htmx.ClassNames{
-					"w-10":         true,
-					"rounded-full": true,
-				},
-				htmx.Img(
-					htmx.Attribute("alt", "Tailwind CSS Navbar component"),
-					htmx.Attribute("src", "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"),
-				),
-			),
+// UserMenu ...
+func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
+	return htmx.Nav(
+		htmx.Merge(
+			htmx.ClassNames{},
 		),
-		htmx.Ul(
-			htmx.Attribute("tabindex", "0"),
-			htmx.ClassNames{
-				"mt-3":             true,
-				"z-[1]":            true,
-				"p-2":              true,
-				"shadow":           true,
-				"menu":             true,
-				"menu-sm":          true,
-				"dropdown-content": true,
-				"bg-base-100":      true,
-				"rounded-box":      true,
-				"w-52":             true,
+		menus.Menu(
+			menus.MenuProps{
+				ClassNames: htmx.ClassNames{
+					"w-full":      true,
+					"bg-base-200": false,
+				},
 			},
-			// htmx.Group(users...),
-			htmx.Li(
-				htmx.A(
-					htmx.ClassNames{"justify-between": true},
-					htmx.Text("Profile"),
-					htmx.Span(htmx.ClassNames{"badge": true}, htmx.Text("New")),
-				),
-			),
-			htmx.Li(
-				links.Link(
-					links.LinkProps{
-						Href:       "/settings",
-						ClassNames: htmx.ClassNames{"underline-none": true},
+			menus.MenuItem(
+				menus.MenuItemProps{},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href:   "/me",
+						Active: strings.HasPrefix(p.Path, "/me"),
 					},
-					htmx.Text(
-						"Settings",
-					),
+					htmx.Text("Profile"),
 				),
 			),
-			htmx.Li(
-				htmx.A(
-					htmx.Attribute("href", "/logout"),
+			menus.MenuItem(
+				menus.MenuItemProps{},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href: "/logout",
+					},
 					htmx.Text("Logout"),
 				),
 			),
