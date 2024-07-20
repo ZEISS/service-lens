@@ -124,6 +124,14 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		site.Post("/teams/new", handlers.CreateTeam())
 		site.Get("/teams/:id", handlers.ShowTeam())
 
+		// Designs ...
+		app.Get("/designs", handlers.ListDesigns())
+		app.Get("/designs/new", handlers.NewDesign())
+		app.Post("/designs/new", handlers.CreateDesign())
+		app.Get("/designs/:id", handlers.ShowDesign())
+		app.Put("/designs/:id", handlers.UpdateDesign())
+		app.Delete("/designs/:id", handlers.DeleteDesign())
+
 		// Team ...
 		team := app.Group("/teams/:t_slug")
 
@@ -133,14 +141,6 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		team.Get("/profiles/:id", handlers.ShowProfile())
 		team.Put("/profiles/:id", handlers.EditProfile())
 		team.Delete("/profiles/:id", handlers.DeleteProfile())
-
-		// Designs ...
-		team.Get("/designs", handlers.ListDesigns())
-		team.Get("/designs/new", handlers.NewDesign())
-		team.Post("/designs/new", handlers.CreateDesign())
-		team.Get("/designs/:id", handlers.ShowDesign())
-		team.Put("/designs/:id", handlers.UpdateDesign())
-		team.Delete("/designs/:id", handlers.DeleteDesign())
 
 		// Environments ...
 		team.Get("/environments", handlers.ListEnvironments())

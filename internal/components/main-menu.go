@@ -46,6 +46,50 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				},
 				menus.MenuCollapsible(
 					menus.MenuCollapsibleProps{
+						Open: strings.HasPrefix(p.Path, "/designs"),
+					},
+					menus.MenuCollapsibleSummary(
+						menus.MenuCollapsibleSummaryProps{},
+						htmx.Text("Designs"),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{
+							ClassNames: htmx.ClassNames{
+								"hover:bg-base-300": false,
+							},
+						},
+						menus.MenuLink(
+							menus.MenuLinkProps{
+								Href:   "/designs/new",
+								Active: p.Path == "/designs/new",
+							},
+							htmx.Text("New Design"),
+						),
+					),
+					menus.MenuItem(
+						menus.MenuItemProps{
+							ClassNames: htmx.ClassNames{
+								"hover:bg-base-300": false,
+							},
+						},
+						menus.MenuLink(
+							menus.MenuLinkProps{
+								Href:   "/designs",
+								Active: p.Path == "/designs",
+							},
+							htmx.Text("List Designs"),
+						),
+					),
+				),
+			),
+			menus.MenuItem(
+				menus.MenuItemProps{
+					ClassNames: htmx.ClassNames{
+						"hover:bg-base-300": false,
+					},
+				},
+				menus.MenuCollapsible(
+					menus.MenuCollapsibleProps{
 						Open: strings.HasPrefix(p.Path, "/workloads"),
 					},
 					menus.MenuCollapsibleSummary(

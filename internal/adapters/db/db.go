@@ -32,6 +32,11 @@ func (r *readTxImpl) GetUser(ctx context.Context, user *adapters.GothUser) error
 	return r.conn.Where(user).First(user).Error
 }
 
+// ListDesigns is a method that returns a list of designs
+func (r *readTxImpl) ListDesigns(ctx context.Context, pagination *tables.Results[models.Design]) error {
+	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+}
+
 // ListProfiles is a method that returns a list of profiles
 func (r *readTxImpl) ListProfiles(ctx context.Context, team uuid.UUID, pagination *tables.Results[models.Profile]) error {
 	return r.conn.

@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
+	"github.com/zeiss/service-lens/internal/controllers/designs"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
 	"github.com/zeiss/service-lens/internal/controllers/login"
@@ -62,7 +63,7 @@ func (a *handlers) Me() fiber.Handler {
 // ListDesigns ...
 func (a *handlers) ListDesigns() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return nil
+		return designs.NewListDesignsController(a.store)
 	})
 }
 

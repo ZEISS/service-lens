@@ -40,6 +40,7 @@ var Migrate = &cobra.Command{
 			&models.ProfileQuestion{},
 			&models.ProfileQuestionChoice{},
 			&models.ProfileQuestionAnswer{},
+			&models.Design{},
 			&models.Environment{},
 			&models.Profile{},
 			&models.Lens{},
