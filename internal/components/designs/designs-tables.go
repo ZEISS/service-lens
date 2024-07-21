@@ -12,6 +12,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // DesignsTableProps ...
@@ -126,7 +127,7 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: "/desigs/" + row.ID.String(),
+									Href: fmt.Sprintf(utils.ShowDesigUrlFormat, row.ID),
 								},
 								htmx.Text(row.Title),
 							),
