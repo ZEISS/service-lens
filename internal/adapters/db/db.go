@@ -32,6 +32,11 @@ func (r *readTxImpl) GetUser(ctx context.Context, user *adapters.GothUser) error
 	return r.conn.Where(user).First(user).Error
 }
 
+// GetDesign is a method that returns a design by ID
+func (r *readTxImpl) GetDesign(ctx context.Context, design *models.Design) error {
+	return r.conn.Preload(clause.Associations).Where(design).First(design).Error
+}
+
 // ListDesigns is a method that returns a list of designs
 func (r *readTxImpl) ListDesigns(ctx context.Context, pagination *tables.Results[models.Design]) error {
 	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
@@ -128,6 +133,11 @@ func NewWriteTx() seed.ReadWriteTxFactory[ports.ReadWriteTx] {
 	return func(db *gorm.DB) (ports.ReadWriteTx, error) {
 		return &writeTxImpl{conn: db}, nil
 	}
+}
+
+// CreateDesign is a method that creates a design
+func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) error {
+	return rw.conn.Create(design).Error
 }
 
 // CreateProfile is a method that creates a profile

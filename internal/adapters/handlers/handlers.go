@@ -70,21 +70,21 @@ func (a *handlers) ListDesigns() fiber.Handler {
 // NewDesign ...
 func (a *handlers) NewDesign() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return nil
+		return designs.NewDesignController(a.store)
 	})
 }
 
 // ShowDesign ...
 func (a *handlers) ShowDesign() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return nil
+		return designs.NewShowDesignController(a.store)
 	})
 }
 
 // CreateDesign ...
 func (a *handlers) CreateDesign() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return nil
+		return designs.NewCreateDesignController(a.store)
 	})
 }
 

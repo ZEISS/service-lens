@@ -31,6 +31,8 @@ type Datastore interface {
 type ReadTx interface {
 	// GetUser is a method that returns the profile of the current user
 	GetUser(ctx context.Context, user *adapters.GothUser) error
+	// GetDesign is a method that returns a design by ID
+	GetDesign(ctx context.Context, design *models.Design) error
 	// ListDesigns is a method that returns a list of designs
 	ListDesigns(ctx context.Context, designs *tables.Results[models.Design]) error
 	// ListProfiles is a method that returns a list of profiles
@@ -65,6 +67,8 @@ type ReadTx interface {
 type ReadWriteTx interface {
 	ReadTx
 
+	// CreateDesign is a method that creates a design
+	CreateDesign(ctx context.Context, design *models.Design) error
 	// CreateProfile is a method that creates a profile
 	CreateProfile(ctx context.Context, profile *models.Profile) error
 	// UpdateProfile is a method that updates a profile
