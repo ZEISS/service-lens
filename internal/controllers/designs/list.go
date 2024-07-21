@@ -30,11 +30,6 @@ func NewListDesignsController(store seed.Database[ports.ReadTx, ports.ReadWriteT
 
 // Prepare ...
 func (l *ListDesignsControllerImpl) Prepare() error {
-	err := l.BindBody(&l.results)
-	if err != nil {
-		return err
-	}
-
 	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.ListDesigns(ctx, &l.results)
 	})

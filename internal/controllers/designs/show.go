@@ -9,7 +9,9 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
 // ShowDesignControllerImpl ...
@@ -97,6 +99,48 @@ func (l *ShowDesignControllerImpl) Get() error {
 									htmx.Text(
 										l.Design.UpdatedAt.Format("2006-01-02 15:04:05"),
 									),
+								),
+							),
+						),
+					),
+				),
+				htmx.FormElement(
+					htmx.HxPost("/designs/new"),
+					cards.CardBordered(
+						cards.CardProps{},
+						cards.Body(
+							cards.BodyProps{},
+							forms.FormControl(
+								forms.FormControlProps{
+									ClassNames: htmx.ClassNames{},
+								},
+								forms.TextareaBordered(
+									forms.TextareaProps{
+										ClassNames: htmx.ClassNames{
+											"h-32": true,
+										},
+										Name:        "body",
+										Placeholder: "Start typing...",
+									},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("Supports Markdown."),
+									),
+								),
+							),
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.Outline(
+									buttons.ButtonProps{},
+									htmx.Attribute("type", "submit"),
+									htmx.Text("Comment"),
 								),
 							),
 						),
