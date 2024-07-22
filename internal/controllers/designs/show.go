@@ -1,9 +1,13 @@
 package designs
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer/html"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
@@ -20,6 +24,7 @@ import (
 // ShowDesignControllerImpl ...
 type ShowDesignControllerImpl struct {
 	Design models.Design
+	Body   string
 	store  seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
@@ -42,9 +47,32 @@ func (l *ShowDesignControllerImpl) Prepare() error {
 		return err
 	}
 
-	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.GetDesign(ctx, &l.Design)
 	})
+	if err != nil {
+		return err
+	}
+
+	markdown := goldmark.New(
+		goldmark.WithRendererOptions(
+			html.WithXHTML(),
+			html.WithUnsafe(),
+		),
+		goldmark.WithExtensions(
+			extension.GFM,
+		),
+	)
+
+	var b bytes.Buffer
+	err = markdown.Convert([]byte(l.Design.Body), &b)
+	if err != nil {
+		return err
+	}
+
+	l.Body = b.String()
+
+	return nil
 }
 
 // Get ...
@@ -111,10 +139,21 @@ func (l *ShowDesignControllerImpl) Get() error {
 					cards.CardProps{},
 					cards.Body(
 						cards.BodyProps{},
+						htmx.Div(
+							htmx.ID("body"),
+							htmx.Raw(l.Body),
+						),
+					),
+				),
+				cards.CardBordered(
+					cards.CardProps{},
+					cards.Body(
+						cards.BodyProps{},
 						cards.Title(
 							cards.TitleProps{},
 							htmx.Text("Comments"),
 						),
+
 						htmx.Div(
 							htmx.ID("comments"),
 							htmx.Group(htmx.ForEach(tables.RowsPtr(l.Design.Comments), func(c *models.DesignComment, choiceIdx int) htmx.Node {
@@ -131,7 +170,6 @@ func (l *ShowDesignControllerImpl) Get() error {
 								)
 							})...),
 						),
-
 						htmx.FormElement(
 							htmx.HxPost(fmt.Sprintf(utils.CreateDesignCommentUrlFormat, l.Design.ID)),
 							htmx.HxTarget("#comments"),
