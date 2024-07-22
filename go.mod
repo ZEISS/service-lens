@@ -17,7 +17,7 @@ require (
 	github.com/zeiss/fiber-goth v1.2.8
 	github.com/zeiss/fiber-htmx v1.3.19
 	github.com/zeiss/gorm-seed v0.1.2
-	golang.org/x/mod v0.18.0
+	golang.org/x/mod v0.19.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
 	helm.sh/helm v2.17.0+incompatible
