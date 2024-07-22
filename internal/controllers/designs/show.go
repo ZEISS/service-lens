@@ -38,11 +38,7 @@ func NewShowDesignController(store seed.Database[ports.ReadTx, ports.ReadWriteTx
 
 // Prepare ...
 func (l *ShowDesignControllerImpl) Prepare() error {
-	var params struct {
-		ID string `uri:"id" validate:"required,uuid"`
-	}
-
-	err := l.BindParams(&params)
+	err := l.BindParams(&l.Design)
 	if err != nil {
 		return err
 	}
@@ -86,16 +82,27 @@ func (l *ShowDesignControllerImpl) Get() error {
 				},
 				cards.CardBordered(
 					cards.CardProps{},
+					htmx.HxTarget("this"),
+					htmx.HxSwap("outerHTML"),
+					htmx.ID("title"),
 					cards.Body(
 						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Overview"),
-						),
-						htmx.Div(
-							htmx.H1(
-								htmx.Text(l.Design.Title),
+						htmx.H1(htmx.Text(l.Design.Title)),
+						cards.Actions(
+							cards.ActionsProps{},
+							buttons.Outline(
+								buttons.ButtonProps{},
+								htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
+								htmx.Text("Edit"),
 							),
+						),
+					),
+				),
+				cards.CardBordered(
+					cards.CardProps{},
+					cards.Body(
+						cards.BodyProps{},
+						htmx.Div(
 							htmx.Div(
 								htmx.ClassNames{
 									"flex":     true,
@@ -159,11 +166,6 @@ func (l *ShowDesignControllerImpl) Get() error {
 					cards.CardProps{},
 					cards.Body(
 						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Comments"),
-						),
-
 						htmx.Div(
 							htmx.ID("comments"),
 							htmx.Group(htmx.ForEach(tables.RowsPtr(l.Design.Comments), func(c *models.DesignComment, choiceIdx int) htmx.Node {

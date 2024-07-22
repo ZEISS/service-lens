@@ -1,13 +1,9 @@
-package designs_edit_body
+package design_edit_title
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/renderer/html"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/toasts"
@@ -54,36 +50,20 @@ func (l *UpdateControllerImpl) Prepare() error {
 		return err
 	}
 
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetDesign(ctx, &l.Design)
+	})
+	if err != nil {
+		return err
+	}
+
 	err = l.BindBody(&l.Design)
 	if err != nil {
 		return err
 	}
 
 	return l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
-		err := tx.UpdateDesign(ctx, &l.Design)
-		if err != nil {
-			return err
-		}
-
-		markdown := goldmark.New(
-			goldmark.WithRendererOptions(
-				html.WithXHTML(),
-				html.WithUnsafe(),
-			),
-			goldmark.WithExtensions(
-				extension.GFM,
-			),
-		)
-
-		var b bytes.Buffer
-		err = markdown.Convert([]byte(l.Design.Body), &b)
-		if err != nil {
-			return err
-		}
-
-		l.Design.Body = b.String()
-
-		return err
+		return tx.UpdateDesign(ctx, &l.Design)
 	})
 }
 
@@ -92,19 +72,14 @@ func (l *UpdateControllerImpl) Put() error {
 	return l.Render(
 		cards.CardBordered(
 			cards.CardProps{},
-			htmx.HxTarget("this"),
-			htmx.HxSwap("outerHTML"),
-			htmx.ID("body"),
 			cards.Body(
 				cards.BodyProps{},
-				htmx.Div(
-					htmx.Raw(l.Design.Body),
-				),
+				htmx.H1(htmx.Text(l.Design.Title)),
 				cards.Actions(
 					cards.ActionsProps{},
 					buttons.Outline(
 						buttons.ButtonProps{},
-						htmx.HxGet(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
+						htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
 						htmx.Text("Edit"),
 					),
 				),

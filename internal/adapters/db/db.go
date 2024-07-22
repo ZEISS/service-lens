@@ -142,7 +142,26 @@ func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) 
 
 // UpdateDesign is a method that updates a design
 func (rw *writeTxImpl) UpdateDesign(ctx context.Context, design *models.Design) error {
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(design).Error
+	src := models.Design{}
+	src.ID = design.ID
+
+	err := rw.conn.Where(src).First(&src).Error
+	if err != nil {
+		return err
+	}
+
+	tg := models.DesignRevision{
+		DesignID: src.ID,
+		Title:    src.Title,
+		Body:     src.Body,
+	}
+
+	err = rw.conn.Create(&tg).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(design).Error
 }
 
 // CreateDesignComment is a method that creates a design comment
@@ -157,7 +176,7 @@ func (rw *writeTxImpl) CreateProfile(ctx context.Context, profile *models.Profil
 
 // UpdateProfile is a method that updates a profile
 func (rw *writeTxImpl) UpdateProfile(ctx context.Context, profile *models.Profile) error {
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(profile).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(profile).Error
 }
 
 // DeleteProfile is a method that deletes a profile
@@ -172,7 +191,7 @@ func (rw *writeTxImpl) CreateEnvironment(ctx context.Context, environment *model
 
 // UpdateEnvironment is a method that updates an environment
 func (rw *writeTxImpl) UpdateEnvironment(ctx context.Context, environment *models.Environment) error {
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(environment).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(environment).Error
 }
 
 // DeleteEnvironment is a method that deletes an environment
