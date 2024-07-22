@@ -132,6 +132,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Put("/designs/:id", handlers.UpdateDesign())
 		app.Delete("/designs/:id", handlers.DeleteDesign())
 		app.Post("/designs/:id/comments", handlers.CreateDesignComment())
+		app.Get("/designs/:id/body/edit", handlers.EditBodyDesign())
+		app.Put("/designs/:id/body/edit", handlers.UpdateBodyDesign())
 
 		// Team ...
 		team := app.Group("/teams/:t_slug")

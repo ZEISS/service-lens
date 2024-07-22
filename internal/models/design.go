@@ -14,7 +14,7 @@ type Design struct {
 	// Title of the design
 	Title string `json:"title" form:"title" validate:"required,min=3,max=255"`
 	// Body of the design in markdown, HTML, or plain text
-	Body string `gorm:"type:text"`
+	Body string `form:"body" gorm:"type:text"`
 	// Tags are the tags associated with the environment
 	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;"`
 	// Comments are the comments associated with the design
