@@ -46,6 +46,8 @@ func (l *ShowControllerImpl) Get() error {
 	return l.Render(
 		htmx.FormElement(
 			htmx.HxPut(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
+			htmx.HxTarget("this"),
+			htmx.HxSwap("outerHTML"),
 			cards.CardBordered(
 				cards.CardProps{},
 				cards.Body(

@@ -70,17 +70,23 @@ func (l *UpdateControllerImpl) Prepare() error {
 // Prepare ...
 func (l *UpdateControllerImpl) Put() error {
 	return l.Render(
-		cards.CardBordered(
-			cards.CardProps{},
-			cards.Body(
-				cards.BodyProps{},
-				htmx.H1(htmx.Text(l.Design.Title)),
-				cards.Actions(
-					cards.ActionsProps{},
-					buttons.Outline(
-						buttons.ButtonProps{},
-						htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
-						htmx.Text("Edit"),
+		htmx.FormElement(
+			htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
+			htmx.HxTarget("this"),
+			htmx.HxSwap("outerHTML"),
+			cards.CardBordered(
+				cards.CardProps{},
+				cards.Body(
+					cards.BodyProps{},
+					htmx.ID("body"),
+					htmx.H1(htmx.Text(l.Design.Title)),
+					cards.Actions(
+						cards.ActionsProps{},
+						buttons.Outline(
+							buttons.ButtonProps{},
+							htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
+							htmx.Text("Edit"),
+						),
 					),
 				),
 			),

@@ -33,6 +33,9 @@ func (l *NewDesignControllerImpl) Get() error {
 				},
 				htmx.FormElement(
 					htmx.HxPost("/designs/new"),
+					htmx.HxTarget("this"),
+					htmx.HxSwap("outerHTML"),
+					htmx.ID("body"),
 					cards.CardBordered(
 						cards.CardProps{},
 						cards.Body(
