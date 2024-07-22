@@ -62,7 +62,6 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 						htmx.ClassNames{
 							"overflow-auto": true,
 							"w-full":        true,
-							"h-screen":      true,
 							"max-w-full":    true,
 						},
 						htmx.Div(

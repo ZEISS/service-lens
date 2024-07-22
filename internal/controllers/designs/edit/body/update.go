@@ -91,7 +91,12 @@ func (l *UpdateControllerImpl) Prepare() error {
 func (l *UpdateControllerImpl) Put() error {
 	return l.Render(
 		cards.CardBordered(
-			cards.CardProps{},
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					"my-2": true,
+					"mx-2": true,
+				},
+			},
 			htmx.HxTarget("this"),
 			htmx.HxSwap("outerHTML"),
 			htmx.ID("body"),

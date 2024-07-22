@@ -34,7 +34,7 @@ func (r *readTxImpl) GetUser(ctx context.Context, user *adapters.GothUser) error
 
 // GetDesign is a method that returns a design by ID
 func (r *readTxImpl) GetDesign(ctx context.Context, design *models.Design) error {
-	return r.conn.Preload(clause.Associations).Where(design).First(design).Error
+	return r.conn.Preload(clause.Associations).Preload("Comments.Author").Where(design).First(design).Error
 }
 
 // ListDesigns is a method that returns a list of designs

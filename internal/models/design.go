@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -17,6 +18,10 @@ type Design struct {
 	Body string `form:"body" gorm:"type:text"`
 	// Tags are the tags associated with the environment
 	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;"`
+	// AuthorID is the foreign key to the author
+	AuthorID uuid.UUID `json:"author_id"`
+	// Author is the author
+	Author adapters.GothUser `json:"author" gorm:"foreignKey:AuthorID;references:ID"`
 	// Comments are the comments associated with the design
 	Comments []DesignComment `json:"comments"`
 	// CreatedAt ...
@@ -53,6 +58,10 @@ type DesignComment struct {
 	Design Design `json:"design" gorm:"foreignKey:DesignID;references:ID" validate:"-"`
 	// Comment is the comment
 	Comment string `json:"comment" form:"comment" gorm:"type:text" validate:"required,min=3"`
+	// AuthorID is the foreign key to the author
+	AuthorID uuid.UUID `json:"author_id"`
+	// Author is the author
+	Author adapters.GothUser `json:"author" gorm:"foreignKey:AuthorID;references:ID"`
 	// ParentID is the foreign key to the parent comment
 	ParentID *uuid.UUID `json:"parent_id" gorm:"type:uuid;index" params:"parent_id"`
 	// Parent is the parent comment

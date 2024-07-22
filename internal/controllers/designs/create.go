@@ -67,8 +67,9 @@ func (l *CreateDesignControllerImpl) Error(err error) error {
 // Post ...
 func (l *CreateDesignControllerImpl) Post() error {
 	design := models.Design{
-		Title: l.body.Title,
-		Body:  l.body.Body,
+		Title:    l.body.Title,
+		Body:     l.body.Body,
+		AuthorID: l.Session().UserID,
 	}
 
 	l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {

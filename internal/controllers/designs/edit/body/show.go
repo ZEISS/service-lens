@@ -44,15 +44,20 @@ func (l *ShowControllerImpl) Prepare() error {
 // Prepare ...
 func (l *ShowControllerImpl) Get() error {
 	return l.Render(
-		cards.CardBordered(
-			cards.CardProps{},
-			cards.Body(
-				cards.BodyProps{},
-				htmx.HxTarget("this"),
-				htmx.HxSwap("outerHTML"),
-				htmx.ID("body"),
-				htmx.FormElement(
-					htmx.HxPut(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
+		htmx.FormElement(
+			htmx.HxPut(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
+			htmx.HxTarget("this"),
+			htmx.HxSwap("outerHTML"),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-2": true,
+						"mx-2": true,
+					},
+				},
+				cards.Body(
+					cards.BodyProps{},
+					htmx.ID("body"),
 					forms.FormControl(
 						forms.FormControlProps{
 							ClassNames: htmx.ClassNames{},

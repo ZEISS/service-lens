@@ -3,22 +3,17 @@ package designs
 import (
 	"bytes"
 	"context"
-	"fmt"
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer/html"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
 // ShowDesignControllerImpl ...
@@ -80,153 +75,26 @@ func (l *ShowDesignControllerImpl) Get() error {
 				components.LayoutProps{
 					Path: l.Ctx().Path(),
 				},
-				cards.CardBordered(
-					cards.CardProps{},
-					htmx.HxTarget("this"),
-					htmx.HxSwap("outerHTML"),
-					htmx.ID("title"),
-					cards.Body(
-						cards.BodyProps{},
-						htmx.H1(htmx.Text(l.Design.Title)),
-						cards.Actions(
-							cards.ActionsProps{},
-							buttons.Outline(
-								buttons.ButtonProps{},
-								htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, l.Design.ID)),
-								htmx.Text("Edit"),
-							),
-						),
-					),
+				designs.DesignTitleCard(
+					designs.DesignTitleCardProps{
+						Design: l.Design,
+					},
 				),
-				cards.CardBordered(
-					cards.CardProps{},
-					cards.Body(
-						cards.BodyProps{},
-						htmx.Div(
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Created at"),
-								),
-								htmx.H3(
-									htmx.Text(
-										l.Design.CreatedAt.Format("2006-01-02 15:04:05"),
-									),
-								),
-							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Updated at"),
-								),
-								htmx.H3(
-									htmx.Text(
-										l.Design.UpdatedAt.Format("2006-01-02 15:04:05"),
-									),
-								),
-							),
-						),
-					),
+				designs.DesignBodyCard(
+					designs.DesignBodyCardProps{
+						Design:   l.Design,
+						Markdown: l.Body,
+					},
 				),
-				cards.CardBordered(
-					cards.CardProps{},
-					htmx.HxTarget("this"),
-					htmx.HxSwap("outerHTML"),
-					htmx.ID("body"),
-					cards.Body(
-						cards.BodyProps{},
-						htmx.Div(
-							htmx.Raw(l.Body),
-						),
-						cards.Actions(
-							cards.ActionsProps{},
-							buttons.Outline(
-								buttons.ButtonProps{},
-								htmx.HxGet(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
-								htmx.Text("Edit"),
-							),
-						),
-					),
+				designs.DesignMetadataCard(
+					designs.DesignMetadataCardProps{
+						Design: l.Design,
+					},
 				),
-				cards.CardBordered(
-					cards.CardProps{},
-					cards.Body(
-						cards.BodyProps{},
-						htmx.Div(
-							htmx.ID("comments"),
-							htmx.Group(htmx.ForEach(tables.RowsPtr(l.Design.Comments), func(c *models.DesignComment, choiceIdx int) htmx.Node {
-								return cards.CardBordered(
-									cards.CardProps{
-										ClassNames: htmx.ClassNames{
-											"my-4": true,
-										},
-									},
-									cards.Body(
-										cards.BodyProps{},
-										htmx.Text(c.Comment),
-									),
-								)
-							})...),
-						),
-						htmx.FormElement(
-							htmx.HxPost(fmt.Sprintf(utils.CreateDesignCommentUrlFormat, l.Design.ID)),
-							htmx.HxTarget("#comments"),
-							htmx.HxSwap("beforeend"),
-							cards.CardBordered(
-								cards.CardProps{},
-								cards.Body(
-									cards.BodyProps{},
-									forms.FormControl(
-										forms.FormControlProps{
-											ClassNames: htmx.ClassNames{},
-										},
-										forms.TextareaBordered(
-											forms.TextareaProps{
-												ClassNames: htmx.ClassNames{
-													"h-32": true,
-												},
-												Name:        "comment",
-												Placeholder: "Add a comment...",
-											},
-										),
-										forms.FormControlLabel(
-											forms.FormControlLabelProps{},
-											forms.FormControlLabelText(
-												forms.FormControlLabelTextProps{
-													ClassNames: htmx.ClassNames{
-														"text-neutral-500": true,
-													},
-												},
-												htmx.Text("Supports Markdown."),
-											),
-										),
-									),
-									cards.Actions(
-										cards.ActionsProps{},
-										buttons.Outline(
-											buttons.ButtonProps{},
-											htmx.Attribute("type", "submit"),
-											htmx.Text("Comment"),
-										),
-									),
-								),
-							),
-						),
-					),
+				designs.DesignCommentsCard(
+					designs.DesignCommentsCardProps{
+						Design: l.Design,
+					},
 				),
 			),
 		),

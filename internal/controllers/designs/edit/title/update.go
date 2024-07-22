@@ -75,7 +75,12 @@ func (l *UpdateControllerImpl) Put() error {
 			htmx.HxTarget("this"),
 			htmx.HxSwap("outerHTML"),
 			cards.CardBordered(
-				cards.CardProps{},
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-2": true,
+						"mx-2": true,
+					},
+				},
 				cards.Body(
 					cards.BodyProps{},
 					htmx.ID("body"),
