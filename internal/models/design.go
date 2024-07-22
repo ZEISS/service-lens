@@ -48,9 +48,9 @@ type DesignComment struct {
 	// ID is the primary key
 	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()" params:"id"`
 	// DesignID is the foreign key to the design
-	DesignID uuid.UUID `json:"design_id" gorm:"type:uuid;index" params:"design_id"`
+	DesignID uuid.UUID `json:"design_id" gorm:"type:uuid;index" params:"id"`
 	// Design is the design
-	Design Design `json:"design" gorm:"foreignKey:DesignID;references:ID"`
+	Design Design `json:"design" gorm:"foreignKey:DesignID;references:ID" validate:"-"`
 	// Comment is the comment
 	Comment string `json:"comment" form:"comment" gorm:"type:text" validate:"required,min=3"`
 	// ParentID is the foreign key to the parent comment

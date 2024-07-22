@@ -69,6 +69,10 @@ type ReadWriteTx interface {
 
 	// CreateDesign is a method that creates a design
 	CreateDesign(ctx context.Context, design *models.Design) error
+	// UpdateDesign is a method that updates a design
+	UpdateDesign(ctx context.Context, design *models.Design) error
+	// CreateDesignComment is a method that creates a design comment
+	CreateDesignComment(ctx context.Context, comment *models.DesignComment) error
 	// CreateProfile is a method that creates a profile
 	CreateProfile(ctx context.Context, profile *models.Profile) error
 	// UpdateProfile is a method that updates a profile

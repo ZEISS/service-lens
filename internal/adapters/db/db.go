@@ -140,6 +140,16 @@ func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) 
 	return rw.conn.Create(design).Error
 }
 
+// UpdateDesign is a method that updates a design
+func (rw *writeTxImpl) UpdateDesign(ctx context.Context, design *models.Design) error {
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(design).Error
+}
+
+// CreateDesignComment is a method that creates a design comment
+func (rw *writeTxImpl) CreateDesignComment(ctx context.Context, comment *models.DesignComment) error {
+	return rw.conn.Create(comment).Error
+}
+
 // CreateProfile is a method that creates a profile
 func (rw *writeTxImpl) CreateProfile(ctx context.Context, profile *models.Profile) error {
 	return rw.conn.Create(profile).Error

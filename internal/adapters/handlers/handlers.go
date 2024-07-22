@@ -5,6 +5,7 @@ import (
 
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
 	"github.com/zeiss/service-lens/internal/controllers/designs"
+	"github.com/zeiss/service-lens/internal/controllers/designs/comments"
 	"github.com/zeiss/service-lens/internal/controllers/environments"
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
 	"github.com/zeiss/service-lens/internal/controllers/login"
@@ -78,6 +79,13 @@ func (a *handlers) NewDesign() fiber.Handler {
 func (a *handlers) ShowDesign() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return designs.NewShowDesignController(a.store)
+	})
+}
+
+// CreateDesignComment ...
+func (a *handlers) CreateDesignComment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return comments.NewCreateDesignCommentController(a.store)
 	})
 }
 
