@@ -27,7 +27,7 @@ type Workload struct {
 	// Answers are the attached answers
 	Answers []*WorkloadLensQuestionAnswer `json:"answers" gorm:"foreignKey:WorkloadID;" form:"answers"`
 	// Tags are the attached tags
-	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:workload;"`
+	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:workload"`
 	// ReviewOwner is the owner of the review.
 	ReviewOwner string `json:"review_owner" form:"review_owner" validate:"required,email"`
 	// CreatedAt ...

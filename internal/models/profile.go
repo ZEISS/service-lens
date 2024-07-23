@@ -19,7 +19,7 @@ type Profile struct {
 	// Answers are the possible answers for the question.
 	Answers []ProfileQuestionAnswer `json:"answers" form:"answers" gorm:"many2many:profiles_answers;"`
 	// Tags ...
-	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
+	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:profile"`
 	// Team is the team that owns the environment
 	Team adapters.GothTeam `json:"owner" gorm:"foreignKey:TeamID" validate:"-"`
 	// TeamID is the foreign key of the owner

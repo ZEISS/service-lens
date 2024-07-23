@@ -17,11 +17,11 @@ type Environment struct {
 	// Description of the environment
 	Description string `json:"description" form:"description" validate:"max=1024"`
 	// Tags are the tags associated with the environment
-	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;"`
-	// Team is the team that owns the environment
-	Team adapters.GothTeam `json:"owner" gorm:"foreignKey:TeamID"`
-	// TeamID is the foreign key of the owner
-	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
+	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:environment"`
+	// OwnerID is the foreign key of the owner
+	OwnerID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
+	// Owner is the team that owns the environment
+	Owner adapters.GothTeam `json:"owner" gorm:"foreignKey:OwnerID"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

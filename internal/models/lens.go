@@ -38,7 +38,7 @@ type Lens struct {
 	// IsDraft is the lens draft status.
 	IsDraft bool `json:"is_draft"`
 	// Tags are the tags associated with the lens.
-	Tags []*Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens;"`
+	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens"`
 	// Team is the team that owns the environment
 	Team adapters.GothTeam `json:"owner" gorm:"foreignKey:TeamID"`
 	// TeamID is the foreign key of the owner

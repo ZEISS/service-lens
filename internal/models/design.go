@@ -17,7 +17,7 @@ type Design struct {
 	// Body of the design in markdown, HTML, or plain text
 	Body string `form:"body" gorm:"type:text"`
 	// Tags are the tags associated with the environment
-	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;"`
+	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:design"`
 	// AuthorID is the foreign key to the author
 	AuthorID uuid.UUID `json:"author_id"`
 	// Author is the author
