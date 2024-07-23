@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -23,11 +24,21 @@ type CreateEnvironmentControllerImpl struct {
 
 // NewCreateEnvironmentController ...
 func NewCreateEnvironmentController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateEnvironmentControllerImpl {
-	return &CreateEnvironmentControllerImpl{
-		environment:       models.Environment{},
-		store:             store,
-		DefaultController: htmx.DefaultController{},
-	}
+	return &CreateEnvironmentControllerImpl{store: store}
+}
+
+// Error ...
+func (l *CreateEnvironmentControllerImpl) Error(err error) error {
+	return toasts.RenderToasts(
+		l.Ctx(),
+		toasts.Toasts(
+			toasts.ToastsProps{},
+			toasts.ToastAlertError(
+				toasts.ToastProps{},
+				htmx.Text(err.Error()),
+			),
+		),
+	)
 }
 
 // Prepare ...

@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -42,28 +43,27 @@ func (w *EnvironmentListControllerImpl) Prepare() error {
 // Get ...
 func (w *EnvironmentListControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
 				Title: "Environments",
+				Path:  w.Path(),
 			},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"my-2": true,
+						"mx-2": true,
+					},
 				},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
+				cards.Body(
+					cards.BodyProps{},
+					environments.EnvironmentsTable(
+						environments.EnvironmentsTableProps{
+							Environments: w.environments.GetRows(),
+							Offset:       w.environments.GetOffset(),
+							Limit:        w.environments.GetLimit(),
+							Total:        w.environments.GetLen(),
 						},
-						environments.EnvironmentsTable(
-							environments.EnvironmentsTableProps{
-								Environments: w.environments.GetRows(),
-								Offset:       w.environments.GetOffset(),
-								Limit:        w.environments.GetLimit(),
-								Total:        w.environments.GetLen(),
-							},
-						),
 					),
 				),
 			),
