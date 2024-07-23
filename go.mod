@@ -13,7 +13,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
-	github.com/yuin/goldmark v1.4.13
+	github.com/yuin/goldmark v1.7.4
 	github.com/zeiss/fiber-authz v1.0.31
 	github.com/zeiss/fiber-goth v1.2.8
 	github.com/zeiss/fiber-htmx v1.3.19
@@ -23,7 +23,6 @@ require (
 	gorm.io/gorm v1.25.11
 	helm.sh/helm v2.17.0+incompatible
 	mvdan.cc/gofumpt v0.6.0
-	mvdan.cc/xurls/v2 v2.5.0
 )
 
 require (
