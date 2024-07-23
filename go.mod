@@ -16,7 +16,7 @@ require (
 	github.com/yuin/goldmark v1.7.4
 	github.com/zeiss/fiber-authz v1.0.31
 	github.com/zeiss/fiber-goth v1.2.8
-	github.com/zeiss/fiber-htmx v1.3.19
+	github.com/zeiss/fiber-htmx v1.3.20
 	github.com/zeiss/gorm-seed v0.1.2
 	golang.org/x/mod v0.19.0
 	gorm.io/driver/postgres v1.5.9
