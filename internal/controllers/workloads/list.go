@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -39,28 +40,25 @@ func (w *WorkloadListControllerImpl) Prepare() error {
 // Get ...
 func (w *WorkloadListControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{
-				Title: "Workloads",
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Path: w.Path(),
 			},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"m-2": true,
+					},
 				},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
+				cards.Body(
+					cards.BodyProps{},
+					workloads.WorkloadsTable(
+						workloads.WorkloadsTableProps{
+							Workloads: w.workloads.GetRows(),
+							Offset:    w.workloads.GetOffset(),
+							Limit:     w.workloads.GetLimit(),
+							Total:     w.workloads.GetTotalRows(),
 						},
-						workloads.WorkloadsTable(
-							workloads.WorkloadsTableProps{
-								Workloads: w.workloads.GetRows(),
-								Offset:    w.workloads.GetOffset(),
-								Limit:     w.workloads.GetLimit(),
-								Total:     w.workloads.GetTotalRows(),
-							},
-						),
 					),
 				),
 			),

@@ -7,7 +7,9 @@ import (
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -43,6 +45,38 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 						},
 						cards.Body(
 							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text(
+									c.CreatedAt.Format("2006-01-02 15:04:05"),
+								),
+								dropdowns.Dropdown(
+									dropdowns.DropdownProps{},
+									dropdowns.DropdownButton(
+										dropdowns.DropdownButtonProps{
+											ClassNames: htmx.ClassNames{
+												"btn":    true,
+												"btn-sm": true,
+											},
+										},
+										icons.ChevronUpDownOutline(icons.IconProps{}),
+									),
+									dropdowns.DropdownMenuItems(
+										dropdowns.DropdownMenuItemsProps{},
+										dropdowns.DropdownMenuItem(
+											dropdowns.DropdownMenuItemProps{},
+											htmx.A(
+												htmx.ClassNames{
+													"btn":    true,
+													"btn-sm": true,
+												},
+												htmx.Attribute("href", ""),
+												htmx.Text("Edit"),
+											),
+										),
+									),
+								),
+							),
 							htmx.Text(c.Comment),
 							cards.Actions(
 								cards.ActionsProps{},

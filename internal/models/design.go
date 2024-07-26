@@ -18,6 +18,8 @@ type Design struct {
 	Body string `form:"body" gorm:"type:text"`
 	// Tags are the tags associated with the environment
 	Tags []Tag `json:"tags" gorm:"many2many:design_tags;"`
+	// Reactions are the reactions associated with the design
+	Reactions []Reaction `json:"reactions" gorm:"polymorphic:Reactable;"`
 	// AuthorID is the foreign key to the author
 	AuthorID uuid.UUID `json:"author_id"`
 	// Author is the author
@@ -42,6 +44,8 @@ type DesignRevision struct {
 	Design Design `json:"design" gorm:"foreignKey:DesignID;references:ID"`
 	// Title of the design revision
 	Title string `json:"title" form:"title" validate:"required,min=3,max=1024"`
+	// Reactions are the reactions associated with the design
+	Reactions []Reaction `json:"reactions" gorm:"polymorphic:Reactable;"`
 	// Body of the design in markdown, HTML, or plain text
 	Body string `gorm:"type:text"`
 	// CreatedAt ...

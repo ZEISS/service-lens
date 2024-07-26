@@ -38,37 +38,6 @@ func AccountSwitcher(props AccountSwitcherProps, children ...htmx.Node) htmx.Nod
 					"w-full": true,
 				},
 			},
-			// utils.Map(func(el adapters.GothTeam) htmx.Node {
-			// 	return dropdowns.DropdownMenuItem(
-			// 		dropdowns.DropdownMenuItemProps{},
-			// 		links.Link(
-			// 			links.LinkProps{
-			// 				ClassNames: htmx.ClassNames{
-			// 					"link": false,
-			// 				},
-			// 				Href: fmt.Sprintf("/teams/%s", el.Slug),
-			// 			},
-			// 			htmx.Text(el.Name),
-			// 		),
-			// 	)
-			// }, *props.User.Teams...),
-			// dividers.Divider(
-			// 	dividers.DividerProps{
-			// 		ClassNames: htmx.ClassNames{},
-			// 	},
-			// ),
-			// dropdowns.DropdownMenuItem(
-			// 	dropdowns.DropdownMenuItemProps{},
-			// 	links.Link(
-			// 		links.LinkProps{
-			// 			ClassNames: htmx.ClassNames{
-			// 				"link": false,
-			// 			},
-			// 			Href: "/teams/new",
-			// 		},
-			// 		htmx.Text("Create team"),
-			// 	),
-			// ),
 		),
 	)
 }

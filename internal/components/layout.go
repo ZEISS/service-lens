@@ -3,11 +3,9 @@ package components
 import (
 	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/dividers"
 	"github.com/zeiss/fiber-htmx/components/drawers"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/navbars"
 	"github.com/zeiss/fiber-htmx/components/swap"
@@ -134,36 +132,8 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 											icons.IconProps{},
 										),
 									),
-									dropdowns.Dropdown(
-										dropdowns.DropdownProps{
-											ClassNames: htmx.ClassNames{
-												"dropdown-end": true,
-											},
-										},
-										dropdowns.DropdownButton(
-											dropdowns.DropdownButtonProps{
-												ClassNames: htmx.ClassNames{
-													"btn-sm":     true,
-													"btn-circle": true,
-													"btn-ghost":  true,
-												},
-											},
-											avatars.AvatarRoundSmall(
-												avatars.AvatarProps{},
-												htmx.Img(
-													htmx.Attribute("src", "https://avatars.githubusercontent.com/u/570959?v=4"),
-												),
-											),
-										),
-										dropdowns.DropdownMenuItems(
-											dropdowns.DropdownMenuItemsProps{},
-											dropdowns.DropdownMenuItem(
-												dropdowns.DropdownMenuItemProps{},
-												htmx.A(
-													htmx.Text("Profile"),
-												),
-											),
-										),
+									ProfileMenu(
+										ProfileMenuProps{},
 									),
 								),
 							),

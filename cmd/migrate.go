@@ -37,6 +37,7 @@ var Migrate = &cobra.Command{
 			&adapters.GothSession{},
 			&adapters.GothVerificationToken{},
 			&adapters.GothTeam{},
+			&models.Reaction{},
 			&models.ProfileQuestion{},
 			&models.ProfileQuestionChoice{},
 			&models.ProfileQuestionAnswer{},
