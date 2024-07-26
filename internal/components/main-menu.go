@@ -6,6 +6,7 @@ import (
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/menus"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // MainMenuProps ...
@@ -255,6 +256,22 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 					),
 				),
 			),
+
+			menus.MenuItem(
+				menus.MenuItemProps{
+					ClassNames: htmx.ClassNames{
+						"hover:bg-base-300": false,
+					},
+				},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href:   utils.ListTagsUrlFormat,
+						Active: p.Path == utils.ListTagsUrlFormat,
+					},
+					htmx.Text("Tags"),
+				),
+			),
+
 			menus.MenuItem(
 				menus.MenuItemProps{},
 				menus.MenuCollapsible(

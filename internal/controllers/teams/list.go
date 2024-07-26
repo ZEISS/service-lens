@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -47,27 +48,23 @@ func (w *TeamListControllerImpl) Prepare() error {
 // Get ...
 func (w *TeamListControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
-					User: w.Session().User,
+		components.DefaultLayout(
+			components.DefaultLayoutProps{},
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"m-2": true,
+					},
 				},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
+				cards.Body(
+					cards.BodyProps{},
+					teams.TeamsTable(
+						teams.TeamsTableProps{
+							Teams:  w.teams.GetRows(),
+							Offset: w.teams.GetOffset(),
+							Limit:  w.teams.GetLimit(),
+							Total:  w.teams.GetTotalRows(),
 						},
-						teams.TeamsTable(
-							teams.TeamsTableProps{
-								Teams:  w.teams.GetRows(),
-								Offset: w.teams.GetOffset(),
-								Limit:  w.teams.GetLimit(),
-								Total:  w.teams.GetTotalRows(),
-							},
-						),
 					),
 				),
 			),

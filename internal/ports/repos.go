@@ -61,6 +61,8 @@ type ReadTx interface {
 	ListTeams(ctx context.Context, teams *tables.Results[adapters.GothTeam]) error
 	// GetTeam is a method that returns a team by ID
 	GetTeam(ctx context.Context, team *adapters.GothTeam) error
+	// ListTags is a method that returns a list of tags
+	ListTags(ctx context.Context, tags *tables.Results[models.Tag]) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -105,4 +107,10 @@ type ReadWriteTx interface {
 	UpdateTeam(ctx context.Context, team *adapters.GothTeam) error
 	// DeleteTeam is a method that deletes a team
 	DeleteTeam(ctx context.Context, team *adapters.GothTeam) error
+	// CreateTag is a method that creates a tag
+	CreateTag(ctx context.Context, tag *models.Tag) error
+	// UpdateTag is a method that updates a tag
+	UpdateTag(ctx context.Context, tag *models.Tag) error
+	// DeleteTag is a method that deletes a tag
+	DeleteTag(ctx context.Context, tag *models.Tag) error
 }

@@ -47,7 +47,11 @@ func (l *ListDesignsControllerImpl) Get() error {
 					Path: l.Ctx().Path(),
 				},
 				cards.CardBordered(
-					cards.CardProps{},
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
+						},
+					},
 					cards.Body(
 						cards.BodyProps{},
 						designs.DesignsTable(

@@ -4,6 +4,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 )
 
@@ -76,6 +77,42 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								},
 							},
 							htmx.Text("Supports Markdown."),
+						),
+					),
+				),
+				cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"w-full": true,
+							"my-4":   true,
+						},
+					},
+
+					htmx.Input(
+						htmx.Attribute("type", "hidden"),
+						htmx.ID("environment"),
+						htmx.Attribute("name", "environment_id"),
+						htmx.Value(""),
+					),
+					dropdowns.Dropdown(
+						dropdowns.DropdownProps{},
+						htmx.HyperScript("on click from (closest <a/>) set (previous <input/>).value to 'test'"),
+						dropdowns.DropdownButton(
+							dropdowns.DropdownButtonProps{},
+							htmx.Text("Select Environment"),
+							htmx.HxGet("/workloads/partials/environments"),
+							htmx.HxTarget("#environments-list"),
+							htmx.HxSwap("innerHTML"),
+							htmx.ID("environments-button"),
+						),
+						dropdowns.DropdownMenuItems(
+							dropdowns.DropdownMenuItemsProps{
+								TabIndex: 1,
+							},
+							htmx.ID("environments-list"),
+							dropdowns.DropdownMenuItem(
+								dropdowns.DropdownMenuItemProps{},
+							),
 						),
 					),
 				),

@@ -183,6 +183,10 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workloads.Get("/:workload/lenses/:lens/question/:question", handlers.ShowLensQuestion())
 		workloads.Put("/:workload/lenses/:lens/question/:question", handlers.UpdateWorkloadAnswer())
 
+		// Tags ...
+		tags := app.Group("/tags")
+		tags.Get("/", handlers.ListTags())
+
 		// Me ...
 		app.Get("/me", handlers.Me())
 

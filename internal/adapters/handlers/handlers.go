@@ -14,6 +14,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/me"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/settings"
+	"github.com/zeiss/service-lens/internal/controllers/tags"
 	"github.com/zeiss/service-lens/internal/controllers/teams"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
@@ -410,5 +411,12 @@ func (a *handlers) ShowTeam() fiber.Handler {
 func (a *handlers) CreateTeam() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return teams.NewCreateTeamController(a.store)
+	})
+}
+
+// ListTags ...
+func (a *handlers) ListTags() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return tags.NewTagsListController(a.store)
 	})
 }

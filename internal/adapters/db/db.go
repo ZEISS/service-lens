@@ -123,6 +123,11 @@ func (r *readTxImpl) GetWorkload(ctx context.Context, workload *models.Workload)
 	return r.conn.Preload(clause.Associations).Where(workload).First(workload).Error
 }
 
+// ListTags is a method that returns a list of tags
+func (r *readTxImpl) ListTags(ctx context.Context, pagination *tables.Results[models.Tag]) error {
+	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl
@@ -261,4 +266,19 @@ func (rw *writeTxImpl) UpdateTeam(ctx context.Context, team *adapters.GothTeam) 
 // DeleteTeam is a method that deletes a team
 func (rw *writeTxImpl) DeleteTeam(ctx context.Context, team *adapters.GothTeam) error {
 	return rw.conn.Delete(team).Error
+}
+
+// CreateTag is a method that creates a tag
+func (rw *writeTxImpl) CreateTag(ctx context.Context, tag *models.Tag) error {
+	return rw.conn.Create(tag).Error
+}
+
+// UpdateTag is a method that updates a tag
+func (rw *writeTxImpl) UpdateTag(ctx context.Context, tag *models.Tag) error {
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(tag).Error
+}
+
+// DeleteTag is a method that deletes a tag
+func (rw *writeTxImpl) DeleteTag(ctx context.Context, tag *models.Tag) error {
+	return rw.conn.Delete(tag).Error
 }
