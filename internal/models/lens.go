@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
-	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -30,7 +29,7 @@ type Lens struct {
 	// Version is the lens version.
 	Version int `json:"version" gorm:"uniqueIndex:idx_lens_name_version_team"`
 	// Name is the lens name.
-	Name string `json:"name" gorm:"uniqueIndex:idx_lens_name_version_team"`
+	Name string `json:"name" gorm:"many2many:taggables;uniqueIndex:idx_lens_name_version_team"`
 	// Description is the lens description.
 	Description string `json:"description"`
 	// Pillars are the lens pillars.
@@ -38,11 +37,7 @@ type Lens struct {
 	// IsDraft is the lens draft status.
 	IsDraft bool `json:"is_draft"`
 	// Tags are the tags associated with the lens.
-	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:lens"`
-	// Team is the team that owns the environment
-	Team adapters.GothTeam `json:"owner" gorm:"foreignKey:TeamID"`
-	// TeamID is the foreign key of the owner
-	TeamID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
+	Tags []Tag `json:"tags" gorm:"many2many:lens_tags;"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

@@ -186,6 +186,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// Tags ...
 		tags := app.Group("/tags")
 		tags.Get("/", handlers.ListTags())
+		tags.Post("/new", handlers.CreateTag())
+		tags.Delete("/:id", handlers.DeleteTag())
 
 		// Me ...
 		app.Get("/me", handlers.Me())

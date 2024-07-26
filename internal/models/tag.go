@@ -7,29 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type TaggableType string
-
-// TaggableType ...
-const (
-	DesignType     TaggableType = "Design"
-	EnvironmentTyp TaggableType = "Environment"
-	LensType       TaggableType = "Lens"
-	ProfileTyp     TaggableType = "Profile"
-	WorkloadTyp    TaggableType = "Workload"
-)
-
 // Tag ...
 type Tag struct {
-	// ID is the primary key.
-	ID int `json:"id" gorm:"primary_key"`
+	// ID ...
+	ID uuid.UUID `json:"id" gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
 	// Name is the tag name.
-	Name string `json:"name"`
+	Name string `json:"name" gorm:"uniqueIndex:idx_name_value"`
 	// Value is the tag value.
-	Value string `json:"value"`
-	// TaggableID is the foreign key of the taggable
-	TaggableID uuid.UUID `json:"taggable_id"`
-	// TaggableType is the type of the taggable
-	TaggableType TaggableType `json:"taggable_type"`
+	Value string `json:"value" gorm:"uniqueIndex:idx_name_value"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

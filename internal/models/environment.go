@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/zeiss/fiber-goth/adapters"
 	"gorm.io/gorm"
 )
 
@@ -17,11 +16,7 @@ type Environment struct {
 	// Description of the environment
 	Description string `json:"description" form:"description" validate:"max=1024"`
 	// Tags are the tags associated with the environment
-	Tags []Tag `json:"tags" gorm:"polymorphic:Taggable;polymorphicValue:environment"`
-	// OwnerID is the foreign key of the owner
-	OwnerID uuid.UUID `json:"owner_id" gorm:"type:uuid;index"`
-	// Owner is the team that owns the environment
-	Owner adapters.GothTeam `json:"owner" gorm:"foreignKey:OwnerID"`
+	Tags []Tag `json:"tags" gorm:"many2many:environment_tags;"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

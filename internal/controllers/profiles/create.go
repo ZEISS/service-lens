@@ -55,7 +55,6 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 	if err != nil {
 		return err
 	}
-	l.profile.TeamID = session.User.TeamBySlug(l.Ctx().Params("t_slug")).ID
 	l.team = session.User.TeamBySlug(l.Ctx().Params("t_slug"))
 
 	err = validate.Struct(&l.profile)

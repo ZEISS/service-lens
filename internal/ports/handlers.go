@@ -112,4 +112,6 @@ type Handlers interface {
 	DeleteTeam() fiber.Handler
 	// CreateTeam ...
 	CreateTeam() fiber.Handler
+	// DeleteTag ...
+	DeleteTag() fiber.Handler
 }

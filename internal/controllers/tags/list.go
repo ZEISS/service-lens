@@ -1,6 +1,8 @@
 package tags
 
 import (
+	"context"
+
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/tags"
 	"github.com/zeiss/service-lens/internal/models"
@@ -26,7 +28,9 @@ func NewTagsListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 
 // Prepare ...
 func (w *TagsListControllerImpl) Prepare() error {
-	return nil
+	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.ListTags(ctx, &w.tags)
+	})
 }
 
 // Get ...

@@ -5,13 +5,14 @@ import (
 	"time"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/badges"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
-	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // TagsTableProps ...
@@ -90,17 +91,27 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 							},
 						),
 					),
-					htmx.A(
-						htmx.Href("tags/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
+					NewTagModal(),
+					buttons.Outline(
+						buttons.ButtonProps{
+							ClassNames: htmx.ClassNames{
+								"btn-sm": true,
 							},
-							htmx.Text("Create Tags"),
-						),
+						},
+						htmx.OnClick("new_tag_modal.showModal()"),
+						htmx.Text("Create Tag"),
 					),
+					// htmx.A(
+					// 	htmx.Href("tags/new"),
+					// 	buttons.Outline(
+					// 		buttons.ButtonProps{
+					// 			ClassNames: htmx.ClassNames{
+					// 				"btn-sm": true,
+					// 			},
+					// 		},
+					// 		htmx.Text("Create Tags"),
+					// 	),
+					// ),
 				),
 			},
 			[]tables.ColumnDef[*models.Tag]{
@@ -112,8 +123,8 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 					},
 					Cell: func(p tables.TableProps, row *models.Tag) htmx.Node {
 						return htmx.Td(
-							links.Link(
-								links.LinkProps{},
+							badges.Primary(
+								badges.BadgeProps{},
 								htmx.Text(row.Name),
 							),
 						)
@@ -126,12 +137,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Th(htmx.Text("Value"))
 					},
 					Cell: func(p tables.TableProps, row *models.Tag) htmx.Node {
-						return htmx.Td(
-							links.Link(
-								links.LinkProps{},
-								htmx.Text(row.Value),
-							),
-						)
+						return htmx.Td(htmx.Text(row.Value))
 					},
 				},
 				{
@@ -168,7 +174,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 													"btn-sm": true,
 												},
 											},
-											htmx.HxDelete(fmt.Sprintf("//%s", row.ID)),
+											htmx.HxDelete(fmt.Sprintf(utils.DeleteTagUrlFormat, row.ID)),
 											htmx.HxConfirm("Are you sure you want to delete this tag?"),
 											htmx.Text("Delete"),
 										),

@@ -46,6 +46,7 @@ var Migrate = &cobra.Command{
 			&models.DesignCommentRevision{},
 			&models.Environment{},
 			&models.Profile{},
+			&models.Tag{},
 			&models.Lens{},
 			&models.Pillar{},
 			&models.Question{},
@@ -53,7 +54,6 @@ var Migrate = &cobra.Command{
 			&models.Choice{},
 			&models.Risk{},
 			&models.Workload{},
-			&models.Tag{},
 			&models.WorkloadLensQuestionAnswer{},
 		)
 	},

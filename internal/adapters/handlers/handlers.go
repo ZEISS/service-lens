@@ -420,3 +420,17 @@ func (a *handlers) ListTags() fiber.Handler {
 		return tags.NewTagsListController(a.store)
 	})
 }
+
+// CreateTag ...
+func (a *handlers) CreateTag() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return tags.NewTagController(a.store)
+	})
+}
+
+// DeleteTag ...
+func (a *handlers) DeleteTag() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return tags.NewTagDeleteController(a.store)
+	})
+}
