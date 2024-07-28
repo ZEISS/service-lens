@@ -47,7 +47,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   "/designs",
-						Active: p.Path == "/designs",
+						Active: strings.HasPrefix(p.Path, "/designs"),
 					},
 					htmx.Text("Designs"),
 				),
@@ -62,7 +62,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   "/workloads",
-						Active: p.Path == "/workloads",
+						Active: strings.HasPrefix(p.Path, "/workloads"),
 					},
 					htmx.Text("Workloads"),
 				),
@@ -76,7 +76,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   "/lenses",
-						Active: p.Path == "/lenses",
+						Active: strings.HasPrefix(p.Path, "/lenses"),
 					},
 					htmx.Text("Lenses"),
 				),
@@ -90,7 +90,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   "/profiles",
-						Active: p.Path == "/profiles",
+						Active: strings.HasPrefix(p.Path, "/profiles"),
 					},
 					htmx.Text("Profiles"),
 				),
@@ -100,7 +100,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   "/environments",
-						Active: p.Path == "/environments",
+						Active: strings.HasPrefix(p.Path, "/environments"),
 					},
 					htmx.Text("Environments"),
 				),
@@ -114,7 +114,7 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuLink(
 					menus.MenuLinkProps{
 						Href:   utils.ListTagsUrlFormat,
-						Active: p.Path == utils.ListTagsUrlFormat,
+						Active: strings.HasPrefix(p.Path, "/tags"),
 					},
 					htmx.Text("Tags"),
 				),

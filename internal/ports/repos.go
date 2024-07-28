@@ -71,6 +71,8 @@ type ReadWriteTx interface {
 
 	// CreateDesign is a method that creates a design
 	CreateDesign(ctx context.Context, design *models.Design) error
+	// DeleteDesign is a method that deletes a design
+	DeleteDesign(ctx context.Context, design *models.Design) error
 	// UpdateDesign is a method that updates a design
 	UpdateDesign(ctx context.Context, design *models.Design) error
 	// CreateDesignComment is a method that creates a design comment

@@ -37,7 +37,9 @@ func (w *TagsListControllerImpl) Prepare() error {
 func (w *TagsListControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
-			components.DefaultLayoutProps{},
+			components.DefaultLayoutProps{
+				Path: w.Path(),
+			},
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{
@@ -54,15 +56,6 @@ func (w *TagsListControllerImpl) Get() error {
 							Total:  w.tags.GetTotalRows(),
 						},
 					),
-
-				// teams.TeamsTable(
-				// 	teams.TeamsTableProps{
-				// 		Teams:  w.teams.GetRows(),
-				// 		Offset: w.teams.GetOffset(),
-				// 		Limit:  w.teams.GetLimit(),
-				// 		Total:  w.teams.GetTotalRows(),
-				// 	},
-				// ),
 				),
 			),
 		),

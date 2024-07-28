@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -22,9 +23,7 @@ type LensListController struct {
 
 // NewLensListController ...
 func NewLensListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensListController {
-	return &LensListController{
-		store: store,
-	}
+	return &LensListController{store: store}
 }
 
 // Prepare ...
@@ -42,28 +41,25 @@ func (w *LensListController) Prepare() error {
 // Get ...
 func (w *LensListController) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{
-				Title: "Lenses",
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Path: w.Path(),
 			},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"m-2": true,
+					},
 				},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
+				cards.Body(
+					cards.BodyProps{},
+					lenses.LensesTable(
+						lenses.LensesTableProps{
+							Lenses: w.lenses.GetRows(),
+							Offset: w.lenses.GetOffset(),
+							Limit:  w.lenses.GetLimit(),
+							Total:  w.lenses.GetTotalRows(),
 						},
-						lenses.LensesTable(
-							lenses.LensesTableProps{
-								Lenses: w.lenses.GetRows(),
-								Offset: w.lenses.GetOffset(),
-								Limit:  w.lenses.GetLimit(),
-								Total:  w.lenses.GetTotalRows(),
-							},
-						),
 					),
 				),
 			),

@@ -44,10 +44,7 @@ func (r *readTxImpl) ListDesigns(ctx context.Context, pagination *tables.Results
 
 // ListProfiles is a method that returns a list of profiles
 func (r *readTxImpl) ListProfiles(ctx context.Context, team uuid.UUID, pagination *tables.Results[models.Profile]) error {
-	return r.conn.
-		Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).
-		Where("team_id = ?", team).
-		Find(&pagination.Rows).Error
+	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
 // ListProfileQuestions is a method that returns a list of profile questions
@@ -143,6 +140,11 @@ func NewWriteTx() seed.ReadWriteTxFactory[ports.ReadWriteTx] {
 // CreateDesign is a method that creates a design
 func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) error {
 	return rw.conn.Create(design).Error
+}
+
+// DeleteDesign is a method that deletes a design
+func (rw *writeTxImpl) DeleteDesign(ctx context.Context, design *models.Design) error {
+	return rw.conn.Delete(design).Error
 }
 
 // UpdateDesign is a method that updates a design

@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
@@ -43,27 +44,26 @@ func (w *ProfileListControllerImpl) Prepare() error {
 // Get ...
 func (w *ProfileListControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Path: w.Path(),
+			},
+			cards.CardBordered(
+				cards.CardProps{
+					ClassNames: htmx.ClassNames{
+						"m-2": true,
+					},
 				},
-				components.Wrap(
-					components.WrapProps{},
-					htmx.Div(
-						htmx.ClassNames{
-							"overflow-x-auto": true,
+				cards.Body(
+					cards.BodyProps{},
+					profiles.ProfilesTable(
+						profiles.ProfilesTableProps{
+							Team:     w.team.Slug,
+							Profiles: w.profiles.GetRows(),
+							Offset:   w.profiles.GetOffset(),
+							Limit:    w.profiles.GetLimit(),
+							Total:    w.profiles.GetTotalRows(),
 						},
-						profiles.ProfilesTable(
-							profiles.ProfilesTableProps{
-								Team:     w.team.Slug,
-								Profiles: w.profiles.GetRows(),
-								Offset:   w.profiles.GetOffset(),
-								Limit:    w.profiles.GetLimit(),
-								Total:    w.profiles.GetTotalRows(),
-							},
-						),
 					),
 				),
 			),

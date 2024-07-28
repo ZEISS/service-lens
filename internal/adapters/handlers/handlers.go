@@ -109,7 +109,7 @@ func (a *handlers) UpdateDesign() fiber.Handler {
 // DeleteDesign ...
 func (a *handlers) DeleteDesign() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return nil
+		return designs.NewDesignDeleteController(a.store)
 	})
 }
 
