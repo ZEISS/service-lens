@@ -9,4 +9,5 @@ const (
 	ListTagsUrlFormat            = "/tags"
 	CreateTagUrlFormat           = "/tags/new"
 	DeleteTagUrlFormat           = "/tags/%s"
+	CreateProfileUrlFormat       = "/profiles/new"
 )

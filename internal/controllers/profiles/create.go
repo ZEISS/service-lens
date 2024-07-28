@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	goth "github.com/zeiss/fiber-goth"
 	"github.com/zeiss/fiber-goth/adapters"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
@@ -30,15 +29,11 @@ type CreateProfileControllerImpl struct {
 
 // NewCreateProfileController ...
 func NewCreateProfileController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *CreateProfileControllerImpl {
-	return &CreateProfileControllerImpl{
-		profile: models.Profile{},
-		store:   store,
-	}
+	return &CreateProfileControllerImpl{store: store}
 }
 
 // Error ...
 func (l *CreateProfileControllerImpl) Error(err error) error {
-	fmt.Println(err)
 	return err
 }
 
@@ -50,12 +45,6 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 	if err != nil {
 		return err
 	}
-
-	session, err := goth.SessionFromContext(l.Ctx())
-	if err != nil {
-		return err
-	}
-	l.team = session.User.TeamBySlug(l.Ctx().Params("t_slug"))
 
 	err = validate.Struct(&l.profile)
 	if err != nil {

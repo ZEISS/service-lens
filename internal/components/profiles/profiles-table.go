@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 const (
@@ -94,7 +95,7 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 						),
 					),
 					htmx.A(
-						htmx.Href(fmt.Sprintf(createProfileURL, props.Team)),
+						htmx.Href(utils.CreateProfileUrlFormat),
 						buttons.Outline(
 							buttons.ButtonProps{
 								ClassNames: htmx.ClassNames{

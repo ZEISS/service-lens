@@ -30,8 +30,7 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.Attribute("src", "https://cdn.tailwindcss.com"),
 				),
 				htmx.Script(
-					htmx.Attribute("src", "https://unpkg.com/htmx.org@1.9.12"),
-					htmx.Integrity("sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"),
+					htmx.Attribute("src", "https://unpkg.com/htmx.org@2.0.1"),
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
