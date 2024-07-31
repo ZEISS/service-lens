@@ -14,7 +14,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/yuin/goldmark v1.7.4
-	github.com/zeiss/fiber-authz v1.0.32
+	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.8
 	github.com/zeiss/fiber-htmx v1.3.20
 	github.com/zeiss/gorm-seed v0.1.2
