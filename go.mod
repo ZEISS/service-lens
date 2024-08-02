@@ -16,7 +16,7 @@ require (
 	github.com/yuin/goldmark v1.7.4
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.8
-	github.com/zeiss/fiber-htmx v1.3.20
+	github.com/zeiss/fiber-htmx v1.3.21
 	github.com/zeiss/gorm-seed v0.1.2
 	golang.org/x/mod v0.19.0
 	gorm.io/driver/postgres v1.5.9
@@ -62,7 +62,7 @@ require (
 	github.com/chavacava/garif v0.1.0 // indirect
 	github.com/ckaznocha/intrange v0.1.2 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
-	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.1 // indirect
 	github.com/daixiang0/gci v0.13.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
@@ -221,6 +221,7 @@ require (
 	github.com/yagipy/maintidx v1.0.0 // indirect
 	github.com/yeya24/promlinter v0.3.0 // indirect
 	github.com/ykadowak/zerologlint v0.1.5 // indirect
+	github.com/zeiss/pkg v0.1.4 // indirect
 	gitlab.com/bosi/decorder v0.4.2 // indirect
 	go-simpler.org/musttag v0.12.2 // indirect
 	go-simpler.org/sloglint v0.7.1 // indirect
@@ -241,7 +242,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.4.7 // indirect
-	k8s.io/apimachinery v0.27.0 // indirect
+	k8s.io/apimachinery v0.30.3 // indirect
 	k8s.io/helm v2.17.0+incompatible // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
