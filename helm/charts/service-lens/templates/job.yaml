@@ -37,14 +37,14 @@ spec:
           args: ["migrate"]
           env:
              {{- if .Values.database.prefix }}
-            - name: service-lens_DATABASE_TABLE_PREFIX
+            - name: SERVICE_LENS_DATABASE_TABLE_PREFIX
               value: "{{ .Values.database.prefix }}"
             {{- end }}
             {{- if .Values.database.uri }}
-            - name: service-lens_DATABASE_URI
+            - name: SERVICE_LENS_DATABASE_URI
               value: "{{ .Values.database.uri }}"
             {{- else if .Values.database.uriSecret }}
-            - name: service-lens_DATABASE_URI
+            - name: SERVICE_LENS_DATABASE_URI
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Values.database.uriSecret }}"
@@ -52,7 +52,7 @@ spec:
             {{- end }}
 
             {{- if .Values.migrate.timeout }}
-            - name: service-lens_TIMEOUT
+            - name: SERVICE_LENS_TIMEOUT
               value: "{{ .Values.migrate.timeout }}"
             {{- end }}
 
