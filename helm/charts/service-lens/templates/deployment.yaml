@@ -103,7 +103,7 @@ spec:
             {{- end }}
 
             {{- if .Values.goth.github.clientSecret }}
-            - name: SERVICE_LENS_GITHUB_SECRET
+            - name: SERVICE_LENS_GITHUB_CLIENT_SECRET
               value: "{{ .Values.goth.github.clientSecret }}"
             {{- end }}
 
