@@ -108,7 +108,7 @@ spec:
             {{- end }}
 
             {{- if .Values.goth.github.callbackUrl }}
-            - name: SERVICE_LENS_GITHUB_CALLBACK
+            - name: SERVICE_LENS_GITHUB_CALLBACK_URL
               value: "{{ .Values.goth.github.callbackUrl }}"
             {{- end }}
 
