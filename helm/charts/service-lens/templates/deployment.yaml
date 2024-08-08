@@ -62,10 +62,10 @@ spec:
 
           env:
             {{- if .Values.database.uri }}
-            - name: service-lens_DATABASE_URI
+            - name: SERVICE_LENS_DATABASE_URI
               value: "{{ .Values.database.uri }}"
             {{- else if .Values.database.uriSecret }}
-            - name: service-lens_DATABASE_URI
+            - name: SERVICE_LENS_DATABASE_URI
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Values.database.uriSecret }}"
@@ -73,13 +73,43 @@ spec:
             {{- end }}
 
             {{- if .Values.database.prefix }}
-            - name: service-lens_DATABASE_TABLE_PREFIX
+            - name: SERVICE_LENS_DATABASE_TABLE_PREFIX
               value: "{{ .Values.database.prefix }}"
             {{- end }}
 
             {{- if .Values.http.addr }}
-            - name: service-lens_ADDR
+            - name: SERVICE_LENS_ADDR
               value: "{{ .Values.http.addr }}"
+            {{- end }}
+
+            {{- if .Values.fga.uri }}
+            - name: TYPHOON_WEB_FGA_API_URL
+              value: "{{ .Values.fga.uri }}"
+            {{- end }}
+
+            {{- if .Values.fga.storeId }}
+            - name: TYPHOON_WEB_FGA_STORE_ID
+              value: "{{ .Values.fga.storeId }}"
+            {{- end }}
+
+            {{- if .Values.fga.authorizationModelId }}
+            - name: TYPHOON_WEB_FGA_AUTHORIZATION_MODEL_ID
+              value: "{{ .Values.fga.authorizationModelId }}"
+            {{- end }}
+
+            {{- if .Values.goth.github.clientID }}
+            - name: SERVICE_LENS_GITHUB_CLIENT_ID
+              value: "{{ .Values.goth.github.clientID }}"
+            {{- end }}
+
+            {{- if .Values.goth.github.clientSecret }}
+            - name: SERVICE_LENS_GITHUB_SECRET
+              value: "{{ .Values.goth.github.clientSecret }}"
+            {{- end }}
+
+            {{- if .Values.goth.github.callbackUrl }}
+            - name: SERVICE_LENS_GITHUB_CALLBACK
+              value: "{{ .Values.goth.github.callbackUrl }}"
             {{- end }}
 
             {{- with .Values.extraEnvVars }}
