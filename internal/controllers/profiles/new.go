@@ -43,6 +43,7 @@ func (p *NewProfileControllerImpl) Get() error {
 			components.DefaultLayoutProps{
 				Title: "New Profile",
 				Path:  p.Path(),
+				User:  p.Session().User,
 			},
 			htmx.FormElement(
 				htmx.HxPost(""),

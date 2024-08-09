@@ -47,6 +47,7 @@ func (w *EnvironmentListControllerImpl) Get() error {
 			components.DefaultLayoutProps{
 				Title: "Environments",
 				Path:  w.Path(),
+				User:  w.Session().User,
 			},
 			cards.CardBordered(
 				cards.CardProps{

@@ -133,7 +133,9 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 										),
 									),
 									ProfileMenu(
-										ProfileMenuProps{},
+										ProfileMenuProps{
+											User: p.User,
+										},
 									),
 								),
 							),

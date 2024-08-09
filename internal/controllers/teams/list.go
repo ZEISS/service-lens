@@ -49,7 +49,9 @@ func (w *TeamListControllerImpl) Prepare() error {
 func (w *TeamListControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
-			components.DefaultLayoutProps{},
+			components.DefaultLayoutProps{
+				User: w.Session().User,
+			},
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{

@@ -38,7 +38,9 @@ func (p *NewTeamControllerImpl) Error(err error) error {
 func (p *NewTeamControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
-			components.DefaultLayoutProps{},
+			components.DefaultLayoutProps{
+				User: p.Session().User,
+			},
 			teams.NewForm(
 				teams.NewFormProps{},
 			),

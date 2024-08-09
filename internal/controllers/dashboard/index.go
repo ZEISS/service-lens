@@ -1,20 +1,17 @@
 package dashboard
 
 import (
-	"context"
 	"fmt"
 
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 
-	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
 // ShowDashboardController ...
 type ShowDashboardController struct {
-	user  adapters.GothUser
 	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
@@ -22,16 +19,8 @@ type ShowDashboardController struct {
 // NewShowDashboardController ...
 func NewShowDashboardController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ShowDashboardController {
 	return &ShowDashboardController{
-		user:  adapters.GothUser{},
 		store: store,
 	}
-}
-
-// Prepare ...
-func (d *ShowDashboardController) Prepare() error {
-	return d.store.ReadTx(d.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetUser(ctx, &d.user)
-	})
 }
 
 // Get ...
@@ -39,11 +28,11 @@ func (d *ShowDashboardController) Get() error {
 	return d.Render(
 		components.Page(
 			components.PageProps{
-				Title: fmt.Sprintf("Dashboard - %s", d.user.Name),
+				Title: fmt.Sprintf("Dashboard - %s", d.Session().User.Name),
 			},
 			components.Layout(
 				components.LayoutProps{
-					User: d.user,
+					User: d.Session().User,
 					Path: d.Path(),
 				},
 				components.Wrap(

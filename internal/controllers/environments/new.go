@@ -24,7 +24,9 @@ func NewEnvironmentController(store seed.Database[ports.ReadTx, ports.ReadWriteT
 func (p *EnvironmentControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
-			components.DefaultLayoutProps{},
+			components.DefaultLayoutProps{
+				User: p.Session().User,
+			},
 			environments.NewForm(
 				environments.NewFormProps{},
 			),

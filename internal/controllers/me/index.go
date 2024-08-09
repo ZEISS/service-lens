@@ -1,13 +1,10 @@
 package me
 
 import (
-	"context"
-
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 
-	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -16,7 +13,6 @@ import (
 
 // MeController ...
 type MeController struct {
-	user  adapters.GothUser
 	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
@@ -28,19 +24,13 @@ func NewMeController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *MeCo
 	}
 }
 
-// Prepare ...
-func (m *MeController) Prepare() error {
-	return m.store.ReadTx(m.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetUser(ctx, &m.user)
-	})
-}
-
 // Get ...
 func (m *MeController) Get() error {
 	return m.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
 				Path: m.Path(),
+				User: m.Session().User,
 			},
 			cards.CardBordered(
 				cards.CardProps{
@@ -69,7 +59,7 @@ func (m *MeController) Get() error {
 							forms.TextInputBordered(
 								forms.TextInputProps{
 									Name:     "username",
-									Value:    m.user.Name,
+									Value:    m.Session().User.Name,
 									Disabled: true,
 								},
 							),
@@ -97,7 +87,7 @@ func (m *MeController) Get() error {
 							forms.TextInputBordered(
 								forms.TextInputProps{
 									Name:     "email",
-									Value:    m.user.Email,
+									Value:    m.Session().User.Email,
 									Disabled: true,
 								},
 							),

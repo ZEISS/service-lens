@@ -43,6 +43,7 @@ func (w *WorkloadListControllerImpl) Get() error {
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
 				Path: w.Path(),
+				User: w.Session().User,
 			},
 			cards.CardBordered(
 				cards.CardProps{

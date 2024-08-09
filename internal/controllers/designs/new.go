@@ -26,6 +26,7 @@ func (l *NewDesignControllerImpl) Get() error {
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
 				Path: l.Path(),
+				User: l.Session().User,
 			},
 			designs.DesignNewForm(
 				designs.DesignNewFormProps{},

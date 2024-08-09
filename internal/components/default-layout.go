@@ -1,6 +1,7 @@
 package components
 
 import (
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 )
 
@@ -9,6 +10,7 @@ type DefaultLayoutProps struct {
 	ClassNames htmx.ClassNames
 	Path       string
 	Title      string
+	User       adapters.GothUser
 }
 
 // DefaultLayout ...
@@ -20,6 +22,7 @@ func DefaultLayout(props DefaultLayoutProps, children ...htmx.Node) htmx.Node {
 		Layout(
 			LayoutProps{
 				Path: props.Path,
+				User: props.User,
 			},
 			Wrap(
 				WrapProps{},
