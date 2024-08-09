@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zeiss/fiber-goth/adapters"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -14,7 +13,7 @@ import (
 )
 
 const (
-	listProfilesURL = "/teams/%s/profiles"
+	listProfilesURL = "/profiles"
 )
 
 var validate *validator.Validate
@@ -23,7 +22,6 @@ var validate *validator.Validate
 type CreateProfileControllerImpl struct {
 	profile models.Profile
 	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
-	team    adapters.GothTeam
 	htmx.DefaultController
 }
 
@@ -58,5 +56,5 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 
 // Post ...
 func (l *CreateProfileControllerImpl) Post() error {
-	return l.Redirect(fmt.Sprintf(listProfilesURL, l.team.ID))
+	return l.Redirect(fmt.Sprintf(listProfilesURL))
 }

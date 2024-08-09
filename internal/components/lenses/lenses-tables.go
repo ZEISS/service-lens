@@ -5,12 +5,12 @@ import (
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 const (
@@ -100,16 +100,15 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							},
 						),
 					),
-					htmx.A(
-						htmx.Href("/lenses/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
+					NewLensModal(),
+					buttons.Outline(
+						buttons.ButtonProps{
+							ClassNames: htmx.ClassNames{
+								"btn-sm": true,
 							},
-							htmx.Text("Create Lens"),
-						),
+						},
+						htmx.OnClick("new_lens_modal.showModal()"),
+						htmx.Text("Create Lens"),
 					),
 				),
 			},
@@ -149,25 +148,24 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 					},
 					Cell: func(p tables.TableProps, row *models.Lens) htmx.Node {
 						return htmx.Td(
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{},
-									icons.BoltOutline(
-										icons.IconProps{},
-									),
-								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{},
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
-										buttons.Error(
-											buttons.ButtonProps{},
-											htmx.HxDelete(fmt.Sprintf(deleteProfileURL, row.ID)),
-											htmx.HxConfirm("Are you sure you want to delete this lens?"),
-											htmx.Text("Delete"),
-										),
-									),
+							buttons.Button(
+								buttons.ButtonProps{
+									ClassNames: htmx.ClassNames{
+										"btn-sm": true,
+									},
+								},
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteLensUrlFormat, row.ID)),
+								htmx.HxConfirm("Are you sure you want to delete lens tag?"),
+								htmx.HxTarget("closest tr"),
+								htmx.HxSwap("outerHTML swap:1s"),
+								icons.TrashOutline(
+									icons.IconProps{
+										ClassNames: htmx.ClassNames{
+											"w-6 h-6": false,
+											"w-4":     true,
+											"h-4":     true,
+										},
+									},
 								),
 							),
 						)

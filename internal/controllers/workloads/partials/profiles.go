@@ -33,10 +33,8 @@ func (w *ProfilePartialListControllerImpl) Prepare() error {
 		return err
 	}
 
-	team := w.Session().User.TeamBySlug(w.Ctx().Params("t_slug"))
-
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListProfiles(ctx, team.ID, &w.profiles)
+		return tx.ListProfiles(ctx, &w.profiles)
 	})
 }
 

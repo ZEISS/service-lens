@@ -146,33 +146,12 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 										icons.IconProps{},
 									),
 								),
-								// dropdowns.DropdownMenuItems(
-								// 	dropdowns.DropdownMenuItemsProps{},
-								// 	dropdowns.DropdownMenuItem(
-								// 		dropdowns.DropdownMenuItemProps{},
-								// 		buttons.Error(
-								// 			buttons.ButtonProps{},
-								// 			htmx.HxDelete(fmt.Sprintf(deleteProfileURL, props.Workload.ID, row.ID)),
-								// 			htmx.HxConfirm("Are you sure you want to delete this lens?"),
-								// 			htmx.Text("Delete"),
-								// 		),
-								// 	),
-								// ),
 							),
 						)
 					},
 				},
 			},
 			props.Workload.Lenses,
-			// Pagination: ProfileListTablePaginationComponent(
-			// 	ProfileListTablePaginationProps{
-			// 		Limit:  props.Limit,
-			// 		Offset: props.Offset,
-			// 		Total:  props.Total,
-			// 		Target: "profiles-tables",
-			// 		Team:   props.Team,
-			// 	},
-			// ),
 		),
 	)
 }

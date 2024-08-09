@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
@@ -43,7 +42,7 @@ func (r *readTxImpl) ListDesigns(ctx context.Context, pagination *tables.Results
 }
 
 // ListProfiles is a method that returns a list of profiles
-func (r *readTxImpl) ListProfiles(ctx context.Context, team uuid.UUID, pagination *tables.Results[models.Profile]) error {
+func (r *readTxImpl) ListProfiles(ctx context.Context, pagination *tables.Results[models.Profile]) error {
 	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
@@ -105,16 +104,6 @@ func (r *readTxImpl) GetWorkloadAnswer(ctx context.Context, answer *models.Workl
 		First(answer).Error
 }
 
-// GetTeam is a method that returns a team by ID
-func (r *readTxImpl) GetTeam(ctx context.Context, team *adapters.GothTeam) error {
-	return r.conn.Where(team).First(team).Error
-}
-
-// ListTeams is a method that returns a list of teams
-func (r *readTxImpl) ListTeams(ctx context.Context, pagination *tables.Results[adapters.GothTeam]) error {
-	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
-}
-
 // GetWorkload is a method that returns a workload by ID
 func (r *readTxImpl) GetWorkload(ctx context.Context, workload *models.Workload) error {
 	return r.conn.Preload(clause.Associations).Where(workload).First(workload).Error
@@ -122,6 +111,11 @@ func (r *readTxImpl) GetWorkload(ctx context.Context, workload *models.Workload)
 
 // ListTags is a method that returns a list of tags
 func (r *readTxImpl) ListTags(ctx context.Context, pagination *tables.Results[models.Tag]) error {
+	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+}
+
+// ListWorkflows is a method that returns a list of workflows
+func (r *readTxImpl) ListWorkflows(ctx context.Context, pagination *tables.Results[models.Workflow]) error {
 	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
@@ -253,21 +247,6 @@ func (rw *writeTxImpl) UpdateWorkloadAnswer(ctx context.Context, answer *models.
 	}
 
 	return rw.conn.Model(answer).Association("Choices").Replace(answer.Choices)
-}
-
-// CreateTeam is a method that creates a team
-func (rw *writeTxImpl) CreateTeam(ctx context.Context, team *adapters.GothTeam) error {
-	return rw.conn.Create(team).Error
-}
-
-// UpdateTeam is a method that updates a team
-func (rw *writeTxImpl) UpdateTeam(ctx context.Context, team *adapters.GothTeam) error {
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(team).Error
-}
-
-// DeleteTeam is a method that deletes a team
-func (rw *writeTxImpl) DeleteTeam(ctx context.Context, team *adapters.GothTeam) error {
-	return rw.conn.Delete(team).Error
 }
 
 // CreateTag is a method that creates a tag

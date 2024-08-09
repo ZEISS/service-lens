@@ -25,7 +25,8 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 		menus.Menu(
 			menus.MenuProps{
 				ClassNames: htmx.ClassNames{
-					"w-full": true,
+					"w-full":      true,
+					"bg-base-200": false,
 				},
 			},
 			menus.MenuItem(
@@ -37,6 +38,10 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 					},
 					htmx.Text("Dashboard"),
 				),
+			),
+			menus.MenuTitle(
+				menus.MenuTitleProps{},
+				htmx.Text("Design & Review"),
 			),
 			menus.MenuItem(
 				menus.MenuItemProps{
@@ -66,6 +71,10 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 					},
 					htmx.Text("Workloads"),
 				),
+			),
+			menus.MenuTitle(
+				menus.MenuTitleProps{},
+				htmx.Text("Configuration"),
 			),
 			menus.MenuItem(
 				menus.MenuItemProps{
@@ -120,45 +129,17 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 				),
 			),
 			menus.MenuItem(
-				menus.MenuItemProps{},
-				menus.MenuCollapsible(
-					menus.MenuCollapsibleProps{
-						Open: strings.HasPrefix(p.Path, "/site"),
+				menus.MenuItemProps{
+					ClassNames: htmx.ClassNames{
+						"hover:bg-base-300": false,
 					},
-					menus.MenuCollapsibleSummary(
-						menus.MenuCollapsibleSummaryProps{},
-						htmx.Text("Administration"),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href:   "/site/teams/new",
-								Active: p.Path == "/site/teams/new",
-							},
-							htmx.Text("New Team"),
-						),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href:   "/site/teams",
-								Active: p.Path == "/site/teams",
-							},
-							htmx.Text("List Teams"),
-						),
-					),
-					menus.MenuItem(
-						menus.MenuItemProps{},
-						menus.MenuLink(
-							menus.MenuLinkProps{
-								Href:   "/settings",
-								Active: p.Path == "/settings",
-							},
-							htmx.Text("Settings"),
-						),
-					),
+				},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href:   utils.ListWorkflowsUrlFormat,
+						Active: strings.HasPrefix(p.Path, "/workflows"),
+					},
+					htmx.Text("Workflows"),
 				),
 			),
 		),

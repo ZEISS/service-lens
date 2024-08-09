@@ -3,7 +3,6 @@ package profiles
 import (
 	"context"
 
-	"github.com/zeiss/fiber-goth/adapters"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/profiles"
@@ -18,7 +17,6 @@ import (
 // ProfileListControllerImpl ...
 type ProfileListControllerImpl struct {
 	profiles tables.Results[models.Profile]
-	team     adapters.GothTeam
 	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
@@ -34,10 +32,8 @@ func (w *ProfileListControllerImpl) Prepare() error {
 		return err
 	}
 
-	w.team = w.Session().User.TeamBySlug(w.Ctx().Params("t_slug"))
-
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListProfiles(ctx, w.team.ID, &w.profiles)
+		return tx.ListProfiles(ctx, &w.profiles)
 	})
 }
 
@@ -59,7 +55,6 @@ func (w *ProfileListControllerImpl) Get() error {
 					cards.BodyProps{},
 					profiles.ProfilesTable(
 						profiles.ProfilesTableProps{
-							Team:     w.team.Slug,
 							Profiles: w.profiles.GetRows(),
 							Offset:   w.profiles.GetOffset(),
 							Limit:    w.profiles.GetLimit(),

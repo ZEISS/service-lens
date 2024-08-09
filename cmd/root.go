@@ -117,13 +117,6 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
 
-		// Site ...
-		site := app.Group("/site")
-		site.Get("/teams", handlers.ListTeams())
-		site.Get("/teams/new", handlers.NewTeam())
-		site.Post("/teams/new", handlers.CreateTeam())
-		site.Get("/teams/:id", handlers.ShowTeam())
-
 		// Designs ...
 		designs := app.Group("/designs")
 		designs.Get("/", handlers.ListDesigns())
@@ -160,7 +153,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// Lenses ...
 		lenses := app.Group("/lenses")
 		lenses.Get("/", handlers.ListLenses())
-		lenses.Get("/new", handlers.NewLens())
+		lenses.Post("/", handlers.NewLens())
 		lenses.Post("/new", handlers.CreateLens())
 		lenses.Get("/:id", handlers.ShowLens())
 		lenses.Get("/:id/edit", handlers.EditLens())
@@ -188,6 +181,10 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		tags.Get("/", handlers.ListTags())
 		tags.Post("/new", handlers.CreateTag())
 		tags.Delete("/:id", handlers.DeleteTag())
+
+		// Workflows ...
+		workflows := app.Group("/workflows")
+		workflows.Get("/", handlers.ListWorkflows())
 
 		// Me ...
 		app.Get("/me", handlers.Me())

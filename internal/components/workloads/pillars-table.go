@@ -43,15 +43,6 @@ func LensPillarTable(props LensPillarTableProps, children ...htmx.Node) htmx.Nod
 				},
 			},
 			props.Lens.GetPillars(),
-			// Pagination: ProfileListTablePaginationComponent(
-			// 	ProfileListTablePaginationProps{
-			// 		Limit:  props.Limit,
-			// 		Offset: props.Offset,
-			// 		Total:  props.Total,
-			// 		Target: "profiles-tables",
-			// 		Team:   props.Team,
-			// 	},
-			// ),
 		),
 	)
 }

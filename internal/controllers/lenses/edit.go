@@ -15,8 +15,7 @@ import (
 
 // LensEditControllerParams ...
 type LensEditControllerParams struct {
-	ID   uuid.UUID `json:"id" xml:"id" form:"id"`
-	Team string    `json:"team" xml:"team" form:"team"`
+	ID uuid.UUID `json:"id" xml:"id" form:"id"`
 }
 
 // NewDefaultLensEditControllerParams ...

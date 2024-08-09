@@ -15,7 +15,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/settings"
 	"github.com/zeiss/service-lens/internal/controllers/tags"
-	"github.com/zeiss/service-lens/internal/controllers/teams"
+	"github.com/zeiss/service-lens/internal/controllers/workflows"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/questions"
@@ -372,48 +372,6 @@ func (a *handlers) UpdateWorkloadAnswer() fiber.Handler {
 	})
 }
 
-// ListTeams ...
-func (a *handlers) ListTeams() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewTeamListController(a.store)
-	})
-}
-
-// NewTeam ...
-func (a *handlers) NewTeam() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewTeamController(a.store)
-	})
-}
-
-// DeleteTeam ...
-func (a *handlers) DeleteTeam() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewTeamDeleteController(a.store)
-	})
-}
-
-// EditTeam ...
-func (a *handlers) EditTeam() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewTeamEditController(a.store)
-	})
-}
-
-// ShowTeam ...
-func (a *handlers) ShowTeam() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewTeamShowController(a.store)
-	})
-}
-
-// CreateTeam ...
-func (a *handlers) CreateTeam() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return teams.NewCreateTeamController(a.store)
-	})
-}
-
 // ListTags ...
 func (a *handlers) ListTags() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
@@ -432,5 +390,12 @@ func (a *handlers) CreateTag() fiber.Handler {
 func (a *handlers) DeleteTag() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return tags.NewTagDeleteController(a.store)
+	})
+}
+
+// ListWorkflows ...
+func (a *handlers) ListWorkflows() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewListWorkflowsController(a.store)
 	})
 }

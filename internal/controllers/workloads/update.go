@@ -2,7 +2,6 @@ package workloads
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/zeiss/service-lens/internal/models"
@@ -36,8 +35,6 @@ func (w *WorkloadUpdateControllerImpl) Prepare() error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(w.workload)
 
 	return w.store.ReadWriteTx(w.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
 		return tx.UpdateWorkload(ctx, &w.workload)

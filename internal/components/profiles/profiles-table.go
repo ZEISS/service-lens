@@ -6,6 +6,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
@@ -146,24 +147,28 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 							buttons.Button(
 								buttons.ButtonProps{
 									ClassNames: htmx.ClassNames{
-										"btn-square": true,
+										"btn-sm": true,
 									},
 								},
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteProfileUrlFormat, row.ID)),
+								htmx.HxConfirm("Are you sure you want to delete this profile?"),
+								htmx.HxTarget("closest tr"),
+								htmx.HxSwap("outerHTML swap:1s"),
+								icons.TrashOutline(
+									icons.IconProps{
+										ClassNames: htmx.ClassNames{
+											"w-6 h-6": false,
+											"w-4":     true,
+											"h-4":     true,
+										},
+									},
+								),
 							),
 						)
 					},
 				},
 			},
 			props.Profiles,
-			// Pagination: ProfileListTablePaginationComponent(
-			// 	ProfileListTablePaginationProps{
-			// 		Limit:  props.Limit,
-			// 		Offset: props.Offset,
-			// 		Total:  props.Total,
-			// 		Target: "profiles-tables",
-			// 		Team:   props.Team,
-			// 	},
-			// ),
 		),
 	)
 }

@@ -205,15 +205,6 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 				},
 			},
 			props.Workloads,
-			// Pagination: ProfileListTablePaginationComponent(
-			// 	ProfileListTablePaginationProps{
-			// 		Limit:  props.Limit,
-			// 		Offset: props.Offset,
-			// 		Total:  props.Total,
-			// 		Target: "profiles-tables",
-			// 		Team:   props.Team,
-			// 	},
-			// ),
 		),
 	)
 }

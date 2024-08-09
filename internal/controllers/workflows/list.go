@@ -1,4 +1,4 @@
-package designs
+package workflows
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/components/designs"
+	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -14,33 +14,33 @@ import (
 	"github.com/zeiss/fiber-htmx/components/tables"
 )
 
-var _ = htmx.Controller(&ListDesignsControllerImpl{})
+var _ = htmx.Controller(&ListWorkflowsControllerImpl{})
 
-// ListDesignsControllerImpl ...
-type ListDesignsControllerImpl struct {
-	results tables.Results[models.Design]
+// ListWorkflowsControllerImpl ...
+type ListWorkflowsControllerImpl struct {
+	results tables.Results[models.Workflow]
 	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
-// NewListDesignsController ...
-func NewListDesignsController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ListDesignsControllerImpl {
-	return &ListDesignsControllerImpl{store: store}
+// NewListWorkflowsController ...
+func NewListWorkflowsController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ListWorkflowsControllerImpl {
+	return &ListWorkflowsControllerImpl{store: store}
 }
 
 // Prepare ...
-func (l *ListDesignsControllerImpl) Prepare() error {
+func (l *ListWorkflowsControllerImpl) Prepare() error {
 	if err := l.BindQuery(&l.results); err != nil {
 		return err
 	}
 
 	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListDesigns(ctx, &l.results)
+		return tx.ListWorkflows(ctx, &l.results)
 	})
 }
 
 // Prepare ...
-func (l *ListDesignsControllerImpl) Get() error {
+func (l *ListWorkflowsControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
@@ -55,12 +55,12 @@ func (l *ListDesignsControllerImpl) Get() error {
 				},
 				cards.Body(
 					cards.BodyProps{},
-					designs.DesignsTable(
-						designs.DesignsTableProps{
-							Designs: l.results.GetRows(),
-							Offset:  l.results.GetOffset(),
-							Limit:   l.results.GetLimit(),
-							Total:   l.results.GetLen(),
+					workflows.WorkflowsTable(
+						workflows.WorkflowsTableProps{
+							Workflows: l.results.GetRows(),
+							Offset:    l.results.GetOffset(),
+							Limit:     l.results.GetLimit(),
+							Total:     l.results.GetLen(),
 						},
 					),
 				),

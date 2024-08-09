@@ -28,7 +28,6 @@ func NewCreateWorkloadController(store seed.Database[ports.ReadTx, ports.ReadWri
 
 // Error ...
 func (l *CreateWorkloadControllerImpl) Error(err error) error {
-	fmt.Println(err)
 	return err
 }
 

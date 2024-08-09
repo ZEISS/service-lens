@@ -1,12 +1,16 @@
 package environments
 
 import (
+	"fmt"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // EnvironmentsTableProps ...
@@ -137,24 +141,28 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 							buttons.Button(
 								buttons.ButtonProps{
 									ClassNames: htmx.ClassNames{
-										"btn-square": true,
+										"btn-sm": true,
 									},
 								},
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteEnvironmentUrlFormat, row.ID)),
+								htmx.HxConfirm("Are you sure you want to delete environment tag?"),
+								htmx.HxTarget("closest tr"),
+								htmx.HxSwap("outerHTML swap:1s"),
+								icons.TrashOutline(
+									icons.IconProps{
+										ClassNames: htmx.ClassNames{
+											"w-6 h-6": false,
+											"w-4":     true,
+											"h-4":     true,
+										},
+									},
+								),
 							),
 						)
 					},
 				},
 			},
 			props.Environments,
-			// Pagination: ProfileListTablePaginationComponent(
-			// 	ProfileListTablePaginationProps{
-			// 		Limit:  props.Limit,
-			// 		Offset: props.Offset,
-			// 		Total:  props.Total,
-			// 		Target: "profiles-tables",
-			// 		Team:   props.Team,
-			// 	},
-			// ),
 		),
 	)
 }

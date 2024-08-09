@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
@@ -36,7 +35,7 @@ type ReadTx interface {
 	// ListDesigns is a method that returns a list of designs
 	ListDesigns(ctx context.Context, designs *tables.Results[models.Design]) error
 	// ListProfiles is a method that returns a list of profiles
-	ListProfiles(ctx context.Context, team uuid.UUID, profiles *tables.Results[models.Profile]) error
+	ListProfiles(ctx context.Context, profiles *tables.Results[models.Profile]) error
 	// ListProfileQuestions is a method that returns a list of profile questions
 	ListProfileQuestions(ctx context.Context, questions *tables.Results[models.ProfileQuestion]) error
 	// GetProfile is a method that returns a profile by ID
@@ -57,12 +56,10 @@ type ReadTx interface {
 	GetLensQuestion(ctx context.Context, question *models.Question) error
 	// GetWorkloadAnswer is a method that returns a workload answer by ID
 	GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
-	// ListTeams is a method that returns a list of teams
-	ListTeams(ctx context.Context, teams *tables.Results[adapters.GothTeam]) error
-	// GetTeam is a method that returns a team by ID
-	GetTeam(ctx context.Context, team *adapters.GothTeam) error
 	// ListTags is a method that returns a list of tags
 	ListTags(ctx context.Context, tags *tables.Results[models.Tag]) error
+	// ListWorkflows is a method that returns a list of workflows
+	ListWorkflows(ctx context.Context, workflows *tables.Results[models.Workflow]) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -103,12 +100,6 @@ type ReadWriteTx interface {
 	DeleteWorkload(ctx context.Context, workload *models.Workload) error
 	// UpdateWorkloadAnswer is a method that updates a workload answer
 	UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
-	// CreateTeam is a method that creates a team
-	CreateTeam(ctx context.Context, team *adapters.GothTeam) error
-	// UpdateTeam is a method that updates a team
-	UpdateTeam(ctx context.Context, team *adapters.GothTeam) error
-	// DeleteTeam is a method that deletes a team
-	DeleteTeam(ctx context.Context, team *adapters.GothTeam) error
 	// CreateTag is a method that creates a tag
 	CreateTag(ctx context.Context, tag *models.Tag) error
 	// UpdateTag is a method that updates a tag
