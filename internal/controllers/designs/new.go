@@ -27,6 +27,17 @@ func (l *NewDesignControllerImpl) Get() error {
 			components.DefaultLayoutProps{
 				Path: l.Path(),
 				User: l.Session().User,
+				Head: []htmx.Node{
+					htmx.Link(
+						htmx.Attribute("href", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.css"),
+						htmx.Rel("stylesheet"),
+						htmx.Type("text/css"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.js"),
+						htmx.Type("text/javascript"),
+					),
+				},
 			},
 			designs.DesignNewForm(
 				designs.DesignNewFormProps{},

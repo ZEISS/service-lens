@@ -131,7 +131,7 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: fmt.Sprintf(showProfileURL, props.Team, row.ID.String()),
+									Href: fmt.Sprintf(utils.ShowProfileUrlFormat, row.ID.String()),
 								},
 								htmx.Text(row.Name),
 							),

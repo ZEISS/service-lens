@@ -2,6 +2,7 @@ package designs
 
 import (
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
@@ -58,14 +59,29 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 					forms.FormControlProps{
 						ClassNames: htmx.ClassNames{},
 					},
-					forms.TextareaBordered(
-						forms.TextareaProps{
-							ClassNames: htmx.ClassNames{
-								"h-[50vh]": true,
+					htmx.Div(
+						alpine.XData(`{
+        value: '# Write Some Markdown...',
+        init() {
+            let editor = new SimpleMDE({ element: this.$refs.editor })
+
+            editor.value(this.value)
+
+            editor.codemirror.on('change', () => {
+                this.value = editor.value()
+            })
+        },
+    }`,
+						),
+						forms.TextareaBordered(
+							forms.TextareaProps{
+								ClassNames: htmx.ClassNames{
+									"h-[50vh]": true,
+								},
+								Name: "body",
 							},
-							Name:        "body",
-							Placeholder: "Start typing...",
-						},
+							alpine.XRef("editor"),
+						),
 					),
 					forms.FormControlLabel(
 						forms.FormControlLabelProps{},

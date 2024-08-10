@@ -11,6 +11,7 @@ const (
 	DeleteTagUrlFormat           = "/tags/%s"
 	CreateProfileUrlFormat       = "/profiles/new"
 	DeleteProfileUrlFormat       = "/profiles/%s"
+	ShowProfileUrlFormat         = "/profiles/%s"
 	ListWorkflowsUrlFormat       = "/workflows"
 	CreateLensUrlFormat          = "/lenses"
 	DeleteLensUrlFormat          = "/lenses/%s"

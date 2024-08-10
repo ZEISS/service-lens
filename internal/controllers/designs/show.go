@@ -10,10 +10,12 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer/html"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
+	"go.abhg.dev/goldmark/mermaid"
 )
 
 // ShowDesignControllerImpl ...
@@ -52,6 +54,8 @@ func (l *ShowDesignControllerImpl) Prepare() error {
 		),
 		goldmark.WithExtensions(
 			extension.GFM,
+			emoji.Emoji,
+			&mermaid.Extender{},
 		),
 	)
 
