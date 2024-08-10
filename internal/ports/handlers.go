@@ -104,4 +104,6 @@ type Handlers interface {
 	DeleteTag() fiber.Handler
 	// ListWorkflows ...
 	ListWorkflows() fiber.Handler
+	// Preview ...
+	Preview() fiber.Handler
 }

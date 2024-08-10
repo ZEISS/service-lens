@@ -192,6 +192,9 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// Settings ...
 		app.Get("/settings", handlers.ShowSettings())
 
+		// Preview ...
+		app.Post("/preview", handlers.Preview())
+
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {
 			return err

@@ -63,7 +63,14 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 						alpine.XData(`{
         value: '# Write Some Markdown...',
         init() {
-            let editor = new SimpleMDE({ element: this.$refs.editor })
+            let editor = new SimpleMDE({
+              element: this.$refs.editor,
+              previewRender: function(plainText, preview) {
+                htmx.ajax('POST', '/preview', {values: {body: plainText}, target: '.editor-preview', swap: 'innerHTML'})
+
+		            return "Loading...";
+	            }
+            })
 
             editor.value(this.value)
 
