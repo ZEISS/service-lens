@@ -6,6 +6,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // DesignNewFormProps ...
@@ -124,6 +125,77 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 				cards.Title(
 					cards.TitleProps{},
 					htmx.Text("Tags - Optional"),
+				),
+				htmx.Div(
+					alpine.XData(`{
+            tags: [],
+            addTag(tag) {
+              this.tags.push({name: '', value: ''});
+            },
+            removeTag(index) {
+              this.tags.splice(index, 1);
+            }
+          }`),
+					htmx.Template(
+						alpine.XFor("({ name, value }, index) in tags"),
+						htmx.Attribute(":key", "index"),
+						htmx.Div(
+							htmx.ClassNames{
+								tailwind.Flex:    true,
+								tailwind.SpaceX4: true,
+							},
+							forms.FormControl(
+								forms.FormControlProps{
+									ClassNames: htmx.ClassNames{},
+								},
+								forms.TextInputBordered(
+									forms.TextInputProps{},
+									alpine.XModel("name"),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("Key in a tag."),
+									),
+								),
+							),
+							forms.FormControl(
+								forms.FormControlProps{
+									ClassNames: htmx.ClassNames{},
+								},
+								forms.TextInputBordered(
+									forms.TextInputProps{},
+									alpine.XModel("value"),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("Value in a tag."),
+									),
+								),
+							),
+						),
+					),
+					cards.Actions(
+						cards.ActionsProps{},
+						buttons.Outline(
+							buttons.ButtonProps{
+								Type: "button",
+							},
+							alpine.XOn("click", "addTag()"),
+							htmx.Text("Add new tag"),
+						),
+					),
 				),
 			),
 		),
