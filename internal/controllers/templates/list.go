@@ -1,7 +1,10 @@
 package templates
 
 import (
+	"context"
+
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/templates"
 	"github.com/zeiss/service-lens/internal/models"
@@ -16,8 +19,7 @@ var _ = htmx.Controller(&ListTemplatesControllerImpl{})
 
 // ListTemplatesControllerImpl ...
 type ListTemplatesControllerImpl struct {
-	results tables.Results[models.Template]
-	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
@@ -35,6 +37,13 @@ func (l *ListTemplatesControllerImpl) Get() error {
 				User: l.Session().User,
 			},
 			func() htmx.Node {
+				results := tables.Results[models.Template]{}
+
+				errorx.Panic(l.BindQuery(&results))
+				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListTemplates(ctx, &results)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
@@ -45,10 +54,10 @@ func (l *ListTemplatesControllerImpl) Get() error {
 						cards.BodyProps{},
 						templates.TemplatesTable(
 							templates.TemplatesTableProps{
-								Templates: l.results.GetRows(),
-								Offset:    l.results.GetOffset(),
-								Limit:     l.results.GetLimit(),
-								Total:     l.results.GetLen(),
+								Templates: results.GetRows(),
+								Offset:    results.GetOffset(),
+								Limit:     results.GetLimit(),
+								Total:     results.GetLen(),
 							},
 						),
 					),

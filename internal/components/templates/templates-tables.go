@@ -5,10 +5,10 @@ import (
 	"time"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/badges"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
+	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -98,6 +98,18 @@ func TemplatesTable(props TemplatesTableProps, children ...htmx.Node) htmx.Node 
 			},
 			[]tables.ColumnDef[*models.Template]{
 				{
+					ID:          "id",
+					AccessorKey: "id",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("ID"))
+					},
+					Cell: func(p tables.TableProps, row *models.Template) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.ID.String()),
+						)
+					},
+				},
+				{
 					ID:          "name",
 					AccessorKey: "name",
 					Header: func(p tables.TableProps) htmx.Node {
@@ -105,8 +117,10 @@ func TemplatesTable(props TemplatesTableProps, children ...htmx.Node) htmx.Node 
 					},
 					Cell: func(p tables.TableProps, row *models.Template) htmx.Node {
 						return htmx.Td(
-							badges.Primary(
-								badges.BadgeProps{},
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf(utils.ShowTemplateUrlFormat, row.ID.String()),
+								},
 								htmx.Text(row.Name),
 							),
 						)

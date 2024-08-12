@@ -201,6 +201,9 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		// Templates ...
 		templates := app.Group("/templates")
 		templates.Get("/", handlers.ListTemplates())
+		templates.Get("/:id", handlers.ShowTemplate())
+		templates.Get("/new", handlers.NewTemplate())
+		templates.Post("/new", handlers.CreateTemplate())
 
 		// Me ...
 		app.Get("/me", handlers.Me())

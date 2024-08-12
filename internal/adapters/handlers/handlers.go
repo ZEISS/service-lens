@@ -415,3 +415,24 @@ func (a *handlers) ListTemplates() fiber.Handler {
 		return templates.NewListTemplatesController(a.store)
 	})
 }
+
+// NewTemplate ...
+func (a *handlers) NewTemplate() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewTemplateController(a.store)
+	})
+}
+
+// CreateTemplate ...
+func (a *handlers) CreateTemplate() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewCreateTemplateController(a.store)
+	})
+}
+
+// ShowTemplate ...
+func (a *handlers) ShowTemplate() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewShowTemplateController(a.store)
+	})
+}
