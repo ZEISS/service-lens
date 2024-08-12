@@ -60,6 +60,10 @@ type ReadTx interface {
 	ListTags(ctx context.Context, tags *tables.Results[models.Tag]) error
 	// ListWorkflows is a method that returns a list of workflows
 	ListWorkflows(ctx context.Context, workflows *tables.Results[models.Workflow]) error
+	// ListTemplates is a method that returns a list of templates
+	ListTemplates(ctx context.Context, templates *tables.Results[models.Template]) error
+	// GetTemplate is a method that returns a template by ID
+	GetTemplate(ctx context.Context, template *models.Template) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
@@ -106,4 +110,10 @@ type ReadWriteTx interface {
 	UpdateTag(ctx context.Context, tag *models.Tag) error
 	// DeleteTag is a method that deletes a tag
 	DeleteTag(ctx context.Context, tag *models.Tag) error
+	// CreateTemplate is a method that creates a template
+	CreateTemplate(ctx context.Context, template *models.Template) error
+	// UpdateTemplate is a method that updates a template
+	UpdateTemplate(ctx context.Context, template *models.Template) error
+	// DeleteTemplate is a method that deletes a template
+	DeleteTemplate(ctx context.Context, template *models.Template) error
 }

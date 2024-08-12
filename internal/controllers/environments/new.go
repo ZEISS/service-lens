@@ -27,9 +27,11 @@ func (p *EnvironmentControllerImpl) Get() error {
 			components.DefaultLayoutProps{
 				User: p.Session().User,
 			},
-			environments.NewForm(
-				environments.NewFormProps{},
-			),
+			func() htmx.Node {
+				return environments.NewForm(
+					environments.NewFormProps{},
+				)
+			},
 		),
 	)
 }

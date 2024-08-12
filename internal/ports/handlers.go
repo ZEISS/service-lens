@@ -106,4 +106,6 @@ type Handlers interface {
 	ListWorkflows() fiber.Handler
 	// Preview ...
 	Preview() fiber.Handler
+	// ListTemplates ...
+	ListTemplates() fiber.Handler
 }

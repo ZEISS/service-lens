@@ -47,24 +47,26 @@ func (l *ListWorkflowsControllerImpl) Get() error {
 				Path: l.Path(),
 				User: l.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					workflows.WorkflowsTable(
-						workflows.WorkflowsTableProps{
-							Workflows: l.results.GetRows(),
-							Offset:    l.results.GetOffset(),
-							Limit:     l.results.GetLimit(),
-							Total:     l.results.GetLen(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						workflows.WorkflowsTable(
+							workflows.WorkflowsTableProps{
+								Workflows: l.results.GetRows(),
+								Offset:    l.results.GetOffset(),
+								Limit:     l.results.GetLimit(),
+								Total:     l.results.GetLen(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

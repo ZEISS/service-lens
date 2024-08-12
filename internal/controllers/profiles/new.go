@@ -45,63 +45,20 @@ func (p *NewProfileControllerImpl) Get() error {
 				Path:  p.Path(),
 				User:  p.Session().User,
 			},
-			htmx.FormElement(
-				htmx.HxPost(""),
-				cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"m-4": true,
-						},
-					},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Create Profile"),
-						),
-						forms.FormControl(
-							forms.FormControlProps{
-								ClassNames: htmx.ClassNames{
-									"py-4": true,
-								},
+			func() htmx.Node {
+				return htmx.FormElement(
+					htmx.HxPost(""),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"m-4": true,
 							},
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{
-										ClassNames: htmx.ClassNames{
-											"-my-4": true,
-										},
-									},
-									htmx.Text("Name"),
-								),
-							),
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{
-										ClassNames: htmx.ClassNames{
-											"text-neutral-500": true,
-										},
-									},
-									htmx.Text("A unique identifier for the workload."),
-								),
-							),
-							forms.TextInputBordered(
-								forms.TextInputProps{
-									Name: "name",
-								},
-							),
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{
-										ClassNames: htmx.ClassNames{
-											"text-neutral-500": true,
-										},
-									},
-									htmx.Text("The name must be from 3 to 100 characters. At least 3 characters must be non-whitespace."),
-								),
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Create Profile"),
 							),
 							forms.FormControl(
 								forms.FormControlProps{
@@ -117,7 +74,7 @@ func (p *NewProfileControllerImpl) Get() error {
 												"-my-4": true,
 											},
 										},
-										htmx.Text("Description"),
+										htmx.Text("Name"),
 									),
 								),
 								forms.FormControlLabel(
@@ -128,12 +85,12 @@ func (p *NewProfileControllerImpl) Get() error {
 												"text-neutral-500": true,
 											},
 										},
-										htmx.Text("A brief description of the workload to document its scope and intended purpose."),
+										htmx.Text("A unique identifier for the workload."),
 									),
 								),
-								forms.TextareaBordered(
-									forms.TextareaProps{
-										Name: "description",
+								forms.TextInputBordered(
+									forms.TextInputProps{
+										Name: "name",
 									},
 								),
 								forms.FormControlLabel(
@@ -144,79 +101,124 @@ func (p *NewProfileControllerImpl) Get() error {
 												"text-neutral-500": true,
 											},
 										},
-										htmx.Text("The description must be from 3 to 1024 characters."),
+										htmx.Text("The name must be from 3 to 100 characters. At least 3 characters must be non-whitespace."),
 									),
 								),
-								cards.Actions(
-									cards.ActionsProps{},
-									buttons.Outline(
-										buttons.ButtonProps{},
-										htmx.Attribute("type", "submit"),
-										htmx.Text("Save Profile"),
+								forms.FormControl(
+									forms.FormControlProps{
+										ClassNames: htmx.ClassNames{
+											"py-4": true,
+										},
+									},
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"-my-4": true,
+												},
+											},
+											htmx.Text("Description"),
+										),
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
+										),
+									),
+									forms.TextareaBordered(
+										forms.TextareaProps{
+											Name: "description",
+										},
+									),
+									forms.FormControlLabel(
+										forms.FormControlLabelProps{},
+										forms.FormControlLabelText(
+											forms.FormControlLabelTextProps{
+												ClassNames: htmx.ClassNames{
+													"text-neutral-500": true,
+												},
+											},
+											htmx.Text("The description must be from 3 to 1024 characters."),
+										),
+									),
+									cards.Actions(
+										cards.ActionsProps{},
+										buttons.Outline(
+											buttons.ButtonProps{},
+											htmx.Attribute("type", "submit"),
+											htmx.Text("Save Profile"),
+										),
 									),
 								),
 							),
 						),
 					),
-				),
-				htmx.Group(
-					htmx.ForEach(p.questions.GetRows(), func(q *models.ProfileQuestion, profileIdx int) htmx.Node {
-						return cards.CardBordered(
-							cards.CardProps{
-								ClassNames: htmx.ClassNames{
-									"w-full": true,
-									"my-4":   true,
+					htmx.Group(
+						htmx.ForEach(p.questions.GetRows(), func(q *models.ProfileQuestion, profileIdx int) htmx.Node {
+							return cards.CardBordered(
+								cards.CardProps{
+									ClassNames: htmx.ClassNames{
+										"w-full": true,
+										"my-4":   true,
+									},
 								},
-							},
-							cards.Body(
-								cards.BodyProps{},
-								htmx.Group(
-
-									cards.Title(
-										cards.TitleProps{},
-										htmx.Text(q.Title),
-									),
+								cards.Body(
+									cards.BodyProps{},
 									htmx.Group(
-										htmx.ForEach(q.GetChoices(), func(c *models.ProfileQuestionChoice, choiceIdx int) htmx.Node {
-											return forms.FormControl(
-												forms.FormControlProps{},
-												forms.FormControlLabel(
-													forms.FormControlLabelProps{},
-													forms.FormControlLabelText(
-														forms.FormControlLabelTextProps{},
-														htmx.Text(c.Title),
+
+										cards.Title(
+											cards.TitleProps{},
+											htmx.Text(q.Title),
+										),
+										htmx.Group(
+											htmx.ForEach(q.GetChoices(), func(c *models.ProfileQuestionChoice, choiceIdx int) htmx.Node {
+												return forms.FormControl(
+													forms.FormControlProps{},
+													forms.FormControlLabel(
+														forms.FormControlLabelProps{},
+														forms.FormControlLabelText(
+															forms.FormControlLabelTextProps{},
+															htmx.Text(c.Title),
+														),
+														forms.Radio(
+															forms.RadioProps{
+																Name:    fmt.Sprintf("answers.%d.ChoiceID", profileIdx),
+																Value:   utils.IntStr(c.ID),
+																Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
+															},
+														),
 													),
-													forms.Radio(
-														forms.RadioProps{
-															Name:    fmt.Sprintf("answers.%d.ChoiceID", profileIdx),
-															Value:   utils.IntStr(c.ID),
-															Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
-														},
-													),
-												),
-											)
-										})...),
+												)
+											})...),
+									),
 								),
-							),
-						)
-					})...,
-				),
-				cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"w-full": true,
-							"my-4":   true,
+							)
+						})...,
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"w-full": true,
+								"my-4":   true,
+							},
 						},
-					},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Tags - Optional"),
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Tags - Optional"),
+							),
 						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

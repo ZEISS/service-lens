@@ -41,24 +41,26 @@ func (w *TagsListControllerImpl) Get() error {
 				Path: w.Path(),
 				User: w.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					tags.TagsTable(
-						tags.TagsTableProps{
-							Tags:   w.tags.GetRows(),
-							Offset: w.tags.GetOffset(),
-							Limit:  w.tags.GetLimit(),
-							Total:  w.tags.GetTotalRows(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						tags.TagsTable(
+							tags.TagsTableProps{
+								Tags:   w.tags.GetRows(),
+								Offset: w.tags.GetOffset(),
+								Limit:  w.tags.GetLimit(),
+								Total:  w.tags.GetTotalRows(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

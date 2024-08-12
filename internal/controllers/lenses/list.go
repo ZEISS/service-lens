@@ -46,24 +46,26 @@ func (w *LensListController) Get() error {
 				Path: w.Path(),
 				User: w.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					lenses.LensesTable(
-						lenses.LensesTableProps{
-							Lenses: w.lenses.GetRows(),
-							Offset: w.lenses.GetOffset(),
-							Limit:  w.lenses.GetLimit(),
-							Total:  w.lenses.GetTotalRows(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						lenses.LensesTable(
+							lenses.LensesTableProps{
+								Lenses: w.lenses.GetRows(),
+								Offset: w.lenses.GetOffset(),
+								Limit:  w.lenses.GetLimit(),
+								Total:  w.lenses.GetTotalRows(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

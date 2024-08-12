@@ -31,56 +31,58 @@ func (d *ShowDashboardController) Get() error {
 				Path: d.Path(),
 				User: d.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
+						},
 					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					cards.Title(
-						cards.TitleProps{},
-						htmx.Text("Dashboard"),
+					cards.Body(
+						cards.BodyProps{},
+						cards.Title(
+							cards.TitleProps{},
+							htmx.Text("Dashboard"),
+						),
+						stats.Stats(
+							stats.StatsProps{},
+							stats.Stat(
+								stats.StatProps{},
+								stats.Title(
+									stats.TitleProps{},
+									htmx.Text("Total Designs"),
+								),
+								stats.Value(
+									stats.ValueProps{},
+									htmx.Text("0"),
+								),
+							),
+							stats.Stat(
+								stats.StatProps{},
+								stats.Title(
+									stats.TitleProps{},
+									htmx.Text("Total Profiles"),
+								),
+								stats.Value(
+									stats.ValueProps{},
+									htmx.Text("0"),
+								),
+							),
+							stats.Stat(
+								stats.StatProps{},
+								stats.Title(
+									stats.TitleProps{},
+									htmx.Text("Total Workloads"),
+								),
+								stats.Value(
+									stats.ValueProps{},
+									htmx.Text("0"),
+								),
+							),
+						),
 					),
-					stats.Stats(
-						stats.StatsProps{},
-						stats.Stat(
-							stats.StatProps{},
-							stats.Title(
-								stats.TitleProps{},
-								htmx.Text("Total Designs"),
-							),
-							stats.Value(
-								stats.ValueProps{},
-								htmx.Text("0"),
-							),
-						),
-						stats.Stat(
-							stats.StatProps{},
-							stats.Title(
-								stats.TitleProps{},
-								htmx.Text("Total Profiles"),
-							),
-							stats.Value(
-								stats.ValueProps{},
-								htmx.Text("0"),
-							),
-						),
-						stats.Stat(
-							stats.StatProps{},
-							stats.Title(
-								stats.TitleProps{},
-								htmx.Text("Total Workloads"),
-							),
-							stats.Value(
-								stats.ValueProps{},
-								htmx.Text("0"),
-							),
-						),
-					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

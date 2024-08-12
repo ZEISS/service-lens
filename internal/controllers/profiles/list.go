@@ -45,24 +45,26 @@ func (w *ProfileListControllerImpl) Get() error {
 				Path: w.Path(),
 				User: w.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					profiles.ProfilesTable(
-						profiles.ProfilesTableProps{
-							Profiles: w.profiles.GetRows(),
-							Offset:   w.profiles.GetOffset(),
-							Limit:    w.profiles.GetLimit(),
-							Total:    w.profiles.GetTotalRows(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						profiles.ProfilesTable(
+							profiles.ProfilesTableProps{
+								Profiles: w.profiles.GetRows(),
+								Offset:   w.profiles.GetOffset(),
+								Limit:    w.profiles.GetLimit(),
+								Total:    w.profiles.GetTotalRows(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

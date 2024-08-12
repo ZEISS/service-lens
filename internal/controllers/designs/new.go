@@ -39,9 +39,11 @@ func (l *NewDesignControllerImpl) Get() error {
 					),
 				},
 			},
-			designs.DesignNewForm(
-				designs.DesignNewFormProps{},
-			),
+			func() htmx.Node {
+				return designs.DesignNewForm(
+					designs.DesignNewFormProps{},
+				)
+			},
 		),
 	)
 }

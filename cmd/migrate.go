@@ -36,6 +36,8 @@ var Migrate = &cobra.Command{
 			&adapters.GothAccount{},
 			&adapters.GothSession{},
 			&adapters.GothVerificationToken{},
+			&models.Template{},
+			&models.Ownable{},
 			&models.Workflow{},
 			&models.WorkflowState{},
 			&models.WorkflowTransition{},

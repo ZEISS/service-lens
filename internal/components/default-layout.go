@@ -15,7 +15,7 @@ type DefaultLayoutProps struct {
 }
 
 // DefaultLayout ...
-func DefaultLayout(props DefaultLayoutProps, children ...htmx.Node) htmx.Node {
+func DefaultLayout(props DefaultLayoutProps, node htmx.ErrBoundaryFunc) htmx.Node {
 	return Page(
 		PageProps{
 			Title: props.Title,
@@ -26,9 +26,11 @@ func DefaultLayout(props DefaultLayoutProps, children ...htmx.Node) htmx.Node {
 				Path: props.Path,
 				User: props.User,
 			},
-			Wrap(
-				WrapProps{},
-				children...,
+			htmx.Fallback(
+				htmx.ErrorBoundary(node),
+				func(err error) htmx.Node {
+					return htmx.Text(err.Error())
+				},
 			),
 		),
 	)

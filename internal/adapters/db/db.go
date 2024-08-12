@@ -119,6 +119,16 @@ func (r *readTxImpl) ListWorkflows(ctx context.Context, pagination *tables.Resul
 	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
+// ListTemplates is a method that returns a list of templates
+func (r *readTxImpl) ListTemplates(ctx context.Context, pagination *tables.Results[models.Template]) error {
+	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+}
+
+// GetTemplate is a method that returns a template by ID
+func (r *readTxImpl) GetTemplate(ctx context.Context, template *models.Template) error {
+	return r.conn.Where(template).First(template).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl
@@ -129,6 +139,21 @@ func NewWriteTx() seed.ReadWriteTxFactory[ports.ReadWriteTx] {
 	return func(db *gorm.DB) (ports.ReadWriteTx, error) {
 		return &writeTxImpl{conn: db}, nil
 	}
+}
+
+// CreateTemplate is a method that creates a template
+func (rw *writeTxImpl) CreateTemplate(ctx context.Context, template *models.Template) error {
+	return rw.conn.Create(template).Error
+}
+
+// DeleteTemplate is a method that deletes a template
+func (rw *writeTxImpl) DeleteTemplate(ctx context.Context, template *models.Template) error {
+	return rw.conn.Delete(template).Error
+}
+
+// UpdateTemplate is a method that updates a template
+func (rw *writeTxImpl) UpdateTemplate(ctx context.Context, template *models.Template) error {
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(template).Error
 }
 
 // CreateDesign is a method that creates a design

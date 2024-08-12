@@ -32,91 +32,93 @@ func (m *MeController) Get() error {
 				Path: m.Path(),
 				User: m.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
+						},
 					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					cards.Title(
-						cards.TitleProps{},
-						htmx.Text("Profile"),
-					),
-					htmx.Form(
-						htmx.HxPost("/me"),
-						forms.FormControl(
-							forms.FormControlProps{},
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{},
-									htmx.Text("Name"),
+					cards.Body(
+						cards.BodyProps{},
+						cards.Title(
+							cards.TitleProps{},
+							htmx.Text("Profile"),
+						),
+						htmx.Form(
+							htmx.HxPost("/me"),
+							forms.FormControl(
+								forms.FormControlProps{},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{},
+										htmx.Text("Name"),
+									),
+								),
+
+								forms.TextInputBordered(
+									forms.TextInputProps{
+										Name:     "username",
+										Value:    m.Session().User.Name,
+										Disabled: true,
+									},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("Your full nane as it will appear in the system."),
+									),
+								),
+							),
+							forms.FormControl(
+								forms.FormControlProps{},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{},
+										htmx.Text("Email"),
+									),
+								),
+								forms.TextInputBordered(
+									forms.TextInputProps{
+										Name:     "email",
+										Value:    m.Session().User.Email,
+										Disabled: true,
+									},
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("Your email address. This is where we will send notifications."),
+									),
 								),
 							),
 
-							forms.TextInputBordered(
-								forms.TextInputProps{
-									Name:     "username",
-									Value:    m.Session().User.Name,
-									Disabled: true,
-								},
-							),
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{
-										ClassNames: htmx.ClassNames{
-											"text-neutral-500": true,
-										},
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.OutlinePrimary(
+									buttons.ButtonProps{
+										Disabled: true,
 									},
-									htmx.Text("Your full nane as it will appear in the system."),
+									htmx.Attribute("type", "submit"),
+									htmx.Text("Update Profile"),
 								),
-							),
-						),
-						forms.FormControl(
-							forms.FormControlProps{},
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{},
-									htmx.Text("Email"),
-								),
-							),
-							forms.TextInputBordered(
-								forms.TextInputProps{
-									Name:     "email",
-									Value:    m.Session().User.Email,
-									Disabled: true,
-								},
-							),
-							forms.FormControlLabel(
-								forms.FormControlLabelProps{},
-								forms.FormControlLabelText(
-									forms.FormControlLabelTextProps{
-										ClassNames: htmx.ClassNames{
-											"text-neutral-500": true,
-										},
-									},
-									htmx.Text("Your email address. This is where we will send notifications."),
-								),
-							),
-						),
-
-						cards.Actions(
-							cards.ActionsProps{},
-							buttons.OutlinePrimary(
-								buttons.ButtonProps{
-									Disabled: true,
-								},
-								htmx.Attribute("type", "submit"),
-								htmx.Text("Update Profile"),
 							),
 						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

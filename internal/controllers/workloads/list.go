@@ -45,24 +45,26 @@ func (w *WorkloadListControllerImpl) Get() error {
 				Path: w.Path(),
 				User: w.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					workloads.WorkloadsTable(
-						workloads.WorkloadsTableProps{
-							Workloads: w.workloads.GetRows(),
-							Offset:    w.workloads.GetOffset(),
-							Limit:     w.workloads.GetLimit(),
-							Total:     w.workloads.GetTotalRows(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						workloads.WorkloadsTable(
+							workloads.WorkloadsTableProps{
+								Workloads: w.workloads.GetRows(),
+								Offset:    w.workloads.GetOffset(),
+								Limit:     w.workloads.GetLimit(),
+								Total:     w.workloads.GetTotalRows(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

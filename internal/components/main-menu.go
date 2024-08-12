@@ -142,6 +142,20 @@ func MainMenu(p MainMenuProps, children ...htmx.Node) htmx.Node {
 					htmx.Text("Workflows"),
 				),
 			),
+			menus.MenuItem(
+				menus.MenuItemProps{
+					ClassNames: htmx.ClassNames{
+						"hover:bg-base-300": false,
+					},
+				},
+				menus.MenuLink(
+					menus.MenuLinkProps{
+						Href:   utils.ListTemplatesUrlFormat,
+						Active: strings.HasPrefix(p.Path, utils.ListTemplatesUrlFormat),
+					},
+					htmx.Text("Templates"),
+				),
+			),
 		),
 	)
 }

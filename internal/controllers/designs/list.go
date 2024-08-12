@@ -47,24 +47,26 @@ func (l *ListDesignsControllerImpl) Get() error {
 				Path: l.Path(),
 				User: l.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"m-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					designs.DesignsTable(
-						designs.DesignsTableProps{
-							Designs: l.results.GetRows(),
-							Offset:  l.results.GetOffset(),
-							Limit:   l.results.GetLimit(),
-							Total:   l.results.GetLen(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"m-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						designs.DesignsTable(
+							designs.DesignsTableProps{
+								Designs: l.results.GetRows(),
+								Offset:  l.results.GetOffset(),
+								Limit:   l.results.GetLimit(),
+								Total:   l.results.GetLen(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/settings"
 	"github.com/zeiss/service-lens/internal/controllers/tags"
+	"github.com/zeiss/service-lens/internal/controllers/templates"
 	"github.com/zeiss/service-lens/internal/controllers/workflows"
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
@@ -405,5 +406,12 @@ func (a *handlers) ListWorkflows() fiber.Handler {
 func (a *handlers) Preview() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return previews.NewPreviewController(a.store)
+	})
+}
+
+// ListTemplates ...
+func (a *handlers) ListTemplates() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewListTemplatesController(a.store)
 	})
 }

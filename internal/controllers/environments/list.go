@@ -49,25 +49,27 @@ func (w *EnvironmentListControllerImpl) Get() error {
 				Path:  w.Path(),
 				User:  w.Session().User,
 			},
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"my-2": true,
-						"mx-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					environments.EnvironmentsTable(
-						environments.EnvironmentsTableProps{
-							Environments: w.environments.GetRows(),
-							Offset:       w.environments.GetOffset(),
-							Limit:        w.environments.GetLimit(),
-							Total:        w.environments.GetLen(),
+			func() htmx.Node {
+				return cards.CardBordered(
+					cards.CardProps{
+						ClassNames: htmx.ClassNames{
+							"my-2": true,
+							"mx-2": true,
 						},
+					},
+					cards.Body(
+						cards.BodyProps{},
+						environments.EnvironmentsTable(
+							environments.EnvironmentsTableProps{
+								Environments: w.environments.GetRows(),
+								Offset:       w.environments.GetOffset(),
+								Limit:        w.environments.GetLimit(),
+								Total:        w.environments.GetLen(),
+							},
+						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }
