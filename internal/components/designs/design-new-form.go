@@ -12,6 +12,7 @@ import (
 // DesignNewFormProps ...
 type DesignNewFormProps struct {
 	ClassNames htmx.ClassNames
+	Template   string
 }
 
 // DesignNewForm ...
@@ -62,7 +63,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 					},
 					htmx.Div(
 						alpine.XData(`{
-        value: '# Write Some Markdown...',
+        value: '',
         init() {
             let editor = new SimpleMDE({
               element: this.$refs.editor,
@@ -73,7 +74,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 	            }
             })
 
-            editor.value(this.value)
+            editor.value(thos.$ref.editor.innerHTML)
 
             editor.codemirror.on('change', () => {
                 this.value = editor.value()
@@ -89,6 +90,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								Name: "body",
 							},
 							alpine.XRef("editor"),
+							htmx.Text(props.Template),
 						),
 					),
 					forms.FormControlLabel(

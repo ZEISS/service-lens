@@ -1,10 +1,17 @@
 package designs
 
 import (
+	"context"
+	"errors"
+
+	"github.com/google/uuid"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/designs"
+	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"gorm.io/gorm"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -40,8 +47,26 @@ func (l *NewDesignControllerImpl) Get() error {
 				},
 			},
 			func() htmx.Node {
+				params := struct {
+					Template uuid.UUID `json:"template"`
+				}{}
+				errorx.Ignore(params, l.BindQuery(&params))
+
+				template := models.Template{
+					ID: params.Template,
+				}
+
+				err := l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.GetTemplate(ctx, &template)
+				})
+				if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+					panic(err)
+				}
+
 				return designs.DesignNewForm(
-					designs.DesignNewFormProps{},
+					designs.DesignNewFormProps{
+						Template: template.Body,
+					},
 				)
 			},
 		),

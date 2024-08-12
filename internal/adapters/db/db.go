@@ -126,7 +126,7 @@ func (r *readTxImpl) ListTemplates(ctx context.Context, pagination *tables.Resul
 
 // GetTemplate is a method that returns a template by ID
 func (r *readTxImpl) GetTemplate(ctx context.Context, template *models.Template) error {
-	return r.conn.Where(template).First(template).Error
+	return r.conn.First(template, template.ID).Error
 }
 
 type writeTxImpl struct {

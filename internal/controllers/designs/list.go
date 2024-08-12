@@ -5,6 +5,7 @@ import (
 
 	"github.com/zeiss/fiber-htmx/components/cards"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
@@ -29,17 +30,6 @@ func NewListDesignsController(store seed.Database[ports.ReadTx, ports.ReadWriteT
 }
 
 // Prepare ...
-func (l *ListDesignsControllerImpl) Prepare() error {
-	if err := l.BindQuery(&l.results); err != nil {
-		return err
-	}
-
-	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListDesigns(ctx, &l.results)
-	})
-}
-
-// Prepare ...
 func (l *ListDesignsControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
@@ -48,6 +38,16 @@ func (l *ListDesignsControllerImpl) Get() error {
 				User: l.Session().User,
 			},
 			func() htmx.Node {
+				errorx.Panic(l.BindQuery(&l.results))
+				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListDesigns(ctx, &l.results)
+				}))
+
+				templates := tables.Results[models.Template]{}
+				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListTemplates(ctx, &templates)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
@@ -58,10 +58,11 @@ func (l *ListDesignsControllerImpl) Get() error {
 						cards.BodyProps{},
 						designs.DesignsTable(
 							designs.DesignsTableProps{
-								Designs: l.results.GetRows(),
-								Offset:  l.results.GetOffset(),
-								Limit:   l.results.GetLimit(),
-								Total:   l.results.GetLen(),
+								Designs:   l.results.GetRows(),
+								Templates: templates.GetRows(),
+								Offset:    l.results.GetOffset(),
+								Limit:     l.results.GetLimit(),
+								Total:     l.results.GetLen(),
 							},
 						),
 					),

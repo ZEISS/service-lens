@@ -17,10 +17,11 @@ import (
 
 // DesignsTableProps ...
 type DesignsTableProps struct {
-	Designs []*models.Design
-	Offset  int
-	Limit   int
-	Total   int
+	Designs   []*models.Design
+	Templates []*models.Template
+	Offset    int
+	Limit     int
+	Total     int
 }
 
 // DesignsTable ...
@@ -102,6 +103,14 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 							dropdowns.DropdownMenuItemsProps{},
 							dropdowns.DropdownMenuItem(
 								dropdowns.DropdownMenuItemProps{},
+								htmx.Group(
+									htmx.ForEach(props.Templates, func(template *models.Template, idx int) htmx.Node {
+										return htmx.A(
+											htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, template.ID)),
+											htmx.Text(template.Name),
+										)
+									})...,
+								),
 								htmx.A(
 									htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, "_blank")),
 									htmx.Text("Blank Template"),
