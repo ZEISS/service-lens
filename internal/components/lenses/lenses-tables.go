@@ -13,10 +13,6 @@ import (
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
-const (
-	deleteProfileURL = "/profiles/%s"
-)
-
 // LensesTableProps ...
 type LensesTableProps struct {
 	Lenses []*models.Lens

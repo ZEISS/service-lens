@@ -10,7 +10,7 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark-emoji"
+	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer/html"
 	htmx "github.com/zeiss/fiber-htmx"

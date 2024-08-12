@@ -2,7 +2,6 @@ package profiles
 
 import (
 	"context"
-	"fmt"
 
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
@@ -56,5 +55,5 @@ func (l *CreateProfileControllerImpl) Prepare() error {
 
 // Post ...
 func (l *CreateProfileControllerImpl) Post() error {
-	return l.Redirect(fmt.Sprintf(listProfilesURL))
+	return l.Redirect(listProfilesURL)
 }

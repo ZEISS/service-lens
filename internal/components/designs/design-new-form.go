@@ -137,7 +137,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
             }
           }`),
 					htmx.Template(
-						alpine.XFor("({ name, value }, index) in tags"),
+						alpine.XFor("(tag, index) in tags"),
 						htmx.Attribute(":key", "index"),
 						htmx.Div(
 							htmx.ClassNames{
@@ -150,7 +150,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								},
 								forms.TextInputBordered(
 									forms.TextInputProps{},
-									alpine.XModel("name"),
+									alpine.XModel("tag.name"),
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
@@ -170,7 +170,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								},
 								forms.TextInputBordered(
 									forms.TextInputProps{},
-									alpine.XModel("value"),
+									alpine.XModel("tag.value"),
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},

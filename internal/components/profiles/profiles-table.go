@@ -13,11 +13,6 @@ import (
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
-const (
-	createProfileURL = "/teams/%s/profiles/new"
-	showProfileURL   = "/teams/%s/profiles/%s"
-)
-
 // ProfilesTableProps ...
 type ProfilesTableProps struct {
 	Profiles []*models.Profile

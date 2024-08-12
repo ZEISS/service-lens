@@ -11,7 +11,7 @@
 
 Service Lens is an enterprise service management tool. It allows you to manage your services, identify risks, review the solutions that created them and the business context of every service. It follows the Well-Architected methodology established by AWS and Microsoft.
 
-![preview](assets/screenshot_2.png)
+![preview](assets/screenshot_1.png)
 
 It is build on [fiber-htmx](https://github.com/ZEISS/fiber-htmx) and uses a 3-tier architecture.
 
