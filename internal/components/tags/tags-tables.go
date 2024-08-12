@@ -83,34 +83,16 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 						},
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),
 					),
 					NewTagModal(),
-					buttons.Outline(
-						buttons.ButtonProps{
-							ClassNames: htmx.ClassNames{
-								"btn-sm": true,
-							},
-						},
+					buttons.Button(
+						buttons.ButtonProps{},
 						htmx.OnClick("new_tag_modal.showModal()"),
 						htmx.Text("Create Tag"),
 					),
-					// htmx.A(
-					// 	htmx.Href("tags/new"),
-					// 	buttons.Outline(
-					// 		buttons.ButtonProps{
-					// 			ClassNames: htmx.ClassNames{
-					// 				"btn-sm": true,
-					// 			},
-					// 		},
-					// 		htmx.Text("Create Tags"),
-					// 	),
-					// ),
 				),
 			},
 			[]tables.ColumnDef[*models.Tag]{

@@ -89,21 +89,14 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 						},
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),
 					),
 					htmx.A(
 						htmx.Href("/workflows/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
-							},
+						buttons.Button(
+							buttons.ButtonProps{},
 							htmx.Text("Create Workflow"),
 						),
 					),

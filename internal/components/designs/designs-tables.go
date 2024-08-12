@@ -84,9 +84,6 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 						},
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),

@@ -150,7 +150,7 @@ func (p *NewProfileControllerImpl) Get() error {
 									),
 									cards.Actions(
 										cards.ActionsProps{},
-										buttons.Outline(
+										buttons.Button(
 											buttons.ButtonProps{},
 											htmx.Attribute("type", "submit"),
 											htmx.Text("Save Profile"),

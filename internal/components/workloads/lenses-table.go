@@ -84,18 +84,8 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							"items-center": true,
 							"gap-3":        true,
 						},
-						// Search(
-						// 	SearchProps{
-						// 		URL:    "/lenses",
-						// 		Limit:  props.Limit,
-						// 		Offset: props.Offset,
-						// 	},
-						// ),
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),

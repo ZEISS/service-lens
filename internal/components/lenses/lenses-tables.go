@@ -80,29 +80,15 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							"items-center": true,
 							"gap-3":        true,
 						},
-						// Search(
-						// 	SearchProps{
-						// 		URL:    "/lenses",
-						// 		Limit:  props.Limit,
-						// 		Offset: props.Offset,
-						// 	},
-						// ),
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),
 					),
 					NewLensModal(),
-					buttons.Outline(
-						buttons.ButtonProps{
-							ClassNames: htmx.ClassNames{
-								"btn-sm": true,
-							},
-						},
+					buttons.Button(
+						buttons.ButtonProps{},
 						htmx.OnClick("new_lens_modal.showModal()"),
 						htmx.Text("Create Lens"),
 					),

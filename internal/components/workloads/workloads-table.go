@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -89,21 +90,14 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 						},
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),
 					),
 					htmx.A(
-						htmx.Href("/workloads/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
-							},
+						htmx.Href(utils.CreateWorkloadUrlFormat),
+						buttons.Button(
+							buttons.ButtonProps{},
 							htmx.Text("Create Workload"),
 						),
 					),

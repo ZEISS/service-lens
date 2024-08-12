@@ -8,6 +8,7 @@ const (
 	CreateProfileUrlFormat       = "/profiles/new"
 	CreateTagUrlFormat           = "/tags/new"
 	CreateTemplateUrlFormat      = "/templates/new"
+	CreateWorkloadUrlFormat      = "/workloads/new"
 	DeleteDesignUrlFormat        = "/designs/%s"
 	DeleteEnvironmentUrlFormat   = "/environments/%s"
 	DeleteLensUrlFormat          = "/lenses/%s"

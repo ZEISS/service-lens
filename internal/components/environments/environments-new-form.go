@@ -117,10 +117,10 @@ func NewForm(props NewFormProps) htmx.Node {
 					),
 					cards.Actions(
 						cards.ActionsProps{},
-						buttons.Outline(
+						buttons.Button(
 							buttons.ButtonProps{},
 							htmx.Attribute("type", "submit"),
-							htmx.Text("Create Environment"),
+							htmx.Text("Save Environment"),
 						),
 					),
 				),

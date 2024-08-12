@@ -82,21 +82,14 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 						},
 						forms.TextInputBordered(
 							forms.TextInputProps{
-								ClassNames: htmx.ClassNames{
-									"input-sm": true,
-								},
 								Placeholder: "Search ...",
 							},
 						),
 					),
 					htmx.A(
 						htmx.Href("/environments/new"),
-						buttons.Outline(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
-								},
-							},
+						buttons.Button(
+							buttons.ButtonProps{},
 							htmx.Text("Create Environment"),
 						),
 					),

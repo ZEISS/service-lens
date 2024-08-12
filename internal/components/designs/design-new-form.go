@@ -105,7 +105,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 				),
 				cards.Actions(
 					cards.ActionsProps{},
-					buttons.Outline(
+					buttons.Button(
 						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
 						htmx.Text("Save Design"),
@@ -190,12 +190,12 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 					),
 					cards.Actions(
 						cards.ActionsProps{},
-						buttons.Outline(
+						buttons.Button(
 							buttons.ButtonProps{
 								Type: "button",
 							},
 							alpine.XOn("click", "addTag()"),
-							htmx.Text("Add new tag"),
+							htmx.Text("Add Tag"),
 						),
 					),
 				),
