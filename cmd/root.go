@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/kelseyhightower/envconfig"
@@ -23,6 +24,16 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 )
+
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+	os      = "unknown"
+	arch    = "unknown"
+)
+
+var versionFmt = fmt.Sprintf("%s-%s (%s) %s/%s", version, commit, date, os, arch)
 
 var config *cfg.Config
 
@@ -49,6 +60,7 @@ func init() {
 }
 
 var Root = &cobra.Command{
+	Version: versionFmt,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		srv := NewWebSrv(config)
 

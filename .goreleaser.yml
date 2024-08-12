@@ -24,6 +24,11 @@ builds:
       - arm64
     ldflags:
       - -s -w
+      - -X github.com/zeiss/service-lens/cmd.version={{ .Tag }}
+      - -X github.com/zeiss/service-lens/cmd.commit={{ .FullCommit }}
+      - -X github.com/zeiss/service-lens/cmd.date={{ .Date }}
+      - -X github.com/zeiss/service-lens/cmd.os={{ .Os }}
+      - -X github.com/zeiss/service-lens/cmd.arch={{ .Arch }}
 
 archives:
   - id: main
