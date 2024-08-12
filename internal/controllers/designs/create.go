@@ -19,6 +19,10 @@ var validate *validator.Validate
 type CreateDesignBody struct {
 	Title string `json:"title" form:"title" validate:"required,min=3,max=2048"`
 	Body  string `json:"body" form:"body" validate:"required"`
+	Tags  []struct {
+		Name  string `json:"name" form:"name" validate:"required"`
+		Value string `json:"value" form:"value" validate:"required"`
+	} `json:"tags" form:"tags"`
 }
 
 // CreateDesignControllerImpl ...
@@ -72,9 +76,19 @@ func (l *CreateDesignControllerImpl) Post() error {
 		AuthorID: l.Session().UserID,
 	}
 
-	l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+	for _, tag := range l.body.Tags {
+		design.Tags = append(design.Tags, models.Tag{
+			Name:  tag.Name,
+			Value: tag.Value,
+		})
+	}
+
+	err := l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
 		return tx.CreateDesign(ctx, &design)
 	})
+	if err != nil {
+		return err
+	}
 
 	return l.Redirect(fmt.Sprintf(utils.ShowDesigUrlFormat, design.ID))
 }

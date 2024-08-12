@@ -133,7 +133,14 @@ func NewWriteTx() seed.ReadWriteTxFactory[ports.ReadWriteTx] {
 
 // CreateDesign is a method that creates a design
 func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) error {
-	return rw.conn.Create(design).Error
+	for i, tag := range design.Tags { // TODO: This is a workaround for a bug in GORM
+		err := rw.conn.Debug().Where(&models.Tag{Name: tag.Name, Value: tag.Value}).FirstOrCreate(&design.Tags[i]).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	return rw.conn.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Create(design).Error
 }
 
 // DeleteDesign is a method that deletes a design

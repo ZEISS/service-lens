@@ -151,6 +151,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								forms.TextInputBordered(
 									forms.TextInputProps{},
 									alpine.XModel("tag.name"),
+									alpine.XBind("name", "`tags.${index}.name`"),
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
@@ -171,6 +172,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								forms.TextInputBordered(
 									forms.TextInputProps{},
 									alpine.XModel("tag.value"),
+									alpine.XBind("name", "`tags.${index}.value`"),
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},

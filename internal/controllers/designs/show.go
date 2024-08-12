@@ -95,6 +95,11 @@ func (l *ShowDesignControllerImpl) Get() error {
 						Design: l.Design,
 					},
 				),
+				designs.DesignTagsCard(
+					designs.DesignTagsCardProps{
+						Design: l.Design,
+					},
+				),
 				designs.DesignCommentsCard(
 					designs.DesignCommentsCardProps{
 						Design: l.Design,
