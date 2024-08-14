@@ -86,7 +86,9 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							},
 						),
 					),
-					NewLensModal(),
+					NewLensModal(
+						NewLensModalProps{},
+					),
 					buttons.Button(
 						buttons.ButtonProps{},
 						htmx.OnClick("new_lens_modal.showModal()"),

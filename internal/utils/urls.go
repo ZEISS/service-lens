@@ -23,4 +23,5 @@ const (
 	ShowDesigUrlFormat           = "/designs/%s"
 	ShowProfileUrlFormat         = "/profiles/%s"
 	ShowTemplateUrlFormat        = "/templates/%s"
+	ShowLensUrlFormat            = "/lenses/%s"
 )

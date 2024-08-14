@@ -4,8 +4,9 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/modals"
-	"github.com/zeiss/fiber-htmx/components/progress"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/service-lens/internal/utils"
 )
 
@@ -13,32 +14,55 @@ import (
 type NewLensModalProps struct{}
 
 // NewLensModal ...
-func NewLensModal() htmx.Node {
+func NewLensModal(props NewLensModalProps) htmx.Node {
 	return modals.Modal(
 		modals.ModalProps{
 			ID: "new_lens_modal",
 		},
+		htmx.H2(
+			htmx.ClassNames{
+				"text-xl":         true,
+				tailwind.Mb2:      true,
+				tailwind.FontBold: true,
+			},
+			htmx.Text("New Lens"),
+		),
 		htmx.FormElement(
 			htmx.ID("new-lens-form"),
 			htmx.HxEncoding("multipart/form-data"),
 			htmx.HxPost(utils.CreateLensUrlFormat),
-			htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
+			htmx.HxIndicator(".htmx-indicator"),
+			htmx.HxDisabledElt("find button, find input"),
 			htmx.Div(
-				forms.FileInputBordered(
-					forms.FileInputProps{},
-					htmx.Attribute("name", "spec"),
+				forms.FormControl(
+					forms.FormControlProps{},
+					forms.FormControlLabel(
+						forms.FormControlLabelProps{},
+						forms.FormControlLabelText(
+							forms.FormControlLabelTextProps{
+								ClassNames: htmx.ClassNames{
+									"text-neutral-500": true,
+								},
+							},
+							htmx.Text("Select the file to upload."),
+						),
+					),
+					forms.FileInputBordered(
+						forms.FileInputProps{},
+						htmx.Attribute("name", "spec"),
+					),
+					forms.FormControlLabel(
+						forms.FormControlLabelProps{},
+						forms.FormControlLabelText(
+							forms.FormControlLabelTextProps{
+								ClassNames: htmx.ClassNames{
+									"text-neutral-500": true,
+								},
+							},
+							htmx.Text("Needs to conform the lens format specification."),
+						),
+					),
 				),
-			),
-			progress.Progress(
-				progress.ProgressProps{
-					ClassNames: htmx.ClassNames{
-						"block": true,
-						"my-4":  true,
-					},
-				},
-				htmx.ID("new-lens-progress"),
-				htmx.Value("0"),
-				htmx.Max("100"),
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
@@ -46,7 +70,14 @@ func NewLensModal() htmx.Node {
 					buttons.ButtonProps{
 						Type: "submit",
 					},
-					htmx.Text("Create"),
+					loading.Spinner(
+						loading.SpinnerProps{
+							ClassNames: htmx.ClassNames{
+								"htmx-indicator": true,
+							},
+						},
+					),
+					htmx.Text("Create Lens"),
 				),
 			),
 		),

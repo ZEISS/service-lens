@@ -276,13 +276,6 @@ func (a *handlers) DeleteLens() fiber.Handler {
 	})
 }
 
-// CreateLens ...
-func (a *handlers) CreateLens() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return lenses.NewCreateLensController(a.store)
-	})
-}
-
 // ShowSettings ...
 func (a *handlers) ShowSettings() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {

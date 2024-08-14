@@ -166,7 +166,6 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses := app.Group("/lenses")
 		lenses.Get("/", handlers.ListLenses())
 		lenses.Post("/", handlers.NewLens())
-		lenses.Post("/new", handlers.CreateLens())
 		lenses.Get("/:id", handlers.ShowLens())
 		lenses.Get("/:id/edit", handlers.EditLens())
 		lenses.Put("/:id", handlers.UpdateLens())

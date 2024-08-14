@@ -2,14 +2,18 @@ package lenses
 
 import (
 	"context"
+	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/lenses"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LensShowControllerImpl ...
@@ -47,21 +51,51 @@ func (l *LensShowControllerImpl) Get() error {
 				User: l.Session().User,
 			},
 			func() htmx.Node {
-				return cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"m-2": true,
+				return htmx.Fragment(
+
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								"m-2": true,
+							},
 						},
-					},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Overview"),
-						),
-						htmx.Div(
-							htmx.H1(
-								htmx.Text(l.lens.Name),
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Overview"),
+							),
+							htmx.Div(
+								htmx.ClassNames{
+									"flex":     true,
+									"flex-col": true,
+									"py-2":     true,
+								},
+								htmx.H4(
+									htmx.ClassNames{
+										"text-gray-500": true,
+									},
+									htmx.Text("Name"),
+								),
+								htmx.H3(
+									htmx.Text(l.lens.Name),
+								),
+							),
+							htmx.Div(
+								htmx.ClassNames{
+									"flex":     true,
+									"flex-col": true,
+									"py-2":     true,
+								},
+								htmx.H4(
+									htmx.ClassNames{
+										"text-gray-500": true,
+									},
+									htmx.Text("Version"),
+								),
+								htmx.H3(
+									htmx.Text(conv.String(l.lens.Version)),
+								),
 							),
 							htmx.Div(
 								htmx.ClassNames{
@@ -79,81 +113,24 @@ func (l *LensShowControllerImpl) Get() error {
 									htmx.Text(l.lens.Description),
 								),
 							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("ID"),
-								),
-								htmx.H3(htmx.Text(l.lens.ID.String())),
-							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Created at"),
-								),
-								htmx.H3(
-									htmx.Text(
-										l.lens.CreatedAt.Format("2006-01-02 15:04:05"),
-									),
-								),
-							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Updated at"),
-								),
-								htmx.H3(
-									htmx.Text(
-										l.lens.UpdatedAt.Format("2006-01-02 15:04:05"),
-									),
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.Button(
+									buttons.ButtonProps{},
+									htmx.HxDelete(fmt.Sprintf(utils.DeleteLensUrlFormat, l.lens.ID)),
+									htmx.HxConfirm("Are you sure you want to delete this lens?"),
+									htmx.Text("Delete"),
 								),
 							),
 						),
-						cards.Actions(
-							cards.ActionsProps{},
-							buttons.OutlinePrimary(
-								buttons.ButtonProps{},
-								htmx.HxDelete(""),
-								htmx.HxConfirm("Are you sure you want to delete this lens?"),
-								htmx.Text("Delete"),
-							),
-						),
+					),
+					lenses.LensMetadataCard(
+						lenses.LensMetadataCardProps{
+							Lens: l.lens,
+						},
 					),
 				)
 			},
 		),
 	)
 }
-
-// // Delete ...
-// func (l *LensIndexController) Delete() error {
-// 	err := l.db.DestroyLens(l.Context(), l.params.ID)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/list", l.params.Team))
-
-// 	return nil
-// }

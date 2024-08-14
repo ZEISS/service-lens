@@ -1,119 +1,78 @@
 package lenses
 
 import (
-	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/progress"
-	seed "github.com/zeiss/gorm-seed"
-	"github.com/zeiss/service-lens/internal/components"
-	"github.com/zeiss/service-lens/internal/ports"
+	"bytes"
+	"context"
+	"fmt"
+	"io"
 
+	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
+
+	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
 )
 
-// LensNewController ...
-type LensNewControllerImpl struct {
+var validate *validator.Validate
+
+// NewLensControllerImpl ...
+type NewLensControllerImpl struct {
 	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
-// NewLensNewController ...
-func NewLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *LensNewControllerImpl {
-	return &LensNewControllerImpl{
-		store: store,
-	}
+// NewLensController ...
+func NewLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *NewLensControllerImpl {
+	return &NewLensControllerImpl{store: store}
 }
 
-// // Post ...
-// func (l *LensNewControllerImpl) Post() error {
-// 	spec, err := l.Ctx().FormFile("spec")
-// 	if err != nil {
-// 		return err
-// 	}
-// 	file, err := spec.Open()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer file.Close()
-
-// 	buf := bytes.NewBuffer(nil)
-// 	if _, err := io.Copy(buf, file); err != nil {
-// 		return err
-// 	}
-
-// 	team := l.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-// 	lens := &models.Lens{}
-// 	err = lens.UnmarshalJSON(buf.Bytes())
-// 	if err != nil {
-// 		return err
-// 	}
-// 	lens.Team = *team
-
-// 	lens, err = l.db.AddLens(l.Context(), lens)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	l.Hx().Redirect(fmt.Sprintf("/teams/%s/lenses/%s/index", team.Slug, lens.ID))
-
-// 	return nil
-// }
-
-// Get ...
-func (l *LensNewControllerImpl) Get() error {
-	return l.Render(
-		components.Page(
-			components.PageProps{},
-			htmx.DataAttribute("theme", "light"),
-			components.Layout(
-				components.LayoutProps{
-					Path: l.Path(),
-				},
-				cards.CardBordered(
-					cards.CardProps{},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("New Lens"),
-						),
-						htmx.FormElement(
-							htmx.ID("new-lens-form"),
-							htmx.HxEncoding("multipart/form-data"),
-							htmx.HxPost("/lenses/new"),
-							htmx.Attribute("_", "on htmx:xhr:progress(loaded, total) set #new-lens-progress.value to (loaded/total)*100'"),
-							htmx.Div(
-								forms.FileInputBordered(
-									forms.FileInputProps{},
-									htmx.Attribute("name", "spec"),
-								),
-							),
-							progress.Progress(
-								progress.ProgressProps{
-									ClassNames: htmx.ClassNames{
-										"block": true,
-										"my-4":  true,
-									},
-								},
-								htmx.ID("new-lens-progress"),
-								htmx.Value("0"),
-								htmx.Max("100"),
-							),
-							buttons.OutlinePrimary(
-								buttons.ButtonProps{
-									ClassNames: htmx.ClassNames{
-										"my-4": true,
-									},
-								},
-								htmx.Text("Create Lens"),
-								htmx.HxDisabledElt("this"),
-							),
-						),
-					),
-				),
+// Error ...
+func (l *NewLensControllerImpl) Error(err error) error {
+	return toasts.RenderToasts(
+		l.Ctx(),
+		toasts.Toasts(
+			toasts.ToastsProps{},
+			toasts.ToastAlertError(
+				toasts.ToastProps{},
+				htmx.Text(err.Error()),
 			),
 		),
 	)
+}
+
+// Post ...
+func (l *NewLensControllerImpl) Post() error {
+	validate = validator.New()
+	var lens models.Lens
+
+	spec, err := l.Ctx().FormFile("spec")
+	if err != nil {
+		return err
+	}
+	file, err := spec.Open()
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		return err
+	}
+	err = lens.UnmarshalJSON(buf.Bytes())
+	if err != nil {
+		return err
+	}
+
+	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+		return tx.CreateLens(ctx, &lens)
+	})
+	if err != nil {
+		return err
+	}
+
+	return l.Redirect(fmt.Sprintf(utils.ShowLensUrlFormat, lens.ID))
 }
