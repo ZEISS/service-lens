@@ -49,6 +49,13 @@ func ProfileMenu(p ProfileMenuProps, children ...htmx.Node) htmx.Node {
 					htmx.Text("Profile"),
 				),
 			),
+			dropdowns.DropdownMenuItem(
+				dropdowns.DropdownMenuItemProps{},
+				htmx.A(
+					htmx.Attribute("href", "/logout"),
+					htmx.Text("Logout"),
+				),
+			),
 		),
 	)
 }
