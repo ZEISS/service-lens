@@ -11,12 +11,9 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
 
-	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
 )
-
-var validate *validator.Validate
 
 // NewLensControllerImpl ...
 type NewLensControllerImpl struct {
@@ -45,7 +42,6 @@ func (l *NewLensControllerImpl) Error(err error) error {
 
 // Post ...
 func (l *NewLensControllerImpl) Post() error {
-	validate = validator.New()
 	var lens models.Lens
 
 	spec, err := l.Ctx().FormFile("spec")
