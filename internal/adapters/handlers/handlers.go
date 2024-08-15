@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/zeiss/service-lens/internal/controllers/dashboard"
+	"github.com/zeiss/service-lens/internal/controllers/dashboard/stats"
 	"github.com/zeiss/service-lens/internal/controllers/designs"
 	"github.com/zeiss/service-lens/internal/controllers/designs/comments"
 	designs_edit_body "github.com/zeiss/service-lens/internal/controllers/designs/edit/body"
@@ -427,5 +428,26 @@ func (a *handlers) CreateTemplate() fiber.Handler {
 func (a *handlers) ShowTemplate() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return templates.NewShowTemplateController(a.store)
+	})
+}
+
+// StatsTotalProfiles ...
+func (a *handlers) StatsTotalProfiles() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return stats.NewProfileStatsController(a.store)
+	})
+}
+
+// StatsTotalDesigns ...
+func (a *handlers) StatsTotalDesigns() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return stats.NewDesignStatsController(a.store)
+	})
+}
+
+// StatsTotalWorkloads ...
+func (a *handlers) StatsTotalWorkloads() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return stats.NewWorkloadStatsController(a.store)
 	})
 }

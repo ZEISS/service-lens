@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -14,6 +15,8 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 )
 
@@ -36,6 +39,40 @@ func (p *NewProfileControllerImpl) Prepare() error {
 	})
 }
 
+// Post ...
+func (p *NewProfileControllerImpl) Post() error {
+	var profile models.Profile
+	validate = validator.New()
+
+	err := p.BindBody(&profile)
+	if err != nil {
+		return err
+	}
+
+	err = validate.Struct(&profile)
+	if err != nil {
+		return err
+	}
+
+	err = p.store.ReadWriteTx(p.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+		return tx.CreateProfile(ctx, &profile)
+	})
+	if err != nil {
+		return toasts.RenderToasts(
+			p.Ctx(),
+			toasts.Toasts(
+				toasts.ToastsProps{},
+				toasts.ToastAlertError(
+					toasts.ToastProps{},
+					htmx.Text(err.Error()),
+				),
+			),
+		)
+	}
+
+	return p.Redirect(fmt.Sprintf(utils.ShowProfileUrlFormat, profile.ID))
+}
+
 // New ...
 func (p *NewProfileControllerImpl) Get() error {
 	return p.Render(
@@ -51,7 +88,7 @@ func (p *NewProfileControllerImpl) Get() error {
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
-								"m-4": true,
+								tailwind.M2: true,
 							},
 						},
 						cards.Body(
@@ -61,36 +98,18 @@ func (p *NewProfileControllerImpl) Get() error {
 								htmx.Text("Create Profile"),
 							),
 							forms.FormControl(
-								forms.FormControlProps{
-									ClassNames: htmx.ClassNames{
-										"py-4": true,
-									},
-								},
+								forms.FormControlProps{},
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
 									forms.FormControlLabelText(
-										forms.FormControlLabelTextProps{
-											ClassNames: htmx.ClassNames{
-												"-my-4": true,
-											},
-										},
+										forms.FormControlLabelTextProps{},
 										htmx.Text("Name"),
-									),
-								),
-								forms.FormControlLabel(
-									forms.FormControlLabelProps{},
-									forms.FormControlLabelText(
-										forms.FormControlLabelTextProps{
-											ClassNames: htmx.ClassNames{
-												"text-neutral-500": true,
-											},
-										},
-										htmx.Text("A unique identifier for the workload."),
 									),
 								),
 								forms.TextInputBordered(
 									forms.TextInputProps{
-										Name: "name",
+										Name:        "name",
+										Placeholder: "Experiment, Production, Migration ...",
 									},
 								),
 								forms.FormControlLabel(
@@ -105,36 +124,18 @@ func (p *NewProfileControllerImpl) Get() error {
 									),
 								),
 								forms.FormControl(
-									forms.FormControlProps{
-										ClassNames: htmx.ClassNames{
-											"py-4": true,
-										},
-									},
+									forms.FormControlProps{},
 									forms.FormControlLabel(
 										forms.FormControlLabelProps{},
 										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"-my-4": true,
-												},
-											},
+											forms.FormControlLabelTextProps{},
 											htmx.Text("Description"),
-										),
-									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-												},
-											},
-											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
 										),
 									),
 									forms.TextareaBordered(
 										forms.TextareaProps{
-											Name: "description",
+											Name:        "description",
+											Placeholder: "This is a profile for ...",
 										},
 									),
 									forms.FormControlLabel(
@@ -153,7 +154,7 @@ func (p *NewProfileControllerImpl) Get() error {
 										buttons.Button(
 											buttons.ButtonProps{},
 											htmx.Attribute("type", "submit"),
-											htmx.Text("Save Profile"),
+											htmx.Text("Create Profile"),
 										),
 									),
 								),
@@ -202,20 +203,8 @@ func (p *NewProfileControllerImpl) Get() error {
 							)
 						})...,
 					),
-					cards.CardBordered(
-						cards.CardProps{
-							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
-							},
-						},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Tags - Optional"),
-							),
-						),
+					components.AddTags(
+						components.AddTagsProps{},
 					),
 				)
 			},

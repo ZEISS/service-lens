@@ -5,6 +5,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/service-lens/internal/components"
 )
 
 // NewFormProps ...
@@ -27,33 +28,15 @@ func NewForm(props NewFormProps) htmx.Node {
 					htmx.Text("Properties"),
 				),
 				forms.FormControl(
-					forms.FormControlProps{
-						ClassNames: htmx.ClassNames{
-							"py-4": true,
-						},
-					},
+					forms.FormControlProps{},
 					forms.FormControlLabel(
 						forms.FormControlLabelProps{},
 						forms.FormControlLabelText(
-							forms.FormControlLabelTextProps{
-								ClassNames: htmx.ClassNames{
-									"-my-4": true,
-								},
-							},
+							forms.FormControlLabelTextProps{},
 							htmx.Text("Name"),
 						),
 					),
-					forms.FormControlLabel(
-						forms.FormControlLabelProps{},
-						forms.FormControlLabelText(
-							forms.FormControlLabelTextProps{
-								ClassNames: htmx.ClassNames{
-									"text-neutral-500": true,
-								},
-							},
-							htmx.Text("A unique identifier for the environment."),
-						),
-					),
+
 					forms.TextInputBordered(
 						forms.TextInputProps{
 							Name: "name",
@@ -71,31 +54,12 @@ func NewForm(props NewFormProps) htmx.Node {
 						),
 					),
 					forms.FormControl(
-						forms.FormControlProps{
-							ClassNames: htmx.ClassNames{
-								"py-4": true,
-							},
-						},
+						forms.FormControlProps{},
 						forms.FormControlLabel(
 							forms.FormControlLabelProps{},
 							forms.FormControlLabelText(
-								forms.FormControlLabelTextProps{
-									ClassNames: htmx.ClassNames{
-										"-my-4": true,
-									},
-								},
+								forms.FormControlLabelTextProps{},
 								htmx.Text("Description"),
-							),
-						),
-						forms.FormControlLabel(
-							forms.FormControlLabelProps{},
-							forms.FormControlLabelText(
-								forms.FormControlLabelTextProps{
-									ClassNames: htmx.ClassNames{
-										"text-neutral-500": true,
-									},
-								},
-								htmx.Text("A brief description of the environment that workloads run in."),
 							),
 						),
 						forms.TextareaBordered(
@@ -120,25 +84,14 @@ func NewForm(props NewFormProps) htmx.Node {
 						buttons.Button(
 							buttons.ButtonProps{},
 							htmx.Attribute("type", "submit"),
-							htmx.Text("Save Environment"),
+							htmx.Text("Create Environment"),
 						),
 					),
 				),
 			),
 		),
-		cards.CardBordered(
-			cards.CardProps{
-				ClassNames: htmx.ClassNames{
-					"m-2": true,
-				},
-			},
-			cards.Body(
-				cards.BodyProps{},
-				cards.Title(
-					cards.TitleProps{},
-					htmx.Text("Tags - Optional"),
-				),
-			),
+		components.AddTags(
+			components.AddTagsProps{},
 		),
 	)
 }

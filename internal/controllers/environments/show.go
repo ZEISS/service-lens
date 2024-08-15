@@ -2,14 +2,14 @@ package environments
 
 import (
 	"context"
-	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/environments"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -39,16 +39,20 @@ func (p *EnvironmentShowControllerImpl) Prepare() error {
 // Get ...
 func (p *EnvironmentShowControllerImpl) Get() error {
 	return p.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: p.Path(),
-				},
-				components.Wrap(
-					components.WrapProps{},
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Title: p.environment.Name,
+				Path:  p.Path(),
+				User:  p.Session().User,
+			},
+			func() htmx.Node {
+				return htmx.Fragment(
 					cards.CardBordered(
-						cards.CardProps{},
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.M2: true,
+							},
+						},
 						cards.Body(
 							cards.BodyProps{},
 							cards.Title(
@@ -56,104 +60,44 @@ func (p *EnvironmentShowControllerImpl) Get() error {
 								htmx.Text("Overview"),
 							),
 							htmx.Div(
-								htmx.Div(
+								htmx.ClassNames{
+									"flex":     true,
+									"flex-col": true,
+									"py-2":     true,
+								},
+								htmx.H4(
 									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
+										"text-gray-500": true,
 									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("ID"),
-									),
-									htmx.H3(
-										htmx.Text(p.environment.ID.String()),
-									),
+									htmx.Text("Name"),
 								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Name"),
-									),
-									htmx.H3(
-										htmx.Text(p.environment.Name),
-									),
+								htmx.H3(
+									htmx.Text(p.environment.Name),
 								),
-								htmx.Div(
+							),
+							htmx.Div(
+								htmx.ClassNames{
+									"flex":     true,
+									"flex-col": true,
+									"py-2":     true,
+								},
+								htmx.H4(
 									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
+										"text-gray-500": true,
 									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Description"),
-									),
-									htmx.H3(
-										htmx.Text(p.environment.Description),
-									),
+									htmx.Text("Description"),
 								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Created at"),
-									),
-									htmx.H3(
-										htmx.Text(
-											p.environment.CreatedAt.Format("2006-01-02 15:04:05"),
-										),
-									),
-								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Updated at"),
-									),
-									htmx.H3(
-										htmx.Text(
-											p.environment.UpdatedAt.Format("2006-01-02 15:04:05"),
-										),
-									),
+								htmx.H3(
+									htmx.Text(p.environment.Description),
 								),
 							),
 							cards.Actions(
 								cards.ActionsProps{},
-								links.Button(
-									links.LinkProps{
-										ClassNames: htmx.ClassNames{
-											"btn-outline": true,
-											"btn-primary": true,
-										},
-										Href: fmt.Sprintf("%s/edit", p.environment.ID),
-									},
+								buttons.Button(
+									buttons.ButtonProps{},
 									htmx.Text("Edit"),
 								),
-								buttons.OutlinePrimary(
+								buttons.Button(
 									buttons.ButtonProps{},
 									htmx.HxDelete(""),
 									htmx.HxConfirm("Are you sure you want to delete this Environment?"),
@@ -162,8 +106,13 @@ func (p *EnvironmentShowControllerImpl) Get() error {
 							),
 						),
 					),
-				),
-			),
+					environments.EnvironmentMetadataCard(
+						environments.EnvironmentMetadataCardProps{
+							Environment: p.environment,
+						},
+					),
+				)
+			},
 		),
 	)
 }

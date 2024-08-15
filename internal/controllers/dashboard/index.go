@@ -2,10 +2,12 @@ package dashboard
 
 import (
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -54,7 +56,11 @@ func (d *ShowDashboardController) Get() error {
 								),
 								stats.Value(
 									stats.ValueProps{},
-									htmx.Text("0"),
+									htmx.HxGet(utils.DashboardStatsDesignUrlFormat),
+									htmx.HxTrigger("load"),
+									loading.Spinner(
+										loading.SpinnerProps{},
+									),
 								),
 							),
 							stats.Stat(
@@ -65,7 +71,11 @@ func (d *ShowDashboardController) Get() error {
 								),
 								stats.Value(
 									stats.ValueProps{},
-									htmx.Text("0"),
+									htmx.HxGet(utils.DashboardStatsProfileUrlFormat),
+									htmx.HxTrigger("load"),
+									loading.Spinner(
+										loading.SpinnerProps{},
+									),
 								),
 							),
 							stats.Stat(
@@ -76,7 +86,11 @@ func (d *ShowDashboardController) Get() error {
 								),
 								stats.Value(
 									stats.ValueProps{},
-									htmx.Text("0"),
+									htmx.HxGet(utils.DashboardStatsWorkloadUrlFormat),
+									htmx.HxTrigger("load"),
+									loading.Spinner(
+										loading.SpinnerProps{},
+									),
 								),
 							),
 						),

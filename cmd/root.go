@@ -129,6 +129,12 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))
 
+		// Stats ...
+		stats := app.Group("/stats")
+		stats.Get("/profiles", handlers.StatsTotalProfiles())
+		stats.Get("/designs", handlers.StatsTotalDesigns())
+		stats.Get("/workloads", handlers.StatsTotalWorkloads())
+
 		// Designs ...
 		designs := app.Group("/designs")
 		designs.Get("/", handlers.ListDesigns())

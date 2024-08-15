@@ -129,6 +129,21 @@ func (r *readTxImpl) GetTemplate(ctx context.Context, template *models.Template)
 	return r.conn.First(template, template.ID).Error
 }
 
+// GetTotalNumberOfProfiles is a method that returns the total number of profiles
+func (r *readTxImpl) GetTotalNumberOfProfiles(ctx context.Context, total *int64) error {
+	return r.conn.Model(&models.Profile{}).Count(total).Error
+}
+
+// GetTotalNumberOfDesigns is a method that returns the total number of designs
+func (r *readTxImpl) GetTotalNumberOfDesigns(ctx context.Context, total *int64) error {
+	return r.conn.Model(&models.Design{}).Count(total).Error
+}
+
+// GetTotalNumberOfWorkloads is a method that returns the total number of workloads
+func (r *readTxImpl) GetTotalNumberOfWorkloads(ctx context.Context, total *int64) error {
+	return r.conn.Model(&models.Workload{}).Count(total).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl

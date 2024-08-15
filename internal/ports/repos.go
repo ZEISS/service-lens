@@ -64,6 +64,12 @@ type ReadTx interface {
 	ListTemplates(ctx context.Context, templates *tables.Results[models.Template]) error
 	// GetTemplate is a method that returns a template by ID
 	GetTemplate(ctx context.Context, template *models.Template) error
+	// GetTotalNumberOfProfiles is a method that returns the total number of profiles
+	GetTotalNumberOfProfiles(ctx context.Context, total *int64) error
+	// GetTotalNumberOfDesigns is a method that returns the total number of designs
+	GetTotalNumberOfDesigns(ctx context.Context, total *int64) error
+	// GetTotalNumberOfWorkloads is a method that returns the total number of workloads
+	GetTotalNumberOfWorkloads(ctx context.Context, total *int64) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.
