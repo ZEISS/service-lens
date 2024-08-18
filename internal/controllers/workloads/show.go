@@ -10,7 +10,9 @@ import (
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // WorkloadShowControllerImpl ...
@@ -42,140 +44,25 @@ func (w *WorkloadShowControllerImpl) Prepare() error {
 // Get ...
 func (w *WorkloadShowControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
-				},
-				components.Wrap(
-					components.WrapProps{
-						ClassNames: htmx.ClassNames{
-							"py-4": true,
-						},
-					},
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Title: w.workload.Name,
+				Path:  w.Path(),
+				User:  w.Session().User,
+			},
+			func() htmx.Node {
+				return htmx.Fragment(
 					cards.CardBordered(
-						cards.CardProps{},
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.M2: true,
+							},
+						},
 						cards.Body(
 							cards.BodyProps{},
 							cards.Title(
 								cards.TitleProps{},
 								htmx.Text("Overview"),
-							),
-							htmx.Div(
-								components.CardDataBlock(
-									&components.CardDataBlockProps{
-										Title: "ID",
-										Data:  w.workload.ID.String(),
-									},
-								),
-								components.CardDataBlock(
-									&components.CardDataBlockProps{
-										Title: "Name",
-										Data:  w.workload.Name,
-									},
-								),
-								components.CardDataBlock(
-									&components.CardDataBlockProps{
-										Title: "Description",
-										Data:  w.workload.Description,
-									},
-								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Created at"),
-									),
-									htmx.H3(
-										htmx.Text(
-											w.workload.CreatedAt.Format("2006-01-02 15:04:05"),
-										),
-									),
-								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Updated at"),
-									),
-									htmx.H3(
-										htmx.Text(
-											w.workload.UpdatedAt.Format("2006-01-02 15:04:05"),
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-				components.Wrap(
-					components.WrapProps{
-						ClassNames: htmx.ClassNames{
-							"py-4": true,
-						},
-					},
-					cards.CardBordered(
-						cards.CardProps{},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Lenses"),
-							),
-							workloads.LensesTable(
-								workloads.LensesTableProps{
-									Workload: &w.workload,
-								},
-							),
-							// htmx.Div(
-							// 	htmx.ClassNames{
-							// 		"overflow-x-auto": true,
-							// 	},
-
-							// 	htmx.Table(
-							// 		htmx.ClassNames{
-							// 			"table": true,
-							// 		},
-							// 		htmx.THead(
-							// 			htmx.Tr(
-							// 				htmx.Th(htmx.Text("ID")),
-							// 				htmx.Th(htmx.Text("Lens")),
-							// 			),
-							// 		),
-							// 		// htmx.TBody(
-							// 		// 	htmx.Group(lenses...),
-							// 		// ),
-							// 	),
-							// ),
-						),
-					),
-				),
-				components.Wrap(
-					components.WrapProps{
-						ClassNames: htmx.ClassNames{
-							"py-4": true,
-						},
-					},
-					cards.CardBordered(
-						cards.CardProps{},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Profile"),
 							),
 							htmx.Div(
 								htmx.ClassNames{
@@ -190,9 +77,7 @@ func (w *WorkloadShowControllerImpl) Get() error {
 									htmx.Text("Name"),
 								),
 								htmx.H3(
-									htmx.Text(
-										w.workload.Profile.Name,
-									),
+									htmx.Text(w.workload.Name),
 								),
 							),
 							htmx.Div(
@@ -208,33 +93,36 @@ func (w *WorkloadShowControllerImpl) Get() error {
 									htmx.Text("Description"),
 								),
 								htmx.H3(
-									htmx.Text(
-										w.workload.Profile.Description,
-									),
+									htmx.Text(w.workload.Description),
 								),
 							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
-								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Updated at"),
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.Button(
+									buttons.ButtonProps{},
+									htmx.Text("Edit"),
 								),
-								htmx.H3(
-									htmx.Text(
-										w.workload.Profile.UpdatedAt.Format("2006-01-02 15:04:05"),
-									),
+								buttons.Button(
+									buttons.ButtonProps{},
+									htmx.HxDelete(""),
+									htmx.HxConfirm("Are you sure you want to delete this workload?"),
+									htmx.Text("Delete"),
 								),
 							),
 						),
 					),
-				),
-			),
+					workloads.WorkloadMetadataCard(
+						workloads.WorkloadMetadataCardProps{
+							Workload: w.workload,
+						},
+					),
+					workloads.WorkloadProfileCard(
+						workloads.WorkloadProfileCardProps{
+							Workload: w.workload,
+						},
+					),
+				)
+			},
 		),
 	)
 }
