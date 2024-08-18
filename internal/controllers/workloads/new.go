@@ -1,13 +1,23 @@
 package workloads
 
 import (
+	"context"
+
+	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/loading"
+	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
+	"github.com/zeiss/pkg/slices"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 )
@@ -23,55 +33,38 @@ func NewWorkloadController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 	return &WorkloadNewControllerImpl{store: store}
 }
 
-// // Post ...
-// func (w *WorkloadNewControllerImpl) Post() error {
-// 	query := NewWorkloadNewControllerQuery()
-// 	if err := w.BindQuery(query); err != nil {
-// 		return err
-// 	}
-
-// 	validate := validator.New(validator.WithRequiredStructEnabled())
-// 	err := validate.Struct(query)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	team := w.Values(utils.ValuesKeyTeam).(*authz.Team)
-
-// 	workload := &models.Workload{
-// 		Description: query.Description,
-// 		Lenses:      []*models.Lens{{ID: query.Lens}},
-// 		Name:        query.Name,
-// 		ProfileID:   query.Profile,
-// 		Team:        *team,
-// 	}
-
-// 	err = w.db.CreateWorkload(w.Context(), workload)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	w.Hx().Redirect(fmt.Sprintf("/%s/workloads/%s", team.Slug, workload.ID))
-
-// 	return nil
-// }
-
 // Get ...
 func (w *WorkloadNewControllerImpl) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
-				},
-				htmx.FormElement(
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Title: "New Workload",
+				Path:  w.Path(),
+				User:  w.Session().User,
+			},
+			func() htmx.Node {
+				lenses := tables.Results[models.Lens]{}
+				profiles := tables.Results[models.Profile]{}
+				environments := tables.Results[models.Environment]{}
+
+				errorx.Panic(w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					if err := tx.ListLenses(ctx, &lenses); err != nil {
+						return err
+					}
+
+					if err := tx.ListProfiles(ctx, &profiles); err != nil {
+						return err
+					}
+
+					return tx.ListEnvironments(ctx, &environments)
+				}))
+
+				return htmx.FormElement(
 					htmx.HxPost(""),
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
+								tailwind.M2: true,
 							},
 						},
 						cards.Body(
@@ -81,36 +74,18 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								htmx.Text("Properties"),
 							),
 							forms.FormControl(
-								forms.FormControlProps{
-									ClassNames: htmx.ClassNames{
-										"py-4": true,
-									},
-								},
+								forms.FormControlProps{},
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
 									forms.FormControlLabelText(
-										forms.FormControlLabelTextProps{
-											ClassNames: htmx.ClassNames{
-												"-my-4": true,
-											},
-										},
+										forms.FormControlLabelTextProps{},
 										htmx.Text("Name"),
-									),
-								),
-								forms.FormControlLabel(
-									forms.FormControlLabelProps{},
-									forms.FormControlLabelText(
-										forms.FormControlLabelTextProps{
-											ClassNames: htmx.ClassNames{
-												"text-neutral-500": true,
-											},
-										},
-										htmx.Text("A unique identifier for the workload."),
 									),
 								),
 								forms.TextInputBordered(
 									forms.TextInputProps{
-										Name: "name",
+										Name:        "name",
+										Placeholder: "Shop System, Payment Gateway, etc.",
 									},
 								),
 								forms.FormControlLabel(
@@ -125,36 +100,18 @@ func (w *WorkloadNewControllerImpl) Get() error {
 									),
 								),
 								forms.FormControl(
-									forms.FormControlProps{
-										ClassNames: htmx.ClassNames{
-											"py-4": true,
-										},
-									},
+									forms.FormControlProps{},
 									forms.FormControlLabel(
 										forms.FormControlLabelProps{},
 										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"-my-4": true,
-												},
-											},
+											forms.FormControlLabelTextProps{},
 											htmx.Text("Description"),
-										),
-									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-												},
-											},
-											htmx.Text("A brief description of the workload to document its scope and intended purpose."),
 										),
 									),
 									forms.TextareaBordered(
 										forms.TextareaProps{
-											Name: "description",
+											Name:        "description",
+											Placeholder: "This is a shop system that processes payments.",
 										},
 									),
 									forms.FormControlLabel(
@@ -170,31 +127,12 @@ func (w *WorkloadNewControllerImpl) Get() error {
 									),
 								),
 								forms.FormControl(
-									forms.FormControlProps{
-										ClassNames: htmx.ClassNames{
-											"py-4": true,
-										},
-									},
+									forms.FormControlProps{},
 									forms.FormControlLabel(
 										forms.FormControlLabelProps{},
 										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"-my-4": true,
-												},
-											},
+											forms.FormControlLabelTextProps{},
 											htmx.Text("Review Owner"),
-										),
-									),
-									forms.FormControlLabel(
-										forms.FormControlLabelProps{},
-										forms.FormControlLabelText(
-											forms.FormControlLabelTextProps{
-												ClassNames: htmx.ClassNames{
-													"text-neutral-500": true,
-												},
-											},
-											htmx.Text("The email address of the person responsible for reviewing the workload."),
 										),
 									),
 									forms.TextInputBordered(
@@ -220,119 +158,299 @@ func (w *WorkloadNewControllerImpl) Get() error {
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
+								tailwind.M2: true,
 							},
 						},
 						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Environment"),
-							),
-							htmx.Input(
-								htmx.Attribute("type", "hidden"),
-								htmx.ID("environment"),
-								htmx.Attribute("name", "environment_id"),
-								htmx.Value(""),
-							),
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								htmx.HyperScript("on click from (closest <a/>) set (previous <input/>).value to 'test'"),
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{},
-									htmx.Text("Select Environment"),
-									htmx.HxGet("/workloads/partials/environments"),
-									htmx.HxTarget("#environments-list"),
-									htmx.HxSwap("innerHTML"),
-									htmx.ID("environments-button"),
+							cards.BodyProps{
+								ClassNames: htmx.ClassNames{
+									tailwind.M2: true,
+								},
+							},
+							forms.FormControl(
+								forms.FormControlProps{},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{},
+										htmx.Text("Environment"),
+									),
 								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{
-										TabIndex: 1,
-									},
-									htmx.ID("environments-list"),
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
+								dropdowns.Dropdown(
+									dropdowns.DropdownProps{},
+									alpine.XData(`{
+                      selected: {},
+                      onOptionClick(id, name) {
+                           this.selected = { id, name };
+                        },
+                    }`),
+									htmx.Div(
+										htmx.ClassNames{
+											tailwind.Flex:          true,
+											tailwind.SpaceX4:       true,
+											tailwind.JustifyCenter: true,
+										},
+										forms.TextInputBordered(
+											forms.TextInputProps{
+												Placeholder: "Search an environment ...",
+												Name:        "search",
+											},
+											alpine.XModel("selected.name"),
+											alpine.XRef("button"),
+											htmx.HxPost(utils.WorkloadSearchEnvironmentsUrlFormat),
+											htmx.HxTarget("#search-results"),
+											htmx.HxTrigger("keyup changed delay:500ms"),
+											htmx.HxIndicator(".htmx-indicator"),
+										),
+										loading.Spinner(
+											loading.SpinnerProps{
+												ClassNames: htmx.ClassNames{
+													"htmx-indicator": true,
+												},
+											},
+										),
+									),
+									htmx.Input(
+										htmx.Name("environment_id"),
+										htmx.Type("hidden"),
+										alpine.XModel("selected.id"),
+									),
+									dropdowns.DropdownMenuItems(
+										dropdowns.DropdownMenuItemsProps{
+											ClassNames: htmx.ClassNames{
+												tailwind.WFull: true,
+											},
+										},
+										htmx.ID("search-results"),
+										htmx.IfElse(
+											!slices.Size(0, environments.GetRows()),
+											htmx.Group(
+												htmx.ForEach(environments.GetRows(), func(e *models.Environment, idx int) htmx.Node {
+													return dropdowns.DropdownMenuItem(
+														dropdowns.DropdownMenuItemProps{},
+														htmx.A(
+															htmx.Text(e.Name),
+															htmx.Value(e.ID.String()),
+															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
+														),
+													)
+												})...,
+											),
+											dropdowns.DropdownMenuItem(
+												dropdowns.DropdownMenuItemProps{},
+												htmx.A(
+													htmx.Text("No environment found"),
+												),
+											),
+										),
+									),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("The environment that will be used to monitor the workload."),
 									),
 								),
 							),
-						),
-					),
-					cards.CardBordered(
-						cards.CardProps{
-							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
-							},
-						},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Profile"),
-							),
-							htmx.Input(
-								htmx.Attribute("type", "hidden"),
-								htmx.ID("profile"),
-								htmx.Attribute("name", "profile_id"),
-								htmx.Value(""),
-							),
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								htmx.HyperScript("on click from (closest <a/>) set (previous <input/>).value to 'test'"),
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{},
-									htmx.Text("Select Profile"),
-									htmx.HxGet("/workloads/partials/profiles"),
-									htmx.HxTarget("#profiles-list"),
-									htmx.HxSwap("innerHTML"),
-									htmx.ID("profiles-button"),
+							forms.FormControl(
+								forms.FormControlProps{},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{},
+										htmx.Text("Profle"),
+									),
 								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{
-										TabIndex: 1,
-									},
-									htmx.ID("profiles-list"),
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
+								dropdowns.Dropdown(
+									dropdowns.DropdownProps{},
+									alpine.XData(`{
+                      selected: {},
+                      onOptionClick(id, name) {
+                           this.selected = { id, name };
+                        },
+                    }`),
+									htmx.Div(
+										htmx.ClassNames{
+											tailwind.Flex:          true,
+											tailwind.SpaceX4:       true,
+											tailwind.JustifyCenter: true,
+										},
+										forms.TextInputBordered(
+											forms.TextInputProps{
+												Placeholder: "Search a profile ...",
+												Name:        "search",
+											},
+											alpine.XModel("selected.name"),
+											alpine.XRef("button"),
+											htmx.HxPost(utils.WorkloadSearchProfilesUrlFormat),
+											htmx.HxTarget("#search-results"),
+											htmx.HxTrigger("keyup changed delay:500ms"),
+											htmx.HxIndicator(".htmx-indicator"),
+										),
+										loading.Spinner(
+											loading.SpinnerProps{
+												ClassNames: htmx.ClassNames{
+													"htmx-indicator": true,
+												},
+											},
+										),
+									),
+									htmx.Input(
+										htmx.Name("profile_id"),
+										htmx.Type("hidden"),
+										alpine.XModel("selected.id"),
+									),
+									dropdowns.DropdownMenuItems(
+										dropdowns.DropdownMenuItemsProps{
+											ClassNames: htmx.ClassNames{
+												tailwind.WFull: true,
+											},
+										},
+										htmx.ID("search-results"),
+										htmx.IfElse(
+											!slices.Size(0, profiles.GetRows()),
+											htmx.Group(
+												htmx.ForEach(profiles.GetRows(), func(e *models.Profile, idx int) htmx.Node {
+													return dropdowns.DropdownMenuItem(
+														dropdowns.DropdownMenuItemProps{},
+														htmx.A(
+															htmx.Text(e.Name),
+															htmx.Value(e.ID.String()),
+															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
+														),
+													)
+												})...,
+											),
+											dropdowns.DropdownMenuItem(
+												dropdowns.DropdownMenuItemProps{},
+												htmx.A(
+													htmx.Text("No profile found"),
+												),
+											),
+										),
+									),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("The profile that will be used to monitor the workload."),
 									),
 								),
 							),
-						),
-					),
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Lens"),
-						),
-					),
-					cards.CardBordered(
-						cards.CardProps{
-							ClassNames: htmx.ClassNames{
-								"w-full": true,
-								"my-4":   true,
-							},
-						},
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Tags (Optional)"),
-								components.TagInput(
-									components.TagInputProps{},
+							forms.FormControl(
+								forms.FormControlProps{},
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{},
+										htmx.Text("Lens"),
+									),
+								),
+								dropdowns.Dropdown(
+									dropdowns.DropdownProps{},
+									alpine.XData(`{
+                      selected: {},
+                      onOptionClick(id, name) {
+                           this.selected = { id, name };
+                        },
+                    }`),
+									htmx.Div(
+										htmx.ClassNames{
+											tailwind.Flex:          true,
+											tailwind.SpaceX4:       true,
+											tailwind.JustifyCenter: true,
+										},
+										forms.TextInputBordered(
+											forms.TextInputProps{
+												Placeholder: "Search a lens ...",
+												Name:        "search",
+											},
+											alpine.XModel("selected.name"),
+											alpine.XRef("button"),
+											htmx.HxPost(utils.WorkloadSearchLensesUrlFormat),
+											htmx.HxTarget("#search-results"),
+											htmx.HxTrigger("keyup changed delay:500ms"),
+											htmx.HxIndicator(".htmx-indicator"),
+										),
+										loading.Spinner(
+											loading.SpinnerProps{
+												ClassNames: htmx.ClassNames{
+													"htmx-indicator": true,
+												},
+											},
+										),
+									),
+									htmx.Input(
+										htmx.Name("lens_id"),
+										htmx.Type("hidden"),
+										alpine.XModel("selected.id"),
+									),
+									dropdowns.DropdownMenuItems(
+										dropdowns.DropdownMenuItemsProps{
+											ClassNames: htmx.ClassNames{
+												tailwind.WFull: true,
+											},
+										},
+										htmx.ID("search-results"),
+										htmx.IfElse(
+											!slices.Size(0, lenses.GetRows()),
+											htmx.Group(
+												htmx.ForEach(lenses.GetRows(), func(e *models.Lens, idx int) htmx.Node {
+													return dropdowns.DropdownMenuItem(
+														dropdowns.DropdownMenuItemProps{},
+														htmx.A(
+															htmx.Text(e.Name),
+															htmx.Value(e.ID.String()),
+															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
+														),
+													)
+												})...,
+											),
+											dropdowns.DropdownMenuItem(
+												dropdowns.DropdownMenuItemProps{},
+												htmx.A(
+													htmx.Text("No lenses found"),
+												),
+											),
+										),
+									),
+								),
+								forms.FormControlLabel(
+									forms.FormControlLabelProps{},
+									forms.FormControlLabelText(
+										forms.FormControlLabelTextProps{
+											ClassNames: htmx.ClassNames{
+												"text-neutral-500": true,
+											},
+										},
+										htmx.Text("This is the lens that will be used to monitor the workload."),
+									),
+								),
+							),
+							cards.Actions(
+								cards.ActionsProps{},
+								buttons.Button(
+									buttons.ButtonProps{
+										Type: "submit",
+									},
+									htmx.Text("Create Workload"),
 								),
 							),
 						),
 					),
-					buttons.OutlinePrimary(
-						buttons.ButtonProps{},
-						htmx.Attribute("type", "submit"),
-						htmx.Text("Create Workload"),
-					),
-				),
-			),
+					components.AddTags(components.AddTagsProps{}),
+				)
+			},
 		),
 	)
 }

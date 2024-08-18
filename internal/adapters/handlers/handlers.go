@@ -22,6 +22,7 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/workloads"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/partials"
 	"github.com/zeiss/service-lens/internal/controllers/workloads/questions"
+	"github.com/zeiss/service-lens/internal/controllers/workloads/search"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
@@ -449,5 +450,26 @@ func (a *handlers) StatsTotalDesigns() fiber.Handler {
 func (a *handlers) StatsTotalWorkloads() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return stats.NewWorkloadStatsController(a.store)
+	})
+}
+
+// SearchLenses ...
+func (a *handlers) SearchLenses() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return search.NewSearchLensesController(a.store)
+	})
+}
+
+// SearchProfiles ...
+func (a *handlers) SearchProfiles() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return search.NewSearchProfilesController(a.store)
+	})
+}
+
+// SearchEnvironments ...
+func (a *handlers) SearchEnvironments() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return search.NewSearchEnvironmentsController(a.store)
 	})
 }

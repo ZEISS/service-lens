@@ -264,7 +264,7 @@ func (rw *writeTxImpl) DeleteLens(ctx context.Context, lens *models.Lens) error 
 
 // CreateWorkload is a method that creates a workload
 func (rw *writeTxImpl) CreateWorkload(ctx context.Context, workload *models.Workload) error {
-	return rw.conn.Create(workload).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Create(workload).Error
 }
 
 // UpdateWorkload is a method that updates a workload
