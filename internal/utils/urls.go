@@ -33,4 +33,5 @@ const (
 	WorkloadSearchEnvironmentsUrlFormat = "/workloads/search/environments"
 	WorkloadSearchProfilesUrlFormat     = "/workloads/search/profiles"
 	WorkloadLensUrlFormat               = "/workloads/%s/lenses/%s"
+	DeleteWorkloadUrlFormat             = "/workloads/%s"
 )
