@@ -7,6 +7,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/links"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -86,7 +87,17 @@ func (l *ShowControllerImpl) Get() error {
 					),
 					cards.Actions(
 						cards.ActionsProps{},
-						buttons.Outline(
+						links.Link(
+							links.LinkProps{
+								ClassNames: htmx.ClassNames{
+									"btn":       true,
+									"btn-ghost": true,
+								},
+								Href: fmt.Sprintf(utils.ShowDesigUrlFormat, l.Design.ID),
+							},
+							htmx.Text("Cancel"),
+						),
+						buttons.Button(
 							buttons.ButtonProps{},
 							htmx.Attribute("type", "submit"),
 							htmx.Text("Update"),

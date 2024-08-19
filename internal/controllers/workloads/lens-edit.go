@@ -99,7 +99,6 @@ func (w *WorkloadLensEditControllerImpl) Get() error {
 								tailwind.MinHScreen: true,
 								tailwind.HFull:      true,
 								"overflow-y-auto":   true,
-								"bg-base-300":       true,
 								"max-w-80":          true,
 							},
 						},

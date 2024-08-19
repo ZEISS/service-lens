@@ -58,6 +58,8 @@ type ReadTx interface {
 	GetWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
 	// ListTags is a method that returns a list of tags
 	ListTags(ctx context.Context, tags *tables.Results[models.Tag]) error
+	// GetWorkflow is a method that returns a workflow by ID
+	GetWorkflow(ctx context.Context, workflow *models.Workflow) error
 	// ListWorkflows is a method that returns a list of workflows
 	ListWorkflows(ctx context.Context, workflows *tables.Results[models.Workflow]) error
 	// ListTemplates is a method that returns a list of templates
@@ -122,4 +124,10 @@ type ReadWriteTx interface {
 	UpdateTemplate(ctx context.Context, template *models.Template) error
 	// DeleteTemplate is a method that deletes a template
 	DeleteTemplate(ctx context.Context, template *models.Template) error
+	// CreateWorkflow is a method that creates a workflow
+	CreateWorkflow(ctx context.Context, workflow *models.Workflow) error
+	// UpdateWorkflow is a method that updates a workflow
+	UpdateWorkflow(ctx context.Context, workflow *models.Workflow) error
+	// DeleteWorkflow is a method that deletes a workflow
+	DeleteWorkflow(ctx context.Context, workflow *models.Workflow) error
 }

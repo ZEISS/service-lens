@@ -6,6 +6,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
 )
@@ -23,8 +24,7 @@ func DesignTitleCard(props DesignTitleCardProps) htmx.Node {
 		cards.CardProps{
 			ClassNames: htmx.Merge(
 				htmx.ClassNames{
-					"my-2": true,
-					"mx-2": true,
+					tailwind.M2: true,
 				},
 			),
 		},
@@ -36,7 +36,7 @@ func DesignTitleCard(props DesignTitleCardProps) htmx.Node {
 			htmx.H1(htmx.Text(props.Design.Title)),
 			cards.Actions(
 				cards.ActionsProps{},
-				buttons.Outline(
+				buttons.Button(
 					buttons.ButtonProps{},
 					htmx.HxGet(fmt.Sprintf(utils.EditTitleUrlFormat, props.Design.ID)),
 					htmx.Text("Edit"),

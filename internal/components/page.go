@@ -35,8 +35,8 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
-					htmx.Attribute("src", "https://unpkg.com/hyperscript.org@0.9.12"),
-					htmx.Attribute("type", "text/javascript"),
+					htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/@alpinejs/sort@3.x.x/dist/cdn.min.js"),
+					htmx.Attribute("defer", ""),
 				),
 				htmx.Script(
 					htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"),

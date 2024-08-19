@@ -473,3 +473,17 @@ func (a *handlers) SearchEnvironments() fiber.Handler {
 		return search.NewSearchEnvironmentsController(a.store)
 	})
 }
+
+// CreateWorkflow ...
+func (a *handlers) CreateWorkflow() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewWorkflowController(a.store)
+	})
+}
+
+// ShowWorkflow ...
+func (a *handlers) ShowWorkflow() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewWorkflowShowController(a.store)
+	})
+}

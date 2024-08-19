@@ -7,6 +7,8 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -51,8 +53,7 @@ func (l *ShowControllerImpl) Get() error {
 			cards.CardBordered(
 				cards.CardProps{
 					ClassNames: htmx.ClassNames{
-						"my-2": true,
-						"mx-2": true,
+						tailwind.M2: true,
 					},
 				},
 				cards.Body(
@@ -82,10 +83,20 @@ func (l *ShowControllerImpl) Get() error {
 					),
 					cards.Actions(
 						cards.ActionsProps{},
-						buttons.Outline(
+						links.Link(
+							links.LinkProps{
+								ClassNames: htmx.ClassNames{
+									"btn":       true,
+									"btn-ghost": true,
+								},
+								Href: fmt.Sprintf(utils.ShowDesigUrlFormat, l.Design.ID),
+							},
+							htmx.Text("Cancel"),
+						),
+						buttons.Button(
 							buttons.ButtonProps{},
 							htmx.Attribute("type", "submit"),
-							htmx.Text("Update"),
+							htmx.Text("Save"),
 						),
 					),
 				),

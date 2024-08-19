@@ -73,39 +73,53 @@ func (l *ShowDesignControllerImpl) Prepare() error {
 // Get ...
 func (l *ShowDesignControllerImpl) Get() error {
 	return l.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: l.Ctx().Path(),
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Title: l.Design.Title,
+				Path:  l.Ctx().Path(),
+				User:  l.Session().User,
+				Head: []htmx.Node{
+					htmx.Link(
+						htmx.Attribute("href", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.css"),
+						htmx.Rel("stylesheet"),
+						htmx.Type("text/css"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.js"),
+						htmx.Type("text/javascript"),
+					),
 				},
-				designs.DesignTitleCard(
-					designs.DesignTitleCardProps{
-						Design: l.Design,
-					},
-				),
-				designs.DesignBodyCard(
-					designs.DesignBodyCardProps{
-						Design:   l.Design,
-						Markdown: l.Body,
-					},
-				),
-				designs.DesignMetadataCard(
-					designs.DesignMetadataCardProps{
-						Design: l.Design,
-					},
-				),
-				designs.DesignTagsCard(
-					designs.DesignTagsCardProps{
-						Design: l.Design,
-					},
-				),
-				designs.DesignCommentsCard(
-					designs.DesignCommentsCardProps{
-						Design: l.Design,
-					},
-				),
-			),
+			},
+			func() htmx.Node {
+				return htmx.Fragment(
+					designs.DesignTitleCard(
+						designs.DesignTitleCardProps{
+							Design: l.Design,
+						},
+					),
+					designs.DesignBodyCard(
+						designs.DesignBodyCardProps{
+							Design:   l.Design,
+							Markdown: l.Body,
+						},
+					),
+					designs.DesignMetadataCard(
+						designs.DesignMetadataCardProps{
+							Design: l.Design,
+						},
+					),
+					designs.DesignTagsCard(
+						designs.DesignTagsCardProps{
+							Design: l.Design,
+						},
+					),
+					designs.DesignCommentsCard(
+						designs.DesignCommentsCardProps{
+							Design: l.Design,
+						},
+					),
+				)
+			},
 		),
 	)
 }

@@ -4,20 +4,14 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
-)
-
-const (
-	profileShowURL     = "/profiles/%s"
-	environmentShowURL = "/environments/%s"
-	deleteWorkloadURL  = "/workloads/%s"
 )
 
 // WorkflowsTableProps ...
@@ -93,12 +87,11 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 							},
 						),
 					),
-					htmx.A(
-						htmx.Href("/workflows/new"),
-						buttons.Button(
-							buttons.ButtonProps{},
-							htmx.Text("Create Workflow"),
-						),
+					NewWorkflowModal(),
+					buttons.Button(
+						buttons.ButtonProps{},
+						htmx.OnClick("new_workflow_modal.showModal()"),
+						htmx.Text("Create Workflow"),
 					),
 				),
 			},
@@ -125,7 +118,7 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: "/workflows/",
+									Href: fmt.Sprintf(utils.ShowWorkflowUrlFormat, row.ID),
 								},
 								htmx.Text(row.Name),
 							),
@@ -138,25 +131,24 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 					},
 					Cell: func(p tables.TableProps, row *models.Workflow) htmx.Node {
 						return htmx.Td(
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{},
-									icons.BoltOutline(
-										icons.IconProps{},
-									),
-								),
-								dropdowns.DropdownMenuItems(
-									dropdowns.DropdownMenuItemsProps{},
-									dropdowns.DropdownMenuItem(
-										dropdowns.DropdownMenuItemProps{},
-										buttons.Error(
-											buttons.ButtonProps{},
-											htmx.HxDelete(fmt.Sprintf(deleteWorkloadURL, row.ID)),
-											htmx.HxConfirm("Are you sure you want to delete this workflow?"),
-											htmx.Text("Delete"),
-										),
-									),
+							buttons.Button(
+								buttons.ButtonProps{
+									ClassNames: htmx.ClassNames{
+										"btn-sm": true,
+									},
+								},
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteWorkflowsUrlFormat, row.ID)),
+								htmx.HxConfirm("Are you sure you want to delete this workflow?"),
+								htmx.HxTarget("closest tr"),
+								htmx.HxSwap("outerHTML swap:1s"),
+								icons.TrashOutline(
+									icons.IconProps{
+										ClassNames: htmx.ClassNames{
+											"w-6 h-6": false,
+											"w-4":     true,
+											"h-4":     true,
+										},
+									},
 								),
 							),
 						)

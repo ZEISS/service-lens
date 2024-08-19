@@ -144,6 +144,11 @@ func (r *readTxImpl) GetTotalNumberOfWorkloads(ctx context.Context, total *int64
 	return r.conn.Model(&models.Workload{}).Count(total).Error
 }
 
+// GetWorkflow is a method that returns a workflow by ID
+func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow) error {
+	return r.conn.First(workflow, workflow.ID).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl
@@ -309,4 +314,19 @@ func (rw *writeTxImpl) UpdateTag(ctx context.Context, tag *models.Tag) error {
 // DeleteTag is a method that deletes a tag
 func (rw *writeTxImpl) DeleteTag(ctx context.Context, tag *models.Tag) error {
 	return rw.conn.Delete(tag).Error
+}
+
+// CreateWorkflow is a method that creates a workflow
+func (rw *writeTxImpl) CreateWorkflow(ctx context.Context, workflow *models.Workflow) error {
+	return rw.conn.Create(workflow).Error
+}
+
+// UpdateWorkflow is a method that updates a workflow
+func (rw *writeTxImpl) UpdateWorkflow(ctx context.Context, workflow *models.Workflow) error {
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(workflow).Error
+}
+
+// DeleteWorkflow is a method that deletes a workflow
+func (rw *writeTxImpl) DeleteWorkflow(ctx context.Context, workflow *models.Workflow) error {
+	return rw.conn.Delete(workflow).Error
 }

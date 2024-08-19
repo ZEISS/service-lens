@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
@@ -117,6 +118,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 				},
 				cards.Body(
 					cards.BodyProps{},
+					alpine.XData(`{ doesNotApply: $refs.doesNotApply.checked }`),
 					forms.FormControl(
 						forms.FormControlProps{
 							ClassNames: htmx.ClassNames{
@@ -138,23 +140,18 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 								Value:   "true",
 								Checked: w.answer.DoesNotApply,
 							},
-							htmx.HyperScript(`on change if me.checked set disabled of <input[type=checkbox][name=choices]/> to true
-								remove .hidden from next <label/>
-								else set disabled of <input[type=checkbox][name=choices]/> to false
-								add .hidden to next <label/>`),
+							alpine.XModel(`doesNotApply`),
+							alpine.XRef(`doesNotApply`),
 						),
 					),
 					forms.FormControl(
-						forms.FormControlProps{
-							ClassNames: htmx.ClassNames{
-								"hidden": !w.answer.DoesNotApply,
-							},
-						},
-						htmx.ID("does-not-apply-reason"),
+						forms.FormControlProps{},
+						alpine.XShow(`doesNotApply`),
 						forms.SelectBordered(
 							forms.SelectProps{
 								ClassNames: htmx.ClassNames{
-									"w-full": true,
+									tailwind.WFull:  true,
+									tailwind.MaxWXs: false,
 								},
 							},
 							forms.Option(
@@ -211,6 +208,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 										Checked:  w.answer.IsChecked(choice.ID), // todo(katallaxie): should be a default option in the model
 										Disabled: w.answer.DoesNotApply || (choice.Ref == models.NoneOfTheseQuestionRef && w.answer.DoesNotApply),
 									},
+									alpine.XBind("disabled", "doesNotApply"),
 								),
 							),
 						)
@@ -237,13 +235,20 @@ func (w *WorkloadLensEditQuestionControllerImpl) Get() error {
 						forms.TextareaBordered(
 							forms.TextareaProps{
 								Name:        "notes",
-								Placeholder: "Optional notes",
+								Placeholder: "Additional notes to provide context or reasoning for the answers.",
 							},
 							htmx.Text(w.answer.Notes),
 						),
-						forms.FormControlLabelAltText(
-							forms.FormControlLabelAltTextProps{},
-							htmx.Text("Optional - Can be from 3 to 2048 characters."),
+						forms.FormControlLabel(
+							forms.FormControlLabelProps{},
+							forms.FormControlLabelText(
+								forms.FormControlLabelTextProps{
+									ClassNames: htmx.ClassNames{
+										"text-neutral-500": true,
+									},
+								},
+								htmx.Text("Can be 3 to 2048 characters."),
+							),
 						),
 					),
 					cards.Actions(
