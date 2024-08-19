@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
@@ -56,18 +57,19 @@ func (w *WorkloadLensController) Prepare() error {
 // Get ...
 func (w *WorkloadLensController) Get() error {
 	return w.Render(
-		components.Page(
-			components.PageProps{},
-			components.Layout(
-				components.LayoutProps{
-					Path: w.Path(),
-				},
-				components.Wrap(
-					components.WrapProps{},
+		components.DefaultLayout(
+			components.DefaultLayoutProps{
+				Title: w.lens.Name,
+				Path:  w.Path(),
+				User:  w.Session().User,
+			},
+			func() htmx.Node {
+				return htmx.Fragment(
+
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
-								"my-4": true,
+								tailwind.M2: true,
 							},
 						},
 						cards.Body(
@@ -131,27 +133,27 @@ func (w *WorkloadLensController) Get() error {
 							),
 						),
 					),
-				),
-				cards.CardBordered(
-					cards.CardProps{
-						ClassNames: htmx.ClassNames{
-							"my-4": true,
-						},
-					},
-					cards.Body(
-						cards.BodyProps{},
-						cards.Title(
-							cards.TitleProps{},
-							htmx.Text("Pillars"),
-						),
-						workloads.LensPillarTable(
-							workloads.LensPillarTableProps{
-								Lens: &w.lens,
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.M2: true,
 							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Pillars"),
+							),
+							workloads.LensPillarTable(
+								workloads.LensPillarTableProps{
+									Lens: &w.lens,
+								},
+							),
 						),
 					),
-				),
-			),
+				)
+			},
 		),
 	)
 }

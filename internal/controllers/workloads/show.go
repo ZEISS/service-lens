@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
@@ -14,6 +15,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
@@ -53,6 +55,13 @@ func (w *WorkloadShowControllerImpl) Get() error {
 				User:  w.Session().User,
 			},
 			func() htmx.Node {
+				lenses := tables.Results[models.Lens]{}
+
+				errorx.Panic(w.BindQuery(&lenses))
+				errorx.Panic(w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListLenses(ctx, &lenses)
+				}))
+
 				return htmx.Fragment(
 					cards.CardBordered(
 						cards.CardProps{
@@ -128,6 +137,29 @@ func (w *WorkloadShowControllerImpl) Get() error {
 						workloads.WorkloadProfileCardProps{
 							Workload: w.workload,
 						},
+					),
+					cards.CardBordered(
+						cards.CardProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.M2: true,
+							},
+						},
+						cards.Body(
+							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								htmx.Text("Lenses"),
+							),
+							workloads.LensesTable(
+								workloads.LensesTableProps{
+									Workload: w.workload,
+									Lenses:   lenses.GetRows(),
+									Offset:   lenses.GetOffset(),
+									Limit:    lenses.GetLimit(),
+									Total:    lenses.GetTotalRows(),
+								},
+							),
+						),
 					),
 				)
 			},

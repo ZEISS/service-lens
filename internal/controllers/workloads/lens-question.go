@@ -53,6 +53,7 @@ func (w *WorkloadLensEditQuestionControllerImpl) Prepare() error {
 	w.answer.LensID = w.params.LensID
 	w.answer.WorkloadID = w.params.WorkloadID
 	w.answer.QuestionID = w.params.QuestionID
+	w.question.ID = w.params.QuestionID
 
 	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		err := tx.GetLensQuestion(ctx, &w.question)

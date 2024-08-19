@@ -4,22 +4,17 @@ import (
 	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
-)
-
-const (
-	deleteProfileURL = "/profiles/%s"
-	workloadLensURL  = "/workloads/%s/lenses/%s"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // LensesTableProps ...
 type LensesTableProps struct {
-	Workload *models.Workload
+	Workload models.Workload
+	Lenses   []*models.Lens
 	Offset   int
 	Limit    int
 	Total    int
@@ -115,33 +110,15 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Td(
 							links.Link(
 								links.LinkProps{
-									Href: fmt.Sprintf(workloadLensURL, props.Workload.ID, row.ID),
+									Href: fmt.Sprintf(utils.WorkloadLensUrlFormat, props.Workload.ID, row.ID),
 								},
 								htmx.Text(row.Name),
 							),
 						)
 					},
 				},
-				{
-					Header: func(p tables.TableProps) htmx.Node {
-						return nil
-					},
-					Cell: func(p tables.TableProps, row *models.Lens) htmx.Node {
-						return htmx.Td(
-							dropdowns.Dropdown(
-								dropdowns.DropdownProps{},
-								dropdowns.DropdownButton(
-									dropdowns.DropdownButtonProps{},
-									icons.BoltOutline(
-										icons.IconProps{},
-									),
-								),
-							),
-						)
-					},
-				},
 			},
-			props.Workload.Lenses,
+			props.Lenses,
 		),
 	)
 }

@@ -84,7 +84,7 @@ func (r *readTxImpl) GetLens(ctx context.Context, lens *models.Lens) error {
 
 // GetLensQuestion is a method that returns a lens question by ID
 func (r *readTxImpl) GetLensQuestion(ctx context.Context, question *models.Question) error {
-	return r.conn.Preload("Choices").First(question).Error
+	return r.conn.Preload("Choices").First(question, question.ID).Error
 }
 
 // ListWorkloads is a method that returns a list of workloads
@@ -101,7 +101,7 @@ func (r *readTxImpl) GetWorkloadAnswer(ctx context.Context, answer *models.Workl
 	return r.conn.
 		Where(&models.WorkloadLensQuestionAnswer{WorkloadID: answer.WorkloadID, LensID: answer.LensID, QuestionID: answer.QuestionID}).
 		Preload(clause.Associations).
-		First(answer).Error
+		FirstOrCreate(answer).Error
 }
 
 // GetWorkload is a method that returns a workload by ID
