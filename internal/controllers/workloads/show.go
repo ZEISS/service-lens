@@ -2,12 +2,14 @@ package workloads
 
 import (
 	"context"
+	"fmt"
 
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
@@ -58,6 +60,8 @@ func (w *WorkloadShowControllerImpl) Get() error {
 								tailwind.M2: true,
 							},
 						},
+						htmx.HxTarget("this"),
+						htmx.HxSwap("outerHTML"),
 						cards.Body(
 							cards.BodyProps{},
 							cards.Title(
@@ -99,8 +103,12 @@ func (w *WorkloadShowControllerImpl) Get() error {
 							cards.Actions(
 								cards.ActionsProps{},
 								buttons.Button(
-									buttons.ButtonProps{},
+									buttons.ButtonProps{
+										Type: "button",
+									},
 									htmx.Text("Edit"),
+									htmx.HxGet(fmt.Sprintf(utils.EditWorkloadUrlFormat, w.workload.ID)),
+									htmx.HxSwap("outerHTML"),
 								),
 								buttons.Button(
 									buttons.ButtonProps{},

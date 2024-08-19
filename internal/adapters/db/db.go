@@ -269,7 +269,7 @@ func (rw *writeTxImpl) CreateWorkload(ctx context.Context, workload *models.Work
 
 // UpdateWorkload is a method that updates a workload
 func (rw *writeTxImpl) UpdateWorkload(ctx context.Context, workload *models.Workload) error {
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(workload).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(workload).Error
 }
 
 // DeleteWorkload is a method that deletes a workload

@@ -17,6 +17,7 @@ const (
 	DeleteTemplateUrlFormat             = "/templates/%s"
 	EditBodyUrlFormat                   = "/designs/%s/body/edit"
 	EditTitleUrlFormat                  = "/designs/%s/title/edit"
+	EditWorkloadUrlFormat               = "/workloads/%s/edit"
 	ListTagsUrlFormat                   = "/tags"
 	ListTemplatesUrlFormat              = "/templates"
 	ListWorkflowsUrlFormat              = "/workflows"
