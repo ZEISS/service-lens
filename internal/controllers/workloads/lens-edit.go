@@ -76,16 +76,12 @@ func (w *WorkloadLensEditControllerImpl) Get() error {
 						},
 					},
 					drawers.DrawerContent(
-						drawers.DrawerContentProps{
-							ClassNames: htmx.ClassNames{
-								"px-8": true,
-							},
-						},
+						drawers.DrawerContentProps{},
 						htmx.ID("pillars-drawer-content"),
 						cards.CardBordered(
 							cards.CardProps{
 								ClassNames: htmx.ClassNames{
-									"my-4": true,
+									tailwind.M4: true,
 								},
 							},
 							cards.Body(
