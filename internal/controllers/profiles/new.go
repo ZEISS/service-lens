@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -191,7 +192,7 @@ func (p *NewProfileControllerImpl) Get() error {
 														forms.Radio(
 															forms.RadioProps{
 																Name:    fmt.Sprintf("answers.%d.ChoiceID", profileIdx),
-																Value:   utils.IntStr(c.ID),
+																Value:   conv.String(c.ID),
 																Checked: choiceIdx == 0, // todo(katallaxie): should be a default option in the model
 															},
 														),

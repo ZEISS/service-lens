@@ -7,9 +7,9 @@ import (
 	"github.com/zeiss/fiber-htmx/components/avatars"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/pkg/cast"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
 	"github.com/go-playground/validator/v10"
 	htmx "github.com/zeiss/fiber-htmx"
@@ -99,7 +99,7 @@ func (l *CreateDesignCommentControllerImpl) Post() error {
 					avatars.AvatarRoundSmall(
 						avatars.AvatarProps{},
 						htmx.Img(
-							htmx.Attribute("src", utils.PtrStr(l.Session().User.Image)),
+							htmx.Attribute("src", cast.Value(l.Session().User.Image)),
 						),
 					),
 				),

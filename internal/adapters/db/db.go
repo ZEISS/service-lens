@@ -38,7 +38,7 @@ func (r *readTxImpl) GetDesign(ctx context.Context, design *models.Design) error
 
 // ListDesigns is a method that returns a list of designs
 func (r *readTxImpl) ListDesigns(ctx context.Context, pagination *tables.Results[models.Design]) error {
-	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+	return r.conn.Debug().Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
 // ListProfiles is a method that returns a list of profiles

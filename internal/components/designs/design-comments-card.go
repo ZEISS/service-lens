@@ -12,6 +12,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/pkg/cast"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
 )
@@ -85,7 +86,7 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 									avatars.AvatarRoundSmall(
 										avatars.AvatarProps{},
 										htmx.Img(
-											htmx.Attribute("src", utils.PtrStr(c.Author.Image)),
+											htmx.Attribute("src", cast.Value(c.Author.Image)),
 										),
 									),
 								),

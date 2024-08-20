@@ -32,11 +32,7 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,

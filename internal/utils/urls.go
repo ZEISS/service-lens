@@ -29,6 +29,7 @@ const (
 	ShowLensUrlFormat                   = "/lenses/%s"
 	ShowWorkloadUrlFormat               = "/workloads/%s"
 	ShowWorkflowUrlFormat               = "/workflows/%s"
+	ShowEnvironmentUrlFormat            = "/environments/%s"
 	DashboardStatsProfileUrlFormat      = "/stats/profiles"
 	DashboardStatsDesignUrlFormat       = "/stats/designs"
 	DashboardStatsWorkloadUrlFormat     = "/stats/workloads"

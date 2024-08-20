@@ -4,14 +4,14 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
-	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
-	"github.com/zeiss/service-lens/internal/utils"
 
+	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/conv"
 )
 
 // QuestionUpdateForm ...
@@ -79,7 +79,7 @@ func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 
 	for _, choice := range w.form.Choices {
 		w.answer.Choices = append(w.answer.Choices, models.Choice{
-			ID: utils.StrInt(choice),
+			ID: conv.Int(choice),
 		})
 	}
 

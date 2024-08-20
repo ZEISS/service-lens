@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/dropdowns"
-	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
-	"github.com/zeiss/service-lens/internal/models"
-	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // DesignsTableProps ...
 type DesignsTableProps struct {
 	Designs   []*models.Design
 	Templates []*models.Template
+	URL       string
+	Search    string
 	Offset    int
 	Limit     int
 	Total     int
@@ -34,27 +36,22 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
-
 						tables.Select(
 							tables.SelectProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -62,7 +59,7 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -73,8 +70,6 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 							"flex":            true,
 							"items-center":    true,
 							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
 						},
 					},
 					htmx.Div(
@@ -83,9 +78,11 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),

@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/profiles"
 	"github.com/zeiss/service-lens/internal/models"
@@ -162,7 +163,7 @@ func (p *ProfileShowControllerImpl) Get() error {
 																forms.Radio(
 																	forms.RadioProps{
 																		Name:     fmt.Sprintf("answers.%d.ChoiceID", profileIdx),
-																		Value:    utils.IntStr(c.ID),
+																		Value:    conv.String(c.ID),
 																		Checked:  p.profile.IsChoosen(c.ID),
 																		Disabled: true,
 																	},

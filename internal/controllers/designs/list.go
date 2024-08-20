@@ -26,7 +26,10 @@ type ListDesignsControllerImpl struct {
 
 // NewListDesignsController ...
 func NewListDesignsController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ListDesignsControllerImpl {
-	return &ListDesignsControllerImpl{store: store}
+	return &ListDesignsControllerImpl{
+		results: tables.Results[models.Design]{SearchFields: []string{"Title"}},
+		store:   store,
+	}
 }
 
 // Prepare ...
@@ -63,6 +66,8 @@ func (l *ListDesignsControllerImpl) Get() error {
 								Offset:    l.results.GetOffset(),
 								Limit:     l.results.GetLimit(),
 								Total:     l.results.GetLen(),
+								Search:    l.results.GetSearch(),
+								URL:       l.OriginalURL(),
 							},
 						),
 					),
