@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
+	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
-	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
 
@@ -30,106 +30,171 @@ type WorkloadsTableProps struct {
 
 // WorkloadsTable ...
 func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node {
-	return components.Table(
-		components.TableProps[*models.Workload]{
-			Rows:   props.Workloads,
-			Offset: props.Offset,
-			Limit:  props.Limit,
-			Total:  props.Total,
-		},
-		[]tables.ColumnDef[*models.Workload]{
-			{
-				ID:          "id",
-				AccessorKey: "id",
-				Header: func(p tables.TableProps) htmx.Node {
-					return htmx.Th(htmx.Text("ID"))
-				},
-				Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
-					return htmx.Td(
-						htmx.Text(row.ID.String()),
-					)
-				},
-			},
-			{
-				ID:          "name",
-				AccessorKey: "name",
-				Header: func(p tables.TableProps) htmx.Node {
-					return htmx.Th(htmx.Text("Name"))
-				},
-				Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
-					return htmx.Td(
-						links.Link(
-							links.LinkProps{
-								Href: "/workloads/" + row.ID.String(),
+	return htmx.Div(
+		htmx.ClassNames{},
+		tables.Table(
+			tables.TableProps{
+				ID: "workloads-tables",
+				Pagination: tables.TablePagination(
+					tables.TablePaginationProps{},
+					tables.Pagination(
+						tables.PaginationProps{
+							Offset: props.Offset,
+							Limit:  props.Limit,
+							Total:  props.Total,
+						},
+						tables.Prev(
+							tables.PaginationProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								URL:    "/workloads",
 							},
-							htmx.Text(row.Name),
 						),
-					)
-				},
-			},
-			{
-				ID:          "profile",
-				AccessorKey: "profile",
-				Header: func(p tables.TableProps) htmx.Node {
-					return htmx.Th(htmx.Text("Profile"))
-				},
-				Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
-					return htmx.Td(
-						links.Link(
-							links.LinkProps{
-								Href: fmt.Sprintf(profileShowURL, row.Profile.ID),
+
+						tables.Select(
+							tables.SelectProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								Limits: tables.DefaultLimits,
+								URL:    "/workloads",
 							},
-							htmx.Text(row.Profile.Name),
 						),
-					)
-				},
-			},
-			{
-				ID:          "environment",
-				AccessorKey: "environment",
-				Header: func(p tables.TableProps) htmx.Node {
-					return htmx.Th(htmx.Text("Environment"))
-				},
-				Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
-					return htmx.Td(
-						links.Link(
-							links.LinkProps{
-								Href: fmt.Sprintf(environmentShowURL, row.Environment.ID),
+						tables.Next(
+							tables.PaginationProps{
+								Total:  props.Total,
+								Offset: props.Offset,
+								Limit:  props.Limit,
+								URL:    "/workloads",
 							},
-							htmx.Text(row.Environment.Name),
 						),
-					)
-				},
-			},
-			{
-				Header: func(p tables.TableProps) htmx.Node {
-					return nil
-				},
-				Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
-					return htmx.Td(
+					),
+				),
+				Toolbar: tables.TableToolbar(
+					tables.TableToolbarProps{
+						ClassNames: htmx.ClassNames{
+							"flex":            true,
+							"items-center":    true,
+							"justify-between": true,
+						},
+					},
+					htmx.Div(
+						htmx.ClassNames{
+							"inline-flex":  true,
+							"items-center": true,
+							"gap-3":        true,
+						},
+						forms.TextInputBordered(
+							forms.TextInputProps{
+								Placeholder: "Search ...",
+							},
+						),
+					),
+					htmx.A(
+						htmx.Href(utils.CreateWorkloadUrlFormat),
 						buttons.Button(
-							buttons.ButtonProps{
-								ClassNames: htmx.ClassNames{
-									"btn-sm": true,
+							buttons.ButtonProps{},
+							htmx.Text("Create Workload"),
+						),
+					),
+				),
+			},
+			[]tables.ColumnDef[*models.Workload]{
+				{
+					ID:          "id",
+					AccessorKey: "id",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("ID"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							htmx.Text(row.ID.String()),
+						)
+					},
+				},
+				{
+					ID:          "name",
+					AccessorKey: "name",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Name"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: "/workloads/" + row.ID.String(),
 								},
-							},
-							htmx.HxDelete(fmt.Sprintf(utils.DeleteWorkloadUrlFormat, row.ID)),
-							htmx.HxConfirm("Are you sure you want to delete workload?"),
-							htmx.HxTarget("closest tr"),
-							htmx.HxSwap("outerHTML swap:1s"),
-							icons.TrashOutline(
-								icons.IconProps{
+								htmx.Text(row.Name),
+							),
+						)
+					},
+				},
+				{
+					ID:          "profile",
+					AccessorKey: "profile",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Profile"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf(profileShowURL, row.Profile.ID),
+								},
+								htmx.Text(row.Profile.Name),
+							),
+						)
+					},
+				},
+				{
+					ID:          "environment",
+					AccessorKey: "environment",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Environment"))
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							links.Link(
+								links.LinkProps{
+									Href: fmt.Sprintf(environmentShowURL, row.Environment.ID),
+								},
+								htmx.Text(row.Environment.Name),
+							),
+						)
+					},
+				},
+				{
+					Header: func(p tables.TableProps) htmx.Node {
+						return nil
+					},
+					Cell: func(p tables.TableProps, row *models.Workload) htmx.Node {
+						return htmx.Td(
+							buttons.Button(
+								buttons.ButtonProps{
 									ClassNames: htmx.ClassNames{
-										"w-6 h-6": false,
-										"w-4":     true,
-										"h-4":     true,
+										"btn-sm": true,
 									},
 								},
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteWorkloadUrlFormat, row.ID)),
+								htmx.HxConfirm("Are you sure you want to delete workload?"),
+								htmx.HxTarget("closest tr"),
+								htmx.HxSwap("outerHTML swap:1s"),
+								icons.TrashOutline(
+									icons.IconProps{
+										ClassNames: htmx.ClassNames{
+											"w-6 h-6": false,
+											"w-4":     true,
+											"h-4":     true,
+										},
+									},
+								),
 							),
-						),
-					)
+						)
+					},
 				},
 			},
-		}...,
+			props.Workloads,
+		),
 	)
 }

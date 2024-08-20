@@ -10,12 +10,19 @@ type TableProps[R tables.Row] struct {
 	// ID is the unique identifier for the table.
 	ID string
 	// Rows is the data to be displayed in the table.
-	Rows   []R
-	URL    string
+	Rows []R
+	// URL is the URL to send the request to.
+	URL string
+	// Search is the search string.
 	Search string
+	// Offset is the offset of the table.
 	Offset int
-	Limit  int
-	Total  int
+	// Limit is the limit of the table.
+	Limit int
+	// Total is the total number of rows in the table.
+	Total int
+	// Toolbar is the toolbar of the table.
+	Toolbar htmx.Node
 }
 
 // Table ...
@@ -24,7 +31,7 @@ func Table[R tables.Row](props TableProps[R], columns ...tables.ColumnDef[R]) ht
 		htmx.ClassNames{},
 		tables.Table(
 			tables.TableProps{
-				ID: "designs-tables",
+				ID: props.ID,
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
@@ -78,35 +85,7 @@ func Table[R tables.Row](props TableProps[R], columns ...tables.ColumnDef[R]) ht
 							},
 						),
 					),
-					// dropdowns.Dropdown(
-					// 	dropdowns.DropdownProps{
-					// 		ClassNames: htmx.ClassNames{
-					// 			"dropdown-end": true,
-					// 		},
-					// 	},
-					// 	dropdowns.DropdownButton(
-					// 		dropdowns.DropdownButtonProps{},
-					// 		htmx.Text("Create Design"),
-					// 	),
-					// 	dropdowns.DropdownMenuItems(
-					// 		dropdowns.DropdownMenuItemsProps{},
-					// 		dropdowns.DropdownMenuItem(
-					// 			dropdowns.DropdownMenuItemProps{},
-					// 			htmx.Group(
-					// 				htmx.ForEach(props.Templates, func(template *models.Template, idx int) htmx.Node {
-					// 					return htmx.A(
-					// 						htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, template.ID)),
-					// 						htmx.Text(template.Name),
-					// 					)
-					// 				})...,
-					// 			),
-					// 			htmx.A(
-					// 				htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, "_blank")),
-					// 				htmx.Text("Blank Template"),
-					// 			),
-					// 		),
-					// 	),
-					// ),
+					props.Toolbar,
 				),
 			},
 			columns,
