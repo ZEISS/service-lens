@@ -104,7 +104,7 @@ func (r *MarkdownBuilder) List(w util.BufWriter, source []byte, node ast.Node, e
 	if entering {
 		_ = w.WriteByte('<')
 		_, _ = w.WriteString(tag)
-		_, _ = w.Write([]byte(" " + "class" + `="` + template.HTMLEscapeString(classes) + `"`))
+		_, _ = w.WriteString(" class=\"" + template.HTMLEscapeString(classes) + "\"")
 
 		if n.IsOrdered() && n.Start != 1 {
 			_, _ = fmt.Fprintf(w, " start=\"%d\"", n.Start)
@@ -131,7 +131,7 @@ func (r *MarkdownBuilder) Heading(w util.BufWriter, source []byte, node ast.Node
 	if entering {
 		_, _ = w.WriteString("<h")
 		_ = w.WriteByte("0123456"[n.Level])
-		_, _ = w.Write([]byte(" " + "class" + `="` + template.HTMLEscapeString(HeadingClasses[n.Level]) + `"`))
+		_, _ = w.WriteString(" class=\"" + template.HTMLEscapeString(HeadingClasses[n.Level]) + "\"")
 
 		if n.Attributes() != nil {
 			html.RenderAttributes(w, node, html.HeadingAttributeFilter)

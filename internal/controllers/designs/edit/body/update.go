@@ -7,11 +7,14 @@ import (
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/util"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -69,6 +72,7 @@ func (l *UpdateControllerImpl) Prepare() error {
 			goldmark.WithRendererOptions(
 				html.WithXHTML(),
 				html.WithUnsafe(),
+				renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
 			),
 			goldmark.WithExtensions(
 				extension.GFM,

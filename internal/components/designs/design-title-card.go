@@ -3,12 +3,14 @@ package designs
 import (
 	"fmt"
 
+	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
+
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
-	"github.com/zeiss/service-lens/internal/models"
-	"github.com/zeiss/service-lens/internal/utils"
+	"github.com/zeiss/fiber-htmx/components/typography"
 )
 
 // DesignTitleCardProps ...
@@ -33,7 +35,10 @@ func DesignTitleCard(props DesignTitleCardProps) htmx.Node {
 		htmx.ID("title"),
 		cards.Body(
 			cards.BodyProps{},
-			htmx.H1(htmx.Text(props.Design.Title)),
+			typography.H2(
+				typography.Props{},
+				htmx.Text(props.Design.Title),
+			),
 			cards.Actions(
 				cards.ActionsProps{},
 				buttons.Button(

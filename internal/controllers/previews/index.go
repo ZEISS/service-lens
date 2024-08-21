@@ -7,8 +7,11 @@ import (
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/util"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/ports"
 	"go.abhg.dev/goldmark/mermaid"
 
@@ -43,6 +46,7 @@ func (m *PreviewControllerImpl) Post() error {
 		goldmark.WithRendererOptions(
 			html.WithXHTML(),
 			html.WithUnsafe(),
+			renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
 		),
 		goldmark.WithExtensions(
 			extension.GFM,

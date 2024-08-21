@@ -162,11 +162,7 @@ func (w *WorkloadNewControllerImpl) Get() error {
 							},
 						},
 						cards.Body(
-							cards.BodyProps{
-								ClassNames: htmx.ClassNames{
-									tailwind.M2: true,
-								},
-							},
+							cards.BodyProps{},
 							forms.FormControl(
 								forms.FormControlProps{},
 								forms.FormControlLabel(

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 
+	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/templates"
 	"github.com/zeiss/service-lens/internal/models"
@@ -12,7 +13,9 @@ import (
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/util"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
 	"go.abhg.dev/goldmark/mermaid"
@@ -55,6 +58,7 @@ func (l *ShowTemplateControllerImpl) Get() error {
 					goldmark.WithRendererOptions(
 						html.WithXHTML(),
 						html.WithUnsafe(),
+						renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
 					),
 					goldmark.WithExtensions(
 						extension.GFM,
