@@ -3,6 +3,7 @@ package designs
 import (
 	"fmt"
 
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/avatars"
@@ -12,6 +13,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/pkg/cast"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -19,6 +21,7 @@ import (
 
 // DesignCommentsCardProps ...
 type DesignCommentsCardProps struct {
+	User       adapters.GothUser
 	ClassNames htmx.ClassNames
 	Design     models.Design
 }
@@ -49,44 +52,41 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 							cards.Body(
 								cards.BodyProps{},
 								cards.Title(
-									cards.TitleProps{},
-									htmx.Text(
-										c.CreatedAt.Format("2006-01-02 15:04:05"),
+									cards.TitleProps{
+										ClassNames: htmx.ClassNames{
+											tailwind.FontNormal: true,
+											tailwind.TextBase:   true,
+										},
+									},
+									avatars.AvatarRoundSmall(
+										avatars.AvatarProps{},
+										htmx.Img(
+											htmx.Attribute("src", cast.Value(c.Author.Image)),
+										),
 									),
+									htmx.Text(fmt.Sprintf("commented on %s", c.CreatedAt.Format("Monday 02, 2006"))),
+								),
+								htmx.Text(c.Comment),
+								cards.Actions(
+									cards.ActionsProps{},
 									dropdowns.Dropdown(
 										dropdowns.DropdownProps{},
 										dropdowns.DropdownButton(
 											dropdowns.DropdownButtonProps{
 												ClassNames: htmx.ClassNames{
-													"btn":    true,
-													"btn-sm": true,
+													"btn": true,
 												},
 											},
-											icons.ChevronUpDownOutline(icons.IconProps{}),
-										),
-										dropdowns.DropdownMenuItems(
-											dropdowns.DropdownMenuItemsProps{},
-											dropdowns.DropdownMenuItem(
-												dropdowns.DropdownMenuItemProps{},
-												htmx.A(
-													htmx.ClassNames{
-														"btn":    true,
-														"btn-sm": true,
-													},
-													htmx.Attribute("href", ""),
-													htmx.Text("Edit"),
-												),
+											icons.EllipsisHorizontalOutline(
+												icons.IconProps{},
 											),
 										),
-									),
-								),
-								htmx.Text(c.Comment),
-								cards.Actions(
-									cards.ActionsProps{},
-									avatars.AvatarRoundSmall(
-										avatars.AvatarProps{},
-										htmx.Img(
-											htmx.Attribute("src", cast.Value(c.Author.Image)),
+										dropdowns.DropdownMenuItems(
+											dropdowns.DropdownMenuItemsProps{
+												ClassNames: htmx.ClassNames{
+													"w-full": true,
+												},
+											},
 										),
 									),
 								),
@@ -102,6 +102,16 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 						cards.CardProps{},
 						cards.Body(
 							cards.BodyProps{},
+							cards.Title(
+								cards.TitleProps{},
+								avatars.AvatarRoundSmall(
+									avatars.AvatarProps{},
+									htmx.Img(
+										htmx.Attribute("src", cast.Value(props.User.Image)),
+									),
+								),
+								htmx.Text("Add a comment"),
+							),
 							forms.FormControl(
 								forms.FormControlProps{
 									ClassNames: htmx.ClassNames{},

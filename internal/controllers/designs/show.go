@@ -88,6 +88,7 @@ func (l *ShowDesignControllerImpl) Get() error {
 					),
 					designs.DesignCommentsCard(
 						designs.DesignCommentsCardProps{
+							User:   l.Session().User,
 							Design: l.Design,
 						},
 					),
