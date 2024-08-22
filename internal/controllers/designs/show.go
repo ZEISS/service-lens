@@ -1,24 +1,15 @@
 package designs
 
 import (
-	"bytes"
 	"context"
 
-	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
-	"github.com/yuin/goldmark"
-	emoji "github.com/yuin/goldmark-emoji"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/renderer"
-	"github.com/yuin/goldmark/renderer/html"
-	"github.com/yuin/goldmark/util"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
-	"go.abhg.dev/goldmark/mermaid"
 )
 
 // ShowDesignControllerImpl ...
@@ -49,27 +40,6 @@ func (l *ShowDesignControllerImpl) Prepare() error {
 	if err != nil {
 		return err
 	}
-
-	markdown := goldmark.New(
-		goldmark.WithRendererOptions(
-			html.WithXHTML(),
-			html.WithUnsafe(),
-			renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
-		),
-		goldmark.WithExtensions(
-			extension.GFM,
-			emoji.Emoji,
-			&mermaid.Extender{},
-		),
-	)
-
-	var b bytes.Buffer
-	err = markdown.Convert([]byte(l.Design.Body), &b)
-	if err != nil {
-		return err
-	}
-
-	l.Body = b.String()
 
 	return nil
 }
@@ -103,8 +73,7 @@ func (l *ShowDesignControllerImpl) Get() error {
 					),
 					designs.DesignBodyCard(
 						designs.DesignBodyCardProps{
-							Design:   l.Design,
-							Markdown: l.Body,
+							Design: l.Design,
 						},
 					),
 					designs.DesignMetadataCard(

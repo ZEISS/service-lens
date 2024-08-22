@@ -14,7 +14,6 @@ import (
 // LensesTableProps ...
 type LensesTableProps struct {
 	Workload models.Workload
-	Lenses   []*models.Lens
 	Offset   int
 	Limit    int
 	Total    int
@@ -27,65 +26,6 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 		tables.Table(
 			tables.TableProps{
 				ID: "lenses-tables",
-				Pagination: tables.TablePagination(
-					tables.TablePaginationProps{},
-					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
-						tables.Prev(
-							tables.PaginationProps{
-								Total:  props.Total,
-								Offset: props.Offset,
-								Limit:  props.Limit,
-								URL:    "/lenses",
-							},
-						),
-
-						tables.Select(
-							tables.SelectProps{
-								Total:  props.Total,
-								Offset: props.Offset,
-								Limit:  props.Limit,
-								Limits: tables.DefaultLimits,
-								URL:    "/lenses",
-							},
-						),
-						tables.Next(
-							tables.PaginationProps{
-								Total:  props.Total,
-								Offset: props.Offset,
-								Limit:  props.Limit,
-								URL:    "/lenses",
-							},
-						),
-					),
-				),
-				Toolbar: tables.TableToolbar(
-					tables.TableToolbarProps{
-						ClassNames: htmx.ClassNames{
-							"flex":            true,
-							"items-center":    true,
-							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
-						},
-					},
-					htmx.Div(
-						htmx.ClassNames{
-							"inline-flex":  true,
-							"items-center": true,
-							"gap-3":        true,
-						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
-								Placeholder: "Search ...",
-							},
-						),
-					),
-				),
 			},
 			[]tables.ColumnDef[*models.Lens]{
 				{
@@ -118,7 +58,7 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 					},
 				},
 			},
-			props.Lenses,
+			props.Workload.Lenses,
 		),
 	)
 }

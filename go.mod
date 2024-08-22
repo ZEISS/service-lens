@@ -19,7 +19,7 @@ require (
 	github.com/zeiss/fiber-goth v1.2.11
 	github.com/zeiss/fiber-htmx v1.3.23
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.8-0.20240820132257-62fb0d68df14
+	github.com/zeiss/pkg v0.1.8-0.20240822112310-9121b2544fb1
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.20.0
 	gorm.io/driver/postgres v1.5.9

@@ -25,6 +25,7 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	$(GO) vet ./...
 
+
 .PHONY: test
 test: fmt vet ## Run tests.
 	mkdir -p .test/reports
@@ -47,6 +48,10 @@ clean: ## Remove previous build.
 	rm -rf .test .dist
 	find . -type f -name '*.gen.go' -exec rm {} +
 	git checkout go.mod
+
+.PHONY: up
+up: ## Start the service.
+	air
 
 .PHONY: docs
 docs: ## Generate documentation.

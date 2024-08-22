@@ -5,6 +5,8 @@ import (
 	"text/template"
 
 	"github.com/yuin/goldmark/ast"
+	ext "github.com/yuin/goldmark/extension"
+	gast "github.com/yuin/goldmark/extension/ast"
 	render "github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
@@ -31,20 +33,59 @@ func NewMarkdownBuilder(opts ...html.Option) render.NodeRenderer {
 func (builder MarkdownBuilder) RegisterFuncs(registerer render.NodeRendererFuncRegisterer) {
 	registerer.Register(ast.KindHeading, builder.Heading)
 	registerer.Register(ast.KindList, builder.List)
+	registerer.Register(ast.KindListItem, builder.ListItem)
 	registerer.Register(ast.KindParagraph, builder.Paragraph)
 	registerer.Register(ast.KindLink, builder.Link)
+	registerer.Register(gast.KindTable, builder.Table)
+	registerer.Register(gast.KindTaskCheckBox, builder.TaskCheckBox)
 	// registerer.Register(ast.KindListItem, r.renderListItem)
 }
 
 // HeadingClasses ...
 var HeadingClasses = map[int]string{
-	0: "text-5xl font-bold",
-	1: "text-4xl font-bold",
-	2: "text-3xl font-bold",
-	3: "text-2xl font-bold",
-	4: "text-xl font-bold",
-	5: "text-lg font-bold",
-	6: "text-base font-bold",
+	0: "text-5xl font-bold py-4",
+	1: "text-4xl font-bold py-4",
+	2: "text-3xl font-bold py-4",
+	3: "text-2xl font-bold py-4",
+	4: "text-xl font-bold py-4",
+	5: "text-lg font-bold py-4",
+	6: "text-base font-bold py-4",
+}
+
+// TaskCheckBox ...
+func (r *MarkdownBuilder) TaskCheckBox(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+	if !entering {
+		return ast.WalkContinue, nil
+	}
+	n := node.(*gast.TaskCheckBox)
+
+	if n.IsChecked {
+		_, _ = w.WriteString(`<input checked="" type="checkbox" class="checkbox"`)
+	} else {
+		_, _ = w.WriteString(`<input type="checkbox" class="checkbox"`)
+	}
+	if r.XHTML {
+		_, _ = w.WriteString(" /> ")
+	} else {
+		_, _ = w.WriteString("> ")
+	}
+
+	return ast.WalkContinue, nil
+}
+
+// Table ...
+func (r *MarkdownBuilder) Table(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+	if entering {
+		_, _ = w.WriteString(`<table class="table table-pin-cols my-4"`)
+		if node.Attributes() != nil {
+			html.RenderAttributes(w, node, ext.TableAttributeFilter)
+		}
+		_, _ = w.WriteString(">\n")
+	} else {
+		_, _ = w.WriteString("</table>\n")
+	}
+
+	return ast.WalkContinue, nil
 }
 
 // Link ...
@@ -119,6 +160,30 @@ func (r *MarkdownBuilder) List(w util.BufWriter, source []byte, node ast.Node, e
 		_, _ = w.WriteString("</")
 		_, _ = w.WriteString(tag)
 		_, _ = w.WriteString(">\n")
+	}
+
+	return ast.WalkContinue, nil
+}
+
+// ListItem ...
+func (r *MarkdownBuilder) ListItem(w util.BufWriter, source []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
+	if entering {
+		if node.Attributes() != nil {
+			_, _ = w.WriteString(`<li`)
+			html.RenderAttributes(w, node, html.ListItemAttributeFilter)
+			_ = w.WriteByte('>')
+		} else {
+			_, _ = w.WriteString(`<li>`)
+		}
+		fc := node.FirstChild()
+
+		if fc != nil {
+			if _, ok := fc.(*ast.TextBlock); !ok {
+				_ = w.WriteByte('\n')
+			}
+		}
+	} else {
+		_, _ = w.WriteString("</li>\n")
 	}
 
 	return ast.WalkContinue, nil

@@ -3,12 +3,21 @@ package designs
 import (
 	"fmt"
 
+	"github.com/yuin/goldmark"
+	emoji "github.com/yuin/goldmark-emoji"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer"
+	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/util"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/pkg/conv"
+	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
+	"go.abhg.dev/goldmark/mermaid"
 )
 
 // DesignBodyCardProps ...
@@ -34,7 +43,19 @@ func DesignBodyCard(props DesignBodyCardProps) htmx.Node {
 		cards.Body(
 			cards.BodyProps{},
 			htmx.Div(
-				htmx.Raw(props.Markdown),
+				htmx.Markdown(
+					conv.Bytes(props.Design.Body),
+					goldmark.WithRendererOptions(
+						html.WithXHTML(),
+						html.WithUnsafe(),
+						renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
+					),
+					goldmark.WithExtensions(
+						extension.GFM,
+						emoji.Emoji,
+						&mermaid.Extender{},
+					),
+				),
 			),
 			cards.Actions(
 				cards.ActionsProps{},
