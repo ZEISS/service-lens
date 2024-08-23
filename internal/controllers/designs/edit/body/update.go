@@ -11,9 +11,9 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/builder"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -94,29 +94,19 @@ func (l *UpdateControllerImpl) Prepare() error {
 // Prepare ...
 func (l *UpdateControllerImpl) Put() error {
 	return l.Render(
-		cards.CardBordered(
-			cards.CardProps{
-				ClassNames: htmx.ClassNames{
-					"my-2": true,
-					"mx-2": true,
-				},
-			},
-			htmx.HxTarget("this"),
-			htmx.HxSwap("outerHTML"),
-			htmx.ID("body"),
-			cards.Body(
-				cards.BodyProps{},
+		htmx.Fragment(
+			htmx.Div(
+				htmx.ID("body"),
+				htmx.HxSwapOob(conv.String(true)),
 				htmx.Div(
 					htmx.Raw(l.Design.Body),
 				),
-				cards.Actions(
-					cards.ActionsProps{},
-					buttons.Outline(
-						buttons.ButtonProps{},
-						htmx.HxGet(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
-						htmx.Text("Edit"),
-					),
-				),
+			),
+			buttons.Button(
+				buttons.ButtonProps{},
+				htmx.HxSwap("outerHTML"),
+				htmx.HxGet(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
+				htmx.Text("Edit"),
 			),
 		),
 	)

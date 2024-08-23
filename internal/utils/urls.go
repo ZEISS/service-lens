@@ -40,4 +40,6 @@ const (
 	DeleteWorkloadUrlFormat              = "/workloads/%s"
 	DeleteDesignCommentReactionUrlFormat = "/designs/%s/comments/%s/reactions/%d"
 	CreateDesignCommentReactionUrlFormat = "/designs/%s/comments/%s/reactions"
+	CreateDesignReactionUrlFormat        = "/designs/%s/reactions"
+	DeleteDesignReactionUrlFormat        = "/designs/%s/reactions/%d"
 )

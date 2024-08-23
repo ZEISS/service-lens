@@ -19,7 +19,7 @@ type Design struct {
 	// Tags are the tags associated with the environment
 	Tags []Tag `json:"tags" gorm:"many2many:design_tags;"`
 	// Reactions are the reactions associated with the design
-	Reactions []Reaction `json:"reactions" gorm:"polymorphic:Reactable;"`
+	Reactions []Reaction `json:"reactions" gorm:"polymorphicType:ReactableType;polymorphicId:ReactableID;polymorphicValue:design"`
 	// AuthorID is the foreign key to the author
 	AuthorID uuid.UUID `json:"author_id"`
 	// Author is the author
@@ -34,6 +34,19 @@ type Design struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
+}
+
+// GetReactionsByValue ...
+func (d *Design) GetReactionsByValue() map[string][]Reaction {
+	reactions := make(map[string][]Reaction)
+	for _, reaction := range d.Reactions {
+		if _, ok := reactions[reaction.Value]; !ok {
+			reactions[reaction.Value] = make([]Reaction, 0)
+		}
+		reactions[reaction.Value] = append(reactions[reaction.Value], reaction)
+	}
+
+	return reactions
 }
 
 // DesignRevision ...

@@ -73,6 +73,7 @@ func (l *ShowDesignControllerImpl) Get() error {
 					),
 					designs.DesignBodyCard(
 						designs.DesignBodyCardProps{
+							User:   l.Session().User,
 							Design: l.Design,
 						},
 					),

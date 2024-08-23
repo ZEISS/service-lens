@@ -39,7 +39,7 @@ func (r *readTxImpl) GetDesign(ctx context.Context, design *models.Design) error
 		Preload("Comments.Reactions").
 		Preload("Comments.Reactions.Reactor").
 		Where(design).
-		First(design).Error
+		First(design, design.ID).Error
 }
 
 // ListDesigns is a method that returns a list of designs

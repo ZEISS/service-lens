@@ -130,4 +130,6 @@ type Handlers interface {
 	ShowWorkflow() fiber.Handler
 	// DeleteDesignCommentReaction ...
 	DeleteDesignCommentReaction() fiber.Handler
+	// DesignReactions ...
+	DesignReactions() fiber.Handler
 }

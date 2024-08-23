@@ -159,7 +159,7 @@ func EmojiPicker(props EmojiPickerProps) htmx.Node {
 						"menu":      false,
 						"w-52":      false,
 						"w-96":      true,
-						"w-full":    true,
+						"w-full":    false,
 						"z-[1]":     false,
 						"z-[99999]": true,
 					},

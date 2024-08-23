@@ -9,6 +9,7 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
+	"github.com/zeiss/fiber-goth/adapters"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
@@ -23,6 +24,7 @@ import (
 // DesignBodyCardProps ...
 type DesignBodyCardProps struct {
 	ClassNames htmx.ClassNames
+	User       adapters.GothUser
 	Design     models.Design
 	Markdown   string
 }
@@ -37,12 +39,10 @@ func DesignBodyCard(props DesignBodyCardProps) htmx.Node {
 				},
 			),
 		},
-		htmx.HxTarget("this"),
-		htmx.HxSwap("outerHTML"),
-		htmx.ID("body"),
 		cards.Body(
 			cards.BodyProps{},
 			htmx.Div(
+				htmx.ID("body"),
 				htmx.Markdown(
 					conv.Bytes(props.Design.Body),
 					goldmark.WithRendererOptions(
@@ -58,9 +58,21 @@ func DesignBodyCard(props DesignBodyCardProps) htmx.Node {
 				),
 			),
 			cards.Actions(
-				cards.ActionsProps{},
+				cards.ActionsProps{
+					ClassNames: htmx.ClassNames{
+						tailwind.JustifyEnd:     false,
+						tailwind.JustifyBetween: true,
+					},
+				},
+				DesignReactions(
+					DesignReactionsProps{
+						User:   props.User,
+						Design: props.Design,
+					},
+				),
 				buttons.Button(
 					buttons.ButtonProps{},
+					htmx.HxSwap("outerHTML"),
 					htmx.HxGet(fmt.Sprintf(utils.EditBodyUrlFormat, props.Design.ID)),
 					htmx.Text("Edit"),
 				),

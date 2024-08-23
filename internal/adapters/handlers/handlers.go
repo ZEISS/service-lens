@@ -501,3 +501,10 @@ func (a *handlers) DeleteDesignCommentReaction() fiber.Handler {
 		return comments.NewReactionCommentController(a.store)
 	})
 }
+
+// DesignReactions ...
+func (a *handlers) DesignReactions() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewReactionController(a.store)
+	})
+}

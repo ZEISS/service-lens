@@ -5,10 +5,9 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/links"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -45,20 +44,11 @@ func (l *ShowControllerImpl) Prepare() error {
 // Prepare ...
 func (l *ShowControllerImpl) Get() error {
 	return l.Render(
-		htmx.FormElement(
-			htmx.HxPut(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
-			htmx.HxTarget("this"),
-			htmx.HxSwap("outerHTML"),
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						"my-2": true,
-						"mx-2": true,
-					},
-				},
-				cards.Body(
-					cards.BodyProps{},
-					htmx.ID("body"),
+		htmx.Fragment(
+			htmx.Div(
+				htmx.ID("body"),
+				htmx.HxSwapOob(conv.String(true)),
+				htmx.FormElement(
 					forms.FormControl(
 						forms.FormControlProps{
 							ClassNames: htmx.ClassNames{},
@@ -85,26 +75,37 @@ func (l *ShowControllerImpl) Get() error {
 							),
 						),
 					),
-					cards.Actions(
-						cards.ActionsProps{},
-						links.Link(
-							links.LinkProps{
-								ClassNames: htmx.ClassNames{
-									"btn":       true,
-									"btn-ghost": true,
-								},
-								Href: fmt.Sprintf(utils.ShowDesigUrlFormat, l.Design.ID),
-							},
-							htmx.Text("Cancel"),
-						),
-						buttons.Button(
-							buttons.ButtonProps{},
-							htmx.Attribute("type", "submit"),
-							htmx.Text("Update"),
-						),
-					),
 				),
+			),
+			buttons.Button(
+				buttons.ButtonProps{
+					Type: "submit",
+				},
+				htmx.HxSwap("outerHTML"),
+				htmx.HxPut(fmt.Sprintf(utils.EditBodyUrlFormat, l.Design.ID)),
+				htmx.HxInclude("body"),
+				htmx.Text("Update"),
 			),
 		),
 	)
+	// 	cards.Actions(
+	// 		cards.ActionsProps{},
+	// 		links.Link(
+	// 			links.LinkProps{
+	// 				ClassNames: htmx.ClassNames{
+	// 					"btn":       true,
+	// 					"btn-ghost": true,
+	// 				},
+	// 				Href: fmt.Sprintf(utils.ShowDesigUrlFormat, l.Design.ID),
+	// 			},
+	// 			htmx.Text("Cancel"),
+	// 		),
+	// 		buttons.Button(
+	// 			buttons.ButtonProps{},
+	// 			htmx.Attribute("type", "submit"),
+	// 			htmx.Text("Update"),
+	// 		),
+	// 	),
+	// ),
+	// ),
 }
