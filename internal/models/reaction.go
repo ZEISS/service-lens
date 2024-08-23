@@ -21,12 +21,12 @@ const (
 // Reaction ...
 type Reaction struct {
 	// ID is the primary key.
-	ID uuid.UUID `json:"id" gorm:"primary_key"`
+	ID int `json:"id" gorm:"type:bigint;primaryKey;unique;autoIncrement"`
 	// ReactableID is the ID of the reactable
 	ReactableID uuid.UUID `json:"reactable_id" unique_index:"idx_reactable_id_reactable_type_reactor_id"`
 	// ReactableType is the type of the taggable
 	ReactableType ReactableType `json:"reactable_type" unique_index:"idx_reactable_id_reactable_type_reactor_id"`
-	// Value is the tag value.
+	// Value is the value of the reaction
 	Value string `json:"value"`
 	// ReactorID is the ID of the reactor
 	ReactorID uuid.UUID `json:"reactor_id" unique_index:"idx_reactable_id_reactable_type_reactor_id"`

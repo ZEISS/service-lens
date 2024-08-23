@@ -15,6 +15,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/pkg/cast"
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/utils"
 )
@@ -33,8 +34,7 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 			cards.CardProps{
 				ClassNames: htmx.Merge(
 					htmx.ClassNames{
-						"my-2": true,
-						"mx-2": true,
+						tailwind.M2: true,
 					},
 				),
 			},
@@ -68,9 +68,41 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 								),
 								htmx.Text(c.Comment),
 								cards.Actions(
-									cards.ActionsProps{},
+									cards.ActionsProps{
+										ClassNames: htmx.ClassNames{
+											tailwind.JustifyEnd:     false,
+											tailwind.JustifyBetween: true,
+										},
+									},
+									htmx.Div(
+										htmx.FormElement(
+											htmx.HxPost(fmt.Sprintf(utils.CreateDesignCommentReactionUrlFormat, props.Design.ID, c.ID)),
+											htmx.ClassNames{
+												tailwind.Flex:        true,
+												tailwind.ItemsCenter: true,
+											},
+											components.EmojiPicker(
+												components.EmojiPickerProps{},
+											),
+											htmx.Group(
+												htmx.Map(c.GetReactionsByValue(), func(reaction string, reactions []models.Reaction) htmx.Node {
+													return buttons.Button(
+														buttons.ButtonProps{
+															Type: "button",
+														},
+														htmx.HxDelete(fmt.Sprintf(utils.DeleteDesignCommentReactionUrlFormat, props.Design.ID, c.ID, reactions[0].ID)),
+														// htmx.HxPost(fmt.Sprintf(utils.CreateDesignReactionUrlFormat, c.ID)),
+														htmx.Text(fmt.Sprintf("%s (%d)", reaction, (len(reactions)))),
+													)
+												},
+												)...,
+											),
+										),
+									),
 									dropdowns.Dropdown(
-										dropdowns.DropdownProps{},
+										dropdowns.DropdownProps{
+											ClassNames: htmx.ClassNames{},
+										},
 										dropdowns.DropdownButton(
 											dropdowns.DropdownButtonProps{
 												ClassNames: htmx.ClassNames{
@@ -84,7 +116,7 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 										dropdowns.DropdownMenuItems(
 											dropdowns.DropdownMenuItemsProps{
 												ClassNames: htmx.ClassNames{
-													"w-full": true,
+													tailwind.WFull: true,
 												},
 											},
 										),

@@ -148,6 +148,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		designs.Put("/:id/body/edit", handlers.UpdateBodyDesign())
 		designs.Get("/:id/title/edit", handlers.EditTitleDesign())
 		designs.Put("/:id/title/edit", handlers.UpdateTitleDesign())
+		designs.Post("/:id/comments/:comment_id/reactions", handlers.CreateDesignCommentReaction())
+		designs.Delete("/:id/comments/:comment_id/reactions/:reaction_id", handlers.DeleteDesignCommentReaction())
 
 		// Profiles
 		profiles := app.Group("/profiles")

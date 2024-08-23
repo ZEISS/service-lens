@@ -33,7 +33,13 @@ func (r *readTxImpl) GetUser(ctx context.Context, user *adapters.GothUser) error
 
 // GetDesign is a method that returns a design by ID
 func (r *readTxImpl) GetDesign(ctx context.Context, design *models.Design) error {
-	return r.conn.Preload(clause.Associations).Preload("Comments.Author").Where(design).First(design).Error
+	return r.conn.
+		Preload(clause.Associations).
+		Preload("Comments.Author").
+		Preload("Comments.Reactions").
+		Preload("Comments.Reactions.Reactor").
+		Where(design).
+		First(design).Error
 }
 
 // ListDesigns is a method that returns a list of designs
@@ -329,4 +335,14 @@ func (rw *writeTxImpl) UpdateWorkflow(ctx context.Context, workflow *models.Work
 // DeleteWorkflow is a method that deletes a workflow
 func (rw *writeTxImpl) DeleteWorkflow(ctx context.Context, workflow *models.Workflow) error {
 	return rw.conn.Delete(workflow).Error
+}
+
+// CreateReaction is a method that creates a reaction
+func (rw *writeTxImpl) CreateReaction(ctx context.Context, reaction *models.Reaction) error {
+	return rw.conn.Create(reaction).Error
+}
+
+// DeleteReaction is a method that deletes a reaction
+func (rw *writeTxImpl) DeleteReaction(ctx context.Context, reaction *models.Reaction) error {
+	return rw.conn.Delete(reaction, reaction.ID).Error
 }

@@ -72,12 +72,27 @@ type DesignComment struct {
 	ParentID *uuid.UUID `json:"parent_id" gorm:"type:uuid;index" params:"parent_id"`
 	// Parent is the parent comment
 	Parent *DesignComment `json:"parent" gorm:"foreignKey:ParentID;references:ID"`
+	// Reactions are the reactions associated with the design comment
+	Reactions []Reaction `json:"reactions" gorm:"polymorphicType:ReactableType;polymorphicId:ReactableID;polymorphicValue:design_comment"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
 	UpdatedAt time.Time `json:"updated_at"`
 	// DeletedAt ...
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
+}
+
+// GetReactionsByValue ...
+func (d *DesignComment) GetReactionsByValue() map[string][]Reaction {
+	reactions := make(map[string][]Reaction)
+	for _, reaction := range d.Reactions {
+		if _, ok := reactions[reaction.Value]; !ok {
+			reactions[reaction.Value] = make([]Reaction, 0)
+		}
+		reactions[reaction.Value] = append(reactions[reaction.Value], reaction)
+	}
+
+	return reactions
 }
 
 // DesignCommentRevision ...

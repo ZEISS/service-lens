@@ -487,3 +487,17 @@ func (a *handlers) ShowWorkflow() fiber.Handler {
 		return workflows.NewWorkflowShowController(a.store)
 	})
 }
+
+// CreateDesignCommentReaction ...
+func (a *handlers) CreateDesignCommentReaction() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return comments.NewReactionCommentController(a.store)
+	})
+}
+
+// DeleteDesignCommentReaction ...
+func (a *handlers) DeleteDesignCommentReaction() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return comments.NewReactionCommentController(a.store)
+	})
+}

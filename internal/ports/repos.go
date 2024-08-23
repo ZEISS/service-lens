@@ -130,4 +130,8 @@ type ReadWriteTx interface {
 	UpdateWorkflow(ctx context.Context, workflow *models.Workflow) error
 	// DeleteWorkflow is a method that deletes a workflow
 	DeleteWorkflow(ctx context.Context, workflow *models.Workflow) error
+	// CreateReaction is a method that creates a reaction
+	CreateReaction(ctx context.Context, reaction *models.Reaction) error
+	// DeleteReaction is a method that deletes a reaction
+	DeleteReaction(ctx context.Context, reaction *models.Reaction) error
 }
