@@ -155,6 +155,16 @@ func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow)
 	return r.conn.First(workflow, workflow.ID).Error
 }
 
+// GetDesignComment is a method that returns a design comment by ID
+func (r *readTxImpl) GetDesignComment(ctx context.Context, comment *models.DesignComment) error {
+	return r.conn.Preload("Reactions").Preload("Reactions.Reactor").First(comment, comment.ID).Error
+}
+
+// ListDesignCommentReactions is a method that returns a list of design comment reactions
+func (r *readTxImpl) ListDesignCommentReactions(ctx context.Context, comment *models.DesignComment) error {
+	return r.conn.Preload("Reactions").Preload("Reactions.Reactor").First(comment, comment.ID).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl

@@ -72,6 +72,8 @@ type ReadTx interface {
 	GetTotalNumberOfDesigns(ctx context.Context, total *int64) error
 	// GetTotalNumberOfWorkloads is a method that returns the total number of workloads
 	GetTotalNumberOfWorkloads(ctx context.Context, total *int64) error
+	// GetDesignComment is a method that returns a design comment by ID
+	GetDesignComment(ctx context.Context, comment *models.DesignComment) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.

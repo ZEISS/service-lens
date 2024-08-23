@@ -3,11 +3,12 @@ package comments
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
+	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
 )
@@ -51,13 +52,50 @@ func (l *ReactionCommentControllerImpl) Delete() error {
 	}
 
 	reaction := models.Reaction{
-		ID:        params.ReactionID,
-		ReactorID: l.Session().User.ID,
+		ID:            params.ReactionID,
+		ReactorID:     l.Session().User.ID,
+		ReactableID:   params.CommentID,
+		ReactableType: models.ReactableTypeDesignComment,
 	}
 
-	return l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
 		return tx.DeleteReaction(ctx, &reaction)
 	})
+	if err != nil {
+		return err
+	}
+
+	comment := models.DesignComment{
+		ID: params.CommentID,
+	}
+
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetDesignComment(ctx, &comment)
+	})
+	if err != nil {
+		return err
+	}
+
+	design := models.Design{}
+
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetDesign(ctx, &design)
+	})
+	if err != nil {
+		return err
+	}
+
+	return l.Render(
+		htmx.Fragment(
+			designs.DesignCommentReactions(
+				designs.DesignCommentReactionsProps{
+					User:    l.Session().User,
+					Design:  design,
+					Comment: &comment,
+				},
+			),
+		),
+	)
 }
 
 // Prepare ...
@@ -93,7 +131,42 @@ func (l *ReactionCommentControllerImpl) Post() error {
 		ReactorID:     l.Session().User.ID,
 	}
 
-	return l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
 		return tx.CreateReaction(ctx, &reaction)
 	})
+	if err != nil {
+		return err
+	}
+
+	comment := models.DesignComment{
+		ID: params.CommentID,
+	}
+
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetDesignComment(ctx, &comment)
+	})
+	if err != nil {
+		return err
+	}
+
+	design := models.Design{}
+
+	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.GetDesign(ctx, &design)
+	})
+	if err != nil {
+		return err
+	}
+
+	return l.Render(
+		htmx.Fragment(
+			designs.DesignCommentReactions(
+				designs.DesignCommentReactionsProps{
+					User:    l.Session().User,
+					Design:  design,
+					Comment: &comment,
+				},
+			),
+		),
+	)
 }
