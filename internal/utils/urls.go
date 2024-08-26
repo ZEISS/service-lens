@@ -8,6 +8,7 @@ const (
 	CreateProfileUrlFormat               = "/profiles/new"
 	CreateTagUrlFormat                   = "/tags/new"
 	CreateWorkflowUrlFormat              = "/workflows/new"
+	CreateWorkflowStepUrlFormat          = "/workflows/%s/steps"
 	CreateTemplateUrlFormat              = "/templates/new"
 	CreateWorkloadUrlFormat              = "/workloads/new"
 	DeleteDesignUrlFormat                = "/designs/%s"

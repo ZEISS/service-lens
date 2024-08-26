@@ -151,7 +151,9 @@ func (l *ReactionCommentControllerImpl) Post() error {
 		return err
 	}
 
-	design := models.Design{}
+	design := models.Design{
+		ID: params.ID,
+	}
 
 	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.GetDesign(ctx, &design)

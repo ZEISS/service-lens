@@ -356,3 +356,33 @@ func (rw *writeTxImpl) CreateReaction(ctx context.Context, reaction *models.Reac
 func (rw *writeTxImpl) DeleteReaction(ctx context.Context, reaction *models.Reaction) error {
 	return rw.conn.Delete(reaction, reaction.ID).Error
 }
+
+// CreateWorkflowState is a method that adds a workflow state
+func (rw *writeTxImpl) CreateWorkflowState(ctx context.Context, state *models.WorkflowState) error {
+	workflow := models.Workflow{}
+
+	err := rw.conn.Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
+	if err != nil {
+		return err
+	}
+
+	err = rw.conn.Model(&workflow).Association("States").Append(state)
+	if err != nil {
+		return err
+	}
+
+	for _, s := range workflow.Transitions {
+		if s.NextStateID == 0 {
+			s.NextStateID = state.ID
+		}
+	}
+
+	transition := models.WorkflowTransition{
+		WorkflowID:     state.WorkflowID,
+		CurrentStateID: state.ID,
+	}
+
+	workflow.Transitions = append(workflow.Transitions, transition)
+
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&workflow).Error
+}

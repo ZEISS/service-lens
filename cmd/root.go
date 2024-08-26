@@ -218,6 +218,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workflows.Get("/", handlers.ListWorkflows())
 		workflows.Post("/new", handlers.CreateWorkflow())
 		workflows.Get("/:id", handlers.ShowWorkflow())
+		workflows.Post("/:id/steps", handlers.CreateWorkflowStep())
 
 		// Templates ...
 		templates := app.Group("/templates")

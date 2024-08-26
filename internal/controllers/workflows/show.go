@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -138,32 +139,81 @@ func (p *WorkflowShowControllerImpl) Get() error {
             }`),
 						cards.Body(
 							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Steps"),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
+							htmx.ID("steps"),
+							cards.Actions(
+								cards.ActionsProps{},
+								workflows.NewStepModal(
+									workflows.NewStepModalProps{
+										Workflow: p.workflow,
 									},
 								),
-								htmx.Ul(
-									htmx.Attribute("x-sort", ""),
-									htmx.Li(
-										htmx.Attribute("x-sort:item", ""),
-										htmx.Text("Step 1"),
-									),
-									htmx.Li(
-										htmx.Attribute("x-sort:item", ""),
-										htmx.Text("Step 1"),
-									),
-									htmx.Li(
-										htmx.Attribute("x-sort:item", ""),
-										htmx.Text("Step 1"),
-									),
+								buttons.Button(
+									buttons.ButtonProps{},
+									htmx.OnClick("new_step_modal.showModal()"),
+									htmx.Text("Add Step"),
 								),
 							),
+							// cards.Title(
+							// 	cards.TitleProps{},
+							// 	htmx.Text("Steps"),
+							// 	htmx.Div(
+							// 		htmx.ClassNames{
+							// 			"flex":     true,
+							// 			"flex-col": true,
+							// 			"py-2":     true,
+							// 		},
+							// 	),
+
+							// 	htmx.Ul(
+							// 		htmx.Attribute("x-sort", ""),
+							// 		htmx.Li(
+							// 			htmx.Attribute("x-sort:item", ""),
+							// 			cards.CardBordered(
+							// 				cards.CardProps{},
+							// 				htmx.Attribute("x-sort:item", ""),
+							// 				cards.Body(
+							// 					cards.BodyProps{},
+							// 					htmx.Text("This is an example state."),
+							// 				),
+							// 			),
+							// 		),
+							// 		htmx.Li(
+							// 			htmx.Attribute("x-sort:item", ""),
+							// 			cards.CardBordered(
+							// 				cards.CardProps{},
+							// 				htmx.Attribute("x-sort:item", ""),
+							// 				cards.Body(
+							// 					cards.BodyProps{
+							// 						ClassNames: htmx.ClassNames{
+							// 							tailwind.Flex:           true,
+							// 							tailwind.JustifyBetween: true,
+							// 							tailwind.FlexRow:        true,
+							// 							tailwind.ItemsCenter:    true,
+							// 						},
+							// 					},
+							// 					htmx.Text("This is an example state."),
+							// 					buttons.Button(
+							// 						buttons.ButtonProps{},
+							// 						icons.EllipsisHorizontalOutline(
+							// 							icons.IconProps{},
+							// 						),
+							// 					),
+							// 				),
+							// 			),
+							// 		),
+							// 		htmx.Li(
+							// 			htmx.Attribute("x-sort:item", ""),
+							// 			cards.CardBordered(
+							// 				cards.CardProps{},
+							// 				htmx.Attribute("x-sort:item", ""),
+							// 				cards.Body(
+							// 					cards.BodyProps{},
+							// 					htmx.Text("This is an example state."),
+							// 				),
+							// 			),
+							// 		),
+							// 	),
+							// ),
 						),
 					),
 				)

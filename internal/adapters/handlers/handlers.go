@@ -501,3 +501,10 @@ func (a *handlers) DesignReactions() fiber.Handler {
 		return designs.NewReactionController(a.store)
 	})
 }
+
+// CreateWorkflowStep ...
+func (a *handlers) CreateWorkflowStep() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewStepController(a.store)
+	})
+}

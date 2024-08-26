@@ -129,19 +129,24 @@ func DesignCommentsCard(props DesignCommentsCardProps) htmx.Node {
 								forms.FormControlProps{
 									ClassNames: htmx.ClassNames{},
 								},
+								htmx.StyleElement(htmx.Raw(
+									`.CodeMirror, .CodeMirror-scroll {
+	min-height: 200px;
+}`,
+								)),
 								htmx.Div(
 									alpine.XData(`{
             value: 'Start typing...',
             init() {
                 let editor = new SimpleMDE({
                   element: this.$refs.editor,
+				  status: false,
                   previewRender: function(plainText, preview) {
                     htmx.ajax('POST', '/preview', {values: {body: plainText}, target: '.editor-preview', swap: 'innerHTML'})
 
                     return "Loading...";
                   }
                 })
-
                 editor.value(this.value)
                 editor.codemirror.on('change', () => {
                     this.value = editor.value()

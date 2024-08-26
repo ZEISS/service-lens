@@ -40,7 +40,7 @@ type WorkflowState struct {
 	// ID is the primary key of the workflow status
 	ID int `json:"id" gorm:"primary_key;type:bigint;auto_increment;not null"`
 	// WorkflowID is the foreign key of the workflow
-	WorkflowID int `json:"workflow_id" gorm:"primary_key;type:bigint;not null"`
+	WorkflowID uuid.UUID `json:"workflow_id" gorm:"primary_key;type:uuid;not null"`
 	// Name is the name of the workflow status
 	Name string `json:"name" gorm:"type:varchar(255)"`
 	// Description is the description of the workflow status
@@ -58,11 +58,11 @@ type WorkflowTransition struct {
 	// ID is the primary key of the workflow transition
 	ID int `json:"id" gorm:"primary_key;type:bigint;auto_increment;not null"`
 	// WorkflowID is the foreign key of the workflow
-	WorkflowID int `json:"workflow_id" gorm:"type:bigint;not null"`
-	// CurrentStateId is the foreign key of the current state
-	CurrentStateId int `json:"current_state_id" gorm:"type:bigint;not null"`
+	WorkflowID uuid.UUID `json:"workflow_id" gorm:"type:uuid;not null"`
+	// CurrentStateID is the foreign key of the current state
+	CurrentStateID int `json:"current_state_id" gorm:"type:bigint;not null"`
 	// NextStateID is the foreign key of the next state
-	NextStateID int `json:"next_state_id" gorm:"type:bigint;not null"`
+	NextStateID int `json:"next_state_id" gorm:"type:bigint"`
 	// CreatedAt is the created at field
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt is the updated at field
