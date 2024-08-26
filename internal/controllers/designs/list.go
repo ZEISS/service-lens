@@ -37,8 +37,9 @@ func (l *ListDesignsControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: l.Path(),
-				User: l.Session().User,
+				Path:        l.Path(),
+				User:        l.Session().User,
+				Development: l.IsDevelopment(),
 			},
 			func() htmx.Node {
 				errorx.Panic(l.BindQuery(&l.results))

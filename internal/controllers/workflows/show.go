@@ -32,9 +32,10 @@ func (p *WorkflowShowControllerImpl) Error(err error) error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: "Error",
-				Path:  p.Path(),
-				User:  p.Session().User,
+				Title:       "Error",
+				Path:        p.Path(),
+				User:        p.Session().User,
+				Development: p.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return alerts.Error(alerts.AlertProps{}, htmx.Text(err.Error()))
@@ -60,10 +61,11 @@ func (p *WorkflowShowControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: p.workflow.Name,
-				Path:  p.Path(),
-				User:  p.Session().User,
-				Head:  []htmx.Node{},
+				Title:       p.workflow.Name,
+				Path:        p.Path(),
+				User:        p.Session().User,
+				Development: p.IsDevelopment(),
+				Head:        []htmx.Node{},
 			},
 			func() htmx.Node {
 				return htmx.Fragment(

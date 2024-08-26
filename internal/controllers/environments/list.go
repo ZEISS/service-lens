@@ -45,9 +45,10 @@ func (w *EnvironmentListControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: "Environments",
-				Path:  w.Path(),
-				User:  w.Session().User,
+				Title:       "Environments",
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return cards.CardBordered(

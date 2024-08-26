@@ -8,6 +8,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/github"
+	reload "github.com/zeiss/fiber-reload"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
@@ -120,6 +121,11 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app := fiber.New()
 		app.Use(requestid.New())
 		app.Use(logger.New())
+		app.Use(reload.Environment(s.cfg.Flags.Environment))
+
+		if s.cfg.Flags.Environment == reload.Development {
+			reload.WithHotReload(app)
+		}
 
 		app.Use(goth.NewProtectMiddleware(gothConfig))
 

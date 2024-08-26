@@ -1,15 +1,15 @@
 package dashboard
 
 import (
-	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/loading"
-	"github.com/zeiss/fiber-htmx/components/stats"
-	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/loading"
+	"github.com/zeiss/fiber-htmx/components/stats"
+	seed "github.com/zeiss/gorm-seed"
 )
 
 // ShowDashboardController ...
@@ -30,8 +30,9 @@ func (d *ShowDashboardController) Get() error {
 	return d.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: d.Path(),
-				User: d.Session().User,
+				Path:        d.Path(),
+				User:        d.Session().User,
+				Development: d.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return cards.CardBordered(

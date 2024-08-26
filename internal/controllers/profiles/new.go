@@ -79,9 +79,10 @@ func (p *NewProfileControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: "New Profile",
-				Path:  p.Path(),
-				User:  p.Session().User,
+				Title:       "New Profile",
+				Path:        p.Path(),
+				User:        p.Session().User,
+				Development: p.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return htmx.FormElement(

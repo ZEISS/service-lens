@@ -25,9 +25,10 @@ func (p *EnvironmentControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				User:  p.Session().User,
-				Title: "New Environment",
-				Path:  p.Path(),
+				User:        p.Session().User,
+				Title:       "New Environment",
+				Path:        p.Path(),
+				Development: p.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return environments.NewForm(

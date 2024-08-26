@@ -49,9 +49,10 @@ func (l *ShowDesignControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: l.Design.Title,
-				Path:  l.Ctx().Path(),
-				User:  l.Session().User,
+				Title:       l.Design.Title,
+				Path:        l.Ctx().Path(),
+				User:        l.Session().User,
+				Development: l.IsDevelopment(),
 				Head: []htmx.Node{
 					htmx.Link(
 						htmx.Attribute("href", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.css"),

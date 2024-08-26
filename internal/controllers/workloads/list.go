@@ -42,8 +42,9 @@ func (w *WorkloadListControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: w.Path(),
-				User: w.Session().User,
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return cards.CardBordered(

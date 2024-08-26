@@ -12,6 +12,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // LensListController ...
@@ -43,14 +44,15 @@ func (w *LensListController) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: w.Path(),
-				User: w.Session().User,
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"m-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(

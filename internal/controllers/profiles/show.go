@@ -57,8 +57,9 @@ func (p *ProfileShowControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: p.Path(),
-				User: p.Session().User,
+				Path:        p.Path(),
+				User:        p.Session().User,
+				Development: p.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return htmx.Fragment(

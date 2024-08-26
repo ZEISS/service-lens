@@ -6,6 +6,7 @@ import (
 
 // Flags contains the command line flags.
 type Flags struct {
+	Environment             string `envconfig:"SERVICE_LENS_ENV" default:"production"`
 	Addr                    string `envconfig:"SERVICE_LENS_ADDR" default:":8084"`
 	DatabaseURI             string `envconfig:"SERVICE_LENS_DATABASE_URI" default:"postgres://root@host.docker.internal:26257/defaultdb?sslmode=disable"`
 	DatabaseTablePrefix     string `envconfig:"SERVICE_LENS_DATABASE_TABLE_PREFIX" default:"service_lens_"`

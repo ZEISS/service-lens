@@ -41,9 +41,10 @@ func (p *EnvironmentShowControllerImpl) Get() error {
 	return p.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: p.environment.Name,
-				Path:  p.Path(),
-				User:  p.Session().User,
+				Title:       p.environment.Name,
+				Path:        p.Path(),
+				User:        p.Session().User,
+				Development: p.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return htmx.Fragment(

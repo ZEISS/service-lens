@@ -38,9 +38,10 @@ func (w *WorkloadNewControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: "New Workload",
-				Path:  w.Path(),
-				User:  w.Session().User,
+				Title:       "New Workload",
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				lenses := tables.Results[models.Lens]{}

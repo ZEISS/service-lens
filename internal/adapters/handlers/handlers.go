@@ -54,13 +54,6 @@ func (a *handlers) Dashboard() fiber.Handler {
 	})
 }
 
-// Settings ...
-// func (a *handlers) Settings() fiber.Handler {
-// 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-// 		return settings.NewSettingsIndexController(a.store)
-// 	})
-// }
-
 // Me ...
 func (a *handlers) Me() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {

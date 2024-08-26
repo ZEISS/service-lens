@@ -1,6 +1,6 @@
 module github.com/zeiss/service-lens
 
-go 1.22.5
+go 1.23
 
 require (
 	github.com/go-playground/validator/v10 v10.22.0
@@ -17,9 +17,10 @@ require (
 	github.com/yuin/goldmark-emoji v1.0.3
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.11
-	github.com/zeiss/fiber-htmx v1.3.24-0.20240823090914-aca65cd9435c
+	github.com/zeiss/fiber-htmx v1.3.24-0.20240826112728-e7dd1e871a76
+	github.com/zeiss/fiber-reload v0.1.0
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.8-0.20240822112310-9121b2544fb1
+	github.com/zeiss/pkg v0.1.8-0.20240823051228-d40ebe6703e0
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.20.0
 	gorm.io/driver/postgres v1.5.9
@@ -71,6 +72,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
 	github.com/denis-tingaikin/go-header v0.5.0 // indirect
 	github.com/ettle/strcase v0.2.0 // indirect
+	github.com/fasthttp/websocket v1.5.8 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/firefart/nonamedreturns v1.0.5 // indirect
@@ -96,6 +98,7 @@ require (
 	github.com/go-xmlfmt/xmlfmt v1.1.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/goccy/go-json v0.10.3 // indirect
+	github.com/gofiber/contrib/websocket v1.3.2 // indirect
 	github.com/gofrs/flock v0.12.1 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golangci/dupl v0.0.0-20180902072040-3e9179ac440a // indirect
@@ -191,6 +194,7 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1 // indirect
 	github.com/sashamelentyev/interfacebloat v1.1.0 // indirect
 	github.com/sashamelentyev/usestdlibvars v1.27.0 // indirect
+	github.com/savsgio/gotils v0.0.0-20240303185622-093b76447511 // indirect
 	github.com/securego/gosec/v2 v2.20.1-0.20240822074752-ab3f6c1c83a0 // indirect
 	github.com/shazow/go-diff v0.0.0-20160112020656-b6b7b6733b8c // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect

@@ -48,9 +48,10 @@ func (w *WorkloadShowControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: w.workload.Name,
-				Path:  w.Path(),
-				User:  w.Session().User,
+				Title:       w.workload.Name,
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return htmx.Fragment(

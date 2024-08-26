@@ -29,8 +29,9 @@ func (m *MeController) Get() error {
 	return m.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: m.Path(),
-				User: m.Session().User,
+				Path:        m.Path(),
+				User:        m.Session().User,
+				Development: m.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return cards.CardBordered(

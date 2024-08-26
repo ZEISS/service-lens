@@ -63,9 +63,10 @@ func (w *WorkloadLensEditControllerImpl) Get() error {
 	return w.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Title: w.lens.Name,
-				Path:  w.Path(),
-				User:  w.Session().User,
+				Title:       w.lens.Name,
+				Path:        w.Path(),
+				User:        w.Session().User,
+				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
 				return drawers.Drawer(

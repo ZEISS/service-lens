@@ -33,8 +33,9 @@ func (l *ListTemplatesControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path: l.Path(),
-				User: l.Session().User,
+				Path:        l.Path(),
+				User:        l.Session().User,
+				Development: l.IsDevelopment(),
 			},
 			func() htmx.Node {
 				results := tables.Results[models.Template]{}
