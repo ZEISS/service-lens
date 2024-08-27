@@ -153,6 +153,25 @@ func (p *WorkflowShowControllerImpl) Get() error {
 									htmx.Text("Add Step"),
 								),
 							),
+							htmx.Ul(
+								htmx.Attribute("x-sort", ""),
+								htmx.Group(
+									htmx.ForEach(p.workflow.States, func(state models.WorkflowState, idx int) htmx.Node {
+										return htmx.Li(
+											htmx.ClassNames{
+												tailwind.My2: true,
+											},
+											htmx.Attribute("x-sort:item", ""),
+											workflows.WorkflowStep(
+												workflows.WorkflowStepProps{
+													State:      state,
+													WorkflowID: p.workflow.ID,
+												},
+											),
+										)
+									})...,
+								),
+							),
 							// cards.Title(
 							// 	cards.TitleProps{},
 							// 	htmx.Text("Steps"),

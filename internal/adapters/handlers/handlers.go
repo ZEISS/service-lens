@@ -508,3 +508,10 @@ func (a *handlers) CreateWorkflowStep() fiber.Handler {
 		return workflows.NewStepController(a.store)
 	})
 }
+
+// DeleteWorkflowStep ...
+func (a *handlers) DeleteWorkflowStep() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewStepController(a.store)
+	})
+}

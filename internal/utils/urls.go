@@ -18,6 +18,7 @@ const (
 	DeleteTagUrlFormat                   = "/tags/%s"
 	DeleteTemplateUrlFormat              = "/templates/%s"
 	DeleteWorkflowsUrlFormat             = "/workflows/%s"
+	DeleteWorkflowStepUrlFormat          = "/workflows/%s/steps/%d"
 	EditBodyUrlFormat                    = "/designs/%s/body/edit"
 	EditTitleUrlFormat                   = "/designs/%s/title/edit"
 	EditWorkloadUrlFormat                = "/workloads/%s/edit"

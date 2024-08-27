@@ -134,4 +134,6 @@ type Handlers interface {
 	DesignReactions() fiber.Handler
 	// CreateWorkflowStep ...
 	CreateWorkflowStep() fiber.Handler
+	// DeleteWorkflowStep ...
+	DeleteWorkflowStep() fiber.Handler
 }

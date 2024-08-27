@@ -25,6 +25,8 @@ func NewStepModal(props NewStepModalProps) htmx.Node {
 		},
 		htmx.FormElement(
 			htmx.HxPost(fmt.Sprintf(utils.CreateWorkflowStepUrlFormat, props.Workflow.ID)),
+			htmx.HxTrigger("submit"),
+			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close()"),
 			forms.FormControl(
 				forms.FormControlProps{
 					ClassNames: htmx.ClassNames{},
@@ -73,6 +75,14 @@ func NewStepModal(props NewStepModalProps) htmx.Node {
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
+				buttons.Button(
+					buttons.ButtonProps{
+						Type: "button",
+					},
+					htmx.Text("Cancel"),
+					htmx.Attribute("formnovalidate", ""),
+					htmx.OnClick("event.target.closest('dialog').close()"),
+				),
 				buttons.Button(
 					buttons.ButtonProps{
 						Type: "submit",

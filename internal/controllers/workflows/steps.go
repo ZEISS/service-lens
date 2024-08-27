@@ -2,10 +2,8 @@ package workflows
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -25,11 +23,21 @@ func NewStepController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *St
 	return &StepControllerImpl{store: store}
 }
 
-// Error ...
-func (l *StepControllerImpl) Error(err error) error {
-	fmt.Println(err)
+// Delete ...
+func (l *StepControllerImpl) Delete() error {
+	var params struct {
+		WorkflowID uuid.UUID `json:"workflow_id" params:"id"`
+		ID         int       `json:"id" params:"step_id"`
+	}
 
-	return err
+	err := l.BindParams(&params)
+	if err != nil {
+		return err
+	}
+
+	return l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+		return tx.DeleteWorkflowState(ctx, &models.WorkflowState{ID: params.ID, WorkflowID: params.WorkflowID})
+	})
 }
 
 // Post ...
@@ -51,7 +59,9 @@ func (l *StepControllerImpl) Post() error {
 	}
 
 	state := models.WorkflowState{
-		WorkflowID: params.WorkflowID,
+		WorkflowID:  params.WorkflowID,
+		Name:        params.Name,
+		Description: params.Description,
 	}
 
 	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
@@ -63,22 +73,13 @@ func (l *StepControllerImpl) Post() error {
 
 	return l.Render(
 		htmx.Fragment(
-			cards.CardBordered(
-				cards.CardProps{
-					ClassNames: htmx.ClassNames{
-						tailwind.M2: true,
-					},
+			workflows.WorkflowStep(
+				workflows.WorkflowStepProps{
+					State:      state,
+					WorkflowID: state.WorkflowID,
 				},
 				htmx.ID("steps"),
-				htmx.HxSwapOob("beforeend"),
-				cards.Body(
-					cards.BodyProps{},
-					cards.Title(
-						cards.TitleProps{},
-						htmx.Text(state.Name),
-					),
-					htmx.Text(state.Description),
-				),
+				htmx.HxSwapOob("beforeend focus-scroll:true"),
 			),
 		),
 	)

@@ -152,7 +152,7 @@ func (r *readTxImpl) GetTotalNumberOfWorkloads(ctx context.Context, total *int64
 
 // GetWorkflow is a method that returns a workflow by ID
 func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow) error {
-	return r.conn.First(workflow, workflow.ID).Error
+	return r.conn.Preload(clause.Associations).First(workflow, workflow.ID).Error
 }
 
 // GetDesignComment is a method that returns a design comment by ID
@@ -366,15 +366,14 @@ func (rw *writeTxImpl) CreateWorkflowState(ctx context.Context, state *models.Wo
 		return err
 	}
 
-	err = rw.conn.Model(&workflow).Association("States").Append(state)
+	err = rw.conn.Create(state).Error
 	if err != nil {
 		return err
 	}
 
-	for _, s := range workflow.Transitions {
-		if s.NextStateID == 0 {
-			s.NextStateID = state.ID
-		}
+	err = rw.conn.Model(&workflow).Association("States").Append(state)
+	if err != nil {
+		return err
 	}
 
 	transition := models.WorkflowTransition{
@@ -382,7 +381,54 @@ func (rw *writeTxImpl) CreateWorkflowState(ctx context.Context, state *models.Wo
 		CurrentStateID: state.ID,
 	}
 
-	workflow.Transitions = append(workflow.Transitions, transition)
+	err = rw.conn.Create(&transition).Error
+	if err != nil {
+		return err
+	}
 
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&workflow).Error
+	for _, s := range workflow.Transitions {
+		if s.NextStateID == 0 {
+			return rw.conn.Model(&s).Update("NextStateID", state.ID).Error
+		}
+	}
+
+	return nil
+}
+
+// DeleteWorkflowState is a method that deletes a workflow state
+func (rw *writeTxImpl) DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error {
+	workflow := models.Workflow{}
+
+	err := rw.conn.Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
+	if err != nil {
+		return err
+	}
+
+	var currentTransition int
+	var nextTransition int
+	for i := range workflow.Transitions {
+		if workflow.Transitions[i].CurrentStateID == state.ID {
+			currentTransition = i
+		}
+
+		if workflow.Transitions[i].NextStateID == state.ID {
+			nextTransition = i
+		}
+	}
+
+	if nextTransition != 0 && workflow.Transitions[currentTransition].NextStateID != 0 {
+		workflow.Transitions[nextTransition].NextStateID = workflow.Transitions[currentTransition].NextStateID
+
+		err = rw.conn.Updates(&workflow.Transitions[nextTransition]).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	err = rw.conn.Delete(state, state.ID).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Delete(&workflow.Transitions[currentTransition], workflow.Transitions[currentTransition].ID).Error
 }

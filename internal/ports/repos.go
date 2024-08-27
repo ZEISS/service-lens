@@ -138,4 +138,6 @@ type ReadWriteTx interface {
 	DeleteReaction(ctx context.Context, reaction *models.Reaction) error
 	// CreateWorkflowState is a method that creates a workflow state
 	CreateWorkflowState(ctx context.Context, state *models.WorkflowState) error
+	// DeleteWorkflowState is a method that deletes a workflow state
+	DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error
 }
