@@ -26,7 +26,8 @@ func NewStepModal(props NewStepModalProps) htmx.Node {
 		htmx.FormElement(
 			htmx.HxPost(fmt.Sprintf(utils.CreateWorkflowStepUrlFormat, props.Workflow.ID)),
 			htmx.HxTrigger("submit"),
-			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close()"),
+			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
+			htmx.HxSwap("none"),
 			forms.FormControl(
 				forms.FormControlProps{
 					ClassNames: htmx.ClassNames{},

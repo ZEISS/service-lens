@@ -40,7 +40,7 @@ func WorkflowStep(props WorkflowStepProps, children ...htmx.Node) htmx.Node {
 					buttons.ButtonProps{},
 					htmx.HxDelete(fmt.Sprintf(utils.DeleteWorkflowStepUrlFormat, conv.String(props.WorkflowID), props.State.ID)),
 					htmx.HxConfirm("Are you sure you want to delete this step?"),
-					htmx.HxTarget("closest .card"),
+					htmx.HxTarget("closest li"),
 					htmx.HxSwap("outerHTML swap:1s"),
 					htmx.Text("Delete"),
 				),

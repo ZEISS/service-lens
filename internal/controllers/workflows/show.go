@@ -139,7 +139,6 @@ func (p *WorkflowShowControllerImpl) Get() error {
             }`),
 						cards.Body(
 							cards.BodyProps{},
-							htmx.ID("steps"),
 							cards.Actions(
 								cards.ActionsProps{},
 								workflows.NewStepModal(
@@ -154,6 +153,7 @@ func (p *WorkflowShowControllerImpl) Get() error {
 								),
 							),
 							htmx.Ul(
+								htmx.ID("steps"),
 								htmx.Attribute("x-sort", ""),
 								htmx.Group(
 									htmx.ForEach(p.workflow.States, func(state models.WorkflowState, idx int) htmx.Node {

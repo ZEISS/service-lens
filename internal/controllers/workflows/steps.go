@@ -3,6 +3,7 @@ package workflows
 import (
 	"context"
 
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -73,13 +74,19 @@ func (l *StepControllerImpl) Post() error {
 
 	return l.Render(
 		htmx.Fragment(
-			workflows.WorkflowStep(
-				workflows.WorkflowStepProps{
-					State:      state,
-					WorkflowID: state.WorkflowID,
+			htmx.Li(
+				htmx.ClassNames{
+					tailwind.My2: true,
 				},
+				htmx.Attribute("x-sort:item", ""),
 				htmx.ID("steps"),
-				htmx.HxSwapOob("beforeend focus-scroll:true"),
+				htmx.HxSwapOob("beforeend"),
+				workflows.WorkflowStep(
+					workflows.WorkflowStepProps{
+						State:      state,
+						WorkflowID: state.WorkflowID,
+					},
+				),
 			),
 		),
 	)
