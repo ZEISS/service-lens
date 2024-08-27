@@ -1,6 +1,7 @@
 package models
 
 import (
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,6 +36,15 @@ type Workflow struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
+// GetSortedStates returns the states sorted by transitions.
+func (w Workflow) GetTransitions() []WorkflowTransition {
+	sort.Slice(w.Transitions, func(i, j int) bool {
+		return w.Transitions[i].NextStateID == w.Transitions[j].CurrentStateID
+	})
+
+	return w.Transitions
+}
+
 // WorkflowState is the model for the workflow_state table
 type WorkflowState struct {
 	// ID is the primary key of the workflow status
@@ -61,8 +71,12 @@ type WorkflowTransition struct {
 	WorkflowID uuid.UUID `json:"workflow_id" gorm:"type:uuid;not null"`
 	// CurrentStateID is the foreign key of the current state
 	CurrentStateID int `json:"current_state_id" gorm:"type:bigint;not null"`
+	// CurrentState is the current state of the transition
+	CurrentState WorkflowState `json:"current_state" gorm:"foreignKey:CurrentStateID;references:ID"`
 	// NextStateID is the foreign key of the next state
 	NextStateID int `json:"next_state_id" gorm:"type:bigint"`
+	// NextState is the next state of the transition
+	NextState WorkflowState `json:"next_state" gorm:"foreignKey:NextStateID;references:ID"`
 	// CreatedAt is the created at field
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt is the updated at field

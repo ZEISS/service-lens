@@ -2,18 +2,21 @@ package workflows
 
 import (
 	"context"
+	"fmt"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/alerts"
 	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // WorkflowShowControllerImpl ...
@@ -66,7 +69,11 @@ func (p *WorkflowShowControllerImpl) Get() error {
 				Path:        p.Path(),
 				User:        p.Session().User,
 				Development: p.IsDevelopment(),
-				Head:        []htmx.Node{},
+				Head: []htmx.Node{
+					htmx.Script(
+						htmx.Src("https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"),
+					),
+				},
 			},
 			func() htmx.Node {
 				return htmx.Fragment(
@@ -129,13 +136,41 @@ func (p *WorkflowShowControllerImpl) Get() error {
 							),
 						),
 					),
+
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
 								tailwind.M2: true,
 							},
 						},
+						// Todo: Move this script to a separate file
+						htmx.Script(htmx.Raw(`
+						htmx.onLoad(function(content) {
+    var sortables = content.querySelectorAll(".sortable");
+    for (var i = 0; i < sortables.length; i++) {
+      var sortable = sortables[i];
+      var sortableInstance = new Sortable(sortable, {
+          animation: 150,
+          ghostClass: 'blue-background-class',
+
+          filter: ".htmx-indicator",
+          onMove: function (evt) {
+            return evt.related.className.indexOf('htmx-indicator') === -1;
+          },
+
+          onEnd: function (evt) {
+            this.option("disabled", true);
+          }
+      });
+
+      sortable.addEventListener("htmx:afterSwap", function() {
+        sortableInstance.option("disabled", false);
+      });
+    }
+})
+						`)),
 						alpine.XData(`{
+						
             }`),
 						cards.Body(
 							cards.BodyProps{},
@@ -152,87 +187,32 @@ func (p *WorkflowShowControllerImpl) Get() error {
 									htmx.Text("Add Step"),
 								),
 							),
-							htmx.Ul(
+							htmx.FormElement(
+								htmx.ClassNames{
+									"sortable": true,
+								},
+								htmx.HxPut(fmt.Sprintf(utils.UpdateWorkflowStepUrlFormat, p.workflow.ID)),
+								htmx.HxTrigger("end"),
+								htmx.HxSwap("none"),
 								htmx.ID("steps"),
-								htmx.Attribute("x-sort", ""),
+								loading.Spinner(
+									loading.SpinnerProps{
+										ClassNames: htmx.ClassNames{
+											"htmx-indicator": true,
+										},
+									},
+								),
 								htmx.Group(
-									htmx.ForEach(p.workflow.States, func(state models.WorkflowState, idx int) htmx.Node {
-										return htmx.Li(
-											htmx.ClassNames{
-												tailwind.My2: true,
+									htmx.ForEach(p.workflow.GetTransitions(), func(transition models.WorkflowTransition, idx int) htmx.Node {
+										return workflows.WorkflowStep(
+											workflows.WorkflowStepProps{
+												State:      transition.CurrentState,
+												WorkflowID: p.workflow.ID,
 											},
-											htmx.Attribute("x-sort:item", ""),
-											workflows.WorkflowStep(
-												workflows.WorkflowStepProps{
-													State:      state,
-													WorkflowID: p.workflow.ID,
-												},
-											),
 										)
 									})...,
 								),
 							),
-							// cards.Title(
-							// 	cards.TitleProps{},
-							// 	htmx.Text("Steps"),
-							// 	htmx.Div(
-							// 		htmx.ClassNames{
-							// 			"flex":     true,
-							// 			"flex-col": true,
-							// 			"py-2":     true,
-							// 		},
-							// 	),
-
-							// 	htmx.Ul(
-							// 		htmx.Attribute("x-sort", ""),
-							// 		htmx.Li(
-							// 			htmx.Attribute("x-sort:item", ""),
-							// 			cards.CardBordered(
-							// 				cards.CardProps{},
-							// 				htmx.Attribute("x-sort:item", ""),
-							// 				cards.Body(
-							// 					cards.BodyProps{},
-							// 					htmx.Text("This is an example state."),
-							// 				),
-							// 			),
-							// 		),
-							// 		htmx.Li(
-							// 			htmx.Attribute("x-sort:item", ""),
-							// 			cards.CardBordered(
-							// 				cards.CardProps{},
-							// 				htmx.Attribute("x-sort:item", ""),
-							// 				cards.Body(
-							// 					cards.BodyProps{
-							// 						ClassNames: htmx.ClassNames{
-							// 							tailwind.Flex:           true,
-							// 							tailwind.JustifyBetween: true,
-							// 							tailwind.FlexRow:        true,
-							// 							tailwind.ItemsCenter:    true,
-							// 						},
-							// 					},
-							// 					htmx.Text("This is an example state."),
-							// 					buttons.Button(
-							// 						buttons.ButtonProps{},
-							// 						icons.EllipsisHorizontalOutline(
-							// 							icons.IconProps{},
-							// 						),
-							// 					),
-							// 				),
-							// 			),
-							// 		),
-							// 		htmx.Li(
-							// 			htmx.Attribute("x-sort:item", ""),
-							// 			cards.CardBordered(
-							// 				cards.CardProps{},
-							// 				htmx.Attribute("x-sort:item", ""),
-							// 				cards.Body(
-							// 					cards.BodyProps{},
-							// 					htmx.Text("This is an example state."),
-							// 				),
-							// 			),
-							// 		),
-							// 	),
-							// ),
 						),
 					),
 				)

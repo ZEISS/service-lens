@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
@@ -152,7 +153,13 @@ func (r *readTxImpl) GetTotalNumberOfWorkloads(ctx context.Context, total *int64
 
 // GetWorkflow is a method that returns a workflow by ID
 func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow) error {
-	return r.conn.Preload(clause.Associations).First(workflow, workflow.ID).Error
+	return r.conn.
+		Preload(clause.Associations).
+		Preload("Transitions").
+		Preload("Transitions.CurrentState").
+		Preload("Transitions.NextState").
+		First(workflow, workflow.ID).
+		Error
 }
 
 // GetDesignComment is a method that returns a design comment by ID
@@ -431,4 +438,28 @@ func (rw *writeTxImpl) DeleteWorkflowState(ctx context.Context, state *models.Wo
 	}
 
 	return rw.conn.Delete(&workflow.Transitions[currentTransition], workflow.Transitions[currentTransition].ID).Error
+}
+
+// UpdateWorkflowTransitions is a method that updates workflow transitions
+func (rw *writeTxImpl) UpdateWorkflowTransitions(ctx context.Context, workflowId uuid.UUID, transitions []int) error {
+	workflow := models.Workflow{}
+
+	err := rw.conn.Preload(clause.Associations).First(&workflow, workflowId).Error
+	if err != nil {
+		return err
+	}
+
+	for i := len(transitions) - 1; i >= 0; i-- {
+		for j := range workflow.Transitions {
+			if workflow.Transitions[j].CurrentStateID == transitions[i] {
+				if len(transitions)-1 == i {
+					workflow.Transitions[j].NextStateID = 0
+				} else {
+					workflow.Transitions[j].NextStateID = transitions[i+1]
+				}
+			}
+		}
+	}
+
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.Transitions).Error
 }

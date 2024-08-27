@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
@@ -140,4 +141,6 @@ type ReadWriteTx interface {
 	CreateWorkflowState(ctx context.Context, state *models.WorkflowState) error
 	// DeleteWorkflowState is a method that deletes a workflow state
 	DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error
+	// UpdateWorkflowTransitions is a method that updates workflow transitions
+	UpdateWorkflowTransitions(ctx context.Context, workflowId uuid.UUID, transistions []int) error
 }

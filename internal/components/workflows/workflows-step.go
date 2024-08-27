@@ -24,9 +24,14 @@ func WorkflowStep(props WorkflowStepProps, children ...htmx.Node) htmx.Node {
 	return cards.CardBordered(
 		cards.CardProps{
 			ClassNames: htmx.ClassNames{
-				tailwind.M2: true,
+				tailwind.CursorPointer: true,
 			},
 		},
+		htmx.Input(
+			htmx.Type("hidden"),
+			htmx.Name("step"),
+			htmx.Value(conv.String(props.State.ID)),
+		),
 		cards.Body(
 			cards.BodyProps{},
 			cards.Title(
@@ -40,7 +45,7 @@ func WorkflowStep(props WorkflowStepProps, children ...htmx.Node) htmx.Node {
 					buttons.ButtonProps{},
 					htmx.HxDelete(fmt.Sprintf(utils.DeleteWorkflowStepUrlFormat, conv.String(props.WorkflowID), props.State.ID)),
 					htmx.HxConfirm("Are you sure you want to delete this step?"),
-					htmx.HxTarget("closest li"),
+					htmx.HxTarget("closest .card"),
 					htmx.HxSwap("outerHTML swap:1s"),
 					htmx.Text("Delete"),
 				),
