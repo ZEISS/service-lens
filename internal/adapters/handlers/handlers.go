@@ -522,3 +522,10 @@ func (a *handlers) UpdateWorkflowSteps() fiber.Handler {
 		return workflows.NewStepController(a.store)
 	})
 }
+
+// SearchWorkflows ...
+func (a *handlers) SearchWorkflows() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewSearchWorkflowsController(a.store)
+	})
+}

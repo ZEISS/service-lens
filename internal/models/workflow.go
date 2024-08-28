@@ -1,7 +1,7 @@
 package models
 
 import (
-	"sort"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
@@ -26,8 +26,6 @@ type Workflow struct {
 	Description string `json:"description" gorm:"type:text"`
 	// States is the list of states in the workflow
 	States []WorkflowState `json:"states" gorm:"foreignKey:WorkflowID;references:ID"`
-	// Transitions is the list of transitions in the workflow
-	Transitions []WorkflowTransition `json:"transitions" gorm:"foreignKey:WorkflowID;references:ID"`
 	// CreatedAt is the created at field
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt is the updated at field
@@ -36,13 +34,13 @@ type Workflow struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
-// GetSortedStates returns the states sorted by transitions.
-func (w Workflow) GetTransitions() []WorkflowTransition {
-	sort.Slice(w.Transitions, func(i, j int) bool {
-		return w.Transitions[i].NextStateID == w.Transitions[j].CurrentStateID
+// GetStates returns the states of the workflow
+func (w Workflow) GetStates() []WorkflowState {
+	slices.SortFunc(w.States, func(i, j WorkflowState) int {
+		return i.Order - j.Order
 	})
 
-	return w.Transitions
+	return w.States
 }
 
 // WorkflowState is the model for the workflow_state table
@@ -50,11 +48,13 @@ type WorkflowState struct {
 	// ID is the primary key of the workflow status
 	ID int `json:"id" gorm:"primary_key;type:bigint;auto_increment;not null"`
 	// WorkflowID is the foreign key of the workflow
-	WorkflowID uuid.UUID `json:"workflow_id" gorm:"primary_key;type:uuid;not null"`
+	WorkflowID uuid.UUID `json:"workflow_id" gorm:"type:uuid;idx_workflow_state"`
 	// Name is the name of the workflow status
-	Name string `json:"name" gorm:"type:varchar(255)"`
+	Name string `json:"name" gorm:"type:varchar(255);unique_index:idx_workflow_state"`
 	// Description is the description of the workflow status
 	Description string `json:"description" gorm:"type:text"`
+	// Order is the order of the state in the workflow
+	Order int `json:"order" gorm:"type:int"`
 	// CreatedAt is the created at field
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt is the updated at field
@@ -69,14 +69,12 @@ type WorkflowTransition struct {
 	ID int `json:"id" gorm:"primary_key;type:bigint;auto_increment;not null"`
 	// WorkflowID is the foreign key of the workflow
 	WorkflowID uuid.UUID `json:"workflow_id" gorm:"type:uuid;not null"`
+	// Workflow is the workflow of the transition
+	Workflow Workflow `json:"workflow" gorm:"foreignKey:WorkflowID;references:ID"`
 	// CurrentStateID is the foreign key of the current state
 	CurrentStateID int `json:"current_state_id" gorm:"type:bigint;not null"`
 	// CurrentState is the current state of the transition
 	CurrentState WorkflowState `json:"current_state" gorm:"foreignKey:CurrentStateID;references:ID"`
-	// NextStateID is the foreign key of the next state
-	NextStateID int `json:"next_state_id" gorm:"type:bigint"`
-	// NextState is the next state of the transition
-	NextState WorkflowState `json:"next_state" gorm:"foreignKey:NextStateID;references:ID"`
 	// CreatedAt is the created at field
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt is the updated at field
@@ -93,8 +91,8 @@ type Workable struct {
 	WorkableID uuid.UUID `json:"workable_id" gorm:"type:uuid;not null"`
 	// WorkableType is the type of the workable
 	WorkableType WorkableType `json:"workable_type" gorm:"type:varchar(255);not null"`
-	// WorkflowID is the foreign key of the workflow
-	WorkflowID int `json:"workflow_id" gorm:"type:bigint;not null"`
-	// Workflow is the workflow of the workable
-	Workflow Workflow `json:"workflow" gorm:"foreignKey:WorkflowID;references:ID"`
+	// WorkflowTransitionID is the foreign key of the workflow transition
+	WorkflowTransitionID int `json:"workflow_transition_id" gorm:"type:bigint"`
+	// WorkflowTransition is the workflow transition of the workable
+	WorkflowTransition WorkflowTransition `json:"workflow_transition" gorm:"foreignKey:WorkflowTransitionID;references:ID"`
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -17,9 +18,10 @@ import (
 var validate *validator.Validate
 
 type CreateDesignBody struct {
-	Title string `json:"title" form:"title" validate:"required,min=3,max=2048"`
-	Body  string `json:"body" form:"body" validate:"required"`
-	Tags  []struct {
+	Title      string    `json:"title" form:"title" validate:"required,min=3,max=2048"`
+	Body       string    `json:"body" form:"body" validate:"required"`
+	WorkflowID uuid.UUID `json:"workflow_id" form:"workflow_id" validate:"uuid"`
+	Tags       []struct {
 		Name  string `json:"name" form:"name" validate:"required"`
 		Value string `json:"value" form:"value" validate:"required"`
 	} `json:"tags" form:"tags"`
@@ -74,6 +76,12 @@ func (l *CreateDesignControllerImpl) Post() error {
 		Title:    l.body.Title,
 		Body:     l.body.Body,
 		AuthorID: l.Session().UserID,
+		Workable: models.Workable{
+			WorkableType: models.WorkableTypeDesign,
+			WorkflowTransition: models.WorkflowTransition{
+				WorkflowID: l.body.WorkflowID,
+			},
+		},
 	}
 
 	for _, tag := range l.body.Tags {

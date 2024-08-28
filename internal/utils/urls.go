@@ -12,6 +12,7 @@ const (
 	CreateTemplateUrlFormat              = "/templates/new"
 	CreateWorkloadUrlFormat              = "/workloads/new"
 	UpdateWorkflowStepUrlFormat          = "/workflows/%s/steps"
+	SearchWorkflowsUrlFormat             = "/designs/search/workflows"
 	DeleteDesignUrlFormat                = "/designs/%s"
 	DeleteEnvironmentUrlFormat           = "/environments/%s"
 	DeleteLensUrlFormat                  = "/lenses/%s"

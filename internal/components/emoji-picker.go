@@ -27,7 +27,7 @@ func EmojiPicker(props EmojiPickerProps) htmx.Node {
             input: '🙂',
             emojis: {
                 'tractor, farm, machine, agriculture': '🚜',
-                'leaf, plant, nature, green, agricultre, ecology': '🌿',
+                'leaf, plant, nature, green, agriculture, ecology': '🌿',
                 'corn, field, agricuultre, vegetable, plant, nature, green, ecology': '🌽',
                 'fish, sea, ocan, swimming, water': '🐟',
                 'home, house, building, apartment, residence': '🏠',

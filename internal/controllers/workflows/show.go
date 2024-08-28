@@ -203,10 +203,10 @@ func (p *WorkflowShowControllerImpl) Get() error {
 									},
 								),
 								htmx.Group(
-									htmx.ForEach(p.workflow.GetTransitions(), func(transition models.WorkflowTransition, idx int) htmx.Node {
+									htmx.ForEach(p.workflow.GetStates(), func(state models.WorkflowState, idx int) htmx.Node {
 										return workflows.WorkflowStep(
 											workflows.WorkflowStepProps{
-												State:      transition.CurrentState,
+												State:      state,
 												WorkflowID: p.workflow.ID,
 											},
 										)

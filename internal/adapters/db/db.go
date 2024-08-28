@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/cast"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -155,9 +156,6 @@ func (r *readTxImpl) GetTotalNumberOfWorkloads(ctx context.Context, total *int64
 func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow) error {
 	return r.conn.
 		Preload(clause.Associations).
-		Preload("Transitions").
-		Preload("Transitions.CurrentState").
-		Preload("Transitions.NextState").
 		First(workflow, workflow.ID).
 		Error
 }
@@ -207,6 +205,15 @@ func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) 
 			return err
 		}
 	}
+
+	workflow := models.Workflow{}
+	err := rw.conn.Debug().Preload(clause.Associations).First(&workflow, design.Workable.WorkflowTransition.WorkflowID).Error
+	if err != nil {
+		return err
+	}
+
+	states := workflow.GetStates()
+	design.Workable.WorkflowTransition.CurrentStateID = states[0].ID
 
 	return rw.conn.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Create(design).Error
 }
@@ -373,93 +380,73 @@ func (rw *writeTxImpl) CreateWorkflowState(ctx context.Context, state *models.Wo
 		return err
 	}
 
-	err = rw.conn.Create(state).Error
-	if err != nil {
-		return err
-	}
+	state.Order = len(workflow.States) - 1
+	workflow.States = append(workflow.States, cast.Value(state))
 
-	err = rw.conn.Model(&workflow).Association("States").Append(state)
-	if err != nil {
-		return err
-	}
-
-	transition := models.WorkflowTransition{
-		WorkflowID:     state.WorkflowID,
-		CurrentStateID: state.ID,
-	}
-
-	err = rw.conn.Create(&transition).Error
-	if err != nil {
-		return err
-	}
-
-	for _, s := range workflow.Transitions {
-		if s.NextStateID == 0 {
-			return rw.conn.Model(&s).Update("NextStateID", state.ID).Error
-		}
-	}
-
-	return nil
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow).Error
 }
 
 // DeleteWorkflowState is a method that deletes a workflow state
 func (rw *writeTxImpl) DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error {
-	workflow := models.Workflow{}
+	return nil
+	// workflow := models.Workflow{}
 
-	err := rw.conn.Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
-	if err != nil {
-		return err
-	}
+	// err := rw.conn.Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
+	// if err != nil {
+	// 	return err
+	// }
 
-	var currentTransition int
-	var nextTransition int
-	for i := range workflow.Transitions {
-		if workflow.Transitions[i].CurrentStateID == state.ID {
-			currentTransition = i
-		}
+	// // var currentTransition int
+	// // var nextTransition int
+	// // for i := range workflow.Transitions {
+	// // 	if workflow.Transitions[i].CurrentStateID == state.ID {
+	// // 		currentTransition = i
+	// // 	}
 
-		if workflow.Transitions[i].NextStateID == state.ID {
-			nextTransition = i
-		}
-	}
+	// // 	if workflow.Transitions[i].NextStateID == state.ID {
+	// // 		nextTransition = i
+	// // 	}
+	// // }
 
-	if nextTransition != 0 && workflow.Transitions[currentTransition].NextStateID != 0 {
-		workflow.Transitions[nextTransition].NextStateID = workflow.Transitions[currentTransition].NextStateID
+	// // if nextTransition != 0 && workflow.Transitions[currentTransition].NextStateID != 0 {
+	// // 	workflow.Transitions[nextTransition].NextStateID = workflow.Transitions[currentTransition].NextStateID
 
-		err = rw.conn.Updates(&workflow.Transitions[nextTransition]).Error
-		if err != nil {
-			return err
-		}
-	}
+	// // 	err = rw.conn.Updates(&workflow.Transitions[nextTransition]).Error
+	// // 	if err != nil {
+	// // 		return err
+	// // 	}
+	// // }
 
-	err = rw.conn.Delete(state, state.ID).Error
-	if err != nil {
-		return err
-	}
+	// err = rw.conn.Delete(state, state.ID).Error
+	// if err != nil {
+	// 	return err
+	// }
 
-	return rw.conn.Delete(&workflow.Transitions[currentTransition], workflow.Transitions[currentTransition].ID).Error
+	// return rw.conn.Delete(&workflow.Transitions[currentTransition], workflow.Transitions[currentTransition].ID).Error
 }
 
 // UpdateWorkflowTransitions is a method that updates workflow transitions
 func (rw *writeTxImpl) UpdateWorkflowTransitions(ctx context.Context, workflowId uuid.UUID, transitions []int) error {
-	workflow := models.Workflow{}
+	// workflow := models.Workflow{}
 
-	err := rw.conn.Preload(clause.Associations).First(&workflow, workflowId).Error
-	if err != nil {
-		return err
-	}
+	return nil
 
-	for i := len(transitions) - 1; i >= 0; i-- {
-		for j := range workflow.Transitions {
-			if workflow.Transitions[j].CurrentStateID == transitions[i] {
-				if len(transitions)-1 == i {
-					workflow.Transitions[j].NextStateID = 0
-				} else {
-					workflow.Transitions[j].NextStateID = transitions[i+1]
-				}
-			}
-		}
-	}
+	// err := rw.conn.Preload(clause.Associations).First(&workflow, workflowId).Error
+	// if err != nil {
+	// 	return err
+	// }
 
-	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.Transitions).Error
+	// for i := len(transitions) - 1; i >= 0; i-- {
+	// 	for j := range workflow.Transitions {
+	// 		if workflow.Transitions[j].CurrentStateID == transitions[i] {
+	// 			if len(transitions)-1 == i {
+	// 				workflow.Transitions[j].NextStateID = 0
+	// 			} else {
+	// 				workflow.Transitions[j].NextStateID = transitions[i+1]
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.Transitions).Error
 }

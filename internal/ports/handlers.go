@@ -138,4 +138,6 @@ type Handlers interface {
 	UpdateWorkflowSteps() fiber.Handler
 	// DeleteWorkflowStep ...
 	DeleteWorkflowStep() fiber.Handler
+	// SearchWorkflows ...
+	SearchWorkflows() fiber.Handler
 }

@@ -6,7 +6,10 @@ import (
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/forms"
+	"github.com/zeiss/fiber-htmx/components/loading"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // DesignNewFormProps ...
@@ -25,8 +28,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 		cards.CardBordered(
 			cards.CardProps{
 				ClassNames: htmx.ClassNames{
-					"my-2": true,
-					"mx-2": true,
+					tailwind.M2: true,
 				},
 			},
 			cards.Body(
@@ -74,7 +76,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 	            }
             })
 
-            editor.value(thos.$ref.editor.innerHTML)
+           //  editor.value(this.$ref.editor.innerHTML)
 
             editor.codemirror.on('change', () => {
                 this.value = editor.value()
@@ -111,6 +113,58 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 						buttons.ButtonProps{},
 						htmx.Attribute("type", "submit"),
 						htmx.Text("Save Design"),
+					),
+				),
+			),
+		),
+		cards.CardBordered(
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					tailwind.M2: true,
+				},
+			},
+			cards.Body(
+				cards.BodyProps{},
+				cards.Title(
+					cards.TitleProps{},
+					htmx.Text("Workflow"),
+				),
+				forms.FormControl(
+					forms.FormControlProps{
+						ClassNames: htmx.ClassNames{},
+					},
+					htmx.Div(
+						htmx.ClassNames{
+							tailwind.Flex:           true,
+							tailwind.JustifyBetween: true,
+						},
+						forms.Datalist(
+							forms.DatalistProps{
+								ID:          "workflows",
+								Name:        "workflow",
+								Placeholder: "Select workflows ...",
+								URL:         utils.SearchWorkflowsUrlFormat,
+							},
+						),
+						loading.Spinner(
+							loading.SpinnerProps{
+								ClassNames: htmx.ClassNames{
+									"htmx-indicator": true,
+									tailwind.M2:      true,
+								},
+							},
+						),
+					),
+					forms.FormControlLabel(
+						forms.FormControlLabelProps{},
+						forms.FormControlLabelText(
+							forms.FormControlLabelTextProps{
+								ClassNames: htmx.ClassNames{
+									tailwind.TextNeutral500: true,
+								},
+							},
+							htmx.Text("The team that owns the account."),
+						),
 					),
 				),
 			),

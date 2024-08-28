@@ -146,6 +146,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		designs.Get("/", handlers.ListDesigns())
 		designs.Get("/new", handlers.NewDesign())
 		designs.Post("/new", handlers.CreateDesign())
+		designs.Get("/search/workflows", handlers.SearchWorkflows())
 		designs.Get("/:id", handlers.ShowDesign())
 		designs.Put("/:id", handlers.UpdateDesign())
 		designs.Delete("/:id", handlers.DeleteDesign())
