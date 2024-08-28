@@ -85,7 +85,7 @@ func (a *handlers) ShowDesign() fiber.Handler {
 // CreateDesignComment ...
 func (a *handlers) CreateDesignComment() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return comments.NewCreateDesignCommentController(a.store)
+		return designs.NewCommentsController(a.store)
 	})
 }
 

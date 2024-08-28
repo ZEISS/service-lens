@@ -164,7 +164,11 @@ func (r *readTxImpl) GetWorkflow(ctx context.Context, workflow *models.Workflow)
 
 // GetDesignComment is a method that returns a design comment by ID
 func (r *readTxImpl) GetDesignComment(ctx context.Context, comment *models.DesignComment) error {
-	return r.conn.Preload("Reactions").Preload("Reactions.Reactor").First(comment, comment.ID).Error
+	return r.conn.
+		Preload(clause.Associations).
+		Preload("Reactions").
+		Preload("Reactions.Reactor").
+		First(comment, comment.ID).Error
 }
 
 // ListDesignCommentReactions is a method that returns a list of design comment reactions
@@ -275,7 +279,7 @@ func (rw *writeTxImpl) RemoveTagDesign(ctx context.Context, designId uuid.UUID, 
 
 // CreateDesignComment is a method that creates a design comment
 func (rw *writeTxImpl) CreateDesignComment(ctx context.Context, comment *models.DesignComment) error {
-	return rw.conn.Create(comment).Error
+	return rw.conn.Preload(clause.Associations).Create(comment).Error
 }
 
 // CreateProfile is a method that creates a profile

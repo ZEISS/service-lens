@@ -21,10 +21,9 @@ type DesignCommentReactionsProps struct {
 }
 
 // DesignCommentReactions ...
-func DesignCommentReactions(props DesignCommentReactionsProps) htmx.Node {
+func DesignCommentReactions(props DesignCommentReactionsProps, children ...htmx.Node) htmx.Node {
 	return htmx.Div(
 		htmx.ID(fmt.Sprintf("reaction-%s", props.Comment.ID)),
-		htmx.HxSwapOob(fmt.Sprintf("#reaction-%s", props.Comment.ID)),
 		htmx.ClassNames{
 			tailwind.Flex:        true,
 			tailwind.ItemsCenter: true,
@@ -63,5 +62,6 @@ func DesignCommentReactions(props DesignCommentReactionsProps) htmx.Node {
 			},
 			)...,
 		),
+		htmx.Group(children...),
 	)
 }

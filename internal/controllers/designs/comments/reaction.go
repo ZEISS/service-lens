@@ -2,6 +2,7 @@ package comments
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	"github.com/zeiss/service-lens/internal/components/designs"
@@ -95,14 +96,10 @@ func (l *ReactionCommentControllerImpl) Delete() error {
 					Design:  design,
 					Comment: comment,
 				},
+				htmx.HxSwapOob(fmt.Sprintf("#reaction-%s", comment.ID)),
 			),
 		),
 	)
-}
-
-// Prepare ...
-func (l *ReactionCommentControllerImpl) Prepare() error {
-	return nil
 }
 
 // Post ...
@@ -151,25 +148,15 @@ func (l *ReactionCommentControllerImpl) Post() error {
 		return err
 	}
 
-	design := models.Design{
-		ID: params.ID,
-	}
-
-	err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetDesign(ctx, &design)
-	})
-	if err != nil {
-		return err
-	}
-
 	return l.Render(
 		htmx.Fragment(
 			designs.DesignCommentReactions(
 				designs.DesignCommentReactionsProps{
 					User:    l.Session().User,
-					Design:  design,
+					Design:  comment.Design,
 					Comment: comment,
 				},
+				htmx.HxSwapOob(fmt.Sprintf("#reaction-%s", comment.ID)),
 			),
 		),
 	)

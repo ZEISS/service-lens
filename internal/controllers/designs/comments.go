@@ -3,7 +3,9 @@ package designs
 import (
 	"context"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -33,6 +35,55 @@ func (l *CommentsControllerImpl) Error(err error) error {
 				toasts.ToastProps{},
 				htmx.Text(err.Error()),
 			),
+		),
+	)
+}
+
+// Post ...
+func (l *CommentsControllerImpl) Post() error {
+	validate = validator.New()
+
+	var params struct {
+		DesignID uuid.UUID `json:"id" params:"id" validate:"required,uuid"`
+		Comment  string    `json:"comment" validate:"required"`
+	}
+
+	err := l.BindBody(&params)
+	if err != nil {
+		return err
+	}
+
+	err = l.BindParams(&params)
+	if err != nil {
+		return err
+	}
+
+	err = validate.Struct(&params)
+	if err != nil {
+		return err
+	}
+
+	comment := models.DesignComment{
+		DesignID: params.DesignID,
+		Comment:  params.Comment,
+		AuthorID: l.Session().ID,
+		Author:   l.Session().User,
+	}
+
+	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+		return tx.CreateDesignComment(ctx, &comment)
+	})
+	if err != nil {
+		return err
+	}
+
+	return l.Render(
+		designs.DesignComment(
+			designs.DesignCommentProps{
+				Comment: comment,
+				User:    l.Session().User,
+				Design:  comment.Design,
+			},
 		),
 	)
 }
