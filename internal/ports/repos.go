@@ -147,4 +147,6 @@ type ReadWriteTx interface {
 	DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error
 	// UpdateWorkflowStateOrder is a method that updates workflow states
 	UpdateWorkflowStateOrder(ctx context.Context, workflowId uuid.UUID, states []int) error
+	// DeleteDesignComment is a method that deletes a design comment
+	DeleteDesignComment(ctx context.Context, comment *models.DesignComment) error
 }

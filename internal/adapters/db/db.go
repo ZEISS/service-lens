@@ -455,3 +455,8 @@ func (rw *writeTxImpl) UpdateWorkflowStateOrder(ctx context.Context, workflowId 
 
 	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.States).Error
 }
+
+// DeleteDesignComment ...
+func (rw *writeTxImpl) DeleteDesignComment(ctx context.Context, comment *models.DesignComment) error {
+	return rw.conn.Debug().Delete(comment, comment.ID).Error
+}

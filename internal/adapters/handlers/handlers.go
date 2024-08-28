@@ -543,3 +543,10 @@ func (a *handlers) RemoveTagDesign() fiber.Handler {
 		return designs.NewTagController(a.store)
 	})
 }
+
+// DeleteDesignComment ...
+func (a *handlers) DeleteDesignComment() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewCommentsController(a.store)
+	})
+}

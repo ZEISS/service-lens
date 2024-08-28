@@ -11,8 +11,10 @@ import (
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/fiber-htmx/components/tooltips"
+	"github.com/zeiss/fiber-htmx/components/typography"
 	"github.com/zeiss/pkg/cast"
 	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // DesignCommentProps ...
@@ -85,9 +87,23 @@ func DesignComment(props DesignCommentProps) htmx.Node {
 					dropdowns.DropdownMenuItems(
 						dropdowns.DropdownMenuItemsProps{
 							ClassNames: htmx.ClassNames{
-								tailwind.WFull: true,
+								tailwind.WFull: false,
+								"w-52":         false,
 							},
 						},
+						dropdowns.DropdownMenuItem(
+							dropdowns.DropdownMenuItemProps{},
+							htmx.A(
+								typography.Error(
+									typography.Props{},
+									htmx.Text("Delete"),
+								),
+								htmx.HxDelete(fmt.Sprintf(utils.DeleteDesignCommentUrlFormat, props.Design.ID, props.Comment.ID)),
+								htmx.HxTarget("closest .card"),
+								htmx.HxSwap("outerHTML"),
+								htmx.HxConfirm("Are you sure you want to delete this comment?"),
+							),
+						),
 					),
 				),
 			),
