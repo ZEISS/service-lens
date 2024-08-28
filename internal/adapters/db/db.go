@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"slices"
 
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -388,65 +389,44 @@ func (rw *writeTxImpl) CreateWorkflowState(ctx context.Context, state *models.Wo
 
 // DeleteWorkflowState is a method that deletes a workflow state
 func (rw *writeTxImpl) DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error {
-	return nil
-	// workflow := models.Workflow{}
+	err := rw.conn.Debug().Delete(state, state.ID).Error
+	if err != nil {
+		return err
+	}
 
-	// err := rw.conn.Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
-	// if err != nil {
-	// 	return err
-	// }
+	workflow := models.Workflow{}
+	err = rw.conn.Debug().Preload(clause.Associations).First(&workflow, state.WorkflowID).Error
+	if err != nil {
+		return err
+	}
 
-	// // var currentTransition int
-	// // var nextTransition int
-	// // for i := range workflow.Transitions {
-	// // 	if workflow.Transitions[i].CurrentStateID == state.ID {
-	// // 		currentTransition = i
-	// // 	}
+	slices.SortFunc(workflow.States, func(i, j models.WorkflowState) int {
+		return i.Order - j.Order
+	})
 
-	// // 	if workflow.Transitions[i].NextStateID == state.ID {
-	// // 		nextTransition = i
-	// // 	}
-	// // }
+	for i := range workflow.States {
+		workflow.States[i].Order = i
+	}
 
-	// // if nextTransition != 0 && workflow.Transitions[currentTransition].NextStateID != 0 {
-	// // 	workflow.Transitions[nextTransition].NextStateID = workflow.Transitions[currentTransition].NextStateID
-
-	// // 	err = rw.conn.Updates(&workflow.Transitions[nextTransition]).Error
-	// // 	if err != nil {
-	// // 		return err
-	// // 	}
-	// // }
-
-	// err = rw.conn.Delete(state, state.ID).Error
-	// if err != nil {
-	// 	return err
-	// }
-
-	// return rw.conn.Delete(&workflow.Transitions[currentTransition], workflow.Transitions[currentTransition].ID).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow).Error
 }
 
 // UpdateWorkflowTransitions is a method that updates workflow transitions
-func (rw *writeTxImpl) UpdateWorkflowTransitions(ctx context.Context, workflowId uuid.UUID, transitions []int) error {
-	// workflow := models.Workflow{}
+func (rw *writeTxImpl) UpdateWorkflowStateOrder(ctx context.Context, workflowId uuid.UUID, transitions []int) error {
+	workflow := models.Workflow{}
 
-	return nil
+	err := rw.conn.Preload(clause.Associations).First(&workflow, workflowId).Error
+	if err != nil {
+		return err
+	}
 
-	// err := rw.conn.Preload(clause.Associations).First(&workflow, workflowId).Error
-	// if err != nil {
-	// 	return err
-	// }
+	for i := range transitions {
+		for j := range workflow.States {
+			if workflow.States[j].ID == transitions[i] {
+				workflow.States[j].Order = i
+			}
+		}
+	}
 
-	// for i := len(transitions) - 1; i >= 0; i-- {
-	// 	for j := range workflow.Transitions {
-	// 		if workflow.Transitions[j].CurrentStateID == transitions[i] {
-	// 			if len(transitions)-1 == i {
-	// 				workflow.Transitions[j].NextStateID = 0
-	// 			} else {
-	// 				workflow.Transitions[j].NextStateID = transitions[i+1]
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.Transitions).Error
+	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Save(&workflow.States).Error
 }

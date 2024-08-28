@@ -141,6 +141,6 @@ type ReadWriteTx interface {
 	CreateWorkflowState(ctx context.Context, state *models.WorkflowState) error
 	// DeleteWorkflowState is a method that deletes a workflow state
 	DeleteWorkflowState(ctx context.Context, state *models.WorkflowState) error
-	// UpdateWorkflowTransitions is a method that updates workflow transitions
-	UpdateWorkflowTransitions(ctx context.Context, workflowId uuid.UUID, transistions []int) error
+	// UpdateWorkflowStateOrder is a method that updates workflow states
+	UpdateWorkflowStateOrder(ctx context.Context, workflowId uuid.UUID, states []int) error
 }

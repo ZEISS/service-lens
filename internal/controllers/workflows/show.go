@@ -6,7 +6,6 @@ import (
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/alerts"
-	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/loading"
@@ -169,9 +168,6 @@ func (p *WorkflowShowControllerImpl) Get() error {
     }
 })
 						`)),
-						alpine.XData(`{
-						
-            }`),
 						cards.Body(
 							cards.BodyProps{},
 							cards.Actions(
@@ -206,6 +202,9 @@ func (p *WorkflowShowControllerImpl) Get() error {
 									htmx.ForEach(p.workflow.GetStates(), func(state models.WorkflowState, idx int) htmx.Node {
 										return workflows.WorkflowStep(
 											workflows.WorkflowStepProps{
+												ClassNames: htmx.ClassNames{
+													tailwind.My2: true,
+												},
 												State:      state,
 												WorkflowID: p.workflow.ID,
 											},

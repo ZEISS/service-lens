@@ -15,6 +15,7 @@ import (
 
 // WorkflowStepProps ...
 type WorkflowStepProps struct {
+	ClassNames htmx.ClassNames
 	State      models.WorkflowState
 	WorkflowID uuid.UUID
 }
@@ -23,9 +24,12 @@ type WorkflowStepProps struct {
 func WorkflowStep(props WorkflowStepProps, children ...htmx.Node) htmx.Node {
 	return cards.CardBordered(
 		cards.CardProps{
-			ClassNames: htmx.ClassNames{
-				tailwind.CursorPointer: true,
-			},
+			ClassNames: htmx.Merge(
+				htmx.ClassNames{
+					tailwind.CursorPointer: true,
+				},
+				props.ClassNames,
+			),
 		},
 		htmx.Input(
 			htmx.Type("hidden"),
