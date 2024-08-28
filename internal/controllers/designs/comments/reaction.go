@@ -93,7 +93,7 @@ func (l *ReactionCommentControllerImpl) Delete() error {
 				designs.DesignCommentReactionsProps{
 					User:    l.Session().User,
 					Design:  design,
-					Comment: &comment,
+					Comment: comment,
 				},
 			),
 		),
@@ -168,7 +168,7 @@ func (l *ReactionCommentControllerImpl) Post() error {
 				designs.DesignCommentReactionsProps{
 					User:    l.Session().User,
 					Design:  design,
-					Comment: &comment,
+					Comment: comment,
 				},
 			),
 		),

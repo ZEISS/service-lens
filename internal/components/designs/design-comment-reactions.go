@@ -17,7 +17,7 @@ import (
 type DesignCommentReactionsProps struct {
 	User    adapters.GothUser
 	Design  models.Design
-	Comment *models.DesignComment
+	Comment models.DesignComment
 }
 
 // DesignCommentReactions ...

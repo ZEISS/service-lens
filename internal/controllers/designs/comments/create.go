@@ -4,10 +4,8 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/zeiss/fiber-htmx/components/avatars"
-	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/toasts"
-	"github.com/zeiss/pkg/cast"
+	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -83,27 +81,12 @@ func (l *CreateDesignCommentControllerImpl) Prepare() error {
 // Post ...
 func (l *CreateDesignCommentControllerImpl) Post() error {
 	return l.Render(
-		cards.CardBordered(
-			cards.CardProps{
-				ClassNames: htmx.ClassNames{
-					"my-4": true,
-				},
+		designs.DesignComment(
+			designs.DesignCommentProps{
+				Comment: l.Comment,
+				User:    l.Session().User,
+				Design:  l.Comment.Design,
 			},
-			cards.Body(
-				cards.BodyProps{},
-				htmx.Div(
-					htmx.Text(l.Comment.Comment),
-				),
-				cards.Actions(
-					cards.ActionsProps{},
-					avatars.AvatarRoundSmall(
-						avatars.AvatarProps{},
-						htmx.Img(
-							htmx.Attribute("src", cast.Value(l.Session().User.Image)),
-						),
-					),
-				),
-			),
 		),
 	)
 }
