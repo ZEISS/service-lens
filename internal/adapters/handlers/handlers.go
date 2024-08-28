@@ -529,3 +529,17 @@ func (a *handlers) SearchWorkflows() fiber.Handler {
 		return designs.NewSearchWorkflowsController(a.store)
 	})
 }
+
+// AddTagDesign ...
+func (a *handlers) AddTagDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewTagController(a.store)
+	})
+}
+
+// RemoveTagDesign ...
+func (a *handlers) RemoveTagDesign() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewTagController(a.store)
+	})
+}

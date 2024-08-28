@@ -87,6 +87,10 @@ type ReadWriteTx interface {
 	DeleteDesign(ctx context.Context, design *models.Design) error
 	// UpdateDesign is a method that updates a design
 	UpdateDesign(ctx context.Context, design *models.Design) error
+	// AddTagDesign is a method that adds a tag to a design
+	AddTagDesign(ctx context.Context, designId uuid.UUID, tag *models.Tag) error
+	// RemoveTagDesign is a method that removes a tag from a design
+	RemoveTagDesign(ctx context.Context, designId uuid.UUID, tag *models.Tag) error
 	// CreateDesignComment is a method that creates a design comment
 	CreateDesignComment(ctx context.Context, comment *models.DesignComment) error
 	// CreateProfile is a method that creates a profile

@@ -150,6 +150,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		designs.Get("/:id", handlers.ShowDesign())
 		designs.Put("/:id", handlers.UpdateDesign())
 		designs.Delete("/:id", handlers.DeleteDesign())
+		designs.Post("/:id/tags", handlers.AddTagDesign())
+		designs.Delete("/:id/tags/:tag_id", handlers.RemoveTagDesign())
 		designs.Post("/:id/comments", handlers.CreateDesignComment())
 		designs.Get("/:id/body/edit", handlers.EditBodyDesign())
 		designs.Put("/:id/body/edit", handlers.UpdateBodyDesign())

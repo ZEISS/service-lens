@@ -8,6 +8,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/forms"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/pkg/conv"
+	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -53,15 +54,10 @@ func (l *ShowControllerImpl) Get() error {
 						forms.FormControlProps{
 							ClassNames: htmx.ClassNames{},
 						},
-						forms.TextareaBordered(
-							forms.TextareaProps{
-								ClassNames: htmx.ClassNames{
-									"h-64": true,
-								},
-								Name:        "body",
-								Placeholder: "Start typing...",
+						designs.Editor(
+							designs.EditorProps{
+								Content: l.Design.Body,
 							},
-							htmx.Text(l.Design.Body),
 						),
 						forms.FormControlLabel(
 							forms.FormControlLabelProps{},
@@ -88,24 +84,4 @@ func (l *ShowControllerImpl) Get() error {
 			),
 		),
 	)
-	// 	cards.Actions(
-	// 		cards.ActionsProps{},
-	// 		links.Link(
-	// 			links.LinkProps{
-	// 				ClassNames: htmx.ClassNames{
-	// 					"btn":       true,
-	// 					"btn-ghost": true,
-	// 				},
-	// 				Href: fmt.Sprintf(utils.ShowDesigUrlFormat, l.Design.ID),
-	// 			},
-	// 			htmx.Text("Cancel"),
-	// 		),
-	// 		buttons.Button(
-	// 			buttons.ButtonProps{},
-	// 			htmx.Attribute("type", "submit"),
-	// 			htmx.Text("Update"),
-	// 		),
-	// 	),
-	// ),
-	// ),
 }

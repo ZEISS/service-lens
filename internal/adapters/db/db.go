@@ -4,14 +4,15 @@ import (
 	"context"
 	"slices"
 
-	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/tables"
-	seed "github.com/zeiss/gorm-seed"
-	"github.com/zeiss/pkg/cast"
+
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
+	"github.com/google/uuid"
 	"github.com/zeiss/fiber-goth/adapters"
+	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/cast"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -246,6 +247,30 @@ func (rw *writeTxImpl) UpdateDesign(ctx context.Context, design *models.Design) 
 	}
 
 	return rw.conn.Session(&gorm.Session{FullSaveAssociations: true}).Updates(design).Error
+}
+
+// AddTagDesign is a method that adds a tag to a design
+func (rw *writeTxImpl) AddTagDesign(ctx context.Context, designId uuid.UUID, tag *models.Tag) error {
+	design := models.Design{}
+
+	err := rw.conn.Debug().Preload(clause.Associations).First(&design, designId).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Debug().Model(&design).Association("Tags").Append(tag)
+}
+
+// RemoveTagDesign is a method that removes a tag from a design
+func (rw *writeTxImpl) RemoveTagDesign(ctx context.Context, designId uuid.UUID, tag *models.Tag) error {
+	design := models.Design{}
+
+	err := rw.conn.Debug().Preload(clause.Associations).First(&design, designId).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Debug().Model(&design).Association("Tags").Delete(tag)
 }
 
 // CreateDesignComment is a method that creates a design comment
