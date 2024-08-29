@@ -95,7 +95,7 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 						htmx.Href(utils.CreateWorkloadUrlFormat),
 						buttons.Button(
 							buttons.ButtonProps{},
-							htmx.Text("Create Workload"),
+							htmx.Text("Add Workload"),
 						),
 					),
 				),

@@ -3,17 +3,13 @@ package workloads
 import (
 	"context"
 
-	"github.com/zeiss/fiber-htmx/components/alpine"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/pkg/errorx"
-	"github.com/zeiss/pkg/slices"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -173,74 +169,13 @@ func (w *WorkloadNewControllerImpl) Get() error {
 										htmx.Text("Environment"),
 									),
 								),
-								dropdowns.Dropdown(
-									dropdowns.DropdownProps{},
-									alpine.XData(`{
-                      selected: {},
-                      onOptionClick(id, name) {
-                           this.selected = { id, name };
-                        },
-                    }`),
-									htmx.Div(
-										htmx.ClassNames{
-											tailwind.Flex:          true,
-											tailwind.SpaceX4:       true,
-											tailwind.JustifyCenter: true,
-										},
-										forms.TextInputBordered(
-											forms.TextInputProps{
-												Placeholder: "Search an environment ...",
-												Name:        "search",
-											},
-											alpine.XModel("selected.name"),
-											alpine.XRef("button"),
-											htmx.HxPost(utils.WorkloadSearchEnvironmentsUrlFormat),
-											htmx.HxTarget("#search-results"),
-											htmx.HxTrigger("keyup changed delay:500ms"),
-											htmx.HxIndicator(".htmx-indicator"),
-										),
-										loading.Spinner(
-											loading.SpinnerProps{
-												ClassNames: htmx.ClassNames{
-													"htmx-indicator": true,
-												},
-											},
-										),
-									),
-									htmx.Input(
-										htmx.Name("environment_id"),
-										htmx.Type("hidden"),
-										alpine.XModel("selected.id"),
-									),
-									dropdowns.DropdownMenuItems(
-										dropdowns.DropdownMenuItemsProps{
-											ClassNames: htmx.ClassNames{
-												tailwind.WFull: true,
-											},
-										},
-										htmx.ID("search-results"),
-										htmx.IfElse(
-											!slices.Size(0, environments.GetRows()),
-											htmx.Group(
-												htmx.ForEach(environments.GetRows(), func(e *models.Environment, idx int) htmx.Node {
-													return dropdowns.DropdownMenuItem(
-														dropdowns.DropdownMenuItemProps{},
-														htmx.A(
-															htmx.Text(e.Name),
-															htmx.Value(e.ID.String()),
-															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
-														),
-													)
-												})...,
-											),
-											dropdowns.DropdownMenuItem(
-												dropdowns.DropdownMenuItemProps{},
-												htmx.A(
-													htmx.Text("No environment found"),
-												),
-											),
-										),
-									),
+								forms.Datalist(
+									forms.DatalistProps{
+										ID:          "environments",
+										Name:        "environment",
+										Placeholder: "Search an environment ...",
+										URL:         utils.WorkloadSearchEnvironmentsUrlFormat,
+									},
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
@@ -263,74 +198,13 @@ func (w *WorkloadNewControllerImpl) Get() error {
 										htmx.Text("Profle"),
 									),
 								),
-								dropdowns.Dropdown(
-									dropdowns.DropdownProps{},
-									alpine.XData(`{
-                      selected: {},
-                      onOptionClick(id, name) {
-                           this.selected = { id, name };
-                        },
-                    }`),
-									htmx.Div(
-										htmx.ClassNames{
-											tailwind.Flex:          true,
-											tailwind.SpaceX4:       true,
-											tailwind.JustifyCenter: true,
-										},
-										forms.TextInputBordered(
-											forms.TextInputProps{
-												Placeholder: "Search a profile ...",
-												Name:        "search",
-											},
-											alpine.XModel("selected.name"),
-											alpine.XRef("button"),
-											htmx.HxPost(utils.WorkloadSearchProfilesUrlFormat),
-											htmx.HxTarget("#search-results"),
-											htmx.HxTrigger("keyup changed delay:500ms"),
-											htmx.HxIndicator(".htmx-indicator"),
-										),
-										loading.Spinner(
-											loading.SpinnerProps{
-												ClassNames: htmx.ClassNames{
-													"htmx-indicator": true,
-												},
-											},
-										),
-									),
-									htmx.Input(
-										htmx.Name("profile_id"),
-										htmx.Type("hidden"),
-										alpine.XModel("selected.id"),
-									),
-									dropdowns.DropdownMenuItems(
-										dropdowns.DropdownMenuItemsProps{
-											ClassNames: htmx.ClassNames{
-												tailwind.WFull: true,
-											},
-										},
-										htmx.ID("search-results"),
-										htmx.IfElse(
-											!slices.Size(0, profiles.GetRows()),
-											htmx.Group(
-												htmx.ForEach(profiles.GetRows(), func(e *models.Profile, idx int) htmx.Node {
-													return dropdowns.DropdownMenuItem(
-														dropdowns.DropdownMenuItemProps{},
-														htmx.A(
-															htmx.Text(e.Name),
-															htmx.Value(e.ID.String()),
-															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
-														),
-													)
-												})...,
-											),
-											dropdowns.DropdownMenuItem(
-												dropdowns.DropdownMenuItemProps{},
-												htmx.A(
-													htmx.Text("No profile found"),
-												),
-											),
-										),
-									),
+								forms.Datalist(
+									forms.DatalistProps{
+										ID:          "profiles",
+										Name:        "profile",
+										Placeholder: "Search a profile ...",
+										URL:         utils.WorkloadSearchProfilesUrlFormat,
+									},
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
@@ -353,74 +227,13 @@ func (w *WorkloadNewControllerImpl) Get() error {
 										htmx.Text("Lens"),
 									),
 								),
-								dropdowns.Dropdown(
-									dropdowns.DropdownProps{},
-									alpine.XData(`{
-                      selected: {},
-                      onOptionClick(id, name) {
-                           this.selected = { id, name };
-                        },
-                    }`),
-									htmx.Div(
-										htmx.ClassNames{
-											tailwind.Flex:          true,
-											tailwind.SpaceX4:       true,
-											tailwind.JustifyCenter: true,
-										},
-										forms.TextInputBordered(
-											forms.TextInputProps{
-												Placeholder: "Search a lens ...",
-												Name:        "search",
-											},
-											alpine.XModel("selected.name"),
-											alpine.XRef("button"),
-											htmx.HxPost(utils.WorkloadSearchLensesUrlFormat),
-											htmx.HxTarget("#search-results"),
-											htmx.HxTrigger("keyup changed delay:500ms"),
-											htmx.HxIndicator(".htmx-indicator"),
-										),
-										loading.Spinner(
-											loading.SpinnerProps{
-												ClassNames: htmx.ClassNames{
-													"htmx-indicator": true,
-												},
-											},
-										),
-									),
-									htmx.Input(
-										htmx.Name("lens_id"),
-										htmx.Type("hidden"),
-										alpine.XModel("selected.id"),
-									),
-									dropdowns.DropdownMenuItems(
-										dropdowns.DropdownMenuItemsProps{
-											ClassNames: htmx.ClassNames{
-												tailwind.WFull: true,
-											},
-										},
-										htmx.ID("search-results"),
-										htmx.IfElse(
-											!slices.Size(0, lenses.GetRows()),
-											htmx.Group(
-												htmx.ForEach(lenses.GetRows(), func(e *models.Lens, idx int) htmx.Node {
-													return dropdowns.DropdownMenuItem(
-														dropdowns.DropdownMenuItemProps{},
-														htmx.A(
-															htmx.Text(e.Name),
-															htmx.Value(e.ID.String()),
-															alpine.XOn("click", "onOptionClick($event.target.getAttribute('value'), $event.target.innerText)"),
-														),
-													)
-												})...,
-											),
-											dropdowns.DropdownMenuItem(
-												dropdowns.DropdownMenuItemProps{},
-												htmx.A(
-													htmx.Text("No lenses found"),
-												),
-											),
-										),
-									),
+								forms.Datalist(
+									forms.DatalistProps{
+										ID:          "lenses",
+										Name:        "lens",
+										Placeholder: "Search a lens ...",
+										URL:         utils.WorkloadSearchLensesUrlFormat,
+									},
 								),
 								forms.FormControlLabel(
 									forms.FormControlLabelProps{},
@@ -440,7 +253,7 @@ func (w *WorkloadNewControllerImpl) Get() error {
 									buttons.ButtonProps{
 										Type: "submit",
 									},
-									htmx.Text("Create Workload"),
+									htmx.Text("Add"),
 								),
 							),
 						),
