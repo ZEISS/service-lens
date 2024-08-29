@@ -52,4 +52,6 @@ const (
 	WorkloadSearchEnvironmentsUrlFormat  = "/workloads/search/environments"
 	WorkloadSearchLensesUrlFormat        = "/workloads/search/lenses"
 	WorkloadSearchProfilesUrlFormat      = "/workloads/search/profiles"
+	AddWorkloadTagUrlFormat              = "/workloads/%s/tags"
+	RemoveWorkloadTagUrlFormat           = "/workloads/%s/tags/%s"
 )

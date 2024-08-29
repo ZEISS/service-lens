@@ -267,6 +267,11 @@ func (rw *writeTxImpl) AddTagDesign(ctx context.Context, designId uuid.UUID, tag
 		return err
 	}
 
+	err = rw.conn.Debug().Where(&models.Tag{Name: tag.Name, Value: tag.Value}).FirstOrCreate(tag).Error
+	if err != nil {
+		return err
+	}
+
 	return rw.conn.Debug().Model(&design).Association("Tags").Append(tag)
 }
 
@@ -478,4 +483,33 @@ func (rw *writeTxImpl) PublishLens(ctx context.Context, lensID uuid.UUID) error 
 // UnpublishLens ...
 func (rw *writeTxImpl) UnpublishLens(ctx context.Context, lensID uuid.UUID) error {
 	return rw.conn.Debug().Model(&models.Lens{}).Where("id = ?", lensID).Update("is_draft", true).Error
+}
+
+// AddTagWorkload ...
+func (rw *writeTxImpl) AddTagWorkload(ctx context.Context, workloadId uuid.UUID, tag *models.Tag) error {
+	workload := models.Workload{}
+
+	err := rw.conn.Debug().Preload(clause.Associations).First(&workload, workloadId).Error
+	if err != nil {
+		return err
+	}
+
+	err = rw.conn.Debug().Where(&models.Tag{Name: tag.Name, Value: tag.Value}).FirstOrCreate(tag).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Debug().Model(&workload).Association("Tags").Append(tag)
+}
+
+// RemoveTagWorkload ...
+func (rw *writeTxImpl) RemoveTagWorkload(ctx context.Context, workloadId uuid.UUID, tag *models.Tag) error {
+	workload := models.Workload{}
+
+	err := rw.conn.Debug().Preload(clause.Associations).First(&workload, workloadId).Error
+	if err != nil {
+		return err
+	}
+
+	return rw.conn.Debug().Model(&workload).Association("Tags").Delete(tag)
 }

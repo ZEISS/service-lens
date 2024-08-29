@@ -121,6 +121,10 @@ type ReadWriteTx interface {
 	DeleteWorkload(ctx context.Context, workload *models.Workload) error
 	// UpdateWorkloadAnswer is a method that updates a workload answer
 	UpdateWorkloadAnswer(ctx context.Context, answer *models.WorkloadLensQuestionAnswer) error
+	// AddTagWorkload is a method that adds a tag to a workload
+	AddTagWorkload(ctx context.Context, workloadId uuid.UUID, tag *models.Tag) error
+	// RemoveTagWorkload is a method that removes a tag from a workload
+	RemoveTagWorkload(ctx context.Context, workloadId uuid.UUID, tag *models.Tag) error
 	// CreateTag is a method that creates a tag
 	CreateTag(ctx context.Context, tag *models.Tag) error
 	// UpdateTag is a method that updates a tag

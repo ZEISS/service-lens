@@ -125,6 +125,11 @@ func (w *WorkloadShowControllerImpl) Get() error {
 							Workload: w.workload,
 						},
 					),
+					workloads.WorkloadTagsCard(
+						workloads.WorkloadTagsCardProps{
+							Workload: w.workload,
+						},
+					),
 					workloads.WorkloadProfileCard(
 						workloads.WorkloadProfileCardProps{
 							Workload: w.workload,

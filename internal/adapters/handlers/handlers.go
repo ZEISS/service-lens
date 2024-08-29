@@ -570,3 +570,17 @@ func (a *handlers) UnpublishLens() fiber.Handler {
 		return lenses.NewLensPublishController(a.store)
 	})
 }
+
+// AddTagWorkload ...
+func (a *handlers) AddTagWorkload() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workloads.NewTagController(a.store)
+	})
+}
+
+// RemoveTagWorkload ...
+func (a *handlers) RemoveTagWorkload() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workloads.NewTagController(a.store)
+	})
+}

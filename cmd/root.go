@@ -205,6 +205,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		workloads.Get("/:id", handlers.ShowWorkload())
 		workloads.Get("/:id/edit", handlers.EditWorkload())
 		workloads.Post("/:id/edit", handlers.EditWorkload())
+		workloads.Post("/:id/tags", handlers.AddTagWorkload())
+		workloads.Delete("/:id/tags/:tag_id", handlers.RemoveTagWorkload())
 		// app.Put("/workloads/:id", handlers.UpdateWorkload())
 		workloads.Delete("/:id", handlers.DeleteWorkload())
 		workloads.Get("/partials/environments", handlers.ListEnvironmentsPartial())
