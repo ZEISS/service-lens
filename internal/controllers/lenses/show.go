@@ -7,6 +7,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/components"
@@ -57,7 +58,7 @@ func (l *LensShowControllerImpl) Get() error {
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
-								"m-2": true,
+								tailwind.M2: true,
 							},
 						},
 						cards.Body(
@@ -114,31 +115,19 @@ func (l *LensShowControllerImpl) Get() error {
 									htmx.Text(l.lens.Description),
 								),
 							),
-							htmx.Div(
-								htmx.ClassNames{
-									"flex":     true,
-									"flex-col": true,
-									"py-2":     true,
+							lenses.LensesStatus(
+								lenses.LensesStatusProps{
+									IsDraft: l.lens.IsDraft,
 								},
-								htmx.H4(
-									htmx.ClassNames{
-										"text-gray-500": true,
-									},
-									htmx.Text("Status"),
-								),
-								htmx.H3(
-									htmx.IfElse(l.lens.IsDraft, htmx.Text("Draft"), htmx.Text("Published")),
-								),
+								htmx.ID("status"),
 							),
 							cards.Actions(
 								cards.ActionsProps{},
-								htmx.If(
-									l.lens.IsDraft,
-									buttons.Button(
-										buttons.ButtonProps{},
-										htmx.HxConfirm("Are you sure you want to publish this lens?"),
-										htmx.Text("Publish"),
-									),
+								lenses.LensesPublishButton(
+									lenses.LensesPublishButtonProps{
+										ID:      l.lens.ID,
+										IsDraft: l.lens.IsDraft,
+									},
 								),
 								buttons.Button(
 									buttons.ButtonProps{},

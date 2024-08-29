@@ -151,4 +151,8 @@ type ReadWriteTx interface {
 	UpdateWorkflowStateOrder(ctx context.Context, workflowId uuid.UUID, states []int) error
 	// DeleteDesignComment is a method that deletes a design comment
 	DeleteDesignComment(ctx context.Context, comment *models.DesignComment) error
+	// PublishLens is a method that publishes a lens
+	PublishLens(ctx context.Context, lensID uuid.UUID) error
+	// UnpublishLens is a method that unpublishes a lens
+	UnpublishLens(ctx context.Context, lensID uuid.UUID) error
 }

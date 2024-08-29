@@ -63,6 +63,8 @@ func (l *NewLensControllerImpl) Post() error {
 		return err
 	}
 
+	lens.IsDraft = true // first draft the
+
 	err = l.store.ReadWriteTx(l.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
 		return tx.CreateLens(ctx, &lens)
 	})

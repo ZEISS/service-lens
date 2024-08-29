@@ -191,6 +191,8 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		lenses.Get("/:id/edit", handlers.EditLens())
 		lenses.Put("/:id", handlers.UpdateLens())
 		lenses.Delete("/:id", handlers.DeleteLens())
+		lenses.Post("/:id/publish", handlers.PublishLens())
+		lenses.Delete("/:id/publish", handlers.UnpublishLens())
 
 		// Workloads ...
 		workloads := app.Group("/workloads")

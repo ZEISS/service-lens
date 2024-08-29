@@ -556,3 +556,17 @@ func (a *handlers) ListDesignRevisions() fiber.Handler {
 		return designs.NewRevisionController(a.store)
 	})
 }
+
+// PublishLens ...
+func (a *handlers) PublishLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensPublishController(a.store)
+	})
+}
+
+// UnpublishLens ...
+func (a *handlers) UnpublishLens() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return lenses.NewLensPublishController(a.store)
+	})
+}

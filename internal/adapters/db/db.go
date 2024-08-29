@@ -469,3 +469,13 @@ func (rw *writeTxImpl) UpdateWorkflowStateOrder(ctx context.Context, workflowId 
 func (rw *writeTxImpl) DeleteDesignComment(ctx context.Context, comment *models.DesignComment) error {
 	return rw.conn.Debug().Delete(comment, comment.ID).Error
 }
+
+// PublishLens ...
+func (rw *writeTxImpl) PublishLens(ctx context.Context, lensID uuid.UUID) error {
+	return rw.conn.Debug().Model(&models.Lens{}).Where("id = ?", lensID).Update("is_draft", false).Error
+}
+
+// UnpublishLens ...
+func (rw *writeTxImpl) UnpublishLens(ctx context.Context, lensID uuid.UUID) error {
+	return rw.conn.Debug().Model(&models.Lens{}).Where("id = ?", lensID).Update("is_draft", true).Error
+}
