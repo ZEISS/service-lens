@@ -4,7 +4,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/modals"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -19,20 +18,14 @@ func NewLensModal(props NewLensModalProps) htmx.Node {
 		modals.ModalProps{
 			ID: "new_lens_modal",
 		},
-		htmx.H2(
-			htmx.ClassNames{
-				"text-xl":         true,
-				tailwind.Mb2:      true,
-				tailwind.FontBold: true,
-			},
-			htmx.Text("New Lens"),
-		),
 		htmx.FormElement(
 			htmx.ID("new-lens-form"),
 			htmx.HxEncoding("multipart/form-data"),
+			htmx.HxTrigger("submit"),
 			htmx.HxPost(utils.CreateLensUrlFormat),
-			htmx.HxIndicator(".htmx-indicator"),
 			htmx.HxDisabledElt("find button, find input"),
+			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
+			htmx.HxSwap("none"),
 			htmx.Div(
 				forms.FormControl(
 					forms.FormControlProps{},
@@ -48,7 +41,11 @@ func NewLensModal(props NewLensModalProps) htmx.Node {
 						),
 					),
 					forms.FileInputBordered(
-						forms.FileInputProps{},
+						forms.FileInputProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.MaxWXs: false,
+							},
+						},
 						htmx.Attribute("name", "spec"),
 					),
 					forms.FormControlLabel(
@@ -70,14 +67,7 @@ func NewLensModal(props NewLensModalProps) htmx.Node {
 					buttons.ButtonProps{
 						Type: "submit",
 					},
-					loading.Spinner(
-						loading.SpinnerProps{
-							ClassNames: htmx.ClassNames{
-								"htmx-indicator": true,
-							},
-						},
-					),
-					htmx.Text("Create Lens"),
+					htmx.Text("Add Lens"),
 				),
 			),
 		),

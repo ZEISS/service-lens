@@ -13,6 +13,7 @@ const (
 	CreateWorkloadUrlFormat              = "/workloads/new"
 	AddDesignTagUrlFormat                = "/designs/%s/tags"
 	RemoveDesignTagUrlFormat             = "/designs/%s/tags/%s"
+	ListDesignRevisionsUrlFormat         = "/designs/%s/revisions"
 	DeleteDesignCommentUrlFormat         = "/designs/%s/comments/%s"
 	UpdateWorkflowStepUrlFormat          = "/workflows/%s/steps"
 	SearchWorkflowsUrlFormat             = "/designs/search/workflows"

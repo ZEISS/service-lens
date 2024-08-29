@@ -70,8 +70,6 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 							"flex":            true,
 							"items-center":    true,
 							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
 						},
 					},
 					htmx.Div(

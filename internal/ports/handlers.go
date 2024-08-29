@@ -146,4 +146,6 @@ type Handlers interface {
 	RemoveTagDesign() fiber.Handler
 	// DeleteDesignComment ...
 	DeleteDesignComment() fiber.Handler
+	// ListDesignRevisions ...
+	ListDesignRevisions() fiber.Handler
 }

@@ -71,8 +71,6 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 							"flex":            true,
 							"items-center":    true,
 							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
 						},
 					},
 					htmx.Div(

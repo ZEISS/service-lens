@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workflows"
 	"github.com/zeiss/service-lens/internal/models"
@@ -18,25 +20,15 @@ var _ = htmx.Controller(&ListWorkflowsControllerImpl{})
 
 // ListWorkflowsControllerImpl ...
 type ListWorkflowsControllerImpl struct {
-	results tables.Results[models.Workflow]
-	store   seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewListWorkflowsController ...
 func NewListWorkflowsController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *ListWorkflowsControllerImpl {
-	return &ListWorkflowsControllerImpl{store: store}
-}
-
-// Prepare ...
-func (l *ListWorkflowsControllerImpl) Prepare() error {
-	if err := l.BindQuery(&l.results); err != nil {
-		return err
+	return &ListWorkflowsControllerImpl{
+		store: store,
 	}
-
-	return l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListWorkflows(ctx, &l.results)
-	})
 }
 
 // Prepare ...
@@ -49,20 +41,28 @@ func (l *ListWorkflowsControllerImpl) Get() error {
 				Development: l.IsDevelopment(),
 			},
 			func() htmx.Node {
+				results := tables.Results[models.Workflow]{SearchFields: []string{"Name"}}
+
+				errorx.Panic(l.BindQuery(&results))
+				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListWorkflows(ctx, &results)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"m-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(
 						cards.BodyProps{},
 						workflows.WorkflowsTable(
 							workflows.WorkflowsTableProps{
-								Workflows: l.results.GetRows(),
-								Offset:    l.results.GetOffset(),
-								Limit:     l.results.GetLimit(),
-								Total:     l.results.GetLen(),
+								Workflows: results.GetRows(),
+								Offset:    results.GetOffset(),
+								Limit:     results.GetLimit(),
+								Total:     results.GetLen(),
+								URL:       l.OriginalURL(),
 							},
 						),
 					),

@@ -114,8 +114,32 @@ func (l *LensShowControllerImpl) Get() error {
 									htmx.Text(l.lens.Description),
 								),
 							),
+							htmx.Div(
+								htmx.ClassNames{
+									"flex":     true,
+									"flex-col": true,
+									"py-2":     true,
+								},
+								htmx.H4(
+									htmx.ClassNames{
+										"text-gray-500": true,
+									},
+									htmx.Text("Status"),
+								),
+								htmx.H3(
+									htmx.IfElse(l.lens.IsDraft, htmx.Text("Draft"), htmx.Text("Published")),
+								),
+							),
 							cards.Actions(
 								cards.ActionsProps{},
+								htmx.If(
+									l.lens.IsDraft,
+									buttons.Button(
+										buttons.ButtonProps{},
+										htmx.HxConfirm("Are you sure you want to publish this lens?"),
+										htmx.Text("Publish"),
+									),
+								),
 								buttons.Button(
 									buttons.ButtonProps{},
 									htmx.HxDelete(fmt.Sprintf(utils.DeleteLensUrlFormat, l.lens.ID)),

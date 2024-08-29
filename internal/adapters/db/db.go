@@ -176,6 +176,11 @@ func (r *readTxImpl) ListDesignCommentReactions(ctx context.Context, comment *mo
 	return r.conn.Preload("Reactions").Preload("Reactions.Reactor").First(comment, comment.ID).Error
 }
 
+// ListDesignRevisions is a method that returns a list of design revisions
+func (r *readTxImpl) ListDesignRevisions(ctx context.Context, designID uuid.UUID, pagination *tables.Results[models.DesignRevision]) error {
+	return r.conn.Where("design_id = ?", designID).Find(&pagination.Rows).Error
+}
+
 type writeTxImpl struct {
 	conn *gorm.DB
 	readTxImpl

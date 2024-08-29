@@ -550,3 +550,10 @@ func (a *handlers) DeleteDesignComment() fiber.Handler {
 		return designs.NewCommentsController(a.store)
 	})
 }
+
+// ListDesignRevisions ...
+func (a *handlers) ListDesignRevisions() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewRevisionController(a.store)
+	})
+}

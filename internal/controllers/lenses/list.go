@@ -63,6 +63,7 @@ func (w *LensListController) Get() error {
 								Offset: w.lenses.GetOffset(),
 								Limit:  w.lenses.GetLimit(),
 								Total:  w.lenses.GetTotalRows(),
+								URL:    w.OriginalURL(),
 							},
 						),
 					),

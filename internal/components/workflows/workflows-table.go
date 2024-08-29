@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -16,6 +15,7 @@ import (
 
 // WorkflowsTableProps ...
 type WorkflowsTableProps struct {
+	URL       string
 	Workflows []*models.Workflow
 	Offset    int
 	Limit     int
@@ -38,7 +38,7 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/workflows",
+								URL:    props.URL,
 							},
 						),
 
@@ -48,7 +48,7 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/workflows",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -56,7 +56,7 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/workflows",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -67,8 +67,6 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 							"flex":            true,
 							"items-center":    true,
 							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
 						},
 					},
 					htmx.Div(
@@ -77,9 +75,11 @@ func WorkflowsTable(props WorkflowsTableProps, children ...htmx.Node) htmx.Node 
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),

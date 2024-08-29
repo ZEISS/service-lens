@@ -16,6 +16,7 @@ import (
 // LensesTableProps ...
 type LensesTableProps struct {
 	Lenses []*models.Lens
+	URL    string
 	Offset int
 	Limit  int
 	Total  int
@@ -31,17 +32,13 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/lenses",
+								URL:    props.URL,
 							},
 						),
 
@@ -51,7 +48,7 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/lenses",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -59,7 +56,7 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/lenses",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -70,8 +67,6 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							"flex":            true,
 							"items-center":    true,
 							"justify-between": true,
-							"px-5":            true,
-							"pt-5":            true,
 						},
 					},
 					htmx.Div(
@@ -80,9 +75,11 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),
@@ -92,7 +89,7 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 					buttons.Button(
 						buttons.ButtonProps{},
 						htmx.OnClick("new_lens_modal.showModal()"),
-						htmx.Text("Create Lens"),
+						htmx.Text("Add Lens"),
 					),
 				),
 			},

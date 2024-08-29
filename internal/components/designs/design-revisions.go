@@ -1,11 +1,15 @@
 package designs
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/collapsible"
+	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 // DesignRevisionsCardProps ...
@@ -29,14 +33,29 @@ func DesignRevisionsCard(props DesignRevisionsCardProps) htmx.Node {
 			cards.BodyProps{},
 			collapsible.CollapseArrow(
 				collapsible.CollapseProps{},
-				// htmx.HxTrigger("click once"),
-				// htmx.HxGet("/designs/"+props.DesignID.String()+"/revisions"),
+				htmx.HxTrigger("click once"),
+				htmx.HxGet(fmt.Sprintf(utils.ListDesignRevisionsUrlFormat, props.DesignID)),
+				htmx.HxTarget(".collapse-content"),
+				htmx.HxIndicator("find .htmx-indicator"),
 				collapsible.CollapseCheckbox(
 					collapsible.CollapseCheckboxProps{},
 				),
 				collapsible.CollapseTitle(
-					collapsible.CollapseTitleProps{},
+					collapsible.CollapseTitleProps{
+						ClassNames: htmx.ClassNames{
+							tailwind.Flex:        true,
+							tailwind.ItemsCenter: true,
+						},
+					},
 					htmx.Text("Revisions"),
+					loading.SpinnerSmall(
+						loading.SpinnerProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.Mx2:     true,
+								"htmx-indicator": true,
+							},
+						},
+					),
 				),
 				collapsible.CollapseContent(
 					collapsible.CollapseContentProps{},

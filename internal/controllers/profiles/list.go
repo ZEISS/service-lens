@@ -12,6 +12,7 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // ProfileListControllerImpl ...
@@ -50,7 +51,7 @@ func (w *ProfileListControllerImpl) Get() error {
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"m-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(
@@ -61,6 +62,7 @@ func (w *ProfileListControllerImpl) Get() error {
 								Offset:   w.profiles.GetOffset(),
 								Limit:    w.profiles.GetLimit(),
 								Total:    w.profiles.GetTotalRows(),
+								URL:      w.OriginalURL(),
 							},
 						),
 					),
