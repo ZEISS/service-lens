@@ -87,7 +87,7 @@ func ProfilesTable(props ProfilesTableProps, children ...htmx.Node) htmx.Node {
 						htmx.Href(utils.CreateProfileUrlFormat),
 						buttons.Button(
 							buttons.ButtonProps{},
-							htmx.Text("Create Profile"),
+							htmx.Text("Add Profile"),
 						),
 					),
 				),

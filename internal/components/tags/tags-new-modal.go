@@ -19,7 +19,12 @@ func NewTagModal() htmx.Node {
 			ID: "new_tag_modal",
 		},
 		htmx.FormElement(
+			htmx.ID("new-tag-form"),
+			htmx.HxTrigger("submit"),
 			htmx.HxPost(utils.CreateTagUrlFormat),
+			htmx.HxDisabledElt("find button, find input"),
+			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
+			htmx.HxSwap("none"),
 			forms.FormControl(
 				forms.FormControlProps{
 					ClassNames: htmx.ClassNames{},
@@ -68,11 +73,19 @@ func NewTagModal() htmx.Node {
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
+				buttons.Ghost(
+					buttons.ButtonProps{
+						Type: "button",
+					},
+					htmx.Text("Cancel"),
+					htmx.Attribute("formnovalidate", ""),
+					htmx.OnClick("event.target.closest('dialog').close()"),
+				),
 				buttons.Button(
 					buttons.ButtonProps{
 						Type: "submit",
 					},
-					htmx.Text("Create"),
+					htmx.Text("Add"),
 				),
 			),
 		),

@@ -63,6 +63,14 @@ func NewLensModal(props NewLensModalProps) htmx.Node {
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
+				buttons.Ghost(
+					buttons.ButtonProps{
+						Type: "button",
+					},
+					htmx.Text("Cancel"),
+					htmx.Attribute("formnovalidate", ""),
+					htmx.OnClick("event.target.closest('dialog').close()"),
+				),
 				buttons.Button(
 					buttons.ButtonProps{
 						Type: "submit",

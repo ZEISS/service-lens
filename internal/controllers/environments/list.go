@@ -4,6 +4,7 @@ import (
 	"context"
 
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/environments"
 	"github.com/zeiss/service-lens/internal/models"
@@ -12,12 +13,12 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // EnvironmentListControllerImpl ...
 type EnvironmentListControllerImpl struct {
-	environments tables.Results[models.Environment]
-	store        seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.UnimplementedController
 }
 
@@ -28,44 +29,39 @@ func NewEnvironmentListController(store seed.Database[ports.ReadTx, ports.ReadWr
 	}
 }
 
-// Prepare ...
-func (w *EnvironmentListControllerImpl) Prepare() error {
-	err := w.BindQuery(&w.environments)
-	if err != nil {
-		return err
-	}
-
-	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListEnvironments(ctx, &w.environments)
-	})
-}
-
 // Get ...
-func (w *EnvironmentListControllerImpl) Get() error {
-	return w.Render(
+func (c *EnvironmentListControllerImpl) Get() error {
+	return c.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
 				Title:       "Environments",
-				Path:        w.Path(),
-				User:        w.Session().User,
-				Development: w.IsDevelopment(),
+				Path:        c.Path(),
+				User:        c.Session().User,
+				Development: c.IsDevelopment(),
 			},
 			func() htmx.Node {
+				results := tables.Results[models.Environment]{SearchFields: []string{"Name"}}
+
+				errorx.Panic(c.BindQuery(&results))
+				errorx.Panic(c.store.ReadTx(c.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListEnvironments(ctx, &results)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"my-2": true,
-							"mx-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(
 						cards.BodyProps{},
 						environments.EnvironmentsTable(
 							environments.EnvironmentsTableProps{
-								Environments: w.environments.GetRows(),
-								Offset:       w.environments.GetOffset(),
-								Limit:        w.environments.GetLimit(),
-								Total:        w.environments.GetLen(),
+								Environments: results.GetRows(),
+								Offset:       results.GetOffset(),
+								Limit:        results.GetLimit(),
+								Total:        results.GetLen(),
+								URL:          c.OriginalURL(),
 							},
 						),
 					),

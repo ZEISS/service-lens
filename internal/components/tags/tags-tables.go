@@ -5,9 +5,7 @@ import (
 	"time"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/badges"
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/service-lens/internal/models"
@@ -16,6 +14,7 @@ import (
 
 // TagsTableProps ...
 type TagsTableProps struct {
+	URL    string
 	Tags   []*models.Tag
 	Offset int
 	Limit  int
@@ -32,17 +31,13 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
 
@@ -52,7 +47,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -60,7 +55,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/designs",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -79,9 +74,11 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),
@@ -89,7 +86,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 					buttons.Button(
 						buttons.ButtonProps{},
 						htmx.OnClick("new_tag_modal.showModal()"),
-						htmx.Text("Create Tag"),
+						htmx.Text("Add Tag"),
 					),
 				),
 			},
@@ -101,12 +98,7 @@ func TagsTable(props TagsTableProps, children ...htmx.Node) htmx.Node {
 						return htmx.Th(htmx.Text("Name"))
 					},
 					Cell: func(p tables.TableProps, row *models.Tag) htmx.Node {
-						return htmx.Td(
-							badges.Primary(
-								badges.BadgeProps{},
-								htmx.Text(row.Name),
-							),
-						)
+						return htmx.Td(htmx.Text(row.Name))
 					},
 				},
 				{

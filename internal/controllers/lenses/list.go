@@ -4,6 +4,7 @@ import (
 	"context"
 
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/lenses"
 	"github.com/zeiss/service-lens/internal/models"
@@ -17,8 +18,7 @@ import (
 
 // LensListController ...
 type LensListController struct {
-	lenses tables.Results[models.Lens]
-	store  seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
@@ -27,28 +27,23 @@ func NewLensListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 	return &LensListController{store: store}
 }
 
-// Prepare ...
-func (w *LensListController) Prepare() error {
-	err := w.BindQuery(&w.lenses)
-	if err != nil {
-		return err
-	}
-
-	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListLenses(ctx, &w.lenses)
-	})
-}
-
 // Get ...
-func (w *LensListController) Get() error {
-	return w.Render(
+func (c *LensListController) Get() error {
+	return c.Render(
 		components.DefaultLayout(
 			components.DefaultLayoutProps{
-				Path:        w.Path(),
-				User:        w.Session().User,
-				Development: w.IsDevelopment(),
+				Path:        c.Path(),
+				User:        c.Session().User,
+				Development: c.IsDevelopment(),
 			},
 			func() htmx.Node {
+				results := tables.Results[models.Lens]{SearchFields: []string{"Name"}}
+
+				errorx.Panic(c.BindQuery(&results))
+				errorx.Panic(c.store.ReadTx(c.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListLenses(ctx, &results)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
@@ -59,11 +54,11 @@ func (w *LensListController) Get() error {
 						cards.BodyProps{},
 						lenses.LensesTable(
 							lenses.LensesTableProps{
-								Lenses: w.lenses.GetRows(),
-								Offset: w.lenses.GetOffset(),
-								Limit:  w.lenses.GetLimit(),
-								Total:  w.lenses.GetTotalRows(),
-								URL:    w.OriginalURL(),
+								Lenses: results.GetRows(),
+								Offset: results.GetOffset(),
+								Limit:  results.GetLimit(),
+								Total:  results.GetTotalRows(),
+								URL:    c.OriginalURL(),
 							},
 						),
 					),

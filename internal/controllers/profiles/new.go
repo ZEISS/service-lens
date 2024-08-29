@@ -97,7 +97,7 @@ func (p *NewProfileControllerImpl) Get() error {
 							cards.BodyProps{},
 							cards.Title(
 								cards.TitleProps{},
-								htmx.Text("Create Profile"),
+								htmx.Text("Add Profile"),
 							),
 							forms.FormControl(
 								forms.FormControlProps{},
@@ -156,7 +156,7 @@ func (p *NewProfileControllerImpl) Get() error {
 										buttons.Button(
 											buttons.ButtonProps{},
 											htmx.Attribute("type", "submit"),
-											htmx.Text("Create Profile"),
+											htmx.Text("Add"),
 										),
 									),
 								),

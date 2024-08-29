@@ -5,7 +5,6 @@ import (
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -15,6 +14,7 @@ import (
 
 // EnvironmentsTableProps ...
 type EnvironmentsTableProps struct {
+	URL          string
 	Environments []*models.Environment
 	Offset       int
 	Limit        int
@@ -31,17 +31,13 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/environments",
+								URL:    props.URL,
 							},
 						),
 
@@ -51,7 +47,7 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/environments",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -59,7 +55,7 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/environments",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -78,9 +74,11 @@ func EnvironmentsTable(props EnvironmentsTableProps, children ...htmx.Node) htmx
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),

@@ -81,7 +81,7 @@ func (r *readTxImpl) GetProfile(ctx context.Context, profile *models.Profile) er
 
 // ListLenses is a method that returns a list of lenses
 func (r *readTxImpl) ListLenses(ctx context.Context, pagination *tables.Results[models.Lens]) error {
-	return r.conn.Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
+	return r.conn.Debug().Scopes(tables.PaginatedResults(&pagination.Rows, pagination, r.conn)).Find(&pagination.Rows).Error
 }
 
 // GetLens is a method that returns a lens by ID

@@ -75,7 +75,7 @@ func AddTagModal(props AddTagModalProps) htmx.Node {
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
-				buttons.Button(
+				buttons.Ghost(
 					buttons.ButtonProps{
 						Type: "button",
 					},

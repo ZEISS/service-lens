@@ -76,7 +76,7 @@ func NewStepModal(props NewStepModalProps) htmx.Node {
 			),
 			modals.ModalAction(
 				modals.ModalActionProps{},
-				buttons.Button(
+				buttons.Ghost(
 					buttons.ButtonProps{
 						Type: "button",
 					},

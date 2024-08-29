@@ -9,6 +9,7 @@ import (
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
+	"github.com/zeiss/service-lens/internal/utils"
 )
 
 var validate *validator.Validate
@@ -58,7 +59,12 @@ func (t *NewTagControllerImpl) Post() error {
 		Value: t.Value,
 	}
 
-	return t.store.ReadWriteTx(t.Context(), func(ctx context.Context, w ports.ReadWriteTx) error {
+	err := t.store.ReadWriteTx(t.Context(), func(ctx context.Context, w ports.ReadWriteTx) error {
 		return w.CreateTag(ctx, &tag)
 	})
+	if err != nil {
+		return err
+	}
+
+	return t.Redirect(utils.ListTagsUrlFormat)
 }
