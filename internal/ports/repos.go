@@ -77,6 +77,8 @@ type ReadTx interface {
 	GetDesignComment(ctx context.Context, comment *models.DesignComment) error
 	// ListDesignRevisions is a method that returns a list of design revisions
 	ListDesignRevisions(ctx context.Context, designID uuid.UUID, revisions *tables.Results[models.DesignRevision]) error
+	// ListLensAnswers is a method that returns a list of lens answers
+	ListLensAnswers(ctx context.Context, lensID uuid.UUID, answers *[]models.WorkloadLensQuestionAnswer) error
 }
 
 // ReadWriteTx provides methods for transactional read and write operations.

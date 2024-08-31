@@ -9,6 +9,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/service-lens/internal/builders"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
@@ -39,7 +40,7 @@ func (w *WorkloadLensController) Prepare() error {
 		return err
 	}
 
-	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+	err = w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		if err := tx.GetWorkload(ctx, &w.workload); err != nil {
 			return err
 		}
@@ -52,6 +53,21 @@ func (w *WorkloadLensController) Prepare() error {
 
 		return tx.GetLens(ctx, &w.lens)
 	})
+	if err != nil {
+		return err
+	}
+
+	answers := make([]models.WorkloadLensQuestionAnswer, 0)
+
+	err = w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+		return tx.ListLensAnswers(ctx, w.lens.ID, &answers)
+	})
+	if err != nil {
+		return err
+	}
+
+	b := builders.NewStatisticsBuilder(w.lens, answers)
+	return b.Build()
 }
 
 // Get ...

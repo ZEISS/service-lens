@@ -3,6 +3,10 @@ package designs
 import (
 	"fmt"
 
+	"github.com/zeiss/service-lens/internal/builders"
+	"github.com/zeiss/service-lens/internal/models"
+	"github.com/zeiss/service-lens/internal/utils"
+
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
@@ -15,18 +19,20 @@ import (
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/pkg/conv"
-	"github.com/zeiss/service-lens/internal/builder"
-	"github.com/zeiss/service-lens/internal/models"
-	"github.com/zeiss/service-lens/internal/utils"
+
 	"go.abhg.dev/goldmark/mermaid"
 )
 
 // DesignBodyCardProps ...
 type DesignBodyCardProps struct {
+	// ClassNames ...
 	ClassNames htmx.ClassNames
-	User       adapters.GothUser
-	Design     models.Design
-	Markdown   string
+	// Design ...
+	Design models.Design
+	// Markdown ...
+	Markdown string
+	// User ...
+	User adapters.GothUser
 }
 
 // DesignBodyCard ...
@@ -48,7 +54,7 @@ func DesignBodyCard(props DesignBodyCardProps) htmx.Node {
 					goldmark.WithRendererOptions(
 						html.WithXHTML(),
 						html.WithUnsafe(),
-						renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
+						renderer.WithNodeRenderers(util.Prioritized(builders.NewMarkdownBuilder(), 1)),
 					),
 					goldmark.WithExtensions(
 						extension.GFM,

@@ -14,7 +14,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/pkg/conv"
-	"github.com/zeiss/service-lens/internal/builder"
+	"github.com/zeiss/service-lens/internal/builders"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -72,7 +72,7 @@ func (l *UpdateControllerImpl) Prepare() error {
 			goldmark.WithRendererOptions(
 				html.WithXHTML(),
 				html.WithUnsafe(),
-				renderer.WithNodeRenderers(util.Prioritized(builder.NewMarkdownBuilder(), 1)),
+				renderer.WithNodeRenderers(util.Prioritized(builders.NewMarkdownBuilder(), 1)),
 			),
 			goldmark.WithExtensions(
 				extension.GFM,

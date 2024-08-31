@@ -87,8 +87,11 @@ func (r *readTxImpl) ListLenses(ctx context.Context, pagination *tables.Results[
 // GetLens is a method that returns a lens by ID
 func (r *readTxImpl) GetLens(ctx context.Context, lens *models.Lens) error {
 	return r.conn.
+		Preload(clause.Associations).
 		Preload("Pillars").
 		Preload("Pillars.Questions").
+		Preload("Pillars.Questions.Choices").
+		Preload("Pillars.Questions.Risks").
 		First(lens).Error
 }
 
@@ -179,6 +182,15 @@ func (r *readTxImpl) ListDesignCommentReactions(ctx context.Context, comment *mo
 // ListDesignRevisions is a method that returns a list of design revisions
 func (r *readTxImpl) ListDesignRevisions(ctx context.Context, designID uuid.UUID, pagination *tables.Results[models.DesignRevision]) error {
 	return r.conn.Where("design_id = ?", designID).Find(&pagination.Rows).Error
+}
+
+// ListLensAnswers is a method that returns a list of lens answers
+func (r *readTxImpl) ListLensAnswers(ctx context.Context, lensID uuid.UUID, answers *[]models.WorkloadLensQuestionAnswer) error {
+	return r.conn.
+		Preload(clause.Associations).
+		Where("lens_id = ?", lensID).
+		Find(answers).
+		Error
 }
 
 type writeTxImpl struct {

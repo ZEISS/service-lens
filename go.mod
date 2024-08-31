@@ -3,6 +3,7 @@ module github.com/zeiss/service-lens
 go 1.23
 
 require (
+	github.com/expr-lang/expr v1.16.9
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/golang/mock v1.7.0-rc.1
@@ -17,7 +18,7 @@ require (
 	github.com/yuin/goldmark-emoji v1.0.3
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.11
-	github.com/zeiss/fiber-htmx v1.3.24-0.20240827191531-1bca432b7097
+	github.com/zeiss/fiber-htmx v1.3.24-0.20240830194917-8ae3f011df63
 	github.com/zeiss/fiber-reload v0.1.0
 	github.com/zeiss/gorm-seed v0.1.2
 	github.com/zeiss/pkg v0.1.8-0.20240823051228-d40ebe6703e0
