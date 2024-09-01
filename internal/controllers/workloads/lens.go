@@ -23,12 +23,14 @@ type WorkloadLensController struct {
 	workload models.Workload
 	lens     models.Lens
 	store    seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	risks    *builders.RiskAnalyzerBuilder
 	htmx.DefaultController
 }
 
 // NewWorkloadLensController ...
 func NewWorkloadLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadLensController {
 	return &WorkloadLensController{
+		risks: builders.NewRiskAnalyzerBuilder(),
 		store: store,
 	}
 }
@@ -66,8 +68,7 @@ func (w *WorkloadLensController) Prepare() error {
 		return err
 	}
 
-	b := builders.NewStatisticsBuilder(w.lens, answers)
-	return b.Build()
+	return w.risks.AddAnswers(answers...).AddQuestions(w.lens.GetQuestions()...).Build(builders.DefaultRiskAnalyzerFunc).Error
 }
 
 // Get ...
@@ -149,6 +150,11 @@ func (w *WorkloadLensController) Get() error {
 								),
 							),
 						),
+					),
+					workloads.WorkloadsRisksCard(
+						workloads.WorkloadsRisksCardProps{
+							Risks: w.risks,
+						},
 					),
 					cards.CardBordered(
 						cards.CardProps{

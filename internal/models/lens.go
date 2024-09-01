@@ -46,6 +46,19 @@ type Lens struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
+// GetQuestions ...
+func (l *Lens) GetQuestions() []Question {
+	questions := make([]Question, 0)
+	for _, pillar := range l.Pillars {
+		for _, question := range pillar.Questions {
+			question := question
+			questions = append(questions, question)
+		}
+	}
+
+	return questions
+}
+
 // GetPillars ...
 func (l *Lens) GetPillars() []*Pillar {
 	pillars := make([]*Pillar, len(l.Pillars))
