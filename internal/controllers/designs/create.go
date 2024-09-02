@@ -43,7 +43,7 @@ func NewCreateDesignController(store seed.Database[ports.ReadTx, ports.ReadWrite
 func (l *CreateDesignControllerImpl) Prepare() error {
 	validate = validator.New()
 
-	err := l.Ctx().BodyParser(&l.body)
+	err := l.BindBody(&l.body)
 	if err != nil {
 		return err
 	}

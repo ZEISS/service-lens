@@ -4,6 +4,7 @@ import (
 	"context"
 
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/workloads"
 	"github.com/zeiss/service-lens/internal/models"
@@ -12,29 +13,18 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tables"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 )
 
 // WorkloadListControllerImpl ...
 type WorkloadListControllerImpl struct {
-	workloads tables.Results[models.Workload]
-	store     seed.Database[ports.ReadTx, ports.ReadWriteTx]
+	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
 	htmx.DefaultController
 }
 
 // NewWorkloadListController ...
 func NewWorkloadListController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *WorkloadListControllerImpl {
 	return &WorkloadListControllerImpl{store: store}
-}
-
-// Prepare ...
-func (w *WorkloadListControllerImpl) Prepare() error {
-	if err := w.BindQuery(&w.workloads); err != nil {
-		return err
-	}
-
-	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.ListWorkloads(ctx, &w.workloads)
-	})
 }
 
 // Get ...
@@ -47,20 +37,28 @@ func (w *WorkloadListControllerImpl) Get() error {
 				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
+				results := tables.Results[models.Workload]{SearchFields: []string{"name"}}
+
+				errorx.Panic(w.BindQuery(&results))
+				errorx.Panic(w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+					return tx.ListWorkloads(ctx, &results)
+				}))
+
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"m-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(
 						cards.BodyProps{},
 						workloads.WorkloadsTable(
 							workloads.WorkloadsTableProps{
-								Workloads: w.workloads.GetRows(),
-								Offset:    w.workloads.GetOffset(),
-								Limit:     w.workloads.GetLimit(),
-								Total:     w.workloads.GetTotalRows(),
+								Workloads: results.GetRows(),
+								Offset:    results.GetOffset(),
+								Limit:     results.GetLimit(),
+								Total:     results.GetTotalRows(),
+								URL:       w.OriginalURL(),
 							},
 						),
 					),

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/forms"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -22,6 +21,7 @@ const (
 
 // WorkloadsTableProps ...
 type WorkloadsTableProps struct {
+	URL       string
 	Workloads []*models.Workload
 	Offset    int
 	Limit     int
@@ -38,17 +38,13 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 				Pagination: tables.TablePagination(
 					tables.TablePaginationProps{},
 					tables.Pagination(
-						tables.PaginationProps{
-							Offset: props.Offset,
-							Limit:  props.Limit,
-							Total:  props.Total,
-						},
+						tables.PaginationProps{},
 						tables.Prev(
 							tables.PaginationProps{
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/workloads",
+								URL:    props.URL,
 							},
 						),
 
@@ -58,7 +54,7 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 								Offset: props.Offset,
 								Limit:  props.Limit,
 								Limits: tables.DefaultLimits,
-								URL:    "/workloads",
+								URL:    props.URL,
 							},
 						),
 						tables.Next(
@@ -66,7 +62,7 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 								Total:  props.Total,
 								Offset: props.Offset,
 								Limit:  props.Limit,
-								URL:    "/workloads",
+								URL:    props.URL,
 							},
 						),
 					),
@@ -85,9 +81,11 @@ func WorkloadsTable(props WorkloadsTableProps, children ...htmx.Node) htmx.Node 
 							"items-center": true,
 							"gap-3":        true,
 						},
-						forms.TextInputBordered(
-							forms.TextInputProps{
+						tables.Search(
+							tables.SearchProps{
+								Name:        "search",
 								Placeholder: "Search ...",
+								URL:         props.URL,
 							},
 						),
 					),

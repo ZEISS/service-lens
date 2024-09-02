@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"slices"
 
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -236,6 +237,9 @@ func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) 
 	}
 
 	states := workflow.GetStates()
+
+	fmt.Println(states)
+
 	design.Workable.WorkflowTransition.CurrentStateID = states[0].ID
 
 	return rw.conn.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Create(design).Error
