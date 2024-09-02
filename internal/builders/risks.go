@@ -26,6 +26,7 @@ type Risk struct {
 }
 
 // DefaultRiskAnalyzerFunc ...
+// nolint:gocyclo
 var DefaultRiskAnalyzerFunc = func(s *RiskAnalyzerBuilder) error {
 	for _, q := range s.Questions {
 		s.Risks[q.ID] = &Risk{}
