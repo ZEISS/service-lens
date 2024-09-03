@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/kelseyhightower/envconfig"
+	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/github"
 	reload "github.com/zeiss/fiber-reload"
@@ -13,6 +14,7 @@ import (
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
 	"github.com/zeiss/service-lens/internal/cfg"
+	"github.com/zeiss/service-lens/internal/models"
 
 	"github.com/gofiber/fiber/v2"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
@@ -104,7 +106,37 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return err
 		}
 
-		err = store.Migrate(ctx)
+		err = store.Migrate(ctx,
+			&adapters.GothUser{},
+			&adapters.GothAccount{},
+			&adapters.GothSession{},
+			&adapters.GothVerificationToken{},
+			&models.Template{},
+			&models.Ownable{},
+			&models.Workflow{},
+			&models.WorkflowState{},
+			&models.WorkflowTransition{},
+			&models.Workable{},
+			&models.Reaction{},
+			&models.ProfileQuestion{},
+			&models.ProfileQuestionChoice{},
+			&models.ProfileQuestionAnswer{},
+			&models.Design{},
+			&models.DesignRevision{},
+			&models.DesignComment{},
+			&models.DesignCommentRevision{},
+			&models.Environment{},
+			&models.Profile{},
+			&models.Tag{},
+			&models.Lens{},
+			&models.Pillar{},
+			&models.Question{},
+			&models.Resource{},
+			&models.Choice{},
+			&models.Risk{},
+			&models.Workload{},
+			&models.WorkloadLensQuestionAnswer{},
+		)
 		if err != nil {
 			return err
 		}
