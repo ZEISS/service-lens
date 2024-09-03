@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-const dsnFormat = "host=%s port=%s user=%s password=%s dbname=%s sslmode=disable"
+const dsnFormat = "host=%s port=%s user=%s password=%s dbname=%s"
 
 var Migrate = &cobra.Command{
 	Use:   "migrate",
