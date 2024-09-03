@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/zeiss/fiber-goth/adapters"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/models"
@@ -12,11 +14,15 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+const dsnFormat = "host=%s port=%s user=%s password=%s dbname=%s sslmode=disable"
+
 var Migrate = &cobra.Command{
 	Use:   "migrate",
 	Short: "Migrate the database",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		conn, err := gorm.Open(postgres.Open(config.Flags.DatabaseURI), &gorm.Config{
+		dsn := fmt.Sprintf(dsnFormat, config.Flags.DatabaseHost, config.Flags.DatabasePort, config.Flags.DatabaseUser, config.Flags.DatabasePassword, config.Flags.DatabaseName)
+
+		conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				TablePrefix: config.Flags.DatabaseTablePrefix,
 			},

@@ -8,7 +8,11 @@ import (
 type Flags struct {
 	Environment             string `envconfig:"SERVICE_LENS_ENV" default:"production"`
 	Addr                    string `envconfig:"SERVICE_LENS_ADDR" default:":8084"`
-	DatabaseURI             string `envconfig:"SERVICE_LENS_DATABASE_URI" default:""`
+	DatabaseHost            string `envconfig:"POSTGRES_HOST" default:""`
+	DatabasePort            string `envconfig:"POSTGRES_PORT" default:""`
+	DatabaseUser            string `envconfig:"POSTGRES_USER" default:""`
+	DatabasePassword        string `envconfig:"POSTGRES_PASSWORD" default:""`
+	DatabaseName            string `envconfig:"POSTGRES_DB" default:""`
 	DatabaseTablePrefix     string `envconfig:"SERVICE_LENS_DATABASE_TABLE_PREFIX" default:"service_lens_"`
 	FGAApiUrl               string `envconfig:"SERVICE_LENS_FGA_API_URL" default:""`
 	FGAStoreID              string `envconfig:"SERVICE_LENS_FGA_STORE_ID" default:""`
