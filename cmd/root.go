@@ -49,11 +49,8 @@ func init() {
 	Root.AddCommand(Migrate)
 
 	Root.PersistentFlags().StringVar(&config.Flags.Addr, "addr", config.Flags.Addr, "addr")
-	Root.PersistentFlags().StringVar(&config.Flags.DatabaseHost, "db-host", config.Flags.DatabaseHost, "Database host")
-	Root.PersistentFlags().StringVar(&config.Flags.DatabasePort, "db-port", config.Flags.DatabasePort, "Database port")
-	Root.PersistentFlags().StringVar(&config.Flags.DatabaseUser, "db-user", config.Flags.DatabaseUser, "Database user")
-	Root.PersistentFlags().StringVar(&config.Flags.DatabasePassword, "db-password", config.Flags.DatabasePassword, "Database password")
-	Root.PersistentFlags().StringVar(&config.Flags.DatabaseName, "db-name", config.Flags.DatabaseName, "Database name")
+	Root.PersistentFlags().StringVar(&config.Flags.Environment, "environment", config.Flags.Environment, "environment")
+	Root.PersistentFlags().StringVar(&config.Flags.DatabaseURI, "db-rul", config.Flags.DatabaseURI, "Database URI")
 	Root.PersistentFlags().StringVar(&config.Flags.DatabaseTablePrefix, "db-table-prefix", config.Flags.DatabaseTablePrefix, "Database table prefix")
 	Root.PersistentFlags().StringVar(&config.Flags.FGAApiUrl, "fga-api-url", config.Flags.FGAApiUrl, "FGA API URL")
 	Root.PersistentFlags().StringVar(&config.Flags.FGAStoreID, "fga-store-id", config.Flags.FGAStoreID, "FGA Store ID")
@@ -91,11 +88,9 @@ func NewWebSrv(cfg *cfg.Config) *WebSrv {
 // Start starts the server.
 func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.RunFunc) func() error {
 	return func() error {
-		dsn := fmt.Sprintf(dsnFormat, config.Flags.DatabaseHost, config.Flags.DatabasePort, config.Flags.DatabaseUser, config.Flags.DatabasePassword, config.Flags.DatabaseName)
-
 		providers.RegisterProvider(github.New(s.cfg.Flags.GitHubClientID, s.cfg.Flags.GitHubClientSecret, s.cfg.Flags.GitHubCallbackURL))
 
-		conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		conn, err := gorm.Open(postgres.Open(config.Flags.DatabaseURI), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				TablePrefix: s.cfg.Flags.DatabaseTablePrefix,
 			},
