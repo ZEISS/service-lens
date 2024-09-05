@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   service-lens:
   - apiVersion: v2
+    appVersion: 1.0.34
+    created: "2024-09-05T07:46:36.150413806Z"
+    description: A helm chart for Service Lens
+    digest: c79239c42467a74bf4b880e9fbbc964dc9c242425f63c32a31430fe7313228e2
+    home: http://github.com/zeiss/service-lens
+    keywords:
+    - productivity
+    name: service-lens
+    sources:
+    - https://github.com/zeiss/service-lens
+    urls:
+    - https://github.com/ZEISS/service-lens/releases/download/service-lens-1.0.34/service-lens-1.0.34.tgz
+    version: 1.0.34
+  - apiVersion: v2
     appVersion: 1.0.33
     created: "2024-09-03T12:52:49.469026049Z"
     description: A helm chart for Service Lens
@@ -337,4 +351,4 @@ entries:
     urls:
     - https://github.com/ZEISS/service-lens/releases/download/service-lens-0.1.8/service-lens-0.1.8.tgz
     version: 0.1.8
-generated: "2024-09-03T12:52:49.469280096Z"
+generated: "2024-09-05T07:46:36.150634647Z"
