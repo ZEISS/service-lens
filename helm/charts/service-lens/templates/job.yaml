@@ -41,19 +41,14 @@ spec:
               value: "{{ .Values.database.prefix }}"
             {{- end }}
             {{- if .Values.database.uri }}
-            - name: SERVICE_LENS_DATABASE_URI
+            - name: POSTGRES_URL
               value: "{{ .Values.database.uri }}"
             {{- else if .Values.database.uriSecret }}
-            - name: SERVICE_LENS_DATABASE_URI
+            - name: POSTGRES_URL
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Values.database.uriSecret }}"
                   key: "uri"
-            {{- end }}
-
-            {{- if .Values.migrate.timeout }}
-            - name: SERVICE_LENS_TIMEOUT
-              value: "{{ .Values.migrate.timeout }}"
             {{- end }}
 
             {{- with .Values.extraEnvVars }}
