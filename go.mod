@@ -23,7 +23,7 @@ require (
 	github.com/zeiss/gorm-seed v0.1.2
 	github.com/zeiss/pkg v0.1.8-0.20240823051228-d40ebe6703e0
 	go.abhg.dev/goldmark/mermaid v0.5.0
-	golang.org/x/mod v0.20.0
+	golang.org/x/mod v0.21.0
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.11
 	helm.sh/helm v2.17.0+incompatible
