@@ -67,13 +67,8 @@ func (l *SearchWorkflowsControllerImpl) Get() error {
 		htmx.Fragment(
 			htmx.ForEach(l.workflows.GetRows(), func(e *models.Workflow, idx int) htmx.Node {
 				return htmx.Option(
-					htmx.Value(e.Name),
-					htmx.Text(conv.String(e.ID)),
-					htmx.Input(
-						htmx.Type("hidden"),
-						htmx.Name("workflow_id"),
-						htmx.Value(conv.String(e.ID)),
-					),
+					htmx.Value(conv.String(e.ID)),
+					htmx.Text(conv.String(e.Name)),
 				)
 			})...,
 		),

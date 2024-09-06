@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"slices"
 
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -230,17 +229,17 @@ func (rw *writeTxImpl) CreateDesign(ctx context.Context, design *models.Design) 
 		}
 	}
 
-	workflow := models.Workflow{}
-	err := rw.conn.Debug().Preload(clause.Associations).First(&workflow, design.Workable.WorkflowTransition.WorkflowID).Error
-	if err != nil {
-		return err
+	if design.Workable != nil {
+		workflow := models.Workflow{}
+		err := rw.conn.Debug().Preload(clause.Associations).First(&workflow, design.Workable.WorkflowTransition.WorkflowID).Error
+		if err != nil {
+			return err
+		}
+
+		states := workflow.GetStates()
+
+		design.Workable.WorkflowTransition.CurrentStateID = states[0].ID
 	}
-
-	states := workflow.GetStates()
-
-	fmt.Println(states)
-
-	design.Workable.WorkflowTransition.CurrentStateID = states[0].ID
 
 	return rw.conn.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Create(design).Error
 }

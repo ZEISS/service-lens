@@ -67,13 +67,8 @@ func (l *SearchLensesControllerImpl) Get() error {
 		htmx.Fragment(
 			htmx.ForEach(l.lenses.GetRows(), func(e *models.Lens, idx int) htmx.Node {
 				return htmx.Option(
-					htmx.Value(e.Name),
-					htmx.Text(conv.String(e.ID)),
-					htmx.Input(
-						htmx.Type("hidden"),
-						htmx.Name("lens_id"),
-						htmx.Value(conv.String(e.ID)),
-					),
+					htmx.Value(conv.String(e.ID)),
+					htmx.Text(e.Name),
 				)
 			})...,
 		),

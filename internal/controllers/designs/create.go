@@ -76,12 +76,15 @@ func (l *CreateDesignControllerImpl) Post() error {
 		Title:    l.body.Title,
 		Body:     l.body.Body,
 		AuthorID: l.Session().UserID,
-		Workable: models.Workable{
+	}
+
+	if l.body.WorkflowID != uuid.Nil {
+		design.Workable = &models.Workable{
 			WorkableType: models.WorkableTypeDesign,
 			WorkflowTransition: models.WorkflowTransition{
 				WorkflowID: l.body.WorkflowID,
 			},
-		},
+		}
 	}
 
 	for _, tag := range l.body.Tags {

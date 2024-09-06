@@ -67,13 +67,8 @@ func (l *SearchProfilesControllerImpl) Get() error {
 		htmx.Fragment(
 			htmx.ForEach(l.profiles.GetRows(), func(e *models.Profile, idx int) htmx.Node {
 				return htmx.Option(
-					htmx.Value(e.Name),
-					htmx.Text(conv.String(e.ID)),
-					htmx.Input(
-						htmx.Type("hidden"),
-						htmx.Name("profile_id"),
-						htmx.Value(conv.String(e.ID)),
-					),
+					htmx.Value(conv.String(e.ID)),
+					htmx.Text(e.Name),
 				)
 			})...,
 		),

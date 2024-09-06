@@ -452,6 +452,13 @@ func (a *handlers) SearchLenses() fiber.Handler {
 	})
 }
 
+// SearchTemplates ...
+func (a *handlers) SearchTemplates() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewSearchTemplatesController(a.store)
+	})
+}
+
 // SearchProfiles ...
 func (a *handlers) SearchProfiles() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {

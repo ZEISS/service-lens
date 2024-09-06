@@ -113,8 +113,8 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 						forms.Datalist(
 							forms.DatalistProps{
 								ID:          "workflows",
-								Name:        "workflow",
-								Placeholder: "Select workflows ...",
+								Name:        "workflow_id",
+								Placeholder: "Search a workflow ...",
 								URL:         utils.SearchWorkflowsUrlFormat,
 							},
 						),
@@ -135,7 +135,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 									tailwind.TextNeutral500: true,
 								},
 							},
-							htmx.Text("The team that owns the account."),
+							htmx.Text("Optional - Select a workflow to associate with this design."),
 						),
 					),
 				),

@@ -25,7 +25,7 @@ type Design struct {
 	// Author is the author
 	Author adapters.GothUser `json:"author" gorm:"foreignKey:AuthorID;references:ID"`
 	// Workable is the workable
-	Workable Workable `json:"workable" gorm:"polymorphic:Workable;polymorphic_value:design"`
+	Workable *Workable `json:"workable" gorm:"polymorphic:Workable;polymorphic_value:design"`
 	// Comments are the comments associated with the design
 	Comments []DesignComment `json:"comments"`
 	// CreatedAt ...

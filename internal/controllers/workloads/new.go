@@ -172,7 +172,7 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								forms.Datalist(
 									forms.DatalistProps{
 										ID:          "environments",
-										Name:        "environment",
+										Name:        "environment_id",
 										Placeholder: "Search an environment ...",
 										URL:         utils.WorkloadSearchEnvironmentsUrlFormat,
 									},
@@ -201,7 +201,7 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								forms.Datalist(
 									forms.DatalistProps{
 										ID:          "profiles",
-										Name:        "profile",
+										Name:        "profile_id",
 										Placeholder: "Search a profile ...",
 										URL:         utils.WorkloadSearchProfilesUrlFormat,
 									},

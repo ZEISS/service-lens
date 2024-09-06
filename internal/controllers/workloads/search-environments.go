@@ -67,13 +67,8 @@ func (l *SearchEnvironmentsControllerImpl) Get() error {
 		htmx.Fragment(
 			htmx.ForEach(l.environments.GetRows(), func(e *models.Environment, idx int) htmx.Node {
 				return htmx.Option(
-					htmx.Value(e.Name),
-					htmx.Text(conv.String(e.ID)),
-					htmx.Input(
-						htmx.Type("hidden"),
-						htmx.Name("environment_id"),
-						htmx.Value(conv.String(e.ID)),
-					),
+					htmx.Value(conv.String(e.ID)),
+					htmx.Text(e.Name),
 				)
 			})...,
 		),
