@@ -79,6 +79,22 @@ func (l *IndexLoginController) Get() error {
 											"btn-primary": true,
 											"btn-outline": true,
 										},
+										Href: "/login/entraid",
+									},
+									htmx.Text("Login on Microsoft Entra ID"),
+								),
+							),
+							htmx.Div(
+								htmx.ClassNames{
+									"mt-4": true,
+								},
+								links.Button(
+									links.LinkProps{
+										ClassNames: htmx.ClassNames{
+											"w-full":      true,
+											"btn-primary": true,
+											"btn-outline": true,
+										},
 										Href: "/login/github",
 									},
 									htmx.Text("Login on GitHub"),

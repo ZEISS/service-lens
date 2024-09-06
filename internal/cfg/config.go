@@ -13,6 +13,10 @@ type Flags struct {
 	GitHubCallbackURL   string `envconfig:"SERVICE_LENS_GITHUB_CALLBACK_URL" default:""`
 	GitHubClientID      string `envconfig:"SERVICE_LENS_GITHUB_CLIENT_ID" default:""`
 	GitHubClientSecret  string `envconfig:"SERVICE_LENS_GITHUB_CLIENT_SECRET" default:""`
+	EntraIDClientID     string `envconfig:"SERVICE_LENS_ENTRAID_CLIENT_ID" default:""`
+	EntraIDClientSecret string `envconfig:"SERVICE_LENS_ENTRAID_CLIENT_SECRET" default:""`
+	EntraIDCallbackURL  string `envconfig:"SERVICE_LENS_ENTRAID_CALLBACK_URL" default:""`
+	EntraIDTenantID     string `envconfig:"SERVICE_LENS_ENTRAID_TENANT_ID" default:""`
 }
 
 // NewFlags returns a new instance of Flags.
