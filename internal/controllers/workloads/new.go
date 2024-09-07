@@ -230,7 +230,7 @@ func (w *WorkloadNewControllerImpl) Get() error {
 								forms.Datalist(
 									forms.DatalistProps{
 										ID:          "lenses",
-										Name:        "lens",
+										Name:        "lens_id",
 										Placeholder: "Search a lens ...",
 										URL:         utils.WorkloadSearchLensesUrlFormat,
 									},

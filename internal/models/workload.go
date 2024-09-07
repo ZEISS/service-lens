@@ -61,6 +61,10 @@ type WorkloadLensQuestionAnswer struct {
 	Workload Workload `json:"workload" validate:"-"`
 	// Choices are the selected choices.
 	Choices []Choice `json:"choices" gorm:"many2many:workload_lens_question_answer_choices;" form:"choices"`
+	// RiskID is the foreign key for the risk.
+	RiskID *int `json:"risk_id" form:"risk_id" validate:"required"`
+	// Risk is the risk associated with the answer.
+	Risk *Risk `json:"risk" form:"risk"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...

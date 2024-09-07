@@ -167,12 +167,16 @@ type Choice struct {
 
 // Risk is a model for a risk.
 type Risk struct {
-	ID         int    `json:"id" gorm:"primary_key"`
-	Ref        string `json:"ref"`
-	Risk       string `json:"risk"`
-	Condition  string `json:"condition"`
-	QuestionID int    `json:"question_id"`
-
+	// ID is the primary key.
+	ID int `json:"id" gorm:"primary_key"`
+	// Ref is the risk reference.
+	Ref string `json:"ref"`
+	// Title is the risk title.
+	Risk string `json:"risk"`
+	// Condition is the risk condition.
+	Condition string `json:"condition"`
+	// QuestionID is the question ID.
+	QuestionID int `json:"question_id"`
 	// CreatedAt ...
 	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt ...
