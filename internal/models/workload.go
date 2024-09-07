@@ -37,6 +37,50 @@ type Workload struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gore:"index"`
 }
 
+// TotalAnswers ...
+func (w *Workload) TotalAnswers() int {
+	return len(w.Answers)
+}
+
+// TotalQuestions ...
+func (w *Workload) TotalQuestions() int {
+	total := 0
+
+	for _, l := range w.Lenses {
+		for _, p := range l.Pillars {
+			total += len(p.Questions)
+		}
+	}
+
+	return total
+}
+
+// TotalHighRisks ...
+func (w *Workload) TotalHighRisks() int {
+	total := 0
+
+	for _, a := range w.Answers {
+		if a.Risk != nil && a.Risk.Risk == "HIGH_RISK" {
+			total++
+		}
+	}
+
+	return total
+}
+
+// TotalMediumRisks ...
+func (w *Workload) TotalMediumRisks() int {
+	total := 0
+
+	for _, a := range w.Answers {
+		if a.Risk != nil && a.Risk.Risk == "MEDIUM_RISK" {
+			total++
+		}
+	}
+
+	return total
+}
+
 // WorkloadLensQuestionAnswer represents a business profile question answer.
 type WorkloadLensQuestionAnswer struct {
 	// ID is the primary key.

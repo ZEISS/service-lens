@@ -120,6 +120,11 @@ func (w *WorkloadShowControllerImpl) Get() error {
 							),
 						),
 					),
+					workloads.WorkloadsRisksCard(
+						workloads.WorkloadsRisksCardProps{
+							Workload: w.workload,
+						},
+					),
 					workloads.WorkloadMetadataCard(
 						workloads.WorkloadMetadataCardProps{
 							Workload: w.workload,

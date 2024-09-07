@@ -61,11 +61,6 @@ func (w *WorkloadUpdateAnswerControllerImpl) Error(err error) error {
 func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 	validate = validator.New()
 
-	choices := make(map[int]bool)
-	for _, c := range w.form.Choices {
-		choices[conv.Int(c)] = true
-	}
-
 	err := w.BindParams(&w.params)
 	if err != nil {
 		return err
@@ -79,45 +74,52 @@ func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 		return err
 	}
 
-	question := models.Question{ID: w.params.QuestionID}
-	err = w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
-		return tx.GetLensQuestion(ctx, &question)
-	})
-	if err != nil {
-		return err
-	}
+	if !w.form.DoesNotApply {
+		choices := make(map[int]bool)
+		for _, c := range w.form.Choices {
+			choices[conv.Int(c)] = true
+		}
 
-	env := map[string]bool{
-		"default": true,
-	}
-
-	for _, c := range question.Choices {
-		_, ok := choices[c.ID]
-		env[string(c.Ref)] = utilx.IfElse(ok, true, false)
-	}
-
-	for _, r := range question.Risks {
-		rule := r.Condition
-
-		program, err := expr.Compile(rule, expr.Env(env))
+		question := models.Question{ID: w.params.QuestionID}
+		err = w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+			return tx.GetLensQuestion(ctx, &question)
+		})
 		if err != nil {
 			return err
 		}
 
-		output, err := expr.Run(program, env)
-		if err != nil {
-			return err
+		env := map[string]bool{
+			"default": true,
 		}
 
-		v, ok := output.(bool)
-		if !ok {
-			return fmt.Errorf("expected bool, got %T", v)
+		for _, c := range question.Choices {
+			_, ok := choices[c.ID]
+			env[string(c.Ref)] = utilx.IfElse(ok, true, false)
 		}
 
-		w.answer.RiskID = cast.Ptr(r.ID)
+		for _, r := range question.Risks {
+			rule := r.Condition
 
-		if v {
-			break
+			program, err := expr.Compile(rule, expr.Env(env))
+			if err != nil {
+				return err
+			}
+
+			output, err := expr.Run(program, env)
+			if err != nil {
+				return err
+			}
+
+			v, ok := output.(bool)
+			if !ok {
+				return fmt.Errorf("expected bool, got %T", v)
+			}
+
+			w.answer.RiskID = cast.Ptr(r.ID)
+
+			if v {
+				break
+			}
 		}
 	}
 

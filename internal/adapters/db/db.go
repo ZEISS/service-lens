@@ -122,7 +122,17 @@ func (r *readTxImpl) GetWorkloadAnswer(ctx context.Context, answer *models.Workl
 
 // GetWorkload is a method that returns a workload by ID
 func (r *readTxImpl) GetWorkload(ctx context.Context, workload *models.Workload) error {
-	return r.conn.Preload(clause.Associations).Where(workload).First(workload).Error
+	return r.conn.
+		Preload(clause.Associations).
+		Preload("Lenses.Pillars").
+		Preload("Lenses.Pillars.Questions").
+		Preload("Lenses.Pillars.Questions.Choices").
+		Preload("Lenses.Pillars.Questions.Risks").
+		Preload("Answers.Choices").
+		Preload("Answers.Risk").
+		Where(workload).
+		First(workload, workload.ID).
+		Error
 }
 
 // ListTags is a method that returns a list of tags
