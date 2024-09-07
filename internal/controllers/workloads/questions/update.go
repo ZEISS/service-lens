@@ -57,6 +57,7 @@ func (w *WorkloadUpdateAnswerControllerImpl) Error(err error) error {
 }
 
 // Prepare ...
+// nolint:gocyclo
 func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {
 	validate = validator.New()
 
