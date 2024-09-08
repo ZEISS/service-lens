@@ -81,6 +81,11 @@ func (w *Workload) TotalMediumRisks() int {
 	return total
 }
 
+// TotalLenses ...
+func (w *Workload) TotalLenses() int {
+	return len(w.Lenses)
+}
+
 // WorkloadLensQuestionAnswer represents a business profile question answer.
 type WorkloadLensQuestionAnswer struct {
 	// ID is the primary key.

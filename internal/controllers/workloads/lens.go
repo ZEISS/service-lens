@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/links"
+	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/builders"
@@ -61,14 +62,9 @@ func (w *WorkloadLensController) Prepare() error {
 
 	answers := make([]models.WorkloadLensQuestionAnswer, 0)
 
-	err = w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+	return w.store.ReadTx(w.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 		return tx.ListLensAnswers(ctx, w.lens.ID, &answers)
 	})
-	if err != nil {
-		return err
-	}
-
-	return w.risks.AddAnswers(answers...).AddQuestions(w.lens.GetQuestions()...).Build(builders.DefaultRiskAnalyzerFunc).Error
 }
 
 // Get ...
@@ -82,8 +78,21 @@ func (w *WorkloadLensController) Get() error {
 				Development: w.IsDevelopment(),
 			},
 			func() htmx.Node {
-				return htmx.Fragment(
+				totalHighRisk := 0
+				totalMediumRisk := 0
 
+				for _, a := range w.workload.Answers {
+					if a.Risk != nil {
+						switch a.Risk.Risk {
+						case "HIGH_RISK":
+							totalHighRisk++
+						case "MEDIUM_RISK":
+							totalMediumRisk++
+						}
+					}
+				}
+
+				return htmx.Fragment(
 					cards.CardBordered(
 						cards.CardProps{
 							ClassNames: htmx.ClassNames{
@@ -151,10 +160,58 @@ func (w *WorkloadLensController) Get() error {
 							),
 						),
 					),
-					workloads.WorkloadsRisksCard(
-						workloads.WorkloadsRisksCardProps{
-							Risks: w.risks,
+					stats.Stats(
+						stats.StatsProps{
+							ClassNames: htmx.ClassNames{
+								tailwind.M2:     true,
+								tailwind.Shadow: false,
+							},
 						},
+						stats.Stat(
+							stats.StatProps{},
+							stats.Title(
+								stats.TitleProps{},
+								htmx.Text("Overall Questions Answered"),
+							),
+							stats.Value(
+								stats.ValueProps{},
+								htmx.Text(fmt.Sprintf("%d", len(w.workload.Answers))),
+							),
+							stats.Description(
+								stats.DescriptionProps{},
+								htmx.Text(fmt.Sprintf("Total of %d questions", w.lens.TotalQuestions())),
+							),
+						),
+						stats.Stat(
+							stats.StatProps{},
+							stats.Title(
+								stats.TitleProps{},
+								htmx.Text("Overall High Risks"),
+							),
+							stats.Value(
+								stats.ValueProps{},
+								htmx.Text(fmt.Sprintf("%d", totalHighRisk)),
+							),
+							stats.Description(
+								stats.DescriptionProps{},
+								htmx.Text(fmt.Sprintf("Total of %d questions", w.lens.TotalQuestions())),
+							),
+						),
+						stats.Stat(
+							stats.StatProps{},
+							stats.Title(
+								stats.TitleProps{},
+								htmx.Text("Overall Medium Risks"),
+							),
+							stats.Value(
+								stats.ValueProps{},
+								htmx.Text(fmt.Sprintf("%d", totalMediumRisk)),
+							),
+							stats.Description(
+								stats.DescriptionProps{},
+								htmx.Text(fmt.Sprintf("Total of %d questions", w.lens.TotalQuestions())),
+							),
+						),
 					),
 					cards.CardBordered(
 						cards.CardProps{

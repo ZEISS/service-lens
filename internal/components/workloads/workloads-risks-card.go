@@ -6,7 +6,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
-	"github.com/zeiss/service-lens/internal/builders"
 	"github.com/zeiss/service-lens/internal/models"
 )
 
@@ -14,10 +13,6 @@ import (
 type WorkloadsRisksCardProps struct {
 	// Workload ...
 	Workload models.Workload
-	// Lens ...
-	Lens models.Lens
-	// Risks ...
-	Risks *builders.RiskAnalyzerBuilder
 }
 
 // WorkloadsRisksCard ...
@@ -54,6 +49,10 @@ func WorkloadsRisksCard(props WorkloadsRisksCardProps) htmx.Node {
 				stats.ValueProps{},
 				htmx.Text(fmt.Sprintf("%d", props.Workload.TotalHighRisks())),
 			),
+			stats.Description(
+				stats.DescriptionProps{},
+				htmx.Text(fmt.Sprintf("Total of %d lenses", props.Workload.TotalLenses())),
+			),
 		),
 		stats.Stat(
 			stats.StatProps{},
@@ -65,61 +64,10 @@ func WorkloadsRisksCard(props WorkloadsRisksCardProps) htmx.Node {
 				stats.ValueProps{},
 				htmx.Text(fmt.Sprintf("%d", props.Workload.TotalMediumRisks())),
 			),
+			stats.Description(
+				stats.DescriptionProps{},
+				htmx.Text(fmt.Sprintf("Total of %d lenses", props.Workload.TotalLenses())),
+			),
 		),
-		// stats.Stat(
-		// 	stats.StatProps{},
-		// 	stats.Title(
-		// 		stats.TitleProps{},
-		// 		htmx.Text("Total Medium Risks"),
-		// 	),
-		// 	stats.Value(
-		// 		stats.ValueProps{},
-		// 		htmx.Text(conv.String(props.Risks.TotalMediumRisks())),
-		// 	),
-		// ),
-		// stats.Stat(
-		// 	stats.StatProps{},
-		// 	stats.Title(
-		// 		stats.TitleProps{},
-		// 		htmx.Text("Total Low Risks"),
-		// 	),
-		// 	stats.Value(
-		// 		stats.ValueProps{},
-		// 		htmx.Text(conv.String(props.Risks.TotalLowRisks())),
-		// 	),
-		// ),
-		// stats.Stat(
-		// 	stats.StatProps{},
-		// 	stats.Title(
-		// 		stats.TitleProps{},
-		// 		htmx.Text("Total No Risks"),
-		// 	),
-		// 	stats.Value(
-		// 		stats.ValueProps{},
-		// 		htmx.Text(conv.String(props.Risks.TotalNoRisk())),
-		// 	),
-		// ),
-		// stats.Stat(
-		// 	stats.StatProps{},
-		// 	stats.Title(
-		// 		stats.TitleProps{},
-		// 		htmx.Text("Total Unanswered Risks"),
-		// 	),
-		// 	stats.Value(
-		// 		stats.ValueProps{},
-		// 		htmx.Text(conv.String(props.Risks.TotalNotAnswered())),
-		// 	),
-		// ),
-		// stats.Stat(
-		// 	stats.StatProps{},
-		// 	stats.Title(
-		// 		stats.TitleProps{},
-		// 		htmx.Text("Total Not Applicable Risks"),
-		// 	),
-		// 	stats.Value(
-		// 		stats.ValueProps{},
-		// 		htmx.Text(conv.String(props.Risks.TotalNotApplicable())),
-		// 	),
-		// ),
 	)
 }

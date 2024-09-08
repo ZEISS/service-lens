@@ -57,6 +57,16 @@ func LensesTable(props LensesTableProps, children ...htmx.Node) htmx.Node {
 						)
 					},
 				},
+				{
+					ID:          "updated_at",
+					AccessorKey: "updated_at",
+					Header: func(p tables.TableProps) htmx.Node {
+						return htmx.Th(htmx.Text("Last Updated"))
+					},
+					Cell: func(p tables.TableProps, row *models.Lens) htmx.Node {
+						return htmx.Td(htmx.Text(row.UpdatedAt.Format("2006-01-02 15:04:05")))
+					},
+				},
 			},
 			props.Workload.Lenses,
 		),

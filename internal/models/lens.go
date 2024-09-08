@@ -70,6 +70,16 @@ func (l *Lens) GetPillars() []*Pillar {
 	return pillars
 }
 
+// TotalQuestions ...
+func (l *Lens) TotalQuestions() int {
+	return len(l.GetQuestions())
+}
+
+// TotalPillars ...
+func (l *Lens) TotalPillars() int {
+	return len(l.Pillars)
+}
+
 // Pillar is a model for a pillar.
 type Pillar struct {
 	// ID is the primary key.
