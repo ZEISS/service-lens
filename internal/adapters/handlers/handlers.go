@@ -591,3 +591,10 @@ func (a *handlers) RemoveTagWorkload() fiber.Handler {
 		return workloads.NewTagController(a.store)
 	})
 }
+
+// Task ...
+func (a *handlers) Task() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return designs.NewTaskController(a.store)
+	})
+}

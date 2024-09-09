@@ -16,6 +16,7 @@ const (
 	CreateWorkloadUrlFormat              = "/workloads/new"
 	DashboardStatsDesignUrlFormat        = "/stats/designs"
 	DesignSearchTemplatesUrlFormat       = "/designs/search/templates"
+	DesignTasksUrlFormat                 = "/designs/%s/tasks"
 	DashboardStatsProfileUrlFormat       = "/stats/profiles"
 	DashboardStatsWorkloadUrlFormat      = "/stats/workloads"
 	DeleteDesignCommentReactionUrlFormat = "/designs/%s/comments/%s/reactions/%d"

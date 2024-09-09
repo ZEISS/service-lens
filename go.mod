@@ -14,6 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
+	github.com/teekennedy/goldmark-markdown v0.3.0
 	github.com/yuin/goldmark v1.7.4
 	github.com/yuin/goldmark-emoji v1.0.3
 	github.com/zeiss/fiber-authz v1.0.33
@@ -21,7 +22,7 @@ require (
 	github.com/zeiss/fiber-htmx v1.3.24-0.20240904185607-c49c36d17bba
 	github.com/zeiss/fiber-reload v0.1.0
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.8-0.20240906201119-75c76d920f4f
+	github.com/zeiss/pkg v0.1.8-0.20240909184239-09ed352ba1eb
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.21.0
 	gorm.io/driver/postgres v1.5.9

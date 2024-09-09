@@ -54,7 +54,12 @@ func DesignBodyCard(props DesignBodyCardProps) htmx.Node {
 					goldmark.WithRendererOptions(
 						html.WithXHTML(),
 						html.WithUnsafe(),
-						renderer.WithNodeRenderers(util.Prioritized(builders.NewMarkdownBuilder(), 1)),
+						renderer.WithNodeRenderers(
+							util.Prioritized(
+								builders.NewMarkdownBuilder(
+									builders.WithTaskURL(fmt.Sprintf(utils.DesignTasksUrlFormat, props.Design.ID)),
+								), 1),
+						),
 					),
 					goldmark.WithExtensions(
 						extension.GFM,

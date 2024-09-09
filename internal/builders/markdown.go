@@ -10,21 +10,44 @@ import (
 	render "github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
+	"github.com/zeiss/pkg/conv"
 )
 
 // MarkdownBuilder ...
 type MarkdownBuilder struct {
 	html.Config
+
+	taskURL   string
+	taskItems int
 }
 
+// WithTaskURL ...
+func WithTaskURL(url string) MarkdownBuilderOption {
+	return func(builder *MarkdownBuilder) {
+		builder.taskURL = url
+	}
+}
+
+// WithHTMLOptions ...
+func WithHTMLOptions(opts ...html.Option) MarkdownBuilderOption {
+	return func(builder *MarkdownBuilder) {
+		for _, opt := range opts {
+			opt.SetHTMLOption(&builder.Config)
+		}
+	}
+}
+
+// MarkdownBuilderOption ...
+type MarkdownBuilderOption func(*MarkdownBuilder)
+
 // NewMarkdownBuilder ...
-func NewMarkdownBuilder(opts ...html.Option) render.NodeRenderer {
+func NewMarkdownBuilder(opts ...MarkdownBuilderOption) render.NodeRenderer {
 	builder := &MarkdownBuilder{
 		Config: html.NewConfig(),
 	}
 
 	for _, opt := range opts {
-		opt.SetHTMLOption(&builder.Config)
+		opt(builder)
 	}
 
 	return builder
@@ -59,10 +82,12 @@ func (r *MarkdownBuilder) TaskCheckBox(w util.BufWriter, source []byte, node ast
 	}
 	n := node.(*gast.TaskCheckBox)
 
+	r.taskItems++
+
 	if n.IsChecked {
-		_, _ = w.WriteString(`<input checked="" type="checkbox" class="checkbox"`)
+		_, _ = w.WriteString(`<input checked="" disabled="" type="checkbox" class="checkbox"`)
 	} else {
-		_, _ = w.WriteString(`<input type="checkbox" class="checkbox"`)
+		_, _ = w.WriteString(`<input name="task" value="` + conv.String(r.taskItems) + `" hx-trigger="click" hx-swap="outerHTML" hx-post="` + r.taskURL + `" type="checkbox" class="checkbox"`)
 	}
 	if r.XHTML {
 		_, _ = w.WriteString(" /> ")

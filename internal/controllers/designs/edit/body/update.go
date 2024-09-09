@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/yuin/goldmark"
+	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -72,10 +73,16 @@ func (l *UpdateControllerImpl) Prepare() error {
 			goldmark.WithRendererOptions(
 				html.WithXHTML(),
 				html.WithUnsafe(),
-				renderer.WithNodeRenderers(util.Prioritized(builders.NewMarkdownBuilder(), 1)),
+				renderer.WithNodeRenderers(
+					util.Prioritized(
+						builders.NewMarkdownBuilder(
+							builders.WithTaskURL(fmt.Sprintf(utils.DesignTasksUrlFormat, l.Design.ID)),
+						), 1),
+				),
 			),
 			goldmark.WithExtensions(
 				extension.GFM,
+				emoji.Emoji,
 			),
 		)
 

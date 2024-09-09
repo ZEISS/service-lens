@@ -158,4 +158,6 @@ type Handlers interface {
 	RemoveTagWorkload() fiber.Handler
 	// SearchTemplates ...
 	SearchTemplates() fiber.Handler
+	// Task ...
+	Task() fiber.Handler
 }
