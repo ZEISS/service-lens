@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/expr-lang/expr v1.16.9
-	github.com/go-playground/validator/v10 v10.22.0
+	github.com/go-playground/validator/v10 v10.22.1
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.60.3
