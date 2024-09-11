@@ -539,6 +539,8 @@ github.com/zeiss/fiber-htmx v1.3.24-0.20240911105737-eb7089a629e3 h1:KaSYcsIDbkI
 github.com/zeiss/fiber-htmx v1.3.24-0.20240911105737-eb7089a629e3/go.mod h1:3qDw5fW+LWGgsZgyBiT1+lLliNadHswQ+TrD9+qDCtY=
 github.com/zeiss/fiber-htmx v1.3.24-0.20240911110730-512fa93b02e7 h1:zeqWvvsBMop6r+XViszbVDofz3GHBBIqWoZUy+4oxbw=
 github.com/zeiss/fiber-htmx v1.3.24-0.20240911110730-512fa93b02e7/go.mod h1:3qDw5fW+LWGgsZgyBiT1+lLliNadHswQ+TrD9+qDCtY=
+github.com/zeiss/fiber-htmx v1.3.24-0.20240911111436-9ca48a7940a4 h1:1NS6K/yUzDY2sDZi+8U/nI8Fr3Pa8cYBXTvJgXc0kGA=
+github.com/zeiss/fiber-htmx v1.3.24-0.20240911111436-9ca48a7940a4/go.mod h1:3qDw5fW+LWGgsZgyBiT1+lLliNadHswQ+TrD9+qDCtY=
 github.com/zeiss/fiber-reload v0.1.0 h1:iiZzbHj2EntILhbF74HRZPDSLrvURmwTbUqGlKfo0h4=
 github.com/zeiss/fiber-reload v0.1.0/go.mod h1:eUvohuk2nDjGCUtejTW5db5M28FZNJDtVEAZDZwq0Rg=
 github.com/zeiss/gorm-seed v0.1.2 h1:XksLz/IXC1ejUgbl5dHC2/vQAqD2LNZMhZMz2w+E7fY=
