@@ -34,6 +34,8 @@ const (
 	EditBodyUrlFormat                    = "/designs/%s/body/edit"
 	EditTitleUrlFormat                   = "/designs/%s/title/edit"
 	EditWorkloadUrlFormat                = "/workloads/%s/edit"
+	EditTemplateBodyUrlFormat            = "/templates/%s/edit/body"
+	EditTemplateTitleUrlFormat           = "/templates/%s/edit/title"
 	ListDesignRevisionsUrlFormat         = "/designs/%s/revisions"
 	ListTagsUrlFormat                    = "/tags"
 	ListTemplatesUrlFormat               = "/templates"

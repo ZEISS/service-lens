@@ -1,24 +1,16 @@
 package templates
 
 import (
-	"bytes"
 	"context"
 
-	"github.com/zeiss/service-lens/internal/builders"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/templates"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
-	"github.com/yuin/goldmark"
-	emoji "github.com/yuin/goldmark-emoji"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/renderer"
-	"github.com/yuin/goldmark/renderer/html"
-	"github.com/yuin/goldmark/util"
 	htmx "github.com/zeiss/fiber-htmx"
 	seed "github.com/zeiss/gorm-seed"
-	"go.abhg.dev/goldmark/mermaid"
 )
 
 // ShowTemplateControllerImpl ...
@@ -38,48 +30,38 @@ func NewShowTemplateController(store seed.Database[ports.ReadTx, ports.ReadWrite
 func (l *ShowTemplateControllerImpl) Get() error {
 	return l.Render(
 		components.DefaultLayout(
-			components.DefaultLayoutProps{},
+			components.DefaultLayoutProps{
+				Title:       "Template",
+				Development: l.IsDevelopment(),
+				Head: []htmx.Node{
+					htmx.Link(
+						htmx.Attribute("href", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.css"),
+						htmx.Rel("stylesheet"),
+						htmx.Type("text/css"),
+					),
+					htmx.Script(
+						htmx.Attribute("src", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.js"),
+						htmx.Type("text/javascript"),
+					),
+				},
+			},
 			func() htmx.Node {
 				template := models.Template{}
 
-				err := l.BindParams(&template)
-				if err != nil {
-					panic(err)
-				}
-
-				err = l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
+				errorx.Panic(l.BindParams(&template))
+				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
 					return tx.GetTemplate(ctx, &template)
-				})
-				if err != nil {
-					panic(err)
-				}
-
-				markdown := goldmark.New(
-					goldmark.WithRendererOptions(
-						html.WithXHTML(),
-						html.WithUnsafe(),
-						renderer.WithNodeRenderers(util.Prioritized(builders.NewMarkdownBuilder(), 1)),
-					),
-					goldmark.WithExtensions(
-						extension.GFM,
-						emoji.Emoji,
-						&mermaid.Extender{},
-					),
-				)
-
-				var b bytes.Buffer
-				err = markdown.Convert([]byte(template.Body), &b)
-				if err != nil {
-					panic(err)
-				}
-
-				template.Body = b.String()
+				}))
 
 				return htmx.Fragment(
+					templates.TemplateTitleCard(
+						templates.TemplateTitleCardProps{
+							Template: template,
+						},
+					),
 					templates.TemplateBodyCard(
 						templates.TemplateBodyCardProps{
 							Template: template,
-							Markdown: template.Body,
 						},
 					),
 				)

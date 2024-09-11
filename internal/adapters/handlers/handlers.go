@@ -619,3 +619,31 @@ func (a *handlers) DeleteTemplate() fiber.Handler {
 		return templates.NewDeleteTemplateController(a.store)
 	})
 }
+
+// EditTemplateBody ...
+func (a *handlers) EditTemplateBody() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewEditBodyController(a.store)
+	})
+}
+
+// UpdateTemplateBody ...
+func (a *handlers) UpdateTemplateBody() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewEditBodyController(a.store)
+	})
+}
+
+// EditTemplateTitle ...
+func (a *handlers) EditTemplateTitle() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewEditTitleController(a.store)
+	})
+}
+
+// UpdateTemplateTitle ...
+func (a *handlers) UpdateTemplateTitle() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewEditTitleController(a.store)
+	})
+}
