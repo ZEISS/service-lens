@@ -20,7 +20,7 @@ var validate *validator.Validate
 type CreateDesignBody struct {
 	Title      string    `json:"title" form:"title" validate:"required,min=3,max=2048"`
 	Body       string    `json:"body" form:"body" validate:"required"`
-	WorkflowID uuid.UUID `json:"workflow_id" form:"workflow_id" validate:"uuid"`
+	WorkflowID uuid.UUID `json:"workflow_id" form:"omitempty,workflow_id" validate:"omitempty,required,uuid"`
 	Tags       []struct {
 		Name  string `json:"name" form:"name" validate:"required"`
 		Value string `json:"value" form:"value" validate:"required"`
