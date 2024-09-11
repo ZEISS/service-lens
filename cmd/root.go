@@ -270,6 +270,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		templates.Get("/", handlers.ListTemplates())
 		templates.Get("/new", handlers.NewTemplate())
 		templates.Get("/:id", handlers.ShowTemplate())
+		templates.Delete("/:id", handlers.DeleteTemplate())
 		templates.Post("/new", handlers.CreateTemplate())
 
 		// Me ...

@@ -162,4 +162,6 @@ type Handlers interface {
 	Task() fiber.Handler
 	// DeleteWorkflow ...
 	DeleteWorkflow() fiber.Handler
+	// DeleteTemplate ...
+	DeleteTemplate() fiber.Handler
 }

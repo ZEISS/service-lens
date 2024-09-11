@@ -612,3 +612,10 @@ func (a *handlers) PostDashboard() fiber.Handler {
 		return dashboard.NewShowDashboardController(a.store)
 	})
 }
+
+// DeleteTemplate ...
+func (a *handlers) DeleteTemplate() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return templates.NewDeleteTemplateController(a.store)
+	})
+}
