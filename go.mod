@@ -22,7 +22,7 @@ require (
 	github.com/zeiss/fiber-htmx v1.3.24-0.20240904185607-c49c36d17bba
 	github.com/zeiss/fiber-reload v0.1.0
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.8-0.20240909184239-09ed352ba1eb
+	github.com/zeiss/pkg v0.1.8
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.21.0
 	gorm.io/driver/postgres v1.5.9
