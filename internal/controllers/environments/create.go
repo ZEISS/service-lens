@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
@@ -29,16 +29,7 @@ func NewCreateEnvironmentController(store seed.Database[ports.ReadTx, ports.Read
 
 // Error ...
 func (l *CreateEnvironmentControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(
-		l.Ctx(),
-		toasts.Toasts(
-			toasts.ToastsProps{},
-			toasts.ToastAlertError(
-				toasts.ToastProps{},
-				htmx.Text(err.Error()),
-			),
-		),
-	)
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
 }
 
 // Prepare ...

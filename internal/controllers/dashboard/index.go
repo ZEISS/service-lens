@@ -7,6 +7,7 @@ import (
 	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
@@ -26,6 +27,11 @@ func NewShowDashboardController(store seed.Database[ports.ReadTx, ports.ReadWrit
 	}
 }
 
+// Error ...
+func (d *ShowDashboardController) Error(err error) error {
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(d.Ctx())
+}
+
 // Get ...
 func (d *ShowDashboardController) Get() error {
 	return d.Render(
@@ -37,6 +43,13 @@ func (d *ShowDashboardController) Get() error {
 			},
 			func() htmx.Node {
 				return htmx.Fragment(
+					buttons.Button(
+						buttons.ButtonProps{},
+						htmx.HxPost(d.Path()),
+						htmx.HxTrigger("click"),
+						htmx.HxSwap("none"),
+						htmx.Text("Notification"),
+					),
 					dashboard.WelcomeCard(
 						dashboard.WelcomeCardProps{},
 					),

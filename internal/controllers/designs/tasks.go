@@ -14,12 +14,12 @@ import (
 	"github.com/zeiss/pkg/conv"
 	"github.com/zeiss/service-lens/internal/builders/renderers"
 	"github.com/zeiss/service-lens/internal/builders/transformers"
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/forms"
-	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 )
 
@@ -42,16 +42,7 @@ func NewTaskController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *Ta
 
 // Error ...
 func (l *TaskControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(
-		l.Ctx(),
-		toasts.Toasts(
-			toasts.ToastsProps{},
-			toasts.ToastAlertError(
-				toasts.ToastProps{},
-				htmx.Text(err.Error()),
-			),
-		),
-	)
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
 }
 
 // Prepare ...

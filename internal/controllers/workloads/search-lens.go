@@ -3,12 +3,12 @@ package workloads
 import (
 	"context"
 
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/tables"
-	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/pkg/conv"
 )
@@ -32,16 +32,7 @@ func NewSearchLensesController(store seed.Database[ports.ReadTx, ports.ReadWrite
 
 // Error ...
 func (l *SearchLensesControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(
-		l.Ctx(),
-		toasts.Toasts(
-			toasts.ToastsProps{},
-			toasts.ToastAlertError(
-				toasts.ToastProps{},
-				htmx.Text(err.Error()),
-			),
-		),
-	)
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
 }
 
 // Prepare ...

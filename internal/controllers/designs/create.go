@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -58,16 +58,7 @@ func (l *CreateDesignControllerImpl) Prepare() error {
 
 // Error ...
 func (l *CreateDesignControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(
-		l.Ctx(),
-		toasts.Toasts(
-			toasts.ToastsProps{},
-			toasts.ToastAlertError(
-				toasts.ToastProps{},
-				htmx.Text(err.Error()),
-			),
-		),
-	)
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
 }
 
 // Post ...

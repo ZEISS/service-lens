@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zeiss/fiber-htmx/components/toasts"
+	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -27,16 +27,7 @@ func NewReactionCommentController(store seed.Database[ports.ReadTx, ports.ReadWr
 
 // Error ...
 func (l *ReactionCommentControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(
-		l.Ctx(),
-		toasts.Toasts(
-			toasts.ToastsProps{},
-			toasts.ToastAlertError(
-				toasts.ToastProps{},
-				htmx.Text(err.Error()),
-			),
-		),
-	)
+	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
 }
 
 // Delete ...

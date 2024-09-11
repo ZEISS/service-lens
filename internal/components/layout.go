@@ -7,7 +7,6 @@ import (
 	"github.com/zeiss/fiber-htmx/components/drawers"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/navbars"
-	"github.com/zeiss/fiber-htmx/components/toasts"
 )
 
 // LayoutProps is the properties for the Layout component.
@@ -51,8 +50,8 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 					drawers.DrawerContentProps{
 						ID: "drawer",
 					},
-					toasts.Toaster(
-						toasts.ToastsProps{},
+					Toaster(
+						ToasterProps{},
 					),
 					htmx.Div(
 						htmx.ClassNames{
