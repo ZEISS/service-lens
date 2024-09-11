@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/tailwind"
 	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/components/templates"
@@ -38,7 +39,7 @@ func (l *ListTemplatesControllerImpl) Get() error {
 				Development: l.IsDevelopment(),
 			},
 			func() htmx.Node {
-				results := tables.Results[models.Template]{}
+				results := tables.Results[models.Template]{SearchFields: []string{"Name"}}
 
 				errorx.Panic(l.BindQuery(&results))
 				errorx.Panic(l.store.ReadTx(l.Context(), func(ctx context.Context, tx ports.ReadTx) error {
@@ -48,7 +49,7 @@ func (l *ListTemplatesControllerImpl) Get() error {
 				return cards.CardBordered(
 					cards.CardProps{
 						ClassNames: htmx.ClassNames{
-							"m-2": true,
+							tailwind.M2: true,
 						},
 					},
 					cards.Body(
@@ -59,6 +60,7 @@ func (l *ListTemplatesControllerImpl) Get() error {
 								Offset:    results.GetOffset(),
 								Limit:     results.GetLimit(),
 								Total:     results.GetLen(),
+								URL:       l.OriginalURL(),
 							},
 						),
 					),

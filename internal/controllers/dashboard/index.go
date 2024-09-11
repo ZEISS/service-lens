@@ -7,7 +7,6 @@ import (
 	"github.com/zeiss/service-lens/internal/utils"
 
 	htmx "github.com/zeiss/fiber-htmx"
-	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
@@ -44,13 +43,6 @@ func (d *ShowDashboardController) Get() error {
 			},
 			func() htmx.Node {
 				return htmx.Fragment(
-					buttons.Button(
-						buttons.ButtonProps{},
-						htmx.HxPost(d.Path()),
-						htmx.HxTrigger("click"),
-						htmx.HxSwap("none"),
-						htmx.Text("Notification"),
-					),
 					dashboard.WelcomeCard(
 						dashboard.WelcomeCardProps{},
 					),
