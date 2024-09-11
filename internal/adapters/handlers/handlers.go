@@ -598,3 +598,10 @@ func (a *handlers) Task() fiber.Handler {
 		return designs.NewTaskController(a.store)
 	})
 }
+
+// DeleteWorkflow ...
+func (a *handlers) DeleteWorkflow() fiber.Handler {
+	return htmx.NewHxControllerHandler(func() htmx.Controller {
+		return workflows.NewWorkflowDeleteController(a.store)
+	})
+}

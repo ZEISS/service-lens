@@ -160,4 +160,6 @@ type Handlers interface {
 	SearchTemplates() fiber.Handler
 	// Task ...
 	Task() fiber.Handler
+	// DeleteWorkflow ...
+	DeleteWorkflow() fiber.Handler
 }
