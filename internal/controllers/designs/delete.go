@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
-	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 )
@@ -25,7 +25,7 @@ func NewDesignDeleteController(store seed.Database[ports.ReadTx, ports.ReadWrite
 
 // Error ...
 func (l *DesignDeleteControllerImpl) Error(err error) error {
-	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
+	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
 }
 
 // Prepare ...

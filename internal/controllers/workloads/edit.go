@@ -31,111 +31,101 @@ func NewWorkloadEditController(store seed.Database[ports.ReadTx, ports.ReadWrite
 	return &WorkloadEditControllerImpl{store: store}
 }
 
+// Error ...
+func (p *WorkloadEditControllerImpl) Error(err error) error {
+	return toasts.RenderToasts(p.Ctx(), toasts.Error(err.Error()))
+}
+
 // Post ...
 func (p *WorkloadEditControllerImpl) Post() error {
+	var body struct {
+		Name        string `json:"name" form:"name" validate:"required,min=3,max=128,alphanum"`
+		Description string `json:"description" form:"description" validate:"omitempty,min=3,max=1024"`
+	}
+
+	var params struct {
+		ID uuid.UUID `json:"id" form:"id" validate:"required"`
+	}
+	errorx.Panic(p.BindParams(&params))
+
+	errorx.Panic(p.BindBody(&body))
+	workload := models.Workload{}
+	workload.ID = params.ID
+	workload.Name = body.Name
+	workload.Description = body.Description
+
+	errorx.Panic(p.store.ReadWriteTx(p.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
+		return tx.UpdateWorkload(ctx, &workload)
+	}))
+
 	return p.Render(
-		htmx.Fallback(
-			htmx.ErrorBoundary(
-				func() htmx.Node {
-					var body struct {
-						Name        string `json:"name" form:"name" validate:"required,min=3,max=128,alphanum"`
-						Description string `json:"description" form:"description" validate:"omitempty,min=3,max=1024"`
-					}
 
-					var params struct {
-						ID uuid.UUID `json:"id" form:"id" validate:"required"`
-					}
-					errorx.Panic(p.BindParams(&params))
-
-					errorx.Panic(p.BindBody(&body))
-					workload := models.Workload{}
-					workload.ID = params.ID
-					workload.Name = body.Name
-					workload.Description = body.Description
-
-					errorx.Panic(p.store.ReadWriteTx(p.Context(), func(ctx context.Context, tx ports.ReadWriteTx) error {
-						return tx.UpdateWorkload(ctx, &workload)
-					}))
-
-					return cards.CardBordered(
-						cards.CardProps{
-							ClassNames: htmx.ClassNames{
-								tailwind.M2: true,
-							},
-						},
-						htmx.HxTarget("this"),
-						htmx.HxSwap("outerHTML"),
-						cards.Body(
-							cards.BodyProps{},
-							cards.Title(
-								cards.TitleProps{},
-								htmx.Text("Overview"),
-							),
-							htmx.Div(
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Name"),
-									),
-									htmx.H3(
-										htmx.Text(workload.Name),
-									),
-								),
-								htmx.Div(
-									htmx.ClassNames{
-										"flex":     true,
-										"flex-col": true,
-										"py-2":     true,
-									},
-									htmx.H4(
-										htmx.ClassNames{
-											"text-gray-500": true,
-										},
-										htmx.Text("Description"),
-									),
-									htmx.H3(
-										htmx.Text(workload.Description),
-									),
-								),
-							),
-							cards.Actions(
-								cards.ActionsProps{},
-								buttons.Button(
-									buttons.ButtonProps{
-										Type: "button",
-									},
-									htmx.Text("Edit"),
-									htmx.HxGet(fmt.Sprintf(utils.EditWorkloadUrlFormat, workload.ID)),
-									htmx.HxSwap("outerHTML"),
-								),
-								buttons.Button(
-									buttons.ButtonProps{},
-									htmx.HxDelete(""),
-									htmx.HxConfirm("Are you sure you want to delete this workload?"),
-									htmx.Text("Delete"),
-								),
-							),
-						),
-					)
+		cards.CardBordered(
+			cards.CardProps{
+				ClassNames: htmx.ClassNames{
+					tailwind.M2: true,
 				},
-			),
-			func(err error) htmx.Node {
-				htmx.ReSwap(p.Ctx(), "none")
-				return toasts.Toasts(
-					toasts.ToastsProps{},
-					toasts.ToastAlertError(
-						toasts.ToastProps{},
-						htmx.Text(err.Error()),
-					),
-				)
 			},
+			htmx.HxTarget("this"),
+			htmx.HxSwap("outerHTML"),
+			cards.Body(
+				cards.BodyProps{},
+				cards.Title(
+					cards.TitleProps{},
+					htmx.Text("Overview"),
+				),
+				htmx.Div(
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Name"),
+						),
+						htmx.H3(
+							htmx.Text(workload.Name),
+						),
+					),
+					htmx.Div(
+						htmx.ClassNames{
+							"flex":     true,
+							"flex-col": true,
+							"py-2":     true,
+						},
+						htmx.H4(
+							htmx.ClassNames{
+								"text-gray-500": true,
+							},
+							htmx.Text("Description"),
+						),
+						htmx.H3(
+							htmx.Text(workload.Description),
+						),
+					),
+				),
+				cards.Actions(
+					cards.ActionsProps{},
+					buttons.Button(
+						buttons.ButtonProps{
+							Type: "button",
+						},
+						htmx.Text("Edit"),
+						htmx.HxGet(fmt.Sprintf(utils.EditWorkloadUrlFormat, workload.ID)),
+						htmx.HxSwap("outerHTML"),
+					),
+					buttons.Button(
+						buttons.ButtonProps{},
+						htmx.HxDelete(""),
+						htmx.HxConfirm("Are you sure you want to delete this workload?"),
+						htmx.Text("Delete"),
+					),
+				),
+			),
 		),
 	)
 }

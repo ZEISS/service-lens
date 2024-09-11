@@ -3,7 +3,7 @@ package workloads
 import (
 	"context"
 
-	"github.com/zeiss/service-lens/internal/components"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	"github.com/zeiss/service-lens/internal/components/designs"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
@@ -26,7 +26,7 @@ func NewTagController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *Tag
 
 // Error ...
 func (l *TagControllerImpl) Error(err error) error {
-	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
+	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
 }
 
 // Delete ...

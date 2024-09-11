@@ -59,16 +59,7 @@ func (p *NewProfileControllerImpl) Post() error {
 		return tx.CreateProfile(ctx, &profile)
 	})
 	if err != nil {
-		return toasts.RenderToasts(
-			p.Ctx(),
-			toasts.Toasts(
-				toasts.ToastsProps{},
-				toasts.ToastAlertError(
-					toasts.ToastProps{},
-					htmx.Text(err.Error()),
-				),
-			),
-		)
+		return toasts.RenderToasts(p.Ctx(), toasts.Error(err.Error()))
 	}
 
 	return p.Redirect(fmt.Sprintf(utils.ShowProfileUrlFormat, profile.ID))

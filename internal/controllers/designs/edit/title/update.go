@@ -6,8 +6,8 @@ import (
 
 	"github.com/zeiss/fiber-htmx/components/buttons"
 	"github.com/zeiss/fiber-htmx/components/cards"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
-	"github.com/zeiss/service-lens/internal/components"
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 	"github.com/zeiss/service-lens/internal/utils"
@@ -31,7 +31,7 @@ func NewUpdateController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *
 
 // Error ...
 func (l *UpdateControllerImpl) Error(err error) error {
-	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(l.Ctx())
+	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
 }
 
 // Prepare ...

@@ -11,6 +11,7 @@ import (
 	"github.com/zeiss/fiber-htmx/components/loading"
 	"github.com/zeiss/fiber-htmx/components/stats"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
+	"github.com/zeiss/fiber-htmx/components/toasts"
 	seed "github.com/zeiss/gorm-seed"
 )
 
@@ -29,7 +30,7 @@ func NewShowDashboardController(store seed.Database[ports.ReadTx, ports.ReadWrit
 
 // Error ...
 func (d *ShowDashboardController) Error(err error) error {
-	return components.New(components.ERROR, err.Error()).SetHXTriggerHeader(d.Ctx())
+	return toasts.RenderToasts(d.Ctx(), toasts.Error(err.Error()))
 }
 
 // Get ...
