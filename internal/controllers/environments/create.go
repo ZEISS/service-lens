@@ -29,7 +29,7 @@ func NewCreateEnvironmentController(store seed.Database[ports.ReadTx, ports.Read
 
 // Error ...
 func (l *CreateEnvironmentControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

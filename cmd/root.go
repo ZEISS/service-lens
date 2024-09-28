@@ -10,8 +10,6 @@ import (
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/entraid"
 	"github.com/zeiss/fiber-goth/providers/github"
-	reload "github.com/zeiss/fiber-reload"
-	seed "github.com/zeiss/gorm-seed"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
 	"github.com/zeiss/service-lens/internal/cfg"
@@ -24,6 +22,10 @@ import (
 	"github.com/spf13/cobra"
 	goth "github.com/zeiss/fiber-goth"
 	adapter "github.com/zeiss/fiber-goth/adapters/gorm"
+	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/fiber-htmx/components/toasts"
+	reload "github.com/zeiss/fiber-reload"
+	seed "github.com/zeiss/gorm-seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -146,9 +148,15 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			CookieHTTPOnly: true,
 		}
 
+		userHandler := handlers.NewUserHandler()
+
 		handlers := handlers.New(store)
 
-		app := fiber.New()
+		app := fiber.New(
+			fiber.Config{
+				ErrorHandler: toasts.DefaultErrorHandler,
+			},
+		)
 		app.Use(requestid.New())
 		app.Use(logger.New())
 		app.Use(reload.Environment(s.cfg.Flags.Environment))
@@ -159,9 +167,13 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		app.Use(goth.NewProtectMiddleware(gothConfig))
 
+		compFuncConfig := htmx.Config{
+			ErrorHandler: toasts.DefaultErrorHandler,
+		}
+
 		app.Get("/", handlers.Dashboard())
 		app.Post("/", handlers.PostDashboard())
-		app.Get("/login", handlers.Login())
+		app.Get("/login", htmx.NewCompFuncHandler(userHandler.Login(), compFuncConfig))
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
 		app.Get("/logout", goth.NewLogoutHandler(gothConfig))

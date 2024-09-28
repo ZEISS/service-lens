@@ -33,7 +33,7 @@ func NewWorkloadEditController(store seed.Database[ports.ReadTx, ports.ReadWrite
 
 // Error ...
 func (p *WorkloadEditControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(p.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Post ...

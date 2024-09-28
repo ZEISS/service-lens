@@ -26,7 +26,7 @@ func NewTagController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *Tag
 
 // Error ...
 func (l *TagControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Delete ...

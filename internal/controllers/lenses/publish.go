@@ -27,7 +27,7 @@ func NewLensPublishController(store seed.Database[ports.ReadTx, ports.ReadWriteT
 
 // Error ...
 func (c *LensPublishControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(c.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Delete ...

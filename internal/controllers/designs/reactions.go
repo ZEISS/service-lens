@@ -26,7 +26,7 @@ func NewReactionController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 
 // Error ...
 func (l *ReactionControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Delete ...

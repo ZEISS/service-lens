@@ -29,7 +29,7 @@ func NewTagController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *New
 
 // Error ...
 func (t *NewTagControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(t.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

@@ -30,7 +30,7 @@ func (p *WorkflowDeleteControllerImpl) Prepare() error {
 
 // Error ...
 func (p *WorkflowDeleteControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(p.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Delete ...

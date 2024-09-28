@@ -51,11 +51,6 @@ func NewWorkloadUpdateAnswerController(store seed.Database[ports.ReadTx, ports.R
 	}
 }
 
-// Error ...
-func (w *WorkloadUpdateAnswerControllerImpl) Error(err error) error {
-	return err
-}
-
 // Prepare ...
 // nolint:gocyclo
 func (w *WorkloadUpdateAnswerControllerImpl) Prepare() error {

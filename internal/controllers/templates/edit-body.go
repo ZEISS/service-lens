@@ -43,7 +43,7 @@ func NewEditBodyController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 
 // Error ...
 func (l *EditBodyControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

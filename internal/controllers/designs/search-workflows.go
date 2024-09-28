@@ -32,7 +32,7 @@ func NewSearchWorkflowsController(store seed.Database[ports.ReadTx, ports.ReadWr
 
 // Error ...
 func (l *SearchWorkflowsControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

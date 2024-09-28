@@ -25,7 +25,7 @@ func NewDesignDeleteController(store seed.Database[ports.ReadTx, ports.ReadWrite
 
 // Error ...
 func (l *DesignDeleteControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

@@ -42,7 +42,7 @@ func NewTaskController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *Ta
 
 // Error ...
 func (l *TaskControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

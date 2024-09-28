@@ -29,11 +29,6 @@ func NewCreateProfileController(store seed.Database[ports.ReadTx, ports.ReadWrit
 	return &CreateProfileControllerImpl{store: store}
 }
 
-// Error ...
-func (l *CreateProfileControllerImpl) Error(err error) error {
-	return err
-}
-
 // Prepare ...
 func (l *CreateProfileControllerImpl) Prepare() error {
 	validate = validator.New()

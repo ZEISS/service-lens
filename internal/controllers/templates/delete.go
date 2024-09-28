@@ -31,7 +31,7 @@ func (l *DeleteTemplateControllerImpl) Prepare() error {
 
 // Error ...
 func (l *DeleteTemplateControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Post ...

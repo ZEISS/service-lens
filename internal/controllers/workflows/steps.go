@@ -26,7 +26,7 @@ func NewStepController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *St
 
 // Error ...
 func (l *StepControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Delete ...

@@ -28,7 +28,7 @@ func NewLensController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *Ne
 
 // Error ...
 func (l *NewLensControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Post ...

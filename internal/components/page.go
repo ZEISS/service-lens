@@ -38,6 +38,11 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"),
 					htmx.Attribute("defer", ""),
 				),
+				htmx.Script(
+					htmx.Attribute("src", "https://unpkg.com/fiber-htmx@1.3.26"),
+					htmx.CrossOrigin("anonymous"),
+					htmx.Attribute("defer", ""),
+				),
 			}, props.Head...),
 		},
 		htmx.Body(

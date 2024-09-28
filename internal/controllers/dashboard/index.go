@@ -29,7 +29,7 @@ func NewShowDashboardController(store seed.Database[ports.ReadTx, ports.ReadWrit
 
 // Error ...
 func (d *ShowDashboardController) Error(err error) error {
-	return toasts.RenderToasts(d.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Get ...

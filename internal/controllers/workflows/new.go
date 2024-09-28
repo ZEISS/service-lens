@@ -32,7 +32,7 @@ func NewWorkflowController(store seed.Database[ports.ReadTx, ports.ReadWriteTx])
 
 // Error ...
 func (t *NewWorkflowControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(t.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

@@ -32,7 +32,7 @@ func NewSearchProfilesController(store seed.Database[ports.ReadTx, ports.ReadWri
 
 // Error ...
 func (l *SearchProfilesControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

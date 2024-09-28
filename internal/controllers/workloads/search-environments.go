@@ -32,7 +32,7 @@ func NewSearchEnvironmentsController(store seed.Database[ports.ReadTx, ports.Rea
 
 // Error ...
 func (l *SearchEnvironmentsControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Prepare ...

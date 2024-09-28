@@ -58,7 +58,7 @@ func (l *CreateDesignControllerImpl) Prepare() error {
 
 // Error ...
 func (l *CreateDesignControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Post ...

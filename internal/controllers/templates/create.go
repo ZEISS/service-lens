@@ -54,7 +54,7 @@ func (l *CreateTemplateControllerImpl) Prepare() error {
 
 // Error ...
 func (l *CreateTemplateControllerImpl) Error(err error) error {
-	return toasts.RenderToasts(l.Ctx(), toasts.Error(err.Error()))
+	return toasts.Error(err.Error())
 }
 
 // Post ...
