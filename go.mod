@@ -15,7 +15,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/teekennedy/goldmark-markdown v0.3.0
-	github.com/yuin/goldmark v1.7.4
+	github.com/yuin/goldmark v1.7.7
 	github.com/yuin/goldmark-emoji v1.0.3
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.12
