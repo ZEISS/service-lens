@@ -18,7 +18,7 @@ require (
 	github.com/yuin/goldmark v1.7.7
 	github.com/yuin/goldmark-emoji v1.0.3
 	github.com/zeiss/fiber-authz v1.0.33
-	github.com/zeiss/fiber-goth v1.2.12
+	github.com/zeiss/fiber-goth v1.2.13
 	github.com/zeiss/fiber-htmx v1.3.28
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
@@ -113,6 +113,8 @@ require (
 	github.com/golangci/revgrep v0.5.3 // indirect
 	github.com/golangci/unconvert v0.0.0-20240309020433-c5143eacb3ed // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/go-github/v56 v56.0.0 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/gordonklaus/ineffassign v0.1.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gostaticanalysis/analysisutil v0.7.1 // indirect
