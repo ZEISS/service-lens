@@ -18,7 +18,6 @@ func SubNav(p SubNavProps, children ...htmx.Node) htmx.Node {
 				"bg-base-100":    true,
 				"w-full":         true,
 				"border-neutral": true,
-				"border-b":       true,
 				"border-t":       true,
 				"px-6":           true,
 			},

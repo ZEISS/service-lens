@@ -71,7 +71,6 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 									ClassNames: htmx.ClassNames{
 										"navbar":      true,
 										"z-10":        true,
-										"border-b":    true,
 										"px-3":        true,
 										"bg-base-100": true,
 									},
@@ -118,9 +117,10 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 					drawers.DrawerSideMenu(
 						drawers.DrawerSideMenuProps{
 							ClassNames: htmx.ClassNames{
-								"border-r":    true,
-								"bg-base-100": true,
-								"bg-base-200": false,
+								"border-r":               true,
+								"border-neutral-content": true,
+								"bg-base-100":            true,
+								"bg-base-200":            false,
 							},
 						},
 						// AccountSwitch(

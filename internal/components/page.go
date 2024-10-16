@@ -23,23 +23,23 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 			},
 			Head: append([]htmx.Node{
 				htmx.Link(
-					htmx.Attribute("href", "https://cdn.jsdelivr.net/npm/daisyui/dist/full.css"),
+					htmx.Attribute("href", "https://unpkg.com/tailwindcss@2.0.1/dist/tailwind.min.css"),
 					htmx.Attribute("rel", "stylesheet"),
 					htmx.Attribute("type", "text/css"),
+					htmx.CrossOrigin("anonymous"),
 				),
-				htmx.Script(
-					htmx.Attribute("src", "https://cdn.tailwindcss.com"),
+				htmx.Link(
+					htmx.Attribute("href", "https://unpkg.com/daisyui@4.12.13/dist/full.css"),
+					htmx.Attribute("rel", "stylesheet"),
+					htmx.Attribute("type", "text/css"),
+					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
 					htmx.Attribute("src", "https://unpkg.com/htmx.org@2.0.2"),
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
-					htmx.Attribute("src", "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"),
-					htmx.Attribute("defer", ""),
-				),
-				htmx.Script(
-					htmx.Attribute("src", "https://unpkg.com/fiber-htmx@1.3.26"),
+					htmx.Attribute("src", "https://unpkg.com/alpinejs@1.1.2/dist/alpine.js"),
 					htmx.CrossOrigin("anonymous"),
 					htmx.Attribute("defer", ""),
 				),

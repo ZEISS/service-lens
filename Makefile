@@ -1,13 +1,13 @@
 .DEFAULT_GOAL := build
 
+include .env
+export
+
 GO 				?= go
 GO_RUN_TOOLS 	?= $(GO) run -modfile ./tools/go.mod
 GO_TEST 		?= $(GO_RUN_TOOLS) gotest.tools/gotestsum --format pkgname
 GO_RELEASER 	?= $(GO_RUN_TOOLS) github.com/goreleaser/goreleaser
 GO_MOD 			?= $(shell ${GO} list -m)
-
-# Module name
-MODULE_NAME ?= github.com/katallaxie/template-go
 
 .PHONY: build
 build: ## Build the binary file.
@@ -25,6 +25,13 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	$(GO) vet ./...
 
+.PHONY: start
+start: ## Start the service.
+	$(GO_RUN_TOOLS) github.com/air-verse/air
+
+.PHONY: migrate
+migrate: ## Run database migrations.
+	$(GO) run main.go migrate
 
 .PHONY: test
 test: fmt vet ## Run tests.

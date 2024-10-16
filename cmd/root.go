@@ -16,6 +16,7 @@ import (
 	"github.com/zeiss/service-lens/internal/models"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/helmet"
 	logger "github.com/gofiber/fiber/v2/middleware/logger"
 	requestid "github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/katallaxie/pkg/server"
@@ -158,6 +159,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			},
 		)
 		app.Use(requestid.New())
+		app.Use(helmet.New())
 		app.Use(logger.New())
 		app.Use(reload.Environment(s.cfg.Flags.Environment))
 
