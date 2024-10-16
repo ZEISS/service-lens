@@ -123,11 +123,6 @@ func Layout(p LayoutProps, children ...htmx.Node) htmx.Node {
 								"bg-base-200":            false,
 							},
 						},
-						// AccountSwitch(
-						// 	AccountSwitchProps{
-						// 		User: p.User,
-						// 	},
-						// ),
 						dividers.Divider(
 							dividers.DividerProps{},
 						),
