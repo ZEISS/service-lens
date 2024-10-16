@@ -20,9 +20,9 @@ require (
 	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.12
 	github.com/zeiss/fiber-htmx v1.3.25
-	github.com/zeiss/fiber-reload v0.1.0
+	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.8
+	github.com/zeiss/pkg v0.1.11
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.21.0
 	gorm.io/driver/postgres v1.5.9
@@ -175,7 +175,7 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.16.2 // indirect
 	github.com/oapi-codegen/fiber-middleware v1.0.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/openfga/go-sdk v0.6.0 // indirect
+	github.com/openfga/go-sdk v0.6.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -243,8 +243,8 @@ require (
 	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
-	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/oauth2 v0.22.0 // indirect
+	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/oauth2 v0.23.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.18.0 // indirect
