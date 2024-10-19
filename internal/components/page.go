@@ -23,14 +23,14 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 			},
 			Head: append([]htmx.Node{
 				htmx.Link(
-					htmx.Attribute("href", "https://unpkg.com/tailwindcss@2.0.1/dist/tailwind.min.css"),
+					htmx.Attribute("href", "https://unpkg.com/daisyui@4.12.13/dist/full.css"),
 					htmx.Attribute("rel", "stylesheet"),
 					htmx.Attribute("type", "text/css"),
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Link(
-					htmx.Attribute("href", "https://unpkg.com/daisyui@4.12.13/dist/full.css"),
-					htmx.Attribute("rel", "stylesheet"),
+					htmx.Rel("stylesheet"),
+					htmx.Href("https://unpkg.com/fiber-htmx@1.3.28/dist/out.css"),
 					htmx.Attribute("type", "text/css"),
 					htmx.CrossOrigin("anonymous"),
 				),
@@ -39,9 +39,14 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
-					htmx.Attribute("src", "https://unpkg.com/alpinejs@1.1.2/dist/alpine.js"),
+					htmx.Src("https://unpkg.com/fiber-htmx@1.3.28"),
 					htmx.CrossOrigin("anonymous"),
-					htmx.Attribute("defer", ""),
+					htmx.Defer(),
+				),
+				htmx.Script(
+					htmx.Attribute("src", "https://unpkg.com/alpinejs@3.14.3/dist/cdn.min.js"),
+					htmx.CrossOrigin("anonymous"),
+					htmx.Defer(),
 				),
 			}, props.Head...),
 		},
