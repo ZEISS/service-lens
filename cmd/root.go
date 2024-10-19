@@ -58,6 +58,8 @@ func init() {
 	Root.PersistentFlags().StringVar(&config.Flags.Environment, "environment", config.Flags.Environment, "environment")
 	Root.PersistentFlags().StringVar(&config.Flags.DatabaseURI, "db-rul", config.Flags.DatabaseURI, "Database URI")
 	Root.PersistentFlags().StringVar(&config.Flags.DatabaseTablePrefix, "db-table-prefix", config.Flags.DatabaseTablePrefix, "Database table prefix")
+	Root.PersistentFlags().BoolVar(&config.Flags.GitHubEnabled, "github-enabled", config.Flags.GitHubEnabled, "GitHub enabled")
+	Root.PersistentFlags().BoolVar(&config.Flags.EntraIDEnabled, "entraid-enabled", config.Flags.EntraIDEnabled, "EntraID enabled")
 
 	Root.SilenceUsage = true
 }
@@ -89,8 +91,13 @@ func NewWebSrv(cfg *cfg.Config) *WebSrv {
 // Start starts the server.
 func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.RunFunc) func() error {
 	return func() error {
-		providers.RegisterProvider(github.New(s.cfg.Flags.GitHubClientID, s.cfg.Flags.GitHubClientSecret, s.cfg.Flags.GitHubCallbackURL))
-		providers.RegisterProvider(entraid.New(s.cfg.Flags.EntraIDClientID, s.cfg.Flags.EntraIDClientSecret, s.cfg.Flags.EntraIDCallbackURL, entraid.TenantType(s.cfg.Flags.EntraIDTenantID)))
+		if s.cfg.Flags.GitHubEnabled {
+			providers.RegisterProvider(github.New(s.cfg.Flags.GitHubClientID, s.cfg.Flags.GitHubClientSecret, s.cfg.Flags.GitHubCallbackURL))
+		}
+
+		if s.cfg.Flags.EntraIDEnabled {
+			providers.RegisterProvider(entraid.New(s.cfg.Flags.EntraIDClientID, s.cfg.Flags.EntraIDClientSecret, s.cfg.Flags.EntraIDCallbackURL, entraid.TenantType(s.cfg.Flags.EntraIDTenantID)))
+		}
 
 		conn, err := gorm.Open(postgres.Open(config.Flags.DatabaseURI), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
