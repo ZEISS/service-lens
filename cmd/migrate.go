@@ -61,6 +61,7 @@ var Migrate = &cobra.Command{
 			&models.Risk{},
 			&models.Workload{},
 			&models.WorkloadLensQuestionAnswer{},
+			&models.Setting{},
 		)
 	},
 }

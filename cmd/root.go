@@ -143,6 +143,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			&models.Risk{},
 			&models.Workload{},
 			&models.WorkloadLensQuestionAnswer{},
+			&models.Setting{},
 		)
 		if err != nil {
 			return err

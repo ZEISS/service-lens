@@ -30,6 +30,16 @@ func UserMenu(p UserMenuProps, children ...htmx.Node) htmx.Node {
 				menus.MenuItemProps{},
 				menus.MenuLink(
 					menus.MenuLinkProps{
+						Href:   "/settings",
+						Active: strings.HasPrefix(p.Path, "/settings"),
+					},
+					htmx.Text("Settings"),
+				),
+			),
+			menus.MenuItem(
+				menus.MenuItemProps{},
+				menus.MenuLink(
+					menus.MenuLinkProps{
 						Href:   "/me",
 						Active: strings.HasPrefix(p.Path, "/me"),
 					},
