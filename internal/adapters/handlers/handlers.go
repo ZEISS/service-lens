@@ -606,13 +606,6 @@ func (a *handlers) DeleteWorkflow() fiber.Handler {
 	})
 }
 
-// PostDashboard ...
-func (a *handlers) PostDashboard() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return dashboard.NewShowDashboardController(a.store)
-	})
-}
-
 // DeleteTemplate ...
 func (a *handlers) DeleteTemplate() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {

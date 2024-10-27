@@ -182,7 +182,6 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		}
 
 		app.Get("/", handlers.Dashboard())
-		app.Post("/", handlers.PostDashboard())
 		app.Get("/login", htmx.NewCompFuncHandler(userHandler.Login(), compFuncConfig))
 		app.Get("/login/:provider", goth.NewBeginAuthHandler(gothConfig))
 		app.Get("/auth/:provider/callback", goth.NewCompleteAuthHandler(gothConfig))
