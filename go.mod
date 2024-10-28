@@ -17,12 +17,11 @@ require (
 	github.com/teekennedy/goldmark-markdown v0.3.0
 	github.com/yuin/goldmark v1.7.8
 	github.com/yuin/goldmark-emoji v1.0.4
-	github.com/zeiss/fiber-authz v1.0.33
 	github.com/zeiss/fiber-goth v1.2.13
 	github.com/zeiss/fiber-htmx v1.3.29
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.12
+	github.com/zeiss/pkg v0.1.17
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.21.0
 	gorm.io/driver/postgres v1.5.9
@@ -177,7 +176,7 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.16.2 // indirect
 	github.com/oapi-codegen/fiber-middleware v1.0.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/openfga/go-sdk v0.6.1 // indirect
+	github.com/openfga/go-sdk v0.6.3 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/perimeterx/marshmallow v1.1.5 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -233,6 +232,7 @@ require (
 	github.com/yagipy/maintidx v1.0.0 // indirect
 	github.com/yeya24/promlinter v0.3.0 // indirect
 	github.com/ykadowak/zerologlint v0.1.5 // indirect
+	github.com/zeiss/fiber-authz v1.0.33 // indirect
 	gitlab.com/bosi/decorder v0.4.2 // indirect
 	go-simpler.org/musttag v0.12.2 // indirect
 	go-simpler.org/sloglint v0.7.2 // indirect
