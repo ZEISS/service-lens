@@ -158,6 +158,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		}
 
 		userHandler := handlers.NewUserHandler()
+		settingsHandlers := handlers.NewSettingsHandler()
 
 		handlers := handlers.New(store)
 
@@ -302,7 +303,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/me", handlers.Me())
 
 		// Settings ...
-		app.Get("/settings", handlers.ShowSettings())
+		app.Get("/settings", htmx.NewCompFuncHandler(settingsHandlers.ListSettings, compFuncConfig))
 
 		// Preview ...
 		app.Post("/preview", handlers.Preview())

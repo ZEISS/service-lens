@@ -15,7 +15,6 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/me"
 	"github.com/zeiss/service-lens/internal/controllers/previews"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
-	"github.com/zeiss/service-lens/internal/controllers/settings"
 	"github.com/zeiss/service-lens/internal/controllers/tags"
 	"github.com/zeiss/service-lens/internal/controllers/templates"
 	"github.com/zeiss/service-lens/internal/controllers/workflows"
@@ -267,13 +266,6 @@ func (a *handlers) UpdateLens() fiber.Handler {
 func (a *handlers) DeleteLens() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return lenses.NewLensDeleteController(a.store)
-	})
-}
-
-// ShowSettings ...
-func (a *handlers) ShowSettings() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return settings.NewSettingsShowController(a.store)
 	})
 }
 
