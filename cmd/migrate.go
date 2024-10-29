@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"github.com/zeiss/fiber-goth/adapters"
+	"github.com/zeiss/pkg/dbx"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/models"
 
 	"github.com/spf13/cobra"
-	seed "github.com/zeiss/gorm-seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -25,7 +25,7 @@ var Migrate = &cobra.Command{
 			return err
 		}
 
-		store, err := seed.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
+		store, err := dbx.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
 		if err != nil {
 			return err
 		}

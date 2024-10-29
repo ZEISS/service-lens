@@ -10,6 +10,7 @@ import (
 	"github.com/zeiss/fiber-goth/providers"
 	"github.com/zeiss/fiber-goth/providers/entraid"
 	"github.com/zeiss/fiber-goth/providers/github"
+	"github.com/zeiss/pkg/dbx"
 	"github.com/zeiss/service-lens/internal/adapters/db"
 	"github.com/zeiss/service-lens/internal/adapters/handlers"
 	"github.com/zeiss/service-lens/internal/cfg"
@@ -26,7 +27,6 @@ import (
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/toasts"
 	reload "github.com/zeiss/fiber-reload"
-	seed "github.com/zeiss/gorm-seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -108,7 +108,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 			return err
 		}
 
-		store, err := seed.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
+		store, err := dbx.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
 		if err != nil {
 			return err
 		}

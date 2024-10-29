@@ -4,15 +4,14 @@ import (
 	"context"
 	"slices"
 
-	"github.com/zeiss/fiber-htmx/components/tables"
-
 	"github.com/zeiss/service-lens/internal/models"
 	"github.com/zeiss/service-lens/internal/ports"
 
 	"github.com/google/uuid"
 	"github.com/zeiss/fiber-goth/adapters"
-	seed "github.com/zeiss/gorm-seed"
+	"github.com/zeiss/fiber-htmx/components/tables"
 	"github.com/zeiss/pkg/cast"
+	"github.com/zeiss/pkg/dbx"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -24,7 +23,7 @@ type readTxImpl struct {
 }
 
 // NewReadTx ...
-func NewReadTx() seed.ReadTxFactory[ports.ReadTx] {
+func NewReadTx() dbx.ReadTxFactory[ports.ReadTx] {
 	return func(db *gorm.DB) (ports.ReadTx, error) {
 		return &readTxImpl{conn: db}, nil
 	}
@@ -212,7 +211,7 @@ type writeTxImpl struct {
 }
 
 // NewWriteTx ...
-func NewWriteTx() seed.ReadWriteTxFactory[ports.ReadWriteTx] {
+func NewWriteTx() dbx.ReadWriteTxFactory[ports.ReadWriteTx] {
 	return func(db *gorm.DB) (ports.ReadWriteTx, error) {
 		return &writeTxImpl{conn: db}, nil
 	}

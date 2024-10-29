@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	goth "github.com/zeiss/fiber-goth"
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/cards"
 	"github.com/zeiss/fiber-htmx/components/tailwind"
 	reload "github.com/zeiss/fiber-reload"
+	"github.com/zeiss/pkg/errorx"
 	"github.com/zeiss/service-lens/internal/components"
 )
 
@@ -18,8 +20,8 @@ func NewSettingsHandler() *SettingsHandler {
 func (h *SettingsHandler) ListSettings(c *fiber.Ctx) (htmx.Node, error) {
 	return components.DefaultLayout(
 		components.DefaultLayoutProps{
-			Path: c.Path(),
-			// User:        d.Session().User,
+			Path:        c.Path(),
+			User:        errorx.Ignore(goth.SessionFromContext(c)).User,
 			Development: reload.IsDevelopment(c.UserContext()),
 		},
 		func() htmx.Node {
