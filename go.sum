@@ -539,8 +539,8 @@ github.com/zeiss/fiber-authz v1.0.33 h1:KZnVTxG+VoQLowoCqoMwam/5H4PVu89rn9ZJ2AGO
 github.com/zeiss/fiber-authz v1.0.33/go.mod h1:oVkhY0X9/xFa0Pu3BuEU8ubE7pAQmIjFMUwUGD2pQqc=
 github.com/zeiss/fiber-goth v1.2.15 h1:5imQDAf6lG8xKAzjjsaab25TAYdc5QtyaaqaCwEUbp4=
 github.com/zeiss/fiber-goth v1.2.15/go.mod h1:nBus53MvxBZwPIul1TJVwg4bDOvoIoqs9Bj86YFUkoo=
-github.com/zeiss/fiber-htmx v1.3.29 h1:0KSbp1HqkFBR4XDUA8Y8e97I1Y7iTAJO5ykDhXWIulY=
-github.com/zeiss/fiber-htmx v1.3.29/go.mod h1:taAh4uaXoY+NRqn6t0bnknbzGmVQ70smg6SYK2yaYCI=
+github.com/zeiss/fiber-htmx v1.3.32 h1:FpEpji6+uwWU56shEVMhuRsOpCt6oUdWDNZ54GtjHhs=
+github.com/zeiss/fiber-htmx v1.3.32/go.mod h1:LkK9o7G0jGAZvlXyr3XsRuep60i8mSK23igwoikjlQY=
 github.com/zeiss/fiber-reload v0.1.1 h1:ozSpAjXfCkHa4x2y+lY4cqBWiQ9ORbECMBsMruMexo0=
 github.com/zeiss/fiber-reload v0.1.1/go.mod h1:n8KLvNS6qbfcmQhgHhUNrOfEkiQWxscweIvBBsHy2XI=
 github.com/zeiss/gorm-seed v0.1.2 h1:XksLz/IXC1ejUgbl5dHC2/vQAqD2LNZMhZMz2w+E7fY=
