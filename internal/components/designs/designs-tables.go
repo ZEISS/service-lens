@@ -9,7 +9,6 @@ import (
 
 	htmx "github.com/zeiss/fiber-htmx"
 	"github.com/zeiss/fiber-htmx/components/buttons"
-	"github.com/zeiss/fiber-htmx/components/dropdowns"
 	"github.com/zeiss/fiber-htmx/components/icons"
 	"github.com/zeiss/fiber-htmx/components/links"
 	"github.com/zeiss/fiber-htmx/components/tables"
@@ -86,34 +85,11 @@ func DesignsTable(props DesignsTableProps, children ...htmx.Node) htmx.Node {
 							},
 						),
 					),
-					dropdowns.Dropdown(
-						dropdowns.DropdownProps{
-							ClassNames: htmx.ClassNames{
-								"dropdown-end": true,
-							},
-						},
-						dropdowns.DropdownButton(
-							dropdowns.DropdownButtonProps{},
-							htmx.Text("Create Design"),
-						),
-						dropdowns.DropdownMenuItems(
-							dropdowns.DropdownMenuItemsProps{},
-							dropdowns.DropdownMenuItem(
-								dropdowns.DropdownMenuItemProps{},
-								htmx.Group(
-									htmx.ForEach(props.Templates, func(template *models.Template, idx int) htmx.Node {
-										return htmx.A(
-											htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, template.ID)),
-											htmx.Text(template.Name),
-										)
-									})...,
-								),
-								htmx.A(
-									htmx.Href(fmt.Sprintf(utils.CreateDesignUrlFormat, "_blank")),
-									htmx.Text("Blank Template"),
-								),
-							),
-						),
+					NewDesignModal(),
+					buttons.Button(
+						buttons.ButtonProps{},
+						htmx.OnClick("new_design_modal.showModal()"),
+						htmx.Text("Add Design"),
 					),
 				),
 			},

@@ -36,15 +36,6 @@ func (l *NewDesignControllerImpl) Get() error {
 				User:        l.Session().User,
 				Development: l.IsDevelopment(),
 				Head: []htmx.Node{
-					htmx.Link(
-						htmx.Attribute("href", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.css"),
-						htmx.Rel("stylesheet"),
-						htmx.Type("text/css"),
-					),
-					htmx.Script(
-						htmx.Attribute("src", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.js"),
-						htmx.Type("text/javascript"),
-					),
 					htmx.Script(
 						htmx.Src("https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.js"),
 						htmx.Type("module"),

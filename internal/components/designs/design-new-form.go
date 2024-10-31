@@ -24,8 +24,6 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 	return htmx.FormElement(
 		htmx.HxPost(""),
 		htmx.HxTarget("this"),
-		// htmx.HxSwap("outerHTML"),
-		// htmx.ID("body"),
 		cards.CardBordered(
 			cards.CardProps{
 				ClassNames: htmx.ClassNames{
@@ -38,7 +36,6 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 					cards.TitleProps{},
 					htmx.Text("Create Design"),
 				),
-
 				forms.FormControl(
 					forms.FormControlProps{
 						ClassNames: htmx.ClassNames{},
@@ -93,6 +90,7 @@ func DesignNewForm(props DesignNewFormProps) htmx.Node {
 								htmx.HxSwap("innerHTML"),
 								htmx.Attribute("hx-sync", "closest form:abort"),
 								htmx.ContentEditable("false"),
+								htmx.Text(props.Template),
 							),
 						),
 						tabs.Tab(

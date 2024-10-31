@@ -22,35 +22,34 @@ func NewDesignModal() htmx.Node {
 		},
 		htmx.FormElement(
 			htmx.ID("new-design-form"),
-			htmx.HxTrigger("submit"),
-			htmx.HxPost(utils.CreateDesignUrlFormat),
-			htmx.HxDisabledElt("find button, find input"),
-			htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
-			htmx.HxSwap("none"),
+			htmx.Action(utils.CreateDesignUrlFormat),
+			htmx.Method("get"),
+			htmx.HxBoost(true),
+			// htmx.HxDisabledElt("find button, find input"),
+			// htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
 			forms.FormControl(
 				forms.FormControlProps{},
-				forms.FormControlLabel(
-					forms.FormControlLabelProps{},
-					forms.FormControlLabelText(
-						forms.FormControlLabelTextProps{},
-						htmx.Text("Template"),
-					),
-				),
-				forms.Datalist(
-					forms.DatalistProps{
-						ID:          "templates",
-						Name:        "template_id",
-						Placeholder: "Search a template ...",
-						URL:         utils.DesignSearchTemplatesUrlFormat,
+				htmx.Div(
+					htmx.ClassNames{
+						tailwind.Flex:           true,
+						tailwind.JustifyBetween: true,
 					},
-				),
-				loading.Spinner(
-					loading.SpinnerProps{
-						ClassNames: htmx.ClassNames{
-							"htmx-indicator": true,
-							tailwind.M2:      true,
+					forms.Datalist(
+						forms.DatalistProps{
+							ID:          "templates",
+							Name:        "template",
+							Placeholder: "Search a template ...",
+							URL:         utils.DesignSearchTemplatesUrlFormat,
 						},
-					},
+					),
+					loading.Spinner(
+						loading.SpinnerProps{
+							ClassNames: htmx.ClassNames{
+								"htmx-indicator": true,
+								tailwind.M2:      true,
+							},
+						},
+					),
 				),
 				forms.FormControlLabel(
 					forms.FormControlLabelProps{},
@@ -78,7 +77,7 @@ func NewDesignModal() htmx.Node {
 					buttons.ButtonProps{
 						Type: "submit",
 					},
-					htmx.Text("Add"),
+					htmx.Text("Add Design"),
 				),
 			),
 		),

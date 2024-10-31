@@ -5,7 +5,7 @@ const (
 	CreateDesignCommentReactionUrlFormat = "/designs/%s/comments/%s/reactions"
 	CreateDesignCommentUrlFormat         = "/designs/%s/comments"
 	CreateDesignReactionUrlFormat        = "/designs/%s/reactions"
-	CreateDesignUrlFormat                = "/designs/new?template=%s"
+	CreateDesignUrlFormat                = "/designs/new"
 	CreateEnvironmentUrlFormat           = "/environments"
 	CreateLensUrlFormat                  = "/lenses"
 	CreateProfileUrlFormat               = "/profiles/new"
