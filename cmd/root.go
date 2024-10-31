@@ -159,6 +159,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 
 		userHandler := handlers.NewUserHandler()
 		settingsHandlers := handlers.NewSettingsHandler()
+		previewHandlers := handlers.NewPreviewHandler()
 
 		handlers := handlers.New(store)
 
@@ -306,7 +307,7 @@ func (s *WebSrv) Start(ctx context.Context, ready server.ReadyFunc, run server.R
 		app.Get("/settings", htmx.NewCompFuncHandler(settingsHandlers.ListSettings, compFuncConfig))
 
 		// Preview ...
-		app.Post("/preview", handlers.Preview())
+		app.Post("/preview", htmx.NewCompFuncHandler(previewHandlers.Preview, compFuncConfig))
 
 		err = app.Listen(s.cfg.Flags.Addr)
 		if err != nil {

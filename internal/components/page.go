@@ -30,7 +30,7 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 				),
 				htmx.Link(
 					htmx.Rel("stylesheet"),
-					htmx.Href("https://unpkg.com/fiber-htmx@1.3.28/dist/out.css"),
+					htmx.Href("https://unpkg.com/fiber-htmx@1.3.31/dist/out.css"),
 					htmx.Attribute("type", "text/css"),
 					htmx.CrossOrigin("anonymous"),
 				),
@@ -39,7 +39,7 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 					htmx.CrossOrigin("anonymous"),
 				),
 				htmx.Script(
-					htmx.Src("https://unpkg.com/fiber-htmx@1.3.28"),
+					htmx.Src("https://unpkg.com/fiber-htmx@1.3.31"),
 					htmx.CrossOrigin("anonymous"),
 					htmx.Defer(),
 				),

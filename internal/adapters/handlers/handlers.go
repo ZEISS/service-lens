@@ -13,7 +13,6 @@ import (
 	"github.com/zeiss/service-lens/internal/controllers/lenses"
 	"github.com/zeiss/service-lens/internal/controllers/login"
 	"github.com/zeiss/service-lens/internal/controllers/me"
-	"github.com/zeiss/service-lens/internal/controllers/previews"
 	"github.com/zeiss/service-lens/internal/controllers/profiles"
 	"github.com/zeiss/service-lens/internal/controllers/tags"
 	"github.com/zeiss/service-lens/internal/controllers/templates"
@@ -378,13 +377,6 @@ func (a *handlers) DeleteTag() fiber.Handler {
 func (a *handlers) ListWorkflows() fiber.Handler {
 	return htmx.NewHxControllerHandler(func() htmx.Controller {
 		return workflows.NewListWorkflowsController(a.store)
-	})
-}
-
-// Preview ...
-func (a *handlers) Preview() fiber.Handler {
-	return htmx.NewHxControllerHandler(func() htmx.Controller {
-		return previews.NewPreviewController(a.store)
 	})
 }
 

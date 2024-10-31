@@ -1,45 +1,34 @@
-package previews
+package handlers
 
 import (
 	"bytes"
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/yuin/goldmark"
 	emoji "github.com/yuin/goldmark-emoji"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
-	seed "github.com/zeiss/gorm-seed"
-	"github.com/zeiss/service-lens/internal/builders"
-	"github.com/zeiss/service-lens/internal/ports"
-	"go.abhg.dev/goldmark/mermaid"
-
 	htmx "github.com/zeiss/fiber-htmx"
+	"github.com/zeiss/service-lens/internal/builders"
 )
 
-// PreviewControllerImpl ...
-type PreviewControllerImpl struct {
-	store seed.Database[ports.ReadTx, ports.ReadWriteTx]
-	htmx.DefaultController
+type PreviewHandler struct{}
+
+func NewPreviewHandler() *PreviewHandler {
+	return &PreviewHandler{}
 }
 
-// NewPreviewController ...
-func NewPreviewController(store seed.Database[ports.ReadTx, ports.ReadWriteTx]) *PreviewControllerImpl {
-	return &PreviewControllerImpl{
-		store: store,
-	}
-}
-
-// Post ...
-func (m *PreviewControllerImpl) Post() error {
+func (h *PreviewHandler) Preview(c *fiber.Ctx) (htmx.Node, error) {
 	var form struct {
 		Body string `json:"body" form:"body"`
 	}
 
-	err := m.BindBody(&form)
+	err := c.BodyParser(&form)
 	if err != nil {
-		return fmt.Errorf("bind body: %w", err)
+		return nil, err
 	}
 
 	markdown := goldmark.New(
@@ -51,15 +40,16 @@ func (m *PreviewControllerImpl) Post() error {
 		goldmark.WithExtensions(
 			extension.GFM,
 			emoji.Emoji,
-			&mermaid.Extender{},
 		),
 	)
 
 	var b bytes.Buffer
 	err = markdown.Convert([]byte(form.Body), &b)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return m.Render(htmx.Raw(b.String()))
+	fmt.Println(b.String())
+
+	return htmx.Raw(b.String()), nil
 }

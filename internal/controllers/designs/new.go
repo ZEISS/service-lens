@@ -45,6 +45,10 @@ func (l *NewDesignControllerImpl) Get() error {
 						htmx.Attribute("src", "https://cdn.jsdelivr.net/simplemde/1.11/simplemde.min.js"),
 						htmx.Type("text/javascript"),
 					),
+					htmx.Script(
+						htmx.Src("https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.js"),
+						htmx.Type("module"),
+					),
 				},
 			},
 			func() htmx.Node {
