@@ -18,7 +18,7 @@ require (
 	github.com/yuin/goldmark v1.7.8
 	github.com/yuin/goldmark-emoji v1.0.4
 	github.com/zeiss/fiber-goth v1.2.15
-	github.com/zeiss/fiber-htmx v1.3.33-0.20241030204046-8255c3607dc9
+	github.com/zeiss/fiber-htmx v1.3.33-0.20241103203540-45dd66214df5
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
 	github.com/zeiss/pkg v0.1.17
