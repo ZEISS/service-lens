@@ -51,7 +51,6 @@ func Page(props PageProps, children ...htmx.Node) htmx.Node {
 			}, props.Head...),
 		},
 		htmx.Body(
-			// htmx.HxBoost(true),
 			htmx.Group(children...),
 		),
 	)

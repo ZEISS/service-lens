@@ -24,7 +24,6 @@ func NewDesignModal() htmx.Node {
 			htmx.ID("new-design-form"),
 			htmx.Action(utils.CreateDesignUrlFormat),
 			htmx.Method("get"),
-			htmx.HxBoost(true),
 			// htmx.HxDisabledElt("find button, find input"),
 			// htmx.HxOn("htmx:after-settle", "event.target.closest('dialog').close(), event.target.reset()"),
 			forms.FormControl(
