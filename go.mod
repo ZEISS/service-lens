@@ -21,7 +21,7 @@ require (
 	github.com/zeiss/fiber-htmx v1.3.33
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
-	github.com/zeiss/pkg v0.1.18
+	github.com/zeiss/pkg v0.1.19
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.22.0
 	gorm.io/driver/postgres v1.5.10
@@ -215,7 +215,7 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.1.1 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
 	github.com/tetafro/godot v1.4.18 // indirect
@@ -258,7 +258,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.5.1 // indirect
-	k8s.io/apimachinery v0.31.2 // indirect
+	k8s.io/apimachinery v0.31.3 // indirect
 	k8s.io/helm v2.17.0+incompatible // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
