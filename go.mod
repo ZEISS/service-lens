@@ -24,7 +24,7 @@ require (
 	github.com/zeiss/pkg v0.1.19
 	go.abhg.dev/goldmark/mermaid v0.5.0
 	golang.org/x/mod v0.22.0
-	gorm.io/driver/postgres v1.5.10
+	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 	helm.sh/helm v2.17.0+incompatible
 	mvdan.cc/gofumpt v0.7.0
