@@ -1,6 +1,7 @@
 module github.com/zeiss/service-lens
 
 go 1.23
+toolchain go1.23.4
 
 require (
 	github.com/expr-lang/expr v1.16.9
@@ -14,7 +15,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
-	github.com/teekennedy/goldmark-markdown v0.3.0
+	github.com/teekennedy/goldmark-markdown v0.4.1
 	github.com/yuin/goldmark v1.7.8
 	github.com/yuin/goldmark-emoji v1.0.4
 	github.com/zeiss/fiber-goth v1.2.15
