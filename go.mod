@@ -1,11 +1,9 @@
 module github.com/zeiss/service-lens
 
 go 1.23
-toolchain go1.24.1
-
 require (
 	github.com/expr-lang/expr v1.17.2
-	github.com/go-playground/validator/v10 v10.25.0
+	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.64.8
