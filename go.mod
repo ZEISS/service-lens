@@ -17,7 +17,7 @@ require (
 	github.com/spf13/pflag v1.0.6
 	github.com/teekennedy/goldmark-markdown v0.4.1
 	github.com/yuin/goldmark v1.7.10
-	github.com/yuin/goldmark-emoji v1.0.5
+	github.com/yuin/goldmark-emoji v1.0.6
 	github.com/zeiss/fiber-goth v1.2.15
 	github.com/zeiss/fiber-htmx v1.3.33
 	github.com/zeiss/fiber-reload v0.1.1
