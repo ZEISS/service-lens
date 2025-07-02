@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/expr-lang/expr v1.17.5
-	github.com/go-playground/validator/v10 v10.26.0
+	github.com/go-playground/validator/v10 v10.27.0
 	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/golang/mock v1.7.0-rc.1
 	github.com/golangci/golangci-lint v1.64.8
