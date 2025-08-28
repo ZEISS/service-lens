@@ -24,7 +24,7 @@ require (
 	github.com/zeiss/fiber-reload v0.1.1
 	github.com/zeiss/gorm-seed v0.1.2
 	github.com/zeiss/pkg v0.1.23
-	go.abhg.dev/goldmark/mermaid v0.5.0
+	go.abhg.dev/goldmark/mermaid v0.6.0
 	golang.org/x/mod v0.27.0
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.1
