@@ -27,7 +27,7 @@ require (
 	go.abhg.dev/goldmark/mermaid v0.6.0
 	golang.org/x/mod v0.27.0
 	gorm.io/driver/postgres v1.6.0
-	gorm.io/gorm v1.30.1
+	gorm.io/gorm v1.30.2
 	helm.sh/helm v2.17.0+incompatible
 	mvdan.cc/gofumpt v0.8.0
 )
