@@ -29,7 +29,7 @@ require (
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.30.3
 	helm.sh/helm v2.17.0+incompatible
-	mvdan.cc/gofumpt v0.9.0
+	mvdan.cc/gofumpt v0.9.1
 )
 
 require (
