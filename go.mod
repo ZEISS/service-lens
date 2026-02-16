@@ -3,7 +3,7 @@ module github.com/zeiss/service-lens
 go 1.25.0
 
 require (
-	github.com/expr-lang/expr v1.17.7
+	github.com/expr-lang/expr v1.17.8
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/gofiber/fiber/v2 v2.52.11
 	github.com/golang/mock v1.7.0-rc.1
