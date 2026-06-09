@@ -23,7 +23,7 @@ require (
 	github.com/zeiss/gorm-seed v0.1.2
 	github.com/zeiss/pkg v0.1.23
 	go.abhg.dev/goldmark/mermaid v0.6.0
-	golang.org/x/mod v0.36.0
+	golang.org/x/mod v0.37.0
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.31.1
 	helm.sh/helm v2.17.0+incompatible
@@ -253,7 +253,7 @@ require (
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
-	golang.org/x/tools v0.44.0 // indirect
+	golang.org/x/tools v0.45.0 // indirect
 	golang.org/x/tools/go/packages/packagestest v0.1.1-deprecated // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
