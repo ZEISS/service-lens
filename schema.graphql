@@ -1,0 +1,9 @@
+type Design {
+  id: Int!
+  title: String!
+  body: String!
+}
+
+type Query {
+  designs: [Design]
+}

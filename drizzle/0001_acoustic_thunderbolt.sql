@@ -1,0 +1,1 @@
+ALTER TABLE "service_lens_workload_environment" ADD COLUMN "id" bigint PRIMARY KEY NOT NULL;

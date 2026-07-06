@@ -1,19 +1,6 @@
-# Service Lens :eyeglasses:
+# 👓 Service Lens
 
-[![Test & Build](https://github.com/zeiss/service-lens/actions/workflows/main.yml/badge.svg)](https://github.com/zeiss/service-lens/actions/workflows/main.yml)
-[![Taylor Swift](https://img.shields.io/badge/secured%20by-taylor%20swift-brightgreen.svg)](https://twitter.com/SwiftOnSecurity)
-[![Volkswagen](https://auchenberg.github.io/volkswagen/volkswargen_ci.svg?v=1)](https://github.com/auchenberg/volkswagen)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-> :warning: This project is in early development. It is not ready for production use.
-
-## About
-
-Service Lens is an enterprise service management tool. It allows you to manage your services, identify risks, review the solutions that created them and the business context of every service. It follows the Well-Architected methodology established by AWS and Microsoft.
-
-![preview](assets/screenshot_1.png)
-
-It is build on [fiber-htmx](https://github.com/ZEISS/fiber-htmx) and uses a 3-tier architecture.
+![preview](media/dashboard.png)
 
 ## Lens Format
 
@@ -24,38 +11,39 @@ This JSON schema defines the structure for evaluating a system against best prac
 ### Schema Structure
 
 #### Root Object
-- **version**: (integer) The version of the schema.
-- **name**: (string) The name of the lens.
-- **description**: (string) A description of the lens.
-- **pillars**: (array) A list of pillars.
+
+- ```version```: (integer) The version of the schema.
+- ```name```: (string) The name of the lens.
+- ```description```: (string) A description of the lens.
+- ```pillars```: (array) A list of pillars.
 
 #### Pillar Object
-- **ref**: (string) A reference identifier for the pillar.
-- **name**: (string) The name of the pillar.
-- **description**: (string) A description of the pillar.
-- **questions**: (array) A list of questions related to the pillar.
-- **resources**: (array) A list of resources related to the pillar.
+- ```ref```: (string) A reference identifier for the pillar.
+- ```name```: (string) The name of the pillar.
+- ```description```: (string) A description of the pillar.
+- ```questions```: (array) A list of questions related to the pillar.
+- ```resources```: (array) A list of resources related to the pillar.
 
 #### Question Object
-- **ref**: (string) A reference identifier for the question.
-- **title**: (string) The title of the question.
-- **description**: (string) A description of the question.
-- **resources**: (array) A list of resources related to the question.
-- **choices**: (array) A list of choices for the question.
-- **risks**: (array) A list of risks associated with the question.
+- ```ref```: (string) A reference identifier for the question.
+- ```title```: (string) The title of the question.
+- ```description```: (string) A description of the question.
+- ```resources```: (array) A list of resources related to the question.
+- ```choices```: (array) A list of choices for the question.
+- ```risks```: (array) A list of risks associated with the question.
 
 #### Resource Object
-- **url**: (string) The URL of the resource.
-- **description**: (string) A description of the resource.
+- ```url```: (string) The URL of the resource.
+- ```description```: (string) A description of the resource.
 
 #### Choice Object
-- **ref**: (string) A reference identifier for the choice.
-- **title**: (string) The title of the choice.
-- **description**: (string) A description of the choice.
+- ```ref```: (string) A reference identifier for the choice.
+- ```title```: (string) The title of the choice.
+- ```description```: (string) A description of the choice.
 
 #### Risk Object
-- **risk**: (string) The risk level.
-- **condition**: (string) The condition under which the risk applies.
+- ```risk```: (string) The risk level.
+- ```condition```: (string) The condition under which the risk applies.
 
 #### Example
 
@@ -131,16 +119,38 @@ This JSON schema defines the structure for evaluating a system against best prac
 
 This schema provides a structured way to evaluate the design, operations and risks of a system.
 
+## Installation
+
+Install all needed packages and migrations.
+
+```bash
+npm i
+```
+
+Apply the migrations.
+
+> Start the database via `docker compose up` and create a new environment `cp .env.example .env`.
+
+```bash
+npm run db:migrate
+```
+
 ## Development
 
-Please, set all environment variables in `.env`. `docker compose up db` will launch a local development database.
+Generate database migrations.
 
+```bash
+npm run dev
 ```
-air
+
+Seed the database
+
+```bash
+npm run db:seed
 ```
 
-This launches a development instance of the application.
+The demo user is `indy@jones.com` with password `password123` and can be used test the features.
 
-# License
+## License
 
-[LICENSE](./LICENSE)
+[MIT](/LICENSE)

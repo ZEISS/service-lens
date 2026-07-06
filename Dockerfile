@@ -1,7 +1,15 @@
-FROM cgr.dev/chainguard/static:latest
+FROM node:lts-alpine
 
-WORKDIR /
+WORKDIR /app  
 
-COPY main /main
+COPY package.json package-lock.json ./
 
-ENTRYPOINT ["/main"]
+RUN npm install --only=production
+ 
+COPY . .
+ENV NODE_ENV=production
+ 
+EXPOSE 3000
+ENV HOSTNAME="0.0.0.0"
+  
+CMD ["npm", "start"]  

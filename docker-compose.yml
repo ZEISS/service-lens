@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:14
+    image: postgres:17
     container_name: postgres
     networks:
       - service-lens
@@ -18,40 +18,8 @@ services:
       timeout: 5s
       retries: 5
 
-  migrate:
-    depends_on:
-      postgres:
-        condition: service_healthy
-    image: openfga/openfga:latest
-    container_name: migrate
-    command: migrate
-    networks:
-      - service-lens
-    environment:
-      - OPENFGA_DATASTORE_ENGINE=postgres
-      - OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
-
-  openfga:
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-    image: openfga/openfga:latest
-    container_name: openfga
-    networks:
-      - service-lens
-    environment:
-      - OPENFGA_DATASTORE_ENGINE=postgres
-      - OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
-      - OPENFGA_LOG_FORMAT=json
-    command: run
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-      - "3000:3000"
-
 networks:
-  service-lens:
-
+  service-lens: {}
 
 volumes:
   pg: {}
