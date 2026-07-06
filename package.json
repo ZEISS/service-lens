@@ -96,7 +96,7 @@
     "@graphql-codegen/typescript-react-query": "^7.0.2",
     "@tailwindcss/postcss": "^4.3.0",
     "@total-typescript/ts-reset": "^0.6.1",
-    "@types/node": "^25.9.3",
+    "@types/node": "^26.1.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
