@@ -37,9 +37,9 @@ jobs:
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see [Usage](https://github.com/docker/build-push-action#usage) in the README of the `docker/build-push-action` repository.
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
-      - run: npm ci
-      - run: npm run build
-      - run: npm version ${TAG_NAME} --git-tag-version=false
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm version ${TAG_NAME} --git-tag-version=false
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
       - id: push
@@ -49,14 +49,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      
+
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - uses: actions/attest-build-provenance@v4
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-      
+
       - uses: azure/setup-helm@v5
       - run: npm run build:helm
 
