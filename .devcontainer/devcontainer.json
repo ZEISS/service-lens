@@ -11,7 +11,8 @@
   "postCreateCommand": "bash scripts/postCreateCommand.sh",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:4": {},
-    "ghcr.io/devcontainers/features/node:2": {}
+    "ghcr.io/devcontainers/features/node:2": {},
+    "ghcr.io/devcontainers/features/git:1": {}
   },
   "containerUser": "vscode",
   "remoteUser": "root",
