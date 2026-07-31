@@ -1,10 +1,11 @@
 # 👓 Service Lens
 
+<p style="text-align: center;">Service Lens is a tool that helps enterprises to govern the lifecycle of their workloads
+  grounded in their rules and regulations.</p>
+
 ![preview](media/dashboard.png)
 
 ---
-
-Service Lens is a tool that helps enterprises to govern the lifecycle of their workloads.
 
 ## 💭 Why
 
