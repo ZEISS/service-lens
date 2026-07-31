@@ -2,11 +2,33 @@
 
 ![preview](media/dashboard.png)
 
-## Lens Format
+---
+
+Service Lens is a tool that helps enterprises to govern the lifecycle of their workloads.
+
+## 💭 Why
+
+Most enterprises have complicated governance processes that are shared across teams
+and organizations. All those teams want to ensure that their rules and regulations
+are implemented across all workloads.
+
+They want to do this to manage the risk in the enterprise.
+To manage risk effectively, there needs to be a tool and
+a way to evalute workloads against the rules and regulations.
+
+- [x] Format to specific rules and regulations
+- [x] Shareable across teams and organizations
+- [x] Updates to rules and regulations
+- [x] Provide context of decisions
+
+## 👓 Lens Format
 
 ### Overview
 
-This JSON schema defines the structure for evaluating a system against best practices. It includes various pillars, each containing questions, choices, risks, and resources.
+This JSON schema defines the structure for evaluating a system against best practices.
+It includes various pillars, each containing questions, choices, risks, and resources.
+
+> This schema also works with the YAML format.
 
 ### Schema Structure
 
