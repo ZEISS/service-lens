@@ -3,6 +3,9 @@ const nextConfig = {
   reactCompiler: true,
   serverExternalPackages: ["pg"],
   output: "standalone",
+  experimental: {
+    useTypeScriptCli: true,
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
