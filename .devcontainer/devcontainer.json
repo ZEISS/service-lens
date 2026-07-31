@@ -7,6 +7,9 @@
       "VARIANT": "ubuntu-22.04"
     }
   },
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway"
+  ],
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
   "postCreateCommand": "bash scripts/postCreateCommand.sh",
   "features": {
@@ -14,8 +17,6 @@
     "ghcr.io/devcontainers/features/node:2": {},
     "ghcr.io/devcontainers/features/git:1": {}
   },
-  "containerUser": "vscode",
-  "remoteUser": "root",
   "appPort": 3000,
   "customizations": {
     "codespaces": {
@@ -26,12 +27,6 @@
     },
     "vscode": {
       "extensions": []
-    }
-  },
-  "portsAttributes": {
-    "3000": {
-      "label": "Application",
-      "onAutoForward": "openBrowserOnce"
     }
   }
 }

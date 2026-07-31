@@ -142,12 +142,12 @@ It includes various pillars, each containing questions, choices, risks, and reso
 
 This schema provides a structured way to evaluate the design, operations and risks of a system.
 
-## Installation
+## ⚒️ Installation
 
 Install all needed packages and migrations.
 
 ```bash
-npm i
+pnpm i
 ```
 
 Apply the migrations.
@@ -155,21 +155,21 @@ Apply the migrations.
 > Start the database via `docker compose up` and create a new environment `cp .env.example .env`.
 
 ```bash
-npm run db:migrate
+pnpm run db:migrate
 ```
 
-## Development
+## 👨‍💻 Development
 
 Generate database migrations.
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
-Seed the database
+Seed the database with initial data.
 
 ```bash
-npm run db:seed
+pnpm run db:seed
 ```
 
 The demo user is `indy@jones.com` with password `password123` and can be used test the features.
