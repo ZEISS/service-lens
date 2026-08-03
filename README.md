@@ -153,6 +153,7 @@ pnpm i
 Apply the migrations.
 
 > Start the database via `docker compose up` and create a new environment `cp .env.example .env`.
+> Generate a secret key for BetterAuth via `openssl rand -hex 32` and set it in the `.env` file.
 
 ```bash
 pnpm run db:migrate

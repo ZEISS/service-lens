@@ -7,16 +7,18 @@ import { APP_CONFIG } from "@/config/app-config"
 import { LoginForm } from "../../_components/login-form"
 import { GitHubButton } from "../../_components/social-auth/github-button"
 import { GoogleButton } from "../../_components/social-auth/google-button"
+import { MicrosoftButton } from "../../_components/social-auth/microsoft-button"
 
 export default function LoginV2() {
   return (
     <>
-      <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[350px]">
+      <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-87.5">
         <div className="space-y-2 text-center">
           <h1 className="font-medium text-3xl">Login to your account</h1>
           <p className="text-muted-foreground text-sm">Please enter your details to login.</p>
         </div>
         <div className="space-y-4">
+          <MicrosoftButton className="w-full" />
           <GoogleButton className="w-full" />
           <GitHubButton className="w-full" />
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
