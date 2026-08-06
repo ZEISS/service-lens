@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <Breadcrumbs environment={environment} />
 
       {/* Title */}
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">{environment.name}</h1>
+      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{environment.name}</h1>
 
       <Card>
         <CardHeader>
@@ -44,16 +44,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <CardContent className="space-y-4">
           {/* Created At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Created</label>
-            <p className="text-sm mt-1">{environment.createdAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Created</label>
+            <p className="mt-1 text-sm">{environment.createdAt?.toLocaleString()}</p>
           </div>
 
           <Separator />
 
           {/* Updated At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Last Modified</label>
-            <p className="text-sm mt-1">{environment.updatedAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Last Modified</label>
+            <p className="mt-1 text-sm">{environment.updatedAt?.toLocaleString()}</p>
           </div>
 
           {/* Deleted At */}
@@ -61,8 +61,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <>
               <Separator />
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Deleted</label>
-                <p className="text-sm mt-1">{environment.deletedAt?.toLocaleString()}</p>
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Deleted</label>
+                <p className="mt-1 text-sm">{environment.deletedAt?.toLocaleString()}</p>
               </div>
             </>
           )}
@@ -76,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <CardDescription>Technical details and raw database properties.</CardDescription>
         </CardHeader>
         <CardContent>
-          <pre className="text-xs bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-muted p-3 text-xs">
             {JSON.stringify(environment, null, 2)}
           </pre>
         </CardContent>

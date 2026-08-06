@@ -81,9 +81,9 @@ export default async function DesignPage({ params }: DesignPageProps) {
       <Breadcrumbs design={design} />
 
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-8">
+      <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
-          <h1 className="text-4xl font-bold tracking-tight mb-2">{design.title}</h1>
+          <h1 className="mb-2 font-bold text-4xl tracking-tight">{design.title}</h1>
           {design.description && <p className="text-lg text-muted-foreground">{design.description}</p>}
         </div>
 
@@ -100,16 +100,16 @@ export default async function DesignPage({ params }: DesignPageProps) {
       </div>
 
       {/* Quick Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <EditIcon className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Status</p>
-                <p className="text-xs text-muted-foreground">{design.deletedAt ? "Deleted" : "Active"}</p>
+                <p className="font-medium text-sm">Status</p>
+                <p className="text-muted-foreground text-xs">{design.deletedAt ? "Deleted" : "Active"}</p>
               </div>
             </div>
           </CardContent>
@@ -118,12 +118,12 @@ export default async function DesignPage({ params }: DesignPageProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <ClockIcon className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Created</p>
-                <p className="text-xs text-muted-foreground">{formatRelativeTime(design.createdAt)}</p>
+                <p className="font-medium text-sm">Created</p>
+                <p className="text-muted-foreground text-xs">{formatRelativeTime(design.createdAt)}</p>
               </div>
             </div>
           </CardContent>
@@ -132,12 +132,12 @@ export default async function DesignPage({ params }: DesignPageProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <EditIcon className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Modified</p>
-                <p className="text-xs text-muted-foreground">{formatRelativeTime(design.updatedAt)}</p>
+                <p className="font-medium text-sm">Modified</p>
+                <p className="text-muted-foreground text-xs">{formatRelativeTime(design.updatedAt)}</p>
               </div>
             </div>
           </CardContent>
@@ -146,12 +146,12 @@ export default async function DesignPage({ params }: DesignPageProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
                 <UserIcon className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Content</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="font-medium text-sm">Content</p>
+                <p className="text-muted-foreground text-xs">
                   {design.body ? `${getContentStatistics(design.body)?.wordCount || 0} words` : "No content"}
                 </p>
               </div>
@@ -160,9 +160,9 @@ export default async function DesignPage({ params }: DesignPageProps) {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
         {/* Main Content */}
-        <div className="xl:col-span-3 space-y-6">
+        <div className="space-y-6 xl:col-span-3">
           {/* Design Content */}
           <Card>
             <CardHeader>
@@ -171,29 +171,29 @@ export default async function DesignPage({ params }: DesignPageProps) {
             </CardHeader>
             <CardContent>
               {design.body ? (
-                <div className="prose prose-gray max-w-none dark:prose-invert">
+                <div className="prose prose-gray dark:prose-invert max-w-none">
                   <ReactMarkdown
                     components={{
                       h1: ({ children }) => (
-                        <h1 className="text-3xl font-bold mb-6 text-foreground border-b border-border pb-2">
+                        <h1 className="mb-6 border-border border-b pb-2 font-bold text-3xl text-foreground">
                           {children}
                         </h1>
                       ),
                       h2: ({ children }) => (
-                        <h2 className="text-2xl font-semibold mb-4 mt-8 text-foreground">{children}</h2>
+                        <h2 className="mt-8 mb-4 font-semibold text-2xl text-foreground">{children}</h2>
                       ),
                       h3: ({ children }) => (
-                        <h3 className="text-xl font-medium mb-3 mt-6 text-foreground">{children}</h3>
+                        <h3 className="mt-6 mb-3 font-medium text-foreground text-xl">{children}</h3>
                       ),
                       h4: ({ children }) => (
-                        <h4 className="text-lg font-medium mb-2 mt-4 text-foreground">{children}</h4>
+                        <h4 className="mt-4 mb-2 font-medium text-foreground text-lg">{children}</h4>
                       ),
-                      p: ({ children }) => <p className="mb-4 leading-7 text-foreground">{children}</p>,
-                      ul: ({ children }) => <ul className="list-disc pl-6 mb-4 space-y-1">{children}</ul>,
-                      ol: ({ children }) => <ol className="list-decimal pl-6 mb-4 space-y-1">{children}</ol>,
+                      p: ({ children }) => <p className="mb-4 text-foreground leading-7">{children}</p>,
+                      ul: ({ children }) => <ul className="mb-4 list-disc space-y-1 pl-6">{children}</ul>,
+                      ol: ({ children }) => <ol className="mb-4 list-decimal space-y-1 pl-6">{children}</ol>,
                       li: ({ children }) => <li className="text-foreground leading-relaxed">{children}</li>,
                       blockquote: ({ children }) => (
-                        <blockquote className="border-l-4 border-primary/50 pl-6 py-2 my-4 italic text-muted-foreground bg-muted/30 rounded-r-lg">
+                        <blockquote className="my-4 rounded-r-lg border-primary/50 border-l-4 bg-muted/30 py-2 pl-6 text-muted-foreground italic">
                           {children}
                         </blockquote>
                       ),
@@ -201,7 +201,7 @@ export default async function DesignPage({ params }: DesignPageProps) {
                         const isInlineCode = !className
                         if (isInlineCode) {
                           return (
-                            <code className="bg-muted px-2 py-1 rounded-md text-sm font-mono text-foreground border">
+                            <code className="rounded-md border bg-muted px-2 py-1 font-mono text-foreground text-sm">
                               {children}
                             </code>
                           )
@@ -211,33 +211,33 @@ export default async function DesignPage({ params }: DesignPageProps) {
                         return <code className={`language-${language}`}>{children}</code>
                       },
                       pre: ({ children }) => (
-                        <pre className="bg-muted p-4 rounded-lg overflow-x-auto mb-4 font-mono text-sm border relative">
+                        <pre className="relative mb-4 overflow-x-auto rounded-lg border bg-muted p-4 font-mono text-sm">
                           {children}
                         </pre>
                       ),
                       a: ({ href, children }) => (
                         <a
                           href={href}
-                          className="text-primary hover:text-primary/80 underline underline-offset-4 decoration-primary/50 hover:decoration-primary transition-colors"
+                          className="text-primary underline decoration-primary/50 underline-offset-4 transition-colors hover:text-primary/80 hover:decoration-primary"
                         >
                           {children}
                         </a>
                       ),
-                      hr: () => <hr className="border-border my-8" />,
+                      hr: () => <hr className="my-8 border-border" />,
                       table: ({ children }) => (
-                        <div className="overflow-x-auto my-6 rounded-lg border border-border">
+                        <div className="my-6 overflow-x-auto rounded-lg border border-border">
                           <table className="w-full border-collapse">{children}</table>
                         </div>
                       ),
                       thead: ({ children }) => <thead className="bg-muted/50">{children}</thead>,
                       tbody: ({ children }) => <tbody className="divide-y divide-border">{children}</tbody>,
                       th: ({ children }) => (
-                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left font-medium text-muted-foreground text-xs uppercase tracking-wider">
                           {children}
                         </th>
                       ),
                       td: ({ children }) => (
-                        <td className="px-6 py-4 text-sm text-foreground whitespace-nowrap">{children}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-foreground text-sm">{children}</td>
                       ),
                     }}
                   >
@@ -246,11 +246,11 @@ export default async function DesignPage({ params }: DesignPageProps) {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="rounded-full bg-muted p-3 mb-4">
+                  <div className="mb-4 rounded-full bg-muted p-3">
                     <EditIcon className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">No content yet</h3>
-                  <p className="text-muted-foreground mb-4 max-w-sm">
+                  <h3 className="mb-2 font-semibold text-lg">No content yet</h3>
+                  <p className="mb-4 max-w-sm text-muted-foreground">
                     This design doesn&apos;t have any content yet. Click the edit button to add some content.
                   </p>
                   <Button asChild variant="outline">
@@ -266,7 +266,7 @@ export default async function DesignPage({ params }: DesignPageProps) {
         </div>
 
         {/* Sidebar - Design Properties */}
-        <div className="xl:col-span-1 space-y-6">
+        <div className="space-y-6 xl:col-span-1">
           {/* Design Information */}
           <Card>
             <CardHeader>
@@ -278,16 +278,16 @@ export default async function DesignPage({ params }: DesignPageProps) {
             <CardContent className="space-y-4">
               {/* ID */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground">ID</label>
-                <p className="text-sm font-mono bg-muted px-2 py-1 rounded mt-1 break-all">{design.id}</p>
+                <label className="font-medium text-muted-foreground text-sm">ID</label>
+                <p className="mt-1 break-all rounded bg-muted px-2 py-1 font-mono text-sm">{design.id}</p>
               </div>
 
               <Separator />
 
               {/* Title */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Title</label>
-                <p className="text-sm mt-1">{design.title}</p>
+                <label className="font-medium text-muted-foreground text-sm">Title</label>
+                <p className="mt-1 text-sm">{design.title}</p>
               </div>
 
               {/* Description */}
@@ -295,8 +295,8 @@ export default async function DesignPage({ params }: DesignPageProps) {
                 <>
                   <Separator />
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Description</label>
-                    <p className="text-sm mt-1 leading-relaxed">{design.description}</p>
+                    <label className="font-medium text-muted-foreground text-sm">Description</label>
+                    <p className="mt-1 text-sm leading-relaxed">{design.description}</p>
                   </div>
                 </>
               )}
@@ -304,7 +304,7 @@ export default async function DesignPage({ params }: DesignPageProps) {
               {/* Status */}
               <Separator />
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Status</label>
+                <label className="font-medium text-muted-foreground text-sm">Status</label>
                 <div className="mt-1">
                   {design.deletedAt ? (
                     <Badge variant="destructive">Deleted</Badge>
@@ -327,24 +327,24 @@ export default async function DesignPage({ params }: DesignPageProps) {
             <CardContent className="space-y-4">
               {/* Created At */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">
                   <CalendarIcon className="h-4 w-4" />
                   Created
                 </label>
-                <p className="text-sm mt-1">{formatDate(design.createdAt)}</p>
-                <p className="text-xs text-muted-foreground">{formatRelativeTime(design.createdAt)}</p>
+                <p className="mt-1 text-sm">{formatDate(design.createdAt)}</p>
+                <p className="text-muted-foreground text-xs">{formatRelativeTime(design.createdAt)}</p>
               </div>
 
               <Separator />
 
               {/* Updated At */}
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">
                   <EditIcon className="h-4 w-4" />
                   Last Modified
                 </label>
-                <p className="text-sm mt-1">{formatDate(design.updatedAt)}</p>
-                <p className="text-xs text-muted-foreground">{formatRelativeTime(design.updatedAt)}</p>
+                <p className="mt-1 text-sm">{formatDate(design.updatedAt)}</p>
+                <p className="text-muted-foreground text-xs">{formatRelativeTime(design.updatedAt)}</p>
               </div>
 
               {/* Deleted At */}
@@ -352,12 +352,12 @@ export default async function DesignPage({ params }: DesignPageProps) {
                 <>
                   <Separator />
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                    <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">
                       <TrashIcon className="h-4 w-4" />
                       Deleted
                     </label>
-                    <p className="text-sm mt-1">{formatDate(design.deletedAt)}</p>
-                    <p className="text-xs text-muted-foreground">{formatRelativeTime(design.deletedAt)}</p>
+                    <p className="mt-1 text-sm">{formatDate(design.deletedAt)}</p>
+                    <p className="text-muted-foreground text-xs">{formatRelativeTime(design.deletedAt)}</p>
                   </div>
                 </>
               )}
@@ -380,20 +380,20 @@ export default async function DesignPage({ params }: DesignPageProps) {
                     <>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">Words</label>
-                          <p className="text-2xl font-bold">{stats.wordCount.toLocaleString()}</p>
+                          <label className="font-medium text-muted-foreground text-sm">Words</label>
+                          <p className="font-bold text-2xl">{stats.wordCount.toLocaleString()}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">Characters</label>
-                          <p className="text-2xl font-bold">{stats.characterCount.toLocaleString()}</p>
+                          <label className="font-medium text-muted-foreground text-sm">Characters</label>
+                          <p className="font-bold text-2xl">{stats.characterCount.toLocaleString()}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">Paragraphs</label>
-                          <p className="text-2xl font-bold">{stats.paragraphCount}</p>
+                          <label className="font-medium text-muted-foreground text-sm">Paragraphs</label>
+                          <p className="font-bold text-2xl">{stats.paragraphCount}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-medium text-muted-foreground">Reading Time</label>
-                          <p className="text-2xl font-bold">{stats.readingTimeMinutes} min</p>
+                          <label className="font-medium text-muted-foreground text-sm">Reading Time</label>
+                          <p className="font-bold text-2xl">{stats.readingTimeMinutes} min</p>
                         </div>
                       </div>
 
@@ -427,7 +427,7 @@ export default async function DesignPage({ params }: DesignPageProps) {
               <CardDescription>Technical details and raw database properties.</CardDescription>
             </CardHeader>
             <CardContent>
-              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap">
+              <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-muted p-3 text-xs">
                 {JSON.stringify(design, null, 2)}
               </pre>
             </CardContent>

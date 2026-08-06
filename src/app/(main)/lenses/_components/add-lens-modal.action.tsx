@@ -40,7 +40,7 @@ export async function createLensAction(_: AddLensModalFormState, data: FormData)
 
   try {
     lens = await insertLens(result.data)
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
     }
