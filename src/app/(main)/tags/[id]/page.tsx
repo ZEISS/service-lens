@@ -23,7 +23,7 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
       <Breadcrumbs tag={tag} />
 
       {/* Title */}
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">{tag.name}</h1>
+      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{tag.name}</h1>
 
       {/* Timestamps */}
       <Card>
@@ -34,16 +34,16 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
         <CardContent className="space-y-4">
           {/* Created At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Created</label>
-            <p className="text-sm mt-1">{tag.createdAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Created</label>
+            <p className="mt-1 text-sm">{tag.createdAt?.toLocaleString()}</p>
           </div>
 
           <Separator />
 
           {/* Updated At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Last Modified</label>
-            <p className="text-sm mt-1">{tag.updatedAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Last Modified</label>
+            <p className="mt-1 text-sm">{tag.updatedAt?.toLocaleString()}</p>
           </div>
 
           {/* Deleted At */}
@@ -51,8 +51,8 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
             <>
               <Separator />
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Deleted</label>
-                <p className="text-sm mt-1">{tag.deletedAt?.toLocaleString()}</p>
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Deleted</label>
+                <p className="mt-1 text-sm">{tag.deletedAt?.toLocaleString()}</p>
               </div>
             </>
           )}
@@ -66,7 +66,7 @@ export default async function Page({ params }: { params: Promise<{ id: number }>
           <CardDescription>Technical details and raw database properties.</CardDescription>
         </CardHeader>
         <CardContent>
-          <pre className="text-xs bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-muted p-3 text-xs">
             {JSON.stringify(tag, null, 2)}
           </pre>
         </CardContent>

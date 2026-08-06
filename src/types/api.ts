@@ -1,8 +1,3 @@
-// Utility type to extract keys from an object type T whose values match type V
-type KeysMatching<T extends object, V> = {
-  [K in keyof T]-?: T[K] extends V ? K : never
-}[keyof T]
-
 // Generic interface for API request parameters
 export type ApiRequest<T> = {
   offset?: number

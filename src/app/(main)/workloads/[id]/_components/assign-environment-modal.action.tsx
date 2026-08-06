@@ -32,7 +32,7 @@ export async function createWorkloadAction(_: AddWorkloadModalFormState, data: F
 
   try {
     workload = await insertWorkload(result.data)
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
     }

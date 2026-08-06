@@ -28,7 +28,7 @@ export async function createProfileAction(_: AddProfileModalFormState, data: For
 
   try {
     profile = await insertProfile(result.data)
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
     }

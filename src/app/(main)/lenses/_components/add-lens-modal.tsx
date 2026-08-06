@@ -18,7 +18,7 @@ import { useActionState } from "react"
 import { createLensAction } from "./add-lens-modal.action"
 
 export function AddLensModal() {
-  const [state, formAction, pending] = useActionState(createLensAction, null)
+  const [_state, formAction, pending] = useActionState(createLensAction, null)
 
   return (
     <Dialog>

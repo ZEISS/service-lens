@@ -2,7 +2,7 @@ import { db } from "@/db/index"
 import { type TNewWorkload, workloads } from "@/db/schema"
 
 export async function seedWorkload(input: { count: number }) {
-  const count = input.count ?? 100
+  const _count = input.count ?? 100
 
   try {
     const allWorkloads: TNewWorkload[] = []

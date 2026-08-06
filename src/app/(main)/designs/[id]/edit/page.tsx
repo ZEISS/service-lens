@@ -20,10 +20,10 @@ export default async function EditPage({ params }: EditPageProps) {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
+    <div className="mx-auto w-full max-w-4xl p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Edit Design</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className="font-bold text-3xl tracking-tight">Edit Design</h1>
+        <p className="mt-2 text-muted-foreground">
           Update your design&apos;s title, description, and content using the markdown editor below.
         </p>
       </div>

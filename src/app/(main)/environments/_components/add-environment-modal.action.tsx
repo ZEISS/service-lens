@@ -28,7 +28,7 @@ export async function createEnvironmentAction(_: AddEnvironmentModalFormState, d
 
   try {
     environment = await insertEnvironment(result.data)
-  } catch (error) {
+  } catch {
     return {
       success: false,
     }
