@@ -11,7 +11,7 @@ export type CreateDesignActionState = {
   designId?: string
 }
 
-export async function createDesignAction(prev: CreateDesignActionState, state: FormData) {
+export async function createDesignAction(_prev: CreateDesignActionState, state: FormData) {
   try {
     const newDesign = {
       title: state.get("title") as string,

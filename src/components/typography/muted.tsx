@@ -1,3 +1,3 @@
 export function Muted({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-muted-foreground">{children}</p>
+  return <p className="text-muted-foreground text-sm">{children}</p>
 }
