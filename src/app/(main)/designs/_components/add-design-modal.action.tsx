@@ -28,7 +28,7 @@ export async function createDesignAction(_: AddDesignFormState, data: FormData) 
 
   try {
     design = await insertDesign(result.data)
-  } catch (error) {
+  } catch {
     return {
       success: false,
     }

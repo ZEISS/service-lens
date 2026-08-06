@@ -21,7 +21,7 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<TDesign>) {
   const { id } = row
-  const [state, formAction, pending] = useActionState(deleteLensAction, null)
+  const [_state, formAction, pending] = useActionState(deleteLensAction, null)
 
   return (
     <DropdownMenu>

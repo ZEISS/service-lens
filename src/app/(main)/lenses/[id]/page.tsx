@@ -27,7 +27,7 @@ export default async function LensPage({ params }: LensPageProps) {
       <Breadcrumbs lens={lens} />
 
       {/* Title */}
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">{lens.name}</h1>
+      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{lens.name}</h1>
 
       {/* Metdata */}
       <Card>
@@ -37,29 +37,29 @@ export default async function LensPage({ params }: LensPageProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">ID</label>
-            <p className="text-sm mt-1">{lens.id}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">ID</label>
+            <p className="mt-1 text-sm">{lens.id}</p>
           </div>
 
           <Separator />
 
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Name</label>
-            <p className="text-sm mt-1">{lens.name}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Name</label>
+            <p className="mt-1 text-sm">{lens.name}</p>
           </div>
 
           <Separator />
 
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Version</label>
-            <p className="text-sm mt-1">{lens.version}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Version</label>
+            <p className="mt-1 text-sm">{lens.version}</p>
           </div>
 
           <Separator />
 
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Description</label>
-            <p className="text-sm mt-1">{lens.description || "No description provided."}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Description</label>
+            <p className="mt-1 text-sm">{lens.description || "No description provided."}</p>
           </div>
         </CardContent>
       </Card>
@@ -73,16 +73,16 @@ export default async function LensPage({ params }: LensPageProps) {
         <CardContent className="space-y-4">
           {/* Created At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Created</label>
-            <p className="text-sm mt-1">{lens.createdAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Created</label>
+            <p className="mt-1 text-sm">{lens.createdAt?.toLocaleString()}</p>
           </div>
 
           <Separator />
 
           {/* Updated At */}
           <div>
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Last Modified</label>
-            <p className="text-sm mt-1">{lens.updatedAt?.toLocaleString()}</p>
+            <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Last Modified</label>
+            <p className="mt-1 text-sm">{lens.updatedAt?.toLocaleString()}</p>
           </div>
 
           {/* Deleted At */}
@@ -90,8 +90,8 @@ export default async function LensPage({ params }: LensPageProps) {
             <>
               <Separator />
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Deleted</label>
-                <p className="text-sm mt-1">{lens.deletedAt?.toLocaleString()}</p>
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Deleted</label>
+                <p className="mt-1 text-sm">{lens.deletedAt?.toLocaleString()}</p>
               </div>
             </>
           )}
@@ -105,7 +105,7 @@ export default async function LensPage({ params }: LensPageProps) {
           <CardDescription>Technical details and raw database properties.</CardDescription>
         </CardHeader>
         <CardContent>
-          <pre className="text-xs bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-muted p-3 text-xs">
             {JSON.stringify(lens, null, 2)}
           </pre>
         </CardContent>

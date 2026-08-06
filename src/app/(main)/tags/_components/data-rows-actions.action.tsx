@@ -26,7 +26,7 @@ export async function deleteEnvironmentAction(_: DeleteEnvironmentSchema, data: 
 
   try {
     await deleteEnvironment(result.data)
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
     }

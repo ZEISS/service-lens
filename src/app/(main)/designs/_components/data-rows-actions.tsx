@@ -21,8 +21,7 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<TDesign>) {
-  const { id } = row
-  const [state, formAction, pending] = useActionState(deleteDesignAction, null)
+  const [_state,formAction, pending] = useActionState(deleteDesignAction, null)
 
   return (
     <DropdownMenu>
@@ -45,7 +44,7 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
         <DropdownMenuItem variant="destructive">
           <Form action={formAction}>
             <Input id="id" name="id" value={row.id} hidden readOnly />
-            <Button type="submit" disabled={pending}>
+            <Button type="submit" disabled={pending ?? false}>
               <Trash2Icon />
               Trash
             </Button>
