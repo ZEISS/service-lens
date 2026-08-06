@@ -43,5 +43,5 @@ export const workloadColumns: ColumnDef<TWorkload>[] = [
       )
     },
     enableSorting: false,
-  }
+  },
 ]
