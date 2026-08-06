@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       <Breadcrumbs workload={workload} />
 
       {/* Title */}
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">{workload.name}</h1>
+      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{workload.name}</h1>
 
       <Card>
         <CardHeader>
@@ -65,15 +65,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
           {/* Updated At */}
           <Muted>Updated</Muted>
-          <p className="text-sm mt-1">{workload.updatedAt?.toLocaleString()}</p>
+          <p className="mt-1 text-sm">{workload.updatedAt?.toLocaleString()}</p>
 
           {/* Deleted At */}
           {workload.deletedAt && (
             <>
               <Separator />
               <div>
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">Deleted</label>
-                <p className="text-sm mt-1">{workload.deletedAt?.toLocaleString()}</p>
+                <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Deleted</label>
+                <p className="mt-1 text-sm">{workload.deletedAt?.toLocaleString()}</p>
               </div>
             </>
           )}
@@ -87,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <CardDescription>Technical details and raw database properties.</CardDescription>
         </CardHeader>
         <CardContent>
-          <pre className="text-xs bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded bg-muted p-3 text-xs">
             {JSON.stringify(workload, null, 2)}
           </pre>
         </CardContent>

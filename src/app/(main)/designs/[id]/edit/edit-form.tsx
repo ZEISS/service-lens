@@ -88,7 +88,7 @@ export function EditDesignForm({ design }: EditDesignFormProps) {
             <FieldLabel htmlFor="title">Title</FieldLabel>
             <Input id="title" {...form.register("title")} placeholder="Enter design title" disabled={saving} />
             <FieldDescription>Provide a clear and concise title for your design.</FieldDescription>
-            {errors.title && <p className="text-sm text-destructive mt-1">{errors.title.message}</p>}
+            {errors.title && <p className="mt-1 text-destructive text-sm">{errors.title.message}</p>}
           </Field>
 
           <Field>
@@ -101,7 +101,7 @@ export function EditDesignForm({ design }: EditDesignFormProps) {
               disabled={saving}
             />
             <FieldDescription>Optional description to provide context about your design.</FieldDescription>
-            {errors.description && <p className="text-sm text-destructive mt-1">{errors.description.message}</p>}
+            {errors.description && <p className="mt-1 text-destructive text-sm">{errors.description.message}</p>}
           </Field>
 
           <Field>
@@ -119,7 +119,7 @@ export function EditDesignForm({ design }: EditDesignFormProps) {
               Write your design content using Markdown syntax. You can include headers, lists, code blocks, links, and
               more.
             </FieldDescription>
-            {errors.body && <p className="text-sm text-destructive mt-1">{errors.body.message}</p>}
+            {errors.body && <p className="mt-1 text-destructive text-sm">{errors.body.message}</p>}
           </Field>
         </FieldGroup>
 

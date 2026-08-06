@@ -26,7 +26,7 @@ export async function deleteLensAction(_: DeleteLensSchema, data: FormData) {
 
   try {
     await deleteLens(result.data)
-  } catch (error) {
+  } catch (_error) {
     return {
       success: false,
     }

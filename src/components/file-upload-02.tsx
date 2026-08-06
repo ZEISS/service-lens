@@ -32,10 +32,10 @@ export default function FileUpload02() {
                   Upload file <span className="text-destructive">*</span>
                 </Label>
                 <Input id="file-1" name="file-1" type="file" accept=".csv, .xlsx, .xls" />
-                <p className="text-sm text-muted-foreground">You are only allowed to upload CSV, XLSX or XLS files.</p>
+                <p className="text-muted-foreground text-sm">You are only allowed to upload CSV, XLSX or XLS files.</p>
               </div>
             </div>
-            <div className="flex justify-end space-x-3 mt-8">
+            <div className="mt-8 flex justify-end space-x-3">
               <Button type="button" variant="outline">
                 Cancel
               </Button>

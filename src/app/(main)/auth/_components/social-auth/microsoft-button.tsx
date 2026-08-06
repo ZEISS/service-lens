@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { signIn } from "@/lib/auth-client"
 
 export function MicrosoftButton({ className, ...props }: React.ComponentProps<typeof Button>) {
   return (

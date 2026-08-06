@@ -26,7 +26,7 @@ export async function deleteDesignAction(_: DeleteDesignSchema, data: FormData) 
 
   try {
     await deleteDesign(result.data)
-  } catch (error) {
+  } catch {
     return {
       success: false,
     }

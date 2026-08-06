@@ -66,7 +66,7 @@ const recentPayments = [
 ]
 
 export function AccountOverview() {
-  const session = useSession()
+  const _session = useSession()
 
   return (
     <Card className="shadow-xs">
@@ -93,7 +93,7 @@ export function AccountOverview() {
                 <div className="absolute top-6 left-6">
                   <SimpleIcon icon={siApple} className="size-8 fill-primary-foreground" />
                 </div>
-                <div className="-translate-y-1/2 absolute top-1/2 w-full">
+                <div className="absolute top-1/2 w-full -translate-y-1/2">
                   <div className="flex items-end justify-between px-6">
                     <span className="font-medium font-mono text-accent text-lg uppercase leading-none tracking-wide">
                       Arham Khan
