@@ -37,7 +37,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@graphql-codegen/client-preset": "^6.1.1",
+    "@graphql-codegen/client-preset": "^6.1.2",
     "@graphql-codegen/typescript": "^6.1.0",
     "@graphql-codegen/typescript-resolvers": "^6.1.0",
     "@hookform/resolvers": "^5.7.1",
