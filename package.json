@@ -6,7 +6,7 @@
     "dev": "nodemon",
     "build": "next build && esbuild server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "build:helm": "tsx --env-file=.env update-chart.ts",
-    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "start": "cross-env NODE_ENV=production node server.ts",
     "lint": "biome lint",
     "fix": "biome lint --write --unsafe ./src",
     "format": "biome format --write",
