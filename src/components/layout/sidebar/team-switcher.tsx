@@ -1,7 +1,7 @@
 "use client"
 
 import { signOut } from "@/lib/auth-client"
-import { BadgeCheck, Bell, CreditCard, EllipsisVertical, LogOut } from "lucide-react"
+import { UserCog, Wrench, EllipsisVertical, LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
 
@@ -16,6 +16,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { getInitials } from "@/lib/utils"
 import type { User } from "better-auth"
+import Link from "next/link"
+
+const TeamSwitcherItems = [
+  {
+    title: "Profile",
+    href: "/settings/profile",
+    icon: <UserCog size={18} />,
+  },
+  {
+    title: "Account",
+    href: "/settings/account",
+    icon: <Wrench size={18} />,
+  },
+]
+
 
 export function TeamSwitcher({ user }: { user?: User }) {
   const onClick = async () => {
@@ -56,18 +71,14 @@ export function TeamSwitcher({ user }: { user?: User }) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications
-          </DropdownMenuItem>
+          {TeamSwitcherItems.map((item) => (
+            <DropdownMenuItem key={item.title} asChild>
+              <Link href={item.href}>
+                {item.icon}
+                <span>{item.title}</span>
+              </Link>
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onClick}>

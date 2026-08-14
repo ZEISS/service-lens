@@ -36,10 +36,10 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
+        <DropdownMenuItem>
           <Form action={formAction}>
             <Input id="id" name="id" value={row.id} hidden readOnly />
-            <Button type="submit" disabled={pending}>
+            <Button variant="ghost" size="sm" type="submit" disabled={pending}>
               <Trash2Icon />
               Trash
             </Button>

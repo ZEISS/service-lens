@@ -1,10 +1,11 @@
 "use client"
 
 import { signOut } from "@/lib/auth-client"
-import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
+import Link from "next/link"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -16,6 +17,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn, getInitials } from "@/lib/utils"
+import { UserCog, Wrench } from "lucide-react"
+
+const accountSwitcherItems = [
+  {
+    title: "Profile",
+    href: "/settings/profile",
+    icon: <UserCog size={18} />,
+  },
+  {
+    title: "Account",
+    href: "/settings/account",
+    icon: <Wrench size={18} />,
+  },
+]
 
 export function AccountSwitcher({
   users,
@@ -73,18 +88,14 @@ export function AccountSwitcher({
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BadgeCheck />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <CreditCard />
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell />
-            Notifications
-          </DropdownMenuItem>
+          {accountSwitcherItems.map((item) => (
+            <Link href={item.href} key={item.title}>
+              <DropdownMenuItem>
+                {item.icon}
+                <span>{item.title}</span>
+              </DropdownMenuItem>
+            </Link>
+          ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onClick}>

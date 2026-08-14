@@ -43,10 +43,10 @@ export function AddEnvironmentModal() {
                 name="name"
                 defaultValue={state?.values?.name}
                 disabled={pending}
-                placeholder="Atlantis"
+                placeholder="Production"
                 autoComplete="off"
               />
-              <FieldDescription>Provide a concise title for your design.</FieldDescription>
+              <FieldDescription>Provide a concise name for your environment.</FieldDescription>
               {state?.errors?.properties?.name && (
                 <FieldError>{state?.errors?.properties?.name.errors.pop()}</FieldError>
               )}

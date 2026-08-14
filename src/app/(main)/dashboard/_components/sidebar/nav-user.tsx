@@ -1,6 +1,6 @@
 "use client"
 
-import { CircleUser, CreditCard, EllipsisVertical, LogOut, MessageSquareDot } from "lucide-react"
+import { UserCog, Wrench, EllipsisVertical, LogOut } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -17,6 +17,21 @@ import { signOut } from "@/lib/auth-client"
 import type { User } from "better-auth"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
+import Link from "next/link"
+
+const navUserItems = [
+  {
+    title: "Profile",
+    href: "/settings/profile",
+    icon: <UserCog size={18} />,
+  },
+  {
+    title: "Account",
+    href: "/settings/account",
+    icon: <Wrench size={18} />,
+  },
+]
+
 
 export function NavUser({ user }: { user?: User }) {
   const { isMobile } = useSidebar()
@@ -74,18 +89,14 @@ export function NavUser({ user }: { user?: User }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUser />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <MessageSquareDot />
-                Notifications
-              </DropdownMenuItem>
+              {navUserItems.map((item) => (
+                <Link key={item.title} href={item.href}>
+                  <DropdownMenuItem>
+                    {item.icon}
+                    {item.title}
+                  </DropdownMenuItem>
+                </Link>
+              ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onClick}>
