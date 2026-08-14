@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm"
+import { defineRelations } from "drizzle-orm"
 import { bigint, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
@@ -30,10 +30,12 @@ export const environmentTag = pgTable("environment_tag", {
     .references(() => tags.id, { onDelete: "cascade" }),
 })
 
-export const environmentRelations = relations(environments, ({ many }) => ({
-  workloads: many(workloadEnvironment),
-  tags: many(tags),
-}))
+export const environmentRelations = defineRelations({
+  environments: {
+    workloads: { type: "many" },
+    tags: { type: "many" },
+  },
+})
 
 export const environmentInsertSchema = createInsertSchema(environments, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),

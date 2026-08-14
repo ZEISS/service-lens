@@ -32,7 +32,6 @@ const navUserItems = [
   },
 ]
 
-
 export function NavUser({ user }: { user?: User }) {
   const { isMobile } = useSidebar()
   const onClick = async () => {

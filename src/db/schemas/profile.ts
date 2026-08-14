@@ -1,6 +1,6 @@
 import { pgTable } from "@/db/utils"
-import { relations } from "drizzle-orm"
-import { bigint, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
+import { defineRelations } from "drizzle-orm"
+import { bigint, timestamp, uuid, varchar, primaryKey } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { lenses } from "./lens"
 
@@ -15,25 +15,21 @@ export const profiles = pgTable("profile", {
   deletedAt: timestamp("deleted_at"),
 })
 
+export const profilesToLenses = pgTable(
+  "profiles_to_lenses",
+  {
+    profileId: uuid()
+      .notNull()
+      .references(() => profiles.id, { onDelete: "cascade" }),
+    lensId: uuid()
+      .notNull()
+      .references(() => lenses.id),
+  },
+  (t) => [primaryKey({ columns: [t.profileId, t.lensId] })],
+)
+
 export type TProfile = typeof profiles.$inferSelect
 export type TNewProfile = typeof profiles.$inferInsert
-
-export const profileLens = pgTable("profile_lens", {
-  profileId: uuid()
-    .notNull()
-    .references(() => profiles.id, { onDelete: "cascade" }),
-  lensId: uuid()
-    .notNull()
-    .references(() => lenses.id),
-})
-
-export const profileLensRelations = relations(profileLens, ({ many, one }) => ({
-  profile: one(profiles, {
-    fields: [profileLens.profileId],
-    references: [profiles.id],
-  }),
-  lens: many(lenses),
-}))
 
 export const profileQuestion = pgTable("profile_question", {
   id: bigint({ mode: "bigint" }).primaryKey(),
@@ -65,24 +61,24 @@ export const profileQuestionAnswer = pgTable("profile_question_answer", {
 export type TProfileQuestionAnswer = typeof profileQuestionAnswer.$inferSelect
 export type TNewProfileQuestionAnswer = typeof profileQuestionAnswer.$inferInsert
 
-export const profileRelations = relations(profiles, ({ many }) => ({
-  questions: many(profileQuestion),
-}))
+// export const profileRelations = relations(profiles, ({ many }) => ({
+//   questions: many(profileQuestion),
+// }))
 
-export const profileQuestionRelations = relations(profileQuestion, ({ many, one }) => ({
-  profile: one(profiles, {
-    fields: [profileQuestion.id],
-    references: [profiles.id],
-  }),
-  answers: many(profileQuestionAnswer),
-}))
+// export const profileQuestionRelations = relations(profileQuestion, ({ many, one }) => ({
+//   profile: one(profiles, {
+//     fields: [profileQuestion.id],
+//     references: [profiles.id],
+//   }),
+//   answers: many(profileQuestionAnswer),
+// }))
 
-export const profileQuestionAnswerRelations = relations(profileQuestionAnswer, ({ one }) => ({
-  question: one(profileQuestion, {
-    fields: [profileQuestionAnswer.profileQuestionId],
-    references: [profileQuestion.id],
-  }),
-}))
+// export const profileQuestionAnswerRelations = relations(profileQuestionAnswer, ({ one }) => ({
+//   question: one(profileQuestion, {
+//     fields: [profileQuestionAnswer.profileQuestionId],
+//     references: [profileQuestion.id],
+//   }),
+// }))
 
 export const profileInsertSchema = createInsertSchema(profiles, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),

@@ -1,5 +1,5 @@
 import { pgTable } from "@/db/utils"
-import { relations } from "drizzle-orm"
+import { defineRelations } from "drizzle-orm"
 import { bigint, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { environments } from "./environment"
@@ -62,53 +62,39 @@ export const workloadTag = pgTable("workload_tag", {
     .references(() => tags.id, { onDelete: "cascade" }),
 })
 
-export const workloadRelations = relations(workloads, ({ many }) => ({
-  environments: many(workloadEnvironment),
-}))
+export const workloadRelations = defineRelations({
+  workloads: {
+    environments: "many",
+  },
+})
 
-export const workloadEnvironmentRelations = relations(workloadEnvironment, ({ one }) => ({
-  workload: one(workloads, {
-    fields: [workloadEnvironment.workloadId],
-    references: [workloads.id],
-  }),
-  environment: one(environments, {
-    fields: [workloadEnvironment.environmentId],
-    references: [environments.id],
-  }),
-}))
+export const workloadEnvironmentRelations = defineRelations({
+  workloadEnvironment: {
+    workload: "one",
+    environment: "one",
+  },
+})
 
-export const workloadLensRelations = relations(workloadLens, ({ one }) => ({
-  workload: one(workloads, {
-    fields: [workloadLens.workloadId],
-    references: [workloads.id],
-  }),
-  lens: one(lenses, {
-    fields: [workloadLens.lensId],
-    references: [lenses.id],
-  }),
-}))
+export const workloadLensRelations = defineRelations({
+  workloadLens: {
+    workload: "one",
+    lens: "one",
+  },
+})
 
-export const workloadProfileRelations = relations(workloadProfile, ({ one }) => ({
-  workload: one(workloads, {
-    fields: [workloadProfile.workloadId],
-    references: [workloads.id],
-  }),
-  profile: one(profiles, {
-    fields: [workloadProfile.profileId],
-    references: [profiles.id],
-  }),
-}))
+export const workloadProfileRelations = defineRelations({
+  workloadProfile: {
+    workload: "one",
+    profile: "one",
+  },
+})
 
-export const workloadTagRelations = relations(workloadTag, ({ one }) => ({
-  workload: one(workloads, {
-    fields: [workloadTag.workloadId],
-    references: [workloads.id],
-  }),
-  tag: one(tags, {
-    fields: [workloadTag.tagId],
-    references: [tags.id],
-  }),
-}))
+export const workloadTagRelations = defineRelations({
+  workloadTag: {
+    workload: "one",
+    tag: "one",
+  },
+})
 
 export const workloadInsertSchema = createInsertSchema(workloads, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),

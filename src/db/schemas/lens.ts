@@ -20,7 +20,7 @@ export type TNewLens = typeof lenses.$inferInsert
 
 export const lensInsertSchema = createInsertSchema(lenses, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),
-  version: (schema) => schema.int().min(1, "Version must be a positive integer"),
+  version: (schema) => schema.default(1),
   description: (schema) => schema.max(1024, "Description must be at most 1024 characters").optional(),
 }).pick({
   name: true,

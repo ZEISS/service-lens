@@ -31,7 +31,6 @@ const TeamSwitcherItems = [
   },
 ]
 
-
 export function TeamSwitcher({ user }: { user?: User }) {
   const onClick = async () => {
     await signOut({

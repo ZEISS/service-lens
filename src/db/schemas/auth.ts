@@ -1,5 +1,5 @@
 import { pgTable } from "@/db/utils"
-import { relations } from "drizzle-orm"
+import { defineRelations } from "drizzle-orm"
 import { boolean, index, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core"
 
 export const user = pgTable("user", {
@@ -181,71 +181,60 @@ export const invitation = pgTable(
   ],
 )
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-  teamMembers: many(teamMember),
-  members: many(member),
-  invitations: many(invitation),
-}))
+export const userRelations = defineRelations({
+  user: {
+    sessions: { type: "many" },
+    accounts: { type: "many" },
+    teamMembers: { type: "many" },
+    members: { type: "many" },
+    invitations: { type: "many" },
+  },
+})
 
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
-  }),
-}))
+export const sessionRelations = defineRelations({
+  session: {
+    user: { type: "one" },
+  },
+})
 
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
-  }),
-}))
+export const accountRelations = defineRelations({
+  account: {
+    user: { type: "one" },
+  },
+})
 
-export const organizationRelations = relations(organization, ({ many }) => ({
-  teams: many(team),
-  members: many(member),
-  invitations: many(invitation),
-}))
+export const organizationRelations = defineRelations({
+  organization: {
+    teams: { type: "many" },
+    members: { type: "many" },
+    invitations: { type: "many" },
+  },
+})
 
-export const teamRelations = relations(team, ({ one, many }) => ({
-  organization: one(organization, {
-    fields: [team.organizationId],
-    references: [organization.id],
-  }),
-  teamMembers: many(teamMember),
-}))
+export const teamRelations = defineRelations({
+  team: {
+    organization: { type: "one" },
+    teamMembers: { type: "many" },
+  },
+})
 
-export const teamMemberRelations = relations(teamMember, ({ one }) => ({
-  team: one(team, {
-    fields: [teamMember.teamId],
-    references: [team.id],
-  }),
-  user: one(user, {
-    fields: [teamMember.userId],
-    references: [user.id],
-  }),
-}))
+export const teamMemberRelations = defineRelations({
+  teamMember: {
+    team: { type: "one" },
+    user: { type: "one" },
+  },
+})
 
-export const memberRelations = relations(member, ({ one }) => ({
-  organization: one(organization, {
-    fields: [member.organizationId],
-    references: [organization.id],
-  }),
-  user: one(user, {
-    fields: [member.userId],
-    references: [user.id],
-  }),
-}))
+export const memberRelations = defineRelations({
+  member: {
+    organization: { type: "one" },
+    user: { type: "one" },
+  },
+})
 
-export const invitationRelations = relations(invitation, ({ one }) => ({
-  organization: one(organization, {
-    fields: [invitation.organizationId],
-    references: [organization.id],
-  }),
-  user: one(user, {
-    fields: [invitation.inviterId],
-    references: [user.id],
-  }),
-}))
+export const invitationRelations = defineRelations({
+  invitation: {
+    organization: { type: "one" },
+    user: { type: "one" },
+  },
+})

@@ -1,5 +1,5 @@
 import { pgTable } from "@/db/utils"
-import { relations } from "drizzle-orm"
+import { defineRelations } from "drizzle-orm"
 import { bigint, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { tags } from "./tag"
@@ -28,9 +28,11 @@ export const designTag = pgTable("design_tag", {
     .references(() => tags.id),
 })
 
-export const designRelations = relations(designs, ({ many }) => ({
-  tags: many(tags),
-}))
+export const designRelations = defineRelations({
+  designs: {
+    tags: { type: "many" },
+  },
+})
 
 export const designInsertSchema = createInsertSchema(designs, {
   title: (schema) =>

@@ -1,6 +1,6 @@
 "use client"
 
-import { EllipsisVertical, LogOut,UserCog, Wrench } from "lucide-react"
+import { EllipsisVertical, LogOut, UserCog, Wrench } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
