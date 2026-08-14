@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   }
 
   const workload = await getWorkloadById(id)
-  const environments = workload?.environments.map((env) => ({ ...env.environment })) ?? []
+  const environments = workload?.environments.map((env) => ({ ...env })) ?? []
 
   if (!workload) {
     return notFound()
@@ -73,7 +73,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <Separator />
               <div>
                 <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Deleted</label>
-                <p className="mt-1 text-sm">{workload.deletedAt?.toLocaleString()}</p>
+                <p className="mt-1 text-sm">{workload.deletedAt.toLocaleString()}</p>
               </div>
             </>
           )}
