@@ -58,7 +58,7 @@ export const relations = defineRelations(
     lenses: {
       lensPillars: many.lensPillars({
         from: lenses.id,
-        to: lensPillars.id
+        to: lensPillars.lensId
       }),
     },
     users: {
