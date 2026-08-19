@@ -89,7 +89,7 @@
     "vaul": "^1.1.2",
     "ws": "^8.21.3",
     "zod": "^4.4.3",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.7",
