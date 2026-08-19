@@ -106,7 +106,7 @@
     "dotenv-cli": "^11.0.0",
     "drizzle-kit": "1.0.0-rc.5-ab785fc",
     "esbuild": "^0.28.2",
-    "globals": "^17.9.0",
+    "globals": "^17.11.0",
     "graphql": "^16.14.2",
     "graphql-yoga": "^5.21.2",
     "lint-staged": "^17.3.0",
