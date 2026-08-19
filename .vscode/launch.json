@@ -5,9 +5,9 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev -- --inspect",
-      "preLaunchTask": "npm: prelaunch",
-      "postDebugTask": "npm: postdebug"
+      "command": "pnpm dev -- --inspect",
+      "preLaunchTask": "pnpm: prelaunch",
+      "postDebugTask": "pnpm: postdebug"
     },
     {
       "name": "Next.js: debug full stack",

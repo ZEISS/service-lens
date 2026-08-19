@@ -1,5 +1,5 @@
 {
   "watch": ["server.ts"],
-  "exec": "tsx --env-file=.env server.ts",
+  "exec": "tsx --env-file=.env server.ts --inspect",
   "ext": "js ts"
 }

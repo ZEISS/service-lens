@@ -1,9 +1,7 @@
-import { description } from "@/app/(main)/dashboard/default/_components/chart-area-interactive"
 import { pgTable } from "@/db/utils"
-import { defineRelations } from "drizzle-orm"
-import { integer, json, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
-import { createSelectSchema } from "drizzle-zod"
+import { timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { lenses } from "./lens"
+import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 
 export const lensPillars = pgTable("lens_pillars", {
   id: uuid().primaryKey().defaultRandom(),
@@ -18,23 +16,14 @@ export const lensPillars = pgTable("lens_pillars", {
   deletedAt: timestamp("deleted_at"),
 })
 
-export const lensToPillars = defineRelations(
-  {
-    lenses,
-    lensPillars,
-  },
-  (r) => ({
-    lensPillars: {
-      lens: r.one.lensPillars({
-        from: r.lensPillars.lensId,
-        to: r.lenses.id,
-      }),
-    },
-    lenses: {
-      pillars: r.many.lensPillars(),
-    },
-  }),
-)
+export const insertLensPillarSchema = createInsertSchema(lensPillars, {
+  name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),
+}).omit({
+  createdAt: true,
+  deletedAt: true,
+  id: true,
+  lensId: true,
+})
 
 export type TLensPillar = typeof lensPillars.$inferSelect
 export type TNewLensPillar = typeof lensPillars.$inferInsert

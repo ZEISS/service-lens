@@ -130,6 +130,17 @@ CREATE TABLE "service_lens_lens" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"ref" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"description" varchar(1024) NOT NULL,
+	"lensId" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
 CREATE TABLE "service_lens_profile_question" (
 	"id" bigint PRIMARY KEY,
 	"question" varchar(1024) NOT NULL,

@@ -11,6 +11,8 @@ import {
   member,
   invitation,
   environments,
+  lenses,
+  lensPillars,
 } from "./schema"
 import { defineRelations } from "drizzle-orm"
 
@@ -28,6 +30,8 @@ export const relations = defineRelations(
     member,
     invitation,
     environments,
+    lenses,
+    lensPillars,
   },
   ({
     one,
@@ -42,9 +46,20 @@ export const relations = defineRelations(
     teamMember,
     workloads,
     environments,
+    lenses,
+    lensPillars,
   }) => ({
     workloads: {
-      environments: many.environments({ from: workloads.id, to: environments.id }),
+      environments: many.environments({
+        from: workloads.id,
+        to: environments.id
+      }),
+    },
+    lenses: {
+      lensPillars: many.lensPillars({
+        from: lenses.id,
+        to: lensPillars.id
+      }),
     },
     users: {
       sessions: many.session({

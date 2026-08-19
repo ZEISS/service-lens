@@ -1,6 +1,8 @@
 import { pgTable } from "@/db/utils"
 import { integer, json, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { lensPillars, insertLensPillarSchema } from "./lens-pillar"
+import { z } from "zod"
 
 export const lenses = pgTable("lens", {
   id: uuid().primaryKey().defaultRandom(),
@@ -28,6 +30,10 @@ export const lensInsertSchema = createInsertSchema(lenses, {
   raw: true,
 })
 
+export const insertLensWithPillarsSchema = lensInsertSchema.extend({
+  pillars: z.array(insertLensPillarSchema).optional(),
+})
+
 export const lensSelectSchema = createSelectSchema(lenses)
 export const lensDeleteSchema = createSelectSchema(lenses).pick({
   id: true,
@@ -36,3 +42,4 @@ export const lensDeleteSchema = createSelectSchema(lenses).pick({
 export type TLensInsertSchema = ReturnType<typeof lensInsertSchema.parse>
 export type TLensSelectSchema = ReturnType<typeof lensSelectSchema.parse>
 export type TLensDeleteSchema = ReturnType<typeof lensDeleteSchema.parse>
+export type TLensWithPillarsSchema = ReturnType<typeof insertLensWithPillarsSchema.parse>
