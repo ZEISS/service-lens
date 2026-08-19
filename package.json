@@ -104,7 +104,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
-    "drizzle-kit": "1.0.0-rc.4",
+    "drizzle-kit": "1.0.0-rc.5-ab785fc",
     "esbuild": "^0.28.2",
     "globals": "^17.9.0",
     "graphql": "^16.14.2",
