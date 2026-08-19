@@ -13,6 +13,10 @@ import {
   environments,
   lenses,
   lensPillars,
+  lensPillarQuestions,
+  lensPillarQuestionRisks,
+  lensPillarQuestionChoices,
+  lensPillarQuestionResources,
 } from "./schema"
 import { defineRelations } from "drizzle-orm"
 
@@ -32,6 +36,10 @@ export const relations = defineRelations(
     environments,
     lenses,
     lensPillars,
+    lensPillarQuestions,
+    lensPillarQuestionRisks,
+    lensPillarQuestionChoices,
+    lensPillarQuestionResources,
   },
   ({
     one,
@@ -48,6 +56,10 @@ export const relations = defineRelations(
     environments,
     lenses,
     lensPillars,
+    lensPillarQuestions,
+    lensPillarQuestionRisks,
+    lensPillarQuestionChoices,
+    lensPillarQuestionResources,
   }) => ({
     workloads: {
       environments: many.environments({
@@ -61,6 +73,27 @@ export const relations = defineRelations(
         to: lensPillars.lensId
       }),
     },
+    lensPillars: {
+      questions: many.lensPillarQuestions({
+        from: lensPillars.id,
+        to: lensPillarQuestions.pillarId,
+      }),
+    },
+    lensPillarQuestions: {
+      risks: many.lensPillarQuestionRisks({
+        from: lensPillarQuestions.id,
+        to: lensPillarQuestionRisks.questionsId,
+      }),
+      choices: many.lensPillarQuestionChoices({
+        from: lensPillarQuestions.id,
+        to: lensPillarQuestionChoices.questionsId,
+      }),
+      resources: many.lensPillarQuestionResources({
+        from: lensPillarQuestions.id,
+        to: lensPillarQuestionResources.questionsId,
+      }),
+    },
+
     users: {
       sessions: many.session({
         from: user.id,

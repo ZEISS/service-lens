@@ -1,3 +1,4 @@
+CREATE TYPE "risk" AS ENUM('NO_RISK', 'LOW_RISK', 'MEDIUM_RISK', 'HIGH_RISK');--> statement-breakpoint
 CREATE TABLE "service_lens_account" (
 	"id" text PRIMARY KEY,
 	"account_id" text NOT NULL,
@@ -136,6 +137,49 @@ CREATE TABLE "service_lens_lens_pillars" (
 	"name" varchar(255) NOT NULL,
 	"description" varchar(1024) NOT NULL,
 	"lensId" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars_questions" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"ref" varchar(255) NOT NULL,
+	"title" varchar(255) NOT NULL,
+	"description" varchar(1024) NOT NULL,
+	"pillarId" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars_questions_choices" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"ref" varchar(255) NOT NULL,
+	"title" varchar(255) NOT NULL,
+	"description" varchar(1024) NOT NULL,
+	"questionsId" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars_questions_risks" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"risk" "risk" DEFAULT 'NO_RISK'::"risk",
+	"condition" varchar(1024) NOT NULL,
+	"questionsId" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars_questions_resources" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"ref" varchar(255) NOT NULL,
+	"url" varchar(1024) NOT NULL,
+	"description" varchar(1024) NOT NULL,
+	"questionsId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"deleted_at" timestamp

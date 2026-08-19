@@ -1,11 +1,22 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "adba5e5d-bd3d-4be1-b64e-2e713108c72d",
+  "id": "4c1565c0-3e20-4a7d-a5fc-dbd2b769f42f",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
+    {
+      "values": [
+        "NO_RISK",
+        "LOW_RISK",
+        "MEDIUM_RISK",
+        "HIGH_RISK"
+      ],
+      "name": "risk",
+      "entityType": "enums",
+      "schema": "public"
+    },
     {
       "isRlsEnabled": false,
       "name": "service_lens_account",
@@ -93,6 +104,30 @@
     {
       "isRlsEnabled": false,
       "name": "service_lens_lens_pillars",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_lens_pillars_questions",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_lens_pillars_questions_choices",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_lens_pillars_questions_risks",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_lens_pillars_questions_resources",
       "entityType": "tables",
       "schema": "public"
     },
@@ -1429,6 +1464,409 @@
       "entityType": "columns",
       "schema": "public",
       "table": "service_lens_lens_pillars"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ref",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "title",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "pillarId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ref",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "title",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionsId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "risk",
+      "typeSchema": "public",
+      "notNull": false,
+      "dimensions": 0,
+      "default": "'NO_RISK'",
+      "generated": null,
+      "identity": null,
+      "name": "risk",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "condition",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionsId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ref",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "url",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "description",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionsId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources"
     },
     {
       "type": "bigint",
@@ -2842,6 +3280,46 @@
       "name": "service_lens_lens_pillars_pkey",
       "schema": "public",
       "table": "service_lens_lens_pillars",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "service_lens_lens_pillars_questions_pkey",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "service_lens_lens_pillars_questions_choices_pkey",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_choices",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "service_lens_lens_pillars_questions_risks_pkey",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "service_lens_lens_pillars_questions_resources_pkey",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_resources",
       "entityType": "pks"
     },
     {

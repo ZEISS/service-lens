@@ -18,6 +18,8 @@ export const lensPillars = pgTable("lens_pillars", {
 
 export const insertLensPillarSchema = createInsertSchema(lensPillars, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),
+  ref: (schema) => schema.min(1, "Reference is required").max(255, "Reference must be at most 255 characters"),
+  description: (schema) => schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
 }).omit({
   createdAt: true,
   deletedAt: true,
