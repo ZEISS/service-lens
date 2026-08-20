@@ -9,6 +9,7 @@ import { Breadcrumbs } from "../_components/breadcrumbs"
 import { EnvironmentsDataTable } from "./_components/environments-data-table"
 import { LensesDataTable } from "./_components/lenses-data-table"
 import { ProfilesDataTable } from "./_components/profiles-data-table"
+import { Badge } from "@/components/ui/badge"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -21,6 +22,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const environments = workload?.environments.map((env) => ({ ...env })) ?? []
   const lenses = workload?.lenses.map((lens) => ({ ...lens })) ?? []
   const profiles = workload?.profiles.map((profile) => ({ ...profile })) ?? []
+  const tags = workload?.tags.map((tag) => ({ ...tag })) ?? []
 
   if (!workload) {
     return notFound()
@@ -41,6 +43,18 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </CardHeader>
         <CardContent>
           <p className="text-sm">{workload.description || "No description provided."}</p>
+        </CardContent>
+      </Card>
+
+      {/* Tags */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">Tags</CardTitle>
+          <CardDescription>Associated tags for this workload.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {tags.length === 0 && <p>No tags associated with this workload.</p>}
+          {tags.length > 0 && tags.map((tag, index) => <Badge className="mx-2" key={index}>{tag.name} : {tag.value}</Badge>)}
         </CardContent>
       </Card>
 

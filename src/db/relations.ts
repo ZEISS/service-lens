@@ -58,6 +58,7 @@ export const relations = defineRelations(
     invitation,
     user,
     member,
+    tags,
     account,
     session,
     team,
@@ -88,6 +89,10 @@ export const relations = defineRelations(
       profiles: many.profiles({
         from: workloads.id.through(workloadProfile.workloadId),
         to: profiles.id.through(workloadProfile.profileId),
+      }),
+      tags: many.tags({
+        from: workloads.id.through(workloadTag.workloadId),
+        to: tags.id.through(workloadTag.tagId),
       }),
     },
     lenses: {
