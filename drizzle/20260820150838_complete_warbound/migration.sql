@@ -142,6 +142,13 @@ CREATE TABLE "service_lens_lens_pillars" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
+CREATE TABLE "service_lens_lens_pillars_question_answers" (
+	"workloadId" uuid NOT NULL,
+	"questionId" uuid NOT NULL,
+	"choiceId" uuid NOT NULL,
+	"reason" varchar(1024)
+);
+--> statement-breakpoint
 CREATE TABLE "service_lens_lens_pillars_questions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"ref" varchar(255) NOT NULL,
@@ -270,6 +277,8 @@ CREATE INDEX "team_organizationId_idx" ON "service_lens_team" ("organization_id"
 CREATE INDEX "teamMember_teamId_idx" ON "service_lens_team_member" ("team_id");--> statement-breakpoint
 CREATE INDEX "teamMember_userId_idx" ON "service_lens_team_member" ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "service_lens_verification" ("identifier");--> statement-breakpoint
+CREATE INDEX "workload_id_index" ON "service_lens_lens_pillars_question_answers" ("workloadId");--> statement-breakpoint
+CREATE UNIQUE INDEX "question_choice_unique_index" ON "service_lens_lens_pillars_question_answers" ("workloadId","questionId","choiceId");--> statement-breakpoint
 CREATE INDEX "tag_name_index" ON "service_lens_tag" ("name");--> statement-breakpoint
 CREATE UNIQUE INDEX "tag_name_value_unique_index" ON "service_lens_tag" ("name","value");--> statement-breakpoint
 ALTER TABLE "service_lens_account" ADD CONSTRAINT "service_lens_account_user_id_service_lens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "service_lens_user"("id") ON DELETE CASCADE;--> statement-breakpoint

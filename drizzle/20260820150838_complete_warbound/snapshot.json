@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "51880895-d9aa-4f4a-9dbe-04bcbbd13f66",
+  "id": "5e65f65b-1e32-4463-b1f6-2900be173bbe",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -104,6 +104,12 @@
     {
       "isRlsEnabled": false,
       "name": "service_lens_lens_pillars",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_lens_pillars_question_answers",
       "entityType": "tables",
       "schema": "public"
     },
@@ -1470,6 +1476,58 @@
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "workloadId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "choiceId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "reason",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
@@ -2657,6 +2715,62 @@
       "entityType": "indexes",
       "schema": "public",
       "table": "service_lens_verification"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "workloadId",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "workload_id_index",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "workloadId",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        },
+        {
+          "value": "questionId",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        },
+        {
+          "value": "choiceId",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "question_choice_unique_index",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_question_answers"
     },
     {
       "nameExplicit": true,
