@@ -3,13 +3,13 @@ import { timestamp, uuid, varchar, pgEnum } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const riskEnum = pgEnum("risk", ["NO_RISK", "LOW_RISK", "MEDIUM_RISK", "HIGH_RISK"]);
+export const riskEnum = pgEnum("risk", ["NO_RISK", "LOW_RISK", "MEDIUM_RISK", "HIGH_RISK"])
 
 export const lensPillarQuestionRisks = pgTable("lens_pillars_questions_risks", {
   id: uuid().primaryKey().defaultRandom(),
   risk: riskEnum().default("NO_RISK"),
   condition: varchar({ length: 1024 }).notNull(),
-  questionsId: uuid().notNull(),
+  questionId: uuid().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -24,7 +24,7 @@ export const insertLensPillarQuestionRisksSchema = createInsertSchema(lensPillar
   createdAt: true,
   deletedAt: true,
   id: true,
-  questionsId: true,
+  questionId: true,
 })
 
 export type TLensPillarQuestionRisk = typeof lensPillarQuestionRisks.$inferSelect

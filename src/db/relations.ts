@@ -64,13 +64,13 @@ export const relations = defineRelations(
     workloads: {
       environments: many.environments({
         from: workloads.id,
-        to: environments.id
+        to: environments.id,
       }),
     },
     lenses: {
       lensPillars: many.lensPillars({
         from: lenses.id,
-        to: lensPillars.lensId
+        to: lensPillars.lensId,
       }),
     },
     lensPillars: {
@@ -82,15 +82,15 @@ export const relations = defineRelations(
     lensPillarQuestions: {
       risks: many.lensPillarQuestionRisks({
         from: lensPillarQuestions.id,
-        to: lensPillarQuestionRisks.questionsId,
+        to: lensPillarQuestionRisks.questionId,
       }),
       choices: many.lensPillarQuestionChoices({
         from: lensPillarQuestions.id,
-        to: lensPillarQuestionChoices.questionsId,
+        to: lensPillarQuestionChoices.questionId,
       }),
       resources: many.lensPillarQuestionResources({
         from: lensPillarQuestions.id,
-        to: lensPillarQuestionResources.questionsId,
+        to: lensPillarQuestionResources.questionId,
       }),
     },
 

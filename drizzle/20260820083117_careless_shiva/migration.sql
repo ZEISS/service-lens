@@ -158,7 +158,7 @@ CREATE TABLE "service_lens_lens_pillars_questions_choices" (
 	"ref" varchar(255) NOT NULL,
 	"title" varchar(255) NOT NULL,
 	"description" varchar(1024) NOT NULL,
-	"questionsId" uuid NOT NULL,
+	"questionId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"deleted_at" timestamp
@@ -168,7 +168,7 @@ CREATE TABLE "service_lens_lens_pillars_questions_risks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"risk" "risk" DEFAULT 'NO_RISK'::"risk",
 	"condition" varchar(1024) NOT NULL,
-	"questionsId" uuid NOT NULL,
+	"questionId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"deleted_at" timestamp
@@ -176,10 +176,9 @@ CREATE TABLE "service_lens_lens_pillars_questions_risks" (
 --> statement-breakpoint
 CREATE TABLE "service_lens_lens_pillars_questions_resources" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-	"ref" varchar(255) NOT NULL,
 	"url" varchar(1024) NOT NULL,
-	"description" varchar(1024) NOT NULL,
-	"questionsId" uuid NOT NULL,
+	"description" varchar(1024),
+	"questionId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"deleted_at" timestamp

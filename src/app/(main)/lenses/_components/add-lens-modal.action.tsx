@@ -3,6 +3,7 @@
 import { insertLensWithPillarsAndQuestionsSchema, type TLens } from "@/db/schema"
 import { insertLensWithPillarsAndQuestions } from "@/db/queries/lenses"
 import { lensSpecSchema } from "@/lib/spec"
+import util from "node:util"
 import { redirect } from "next/navigation"
 import "server-only"
 import * as z from "zod"
@@ -28,7 +29,7 @@ export async function createLensAction(_: AddLensModalFormState, data: FormData)
   if (!result.success) {
     const errors = z.treeifyError(result.error)
 
-    console.error("Validation errors:", errors.properties)
+    console.error("Validation errors:", util.inspect(errors, false, null, true))
 
     return {
       values,

@@ -3,6 +3,9 @@ import { timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { lensPillars } from "./lens-pillar"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
+import { insertLensPillarQuestionChoicesSchema } from "./lens-pillar-question-choices"
+import { insertLensPillarQuestionRisksSchema } from "./lens-pillar-question-risks"
+import { insertLensPillarQuestionResourcesSchema } from "./lens-pillar-question-resources"
 
 export const lensPillarQuestions = pgTable("lens_pillars_questions", {
   id: uuid().primaryKey().defaultRandom(),
@@ -20,13 +23,20 @@ export const lensPillarQuestions = pgTable("lens_pillars_questions", {
 export const insertLensPillarQuestionSchema = createInsertSchema(lensPillarQuestions, {
   title: (schema) => schema.min(1, "Title is required").max(255, "Title must be at most 255 characters"),
   ref: (schema) => schema.min(1, "Reference is required").max(255, "Reference must be at most 255 characters"),
-  description: (schema) => schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
-}).omit({
-  createdAt: true,
-  deletedAt: true,
-  id: true,
-  pillarId: true,
+  description: (schema) =>
+    schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
 })
+  .omit({
+    createdAt: true,
+    deletedAt: true,
+    id: true,
+    pillarId: true,
+  })
+  .extend({
+    choices: z.array(insertLensPillarQuestionChoicesSchema).optional(),
+    risks: z.array(insertLensPillarQuestionRisksSchema).optional(),
+    resources: z.array(insertLensPillarQuestionResourcesSchema).optional(),
+  })
 
 export type TLensPillarQuestion = typeof lensPillarQuestions.$inferSelect
 export type TNewLensPillarQuestion = typeof lensPillarQuestions.$inferInsert

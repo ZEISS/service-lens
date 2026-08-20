@@ -4,7 +4,6 @@ import { z } from "zod"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { insertLensPillarQuestionSchema } from "./lens-pillar-question"
 
-
 export const lensPillars = pgTable("lens_pillars", {
   id: uuid().primaryKey().defaultRandom(),
   ref: varchar({ length: 255 }).notNull(),
@@ -21,15 +20,18 @@ export const lensPillars = pgTable("lens_pillars", {
 export const insertLensPillarSchema = createInsertSchema(lensPillars, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),
   ref: (schema) => schema.min(1, "Reference is required").max(255, "Reference must be at most 255 characters"),
-  description: (schema) => schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
-}).omit({
-  createdAt: true,
-  deletedAt: true,
-  id: true,
-  lensId: true,
-}).extend({
-  questions: z.array(insertLensPillarQuestionSchema).optional(),
+  description: (schema) =>
+    schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
 })
+  .omit({
+    createdAt: true,
+    deletedAt: true,
+    id: true,
+    lensId: true,
+  })
+  .extend({
+    questions: z.array(insertLensPillarQuestionSchema).optional(),
+  })
 
 export type TLensPillar = typeof lensPillars.$inferSelect
 export type TNewLensPillar = typeof lensPillars.$inferInsert

@@ -8,7 +8,7 @@ export const lensPillarQuestionChoices = pgTable("lens_pillars_questions_choices
   ref: varchar({ length: 255 }).notNull(),
   title: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 1024 }).notNull(),
-  questionsId: uuid().notNull(),
+  questionId: uuid().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -19,12 +19,13 @@ export const lensPillarQuestionChoices = pgTable("lens_pillars_questions_choices
 export const insertLensPillarQuestionChoicesSchema = createInsertSchema(lensPillarQuestionChoices, {
   title: (schema) => schema.min(1, "Title is required").max(255, "Title must be at most 255 characters"),
   ref: (schema) => schema.min(1, "Reference is required").max(255, "Reference must be at most 255 characters"),
-  description: (schema) => schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
+  description: (schema) =>
+    schema.min(1, "Description is required").max(1024, "Description must be at most 1024 characters"),
 }).omit({
   createdAt: true,
   deletedAt: true,
   id: true,
-  questionsId: true,
+  questionId: true,
 })
 
 export type TLensPillarQuestionChoice = typeof lensPillarQuestionChoices.$inferSelect
