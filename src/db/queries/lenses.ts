@@ -3,7 +3,7 @@ import "server-only"
 import { count, eq } from "drizzle-orm"
 
 import { db } from "@/db"
-import { lensDeleteSchema, lensPillars, lenses, insertLensWithPillarsSchema, type TLensDeleteSchema, type TLensWithPillarsSchema } from "@/db/schema"
+import { lensDeleteSchema, lensPillars, lenses, lensPillarQuestions, type TLensDeleteSchema, type TLensWithPillarsSchema, insertLensWithPillarsAndQuestionsSchema } from "@/db/schema"
 import { takeFirstOrNull } from "@/db/utils"
 
 import type { paginationParams } from "./pagination"
@@ -24,20 +24,30 @@ export async function getLenses(input: getLensesSchema) {
 
 export async function getLensById(id: string) {
   try {
-    const lens = await db.query.lenses.findFirst({ where: { id }, with: { lensPillars: { where: { lensId: id } } } })
+    const lens = await db.query.lenses.findFirst({ where: { id }, with: { lensPillars: { with: { questions: true } } } })
     return lens
   } catch {
     return null
   }
 }
 
-export const insertLensWithPillars = async (input: TLensWithPillarsSchema) =>
+export const insertLensWithPillarsAndQuestions = async (input: TLensWithPillarsSchema) =>
   await db.transaction(async (tx) => {
-    const parsed = await insertLensWithPillarsSchema.parseAsync(input)
+    const parsed = await insertLensWithPillarsAndQuestionsSchema.parseAsync(input)
     const result = await tx.insert(lenses).values(parsed).returning()
     const lens = takeFirstOrNull(result)
     if (!lens) return null
-    parsed.pillars?.forEach(async (pillar) => await tx.insert(lensPillars).values({ ...pillar, lensId: lens?.id }).onConflictDoNothing())
+    // TODO: Make this nice and collapse it into an easier step process.
+    parsed.pillars?.forEach(async (pillar) => {
+      const result = await tx.insert(lensPillars).values({ ...pillar, lensId: lens?.id }).onConflictDoNothing().returning()
+      const lensPillar = takeFirstOrNull(result)
+      if (!lensPillar) return
+
+      pillar.questions?.forEach(async (question) => {
+        await tx.insert(lensPillarQuestions).values({ ...question, pillarId: lensPillar.id }).onConflictDoNothing()
+      })
+    })
+
     return lens
   })
 

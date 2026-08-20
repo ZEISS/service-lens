@@ -1,7 +1,7 @@
 "use server"
 
-import { insertLensWithPillars } from "@/db/queries/lenses"
-import { insertLensPillarSchema, insertLensWithPillarsSchema, type TLens } from "@/db/schema"
+import { insertLensWithPillarsAndQuestionsSchema, type TLens } from "@/db/schema"
+import { insertLensWithPillarsAndQuestions } from "@/db/queries/lenses"
 import { lensSpecSchema } from "@/lib/spec"
 import { redirect } from "next/navigation"
 import "server-only"
@@ -17,7 +17,7 @@ export async function createLensAction(_: AddLensModalFormState, data: FormData)
   const json = new TextDecoder().decode(buffer)
   const spec = lensSpecSchema.safeParse(JSON.parse(json))
 
-  const result = insertLensWithPillarsSchema.safeParse({
+  const result = insertLensWithPillarsAndQuestionsSchema.safeParse({
     raw: spec.data,
     name: spec.data?.name,
     version: spec.data?.version,
@@ -40,7 +40,7 @@ export async function createLensAction(_: AddLensModalFormState, data: FormData)
   let lens: TLens | null = null
 
   try {
-    lens = await insertLensWithPillars(result.data)
+    lens = await insertLensWithPillarsAndQuestions(result.data)
   } catch (error) {
     console.error("insert error", error)
 

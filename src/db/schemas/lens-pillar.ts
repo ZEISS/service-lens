@@ -1,7 +1,9 @@
 import { pgTable } from "@/db/utils"
 import { timestamp, uuid, varchar } from "drizzle-orm/pg-core"
-import { lenses } from "./lens"
+import { z } from "zod"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { insertLensPillarQuestionSchema } from "./lens-pillar-question"
+
 
 export const lensPillars = pgTable("lens_pillars", {
   id: uuid().primaryKey().defaultRandom(),
@@ -25,6 +27,8 @@ export const insertLensPillarSchema = createInsertSchema(lensPillars, {
   deletedAt: true,
   id: true,
   lensId: true,
+}).extend({
+  questions: z.array(insertLensPillarQuestionSchema).optional(),
 })
 
 export type TLensPillar = typeof lensPillars.$inferSelect
