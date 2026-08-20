@@ -3,6 +3,7 @@ import {
   session,
   tags,
   account,
+  profiles,
   verification,
   workloads,
   organization,
@@ -17,6 +18,10 @@ import {
   lensPillarQuestionRisks,
   lensPillarQuestionChoices,
   lensPillarQuestionResources,
+  workloadEnvironment,
+  workloadTag,
+  workloadProfile,
+  workloadLens,
 } from "./schema"
 import { defineRelations } from "drizzle-orm"
 
@@ -34,6 +39,11 @@ export const relations = defineRelations(
     member,
     invitation,
     environments,
+    workloadEnvironment,
+    workloadLens,
+    workloadProfile,
+    workloadTag,
+    profiles,
     lenses,
     lensPillars,
     lensPillarQuestions,
@@ -52,7 +62,12 @@ export const relations = defineRelations(
     session,
     team,
     teamMember,
+    profiles,
     workloads,
+    workloadEnvironment,
+    workloadTag,
+    workloadProfile,
+    workloadLens,
     environments,
     lenses,
     lensPillars,
@@ -63,8 +78,16 @@ export const relations = defineRelations(
   }) => ({
     workloads: {
       environments: many.environments({
-        from: workloads.id,
-        to: environments.id,
+        from: workloads.id.through(workloadEnvironment.workloadId),
+        to: environments.id.through(workloadEnvironment.environmentId),
+      }),
+      lenses: many.lenses({
+        from: workloads.id.through(workloadLens.workloadId),
+        to: lenses.id.through(workloadLens.lensId),
+      }),
+      profiles: many.profiles({
+        from: workloads.id.through(workloadProfile.workloadId),
+        to: profiles.id.through(workloadProfile.profileId),
       }),
     },
     lenses: {
@@ -93,7 +116,6 @@ export const relations = defineRelations(
         to: lensPillarQuestionResources.questionId,
       }),
     },
-
     users: {
       sessions: many.session({
         from: user.id,

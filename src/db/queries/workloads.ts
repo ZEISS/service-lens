@@ -50,7 +50,7 @@ export const deleteWorkload = async (input: TWorkloadDeleteSchema) => {
 }
 
 export const getWorkloadById = async (id: string) =>
-  await db.query.workloads.findFirst({ where: { id }, with: { environments: true } })
+  await db.query.workloads.findFirst({ where: { id }, with: { environments: true, lenses: true, profiles: true } })
 
 export const getTotalNumberOfWorkloads = async () => {
   try {

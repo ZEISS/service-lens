@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "5728dd54-2d83-487b-b3e2-d9f7b633eb1b",
+  "id": "51880895-d9aa-4f4a-9dbe-04bcbbd13f66",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -2194,19 +2194,6 @@
       "table": "service_lens_tag"
     },
     {
-      "type": "bigint",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_workload_environment"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -3347,16 +3334,6 @@
       "name": "service_lens_tag_pkey",
       "schema": "public",
       "table": "service_lens_tag",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "service_lens_workload_environment_pkey",
-      "schema": "public",
-      "table": "service_lens_workload_environment",
       "entityType": "pks"
     },
     {

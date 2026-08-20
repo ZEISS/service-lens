@@ -227,7 +227,6 @@ CREATE TABLE "service_lens_tag" (
 );
 --> statement-breakpoint
 CREATE TABLE "service_lens_workload_environment" (
-	"id" bigint PRIMARY KEY,
 	"workloadId" uuid NOT NULL,
 	"environmentId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,

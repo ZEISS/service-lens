@@ -7,6 +7,8 @@ import { getWorkloadById } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "../_components/breadcrumbs"
 import { EnvironmentsDataTable } from "./_components/environments-data-table"
+import { LensesDataTable } from "./_components/lenses-data-table"
+import { ProfilesDataTable } from "./_components/profiles-data-table"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -17,6 +19,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const workload = await getWorkloadById(id)
   const environments = workload?.environments.map((env) => ({ ...env })) ?? []
+  const lenses = workload?.lenses.map((lens) => ({ ...lens })) ?? []
+  const profiles = workload?.profiles.map((profile) => ({ ...profile })) ?? []
 
   if (!workload) {
     return notFound()
@@ -37,6 +41,28 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </CardHeader>
         <CardContent>
           <p className="text-sm">{workload.description || "No description provided."}</p>
+        </CardContent>
+      </Card>
+
+      {/* Lenses */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">Lenses</CardTitle>
+          <CardDescription>Associated lenses for this workload.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <LensesDataTable data={lenses} />
+        </CardContent>
+      </Card>
+
+      {/* Profiles */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">Profiles</CardTitle>
+          <CardDescription>Associated profiles for this workload.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProfilesDataTable data={profiles} />
         </CardContent>
       </Card>
 

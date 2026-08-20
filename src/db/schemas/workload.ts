@@ -42,7 +42,6 @@ export const workloadProfile = pgTable("workload_profile", {
 })
 
 export const workloadEnvironment = pgTable("workload_environment", {
-  id: bigint({ mode: "bigint" }).primaryKey(),
   workloadId: uuid()
     .notNull()
     .references(() => workloads.id, { onDelete: "cascade" }),
@@ -60,40 +59,6 @@ export const workloadTag = pgTable("workload_tag", {
   tagId: bigint({ mode: "bigint" })
     .notNull()
     .references(() => tags.id, { onDelete: "cascade" }),
-})
-
-export const workloadRelations = defineRelations({
-  workloads: {
-    environments: "many",
-  },
-})
-
-export const workloadEnvironmentRelations = defineRelations({
-  workloadEnvironment: {
-    workload: "one",
-    environment: "one",
-  },
-})
-
-export const workloadLensRelations = defineRelations({
-  workloadLens: {
-    workload: "one",
-    lens: "one",
-  },
-})
-
-export const workloadProfileRelations = defineRelations({
-  workloadProfile: {
-    workload: "one",
-    profile: "one",
-  },
-})
-
-export const workloadTagRelations = defineRelations({
-  workloadTag: {
-    workload: "one",
-    tag: "one",
-  },
 })
 
 export const workloadInsertSchema = createInsertSchema(workloads, {
