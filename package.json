@@ -79,7 +79,7 @@
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.85.0",
     "react-markdown": "^10.1.0",
-    "react-resizable-panels": "^4.12.2",
+    "react-resizable-panels": "^4.12.3",
     "recharts": "^3.10.1",
     "reflect-metadata": "^0.2.2",
     "simple-icons": "^16.28.0",
