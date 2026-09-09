@@ -40,7 +40,7 @@
     "@graphql-codegen/client-preset": "^6.1.2",
     "@graphql-codegen/typescript": "^6.1.0",
     "@graphql-codegen/typescript-resolvers": "^6.1.0",
-    "@hookform/resolvers": "^5.7.1",
+    "@hookform/resolvers": "^5.9.1",
     "@orpc/client": "^1.14.15",
     "@orpc/openapi": "^1.15.0",
     "@orpc/server": "^1.14.15",
