@@ -1,7 +1,8 @@
 FROM ghcr.io/pnpm/pnpm:12
 
-WORKDIR /app
+RUN pnpm runtime set node 24 -g
 
+WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
