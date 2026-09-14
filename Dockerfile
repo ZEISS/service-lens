@@ -1,15 +1,15 @@
-FROM node:lts-alpine
+FROM ghcr.io/pnpm/pnpm:12
 
-WORKDIR /app  
+WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN npm install --only=production
- 
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 ENV NODE_ENV=production
- 
+
 EXPOSE 3000
 ENV HOSTNAME="0.0.0.0"
-  
-CMD ["npm", "start"]  
+
+CMD ["pnpm", "start"]

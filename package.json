@@ -2,6 +2,13 @@
   "name": "service-lens",
   "version": "0.0.0",
   "private": true,
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.x",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "dev": "nodemon",
     "build": "next build && esbuild server.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
@@ -28,7 +35,9 @@
     "db:studio": "dotenv drizzle-kit studio"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": ["biome check --write --no-errors-on-unmatched"]
+    "*.{js,ts,jsx,tsx}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.11.3",
