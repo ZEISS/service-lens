@@ -58,7 +58,7 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       - uses: azure/setup-helm@v5
-      - run: npm run build:helm
+      - run: pnpm run build:helm
       - uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: helm/charts
