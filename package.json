@@ -83,7 +83,7 @@
     "simple-icons": "^16.28.0",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
-    "typeorm": "^1.1.0",
+    "typeorm": "^1.1.1",
     "vaul": "^1.1.2",
     "ws": "^8.21.3",
     "zod": "^4.4.3",
