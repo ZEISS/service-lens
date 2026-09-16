@@ -40,12 +40,12 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm build
       - run: pnpm version ${TAG_NAME} --no-git-tag-version
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
+      - run: pnpm install
+      - run: pnpm lint
+      - run: pnpm build
       - id: push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
