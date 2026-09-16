@@ -1,3 +1,5 @@
+import "@/config/env-config"
+
 import { db } from "@/db"
 import * as schema from "@/db/schema"
 import { betterAuth } from "better-auth"
@@ -26,9 +28,9 @@ export const auth = betterAuth({
       clientSecret: process.env.BETTER_AUTH_GITHUB_CLIENT_SECRET || "",
     },
   },
-  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false //defaults to true
   },
   database: drizzleAdapter(db, {
     schema: { ...schema },
