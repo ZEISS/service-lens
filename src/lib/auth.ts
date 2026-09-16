@@ -26,7 +26,7 @@ export const auth = betterAuth({
       clientSecret: process.env.BETTER_AUTH_GITHUB_CLIENT_SECRET || "",
     },
   },
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
   emailAndPassword: {
     enabled: true,
   },
