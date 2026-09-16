@@ -39,6 +39,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^5.9.1",
+    "@next/env": "^16.3.5",
     "@orpc/client": "^1.14.15",
     "@orpc/openapi": "^1.15.0",
     "@orpc/server": "^1.14.15",
