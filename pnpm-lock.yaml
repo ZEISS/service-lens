@@ -105,8 +105,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0(graphql@16.14.2)
       graphql-ws:
-        specifier: ^6.2.0
-        version: 6.2.0(graphql@16.14.2)(ws@8.21.3)
+        specifier: ^6.2.1
+        version: 6.2.1(graphql@16.14.2)(ws@8.21.3)
       input-otp:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -3114,8 +3114,8 @@ packages:
     peerDependencies:
       graphql: 14 - 16
 
-  graphql-ws@6.2.0:
-    resolution: {integrity: sha512-A0kH9R7JZNh4AKKHykmJdOb5IgRya07uCrhYOXm1UDyxCwc/6jEi5+UMUhoBVj/hsowJHRK7Y3LllMdlNJR+HA==}
+  graphql-ws@6.2.1:
+    resolution: {integrity: sha512-NMbPNeTwXpUOxmczdMtzEnynLNbbR267E9hRcJ81SSbQeIvZup3cMjbD1ZT3jpS2xkpxooisitvO7LZNOyz17Q==}
     engines: {node: '>=20'}
     peerDependencies:
       '@fastify/websocket': ^10 || ^11
@@ -6790,7 +6790,7 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
       graphql: 16.14.2
 
-  graphql-ws@6.2.0(graphql@16.14.2)(ws@8.21.3):
+  graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3):
     dependencies:
       graphql: 16.14.2
     optionalDependencies:
