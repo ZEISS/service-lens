@@ -27,9 +27,7 @@
     "db:studio": "dotenv drizzle-kit studio"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": [
-      "biome check --write --no-errors-on-unmatched"
-    ]
+    "*.{js,ts,jsx,tsx}": ["biome check --write --no-errors-on-unmatched"]
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.11.3",

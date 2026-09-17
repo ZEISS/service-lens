@@ -47,6 +47,18 @@ export const environmentColumns: ColumnDef<TEnvironment>[] = [
     enableSorting: false,
   },
   {
+    accessorKey: "updatedAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Updated At" />,
+    cell: ({ row }) => <span>{row.original.updatedAt?.toDateString()}</span>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+    cell: ({ row }) => <span>{row.original.createdAt?.toDateString()}</span>,
+    enableSorting: false,
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
     enableSorting: false,

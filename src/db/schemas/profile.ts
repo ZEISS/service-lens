@@ -82,8 +82,10 @@ export type TNewProfileQuestionAnswer = typeof profileQuestionAnswer.$inferInser
 
 export const profileInsertSchema = createInsertSchema(profiles, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),
+  description: (schema) => schema.max(255, "Description must be at most 255 characters"),
 }).pick({
   name: true,
+  description: true,
 })
 
 export const profileSelectSchema = createSelectSchema(profiles)

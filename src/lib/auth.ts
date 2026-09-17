@@ -30,7 +30,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    autoSignIn: false //defaults to true
+    autoSignIn: false, //defaults to true
   },
   database: drizzleAdapter(db, {
     schema: { ...schema },

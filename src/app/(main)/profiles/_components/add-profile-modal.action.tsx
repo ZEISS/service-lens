@@ -1,7 +1,7 @@
 "use server"
 
 import { insertProfile } from "@/db/queries/profiles"
-import { environmentInsertSchema, type TProfile } from "@/db/schema"
+import { environmentInsertSchema, profileInsertSchema, type TProfile } from "@/db/schema"
 import { redirect } from "next/navigation"
 import "server-only"
 import { z } from "zod"
@@ -10,9 +10,10 @@ import type { AddProfileModalFormState } from "./add-profile-modal.schema"
 export async function createProfileAction(_: AddProfileModalFormState, data: FormData) {
   const values = {
     name: data.get("name") as string,
+    description: data.get("description") as string,
   }
 
-  const result = environmentInsertSchema.safeParse(values)
+  const result = profileInsertSchema.safeParse(values)
 
   if (!result.success) {
     const errors = z.treeifyError(result.error)

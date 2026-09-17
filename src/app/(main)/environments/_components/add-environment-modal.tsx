@@ -32,7 +32,7 @@ export function AddEnvironmentModal() {
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Create Environment</DialogTitle>
-          <DialogDescription>Fill in the information below to create a new environment.</DialogDescription>
+          <DialogDescription>An environment is the deployment target of a workload.</DialogDescription>
         </DialogHeader>
         <Form action={formAction} id="add-environment-form">
           <FieldGroup>
@@ -43,7 +43,7 @@ export function AddEnvironmentModal() {
                 name="name"
                 defaultValue={state?.values?.name}
                 disabled={pending}
-                placeholder="Production"
+                placeholder="AWS, Azure, Production ..."
                 autoComplete="off"
               />
               <FieldDescription>Provide a concise name for your environment.</FieldDescription>

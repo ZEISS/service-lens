@@ -32,7 +32,9 @@ export function AddProfileModal() {
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Create Profile</DialogTitle>
-          <DialogDescription>Fill in the information below to create a new profile.</DialogDescription>
+          <DialogDescription>
+            A profile is a collection of lenses that apply to archetypes of workloads.
+          </DialogDescription>
         </DialogHeader>
         <Form action={formAction} id="add-profile-form">
           <FieldGroup>
@@ -43,12 +45,25 @@ export function AddProfileModal() {
                 name="name"
                 defaultValue={state?.values?.name}
                 disabled={pending}
-                placeholder="Atlantis"
+                placeholder="Autonomous Agents, Generative Apps ..."
                 autoComplete="off"
               />
-              <FieldDescription>Provide a concise name for the profile.</FieldDescription>
               {state?.errors?.properties?.name && (
                 <FieldError>{state?.errors?.properties?.name.errors.pop()}</FieldError>
+              )}
+            </Field>
+            <Field data-invalid={!!state?.errors?.properties?.description}>
+              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <Input
+                id="description"
+                name="description"
+                defaultValue={state?.values?.description}
+                disabled={pending}
+                placeholder="These agents do their own thing ..."
+                autoComplete="off"
+              />
+              {state?.errors?.properties?.description && (
+                <FieldError>{state?.errors?.properties?.description.errors.pop()}</FieldError>
               )}
             </Field>
           </FieldGroup>

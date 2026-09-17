@@ -8,20 +8,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import Link from "next/link"
 import type { Row } from "@tanstack/react-table"
-import { EllipsisVertical, Trash2Icon } from "lucide-react"
+import { EllipsisVertical } from "lucide-react"
 import Form from "next/form"
 import { useActionState } from "react"
-import { deleteEnvironmentAction } from "./data-rows-actions.action"
+import { deleteProfileAction } from "./data-rows-actions.action"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
 export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<TDesign>) {
-  const { id } = row
-  const [_state, formAction, pending] = useActionState(deleteEnvironmentAction, null)
+  const [_state, formAction, pending] = useActionState(deleteProfileAction, null)
 
   return (
     <DropdownMenu>
@@ -32,17 +31,18 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-32">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/profiles/${row.id}`}>Edit</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem variant="destructive">
           <Form action={formAction}>
-            <Input id="id" name="id" value={row.id} hidden readOnly />
-            <Button variant="ghost" size="sm" type="submit" disabled={pending}>
-              <Trash2Icon />
+            <input type="hidden" id="id" name="id" value={row.id} />
+            <button type="submit" disabled={pending}>
               Trash
-            </Button>
+            </button>
           </Form>
         </DropdownMenuItem>
       </DropdownMenuContent>

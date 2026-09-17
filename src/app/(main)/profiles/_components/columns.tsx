@@ -44,6 +44,12 @@ export const profileColumns: ColumnDef<TProfile>[] = [
     enableSorting: false,
   },
   {
+    accessorKey: "description",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+    cell: ({ row }) => <div>{row.original.description}</div>,
+    enableSorting: false,
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
     enableSorting: false,
