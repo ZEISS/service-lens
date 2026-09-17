@@ -3,6 +3,7 @@ import Link from "next/link"
 import type { ColumnDef } from "@tanstack/react-table"
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
+import { DataTableRowActions } from "./data-rows-actions"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { TWorkload } from "@/db/schema"
@@ -42,6 +43,23 @@ export const workloadColumns: ColumnDef<TWorkload>[] = [
         </Button>
       )
     },
+    enableSorting: false,
+  },
+  {
+    accessorKey: "updatedAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Updated At" />,
+    cell: ({ row }) => <span>{row.original.updatedAt?.toDateString()}</span>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+    cell: ({ row }) => <span>{row.original.createdAt?.toDateString()}</span>,
+    enableSorting: false,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
     enableSorting: false,
   },
 ]

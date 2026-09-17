@@ -36,7 +36,6 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
           <Link href={`/environments/${row.id}`}>Edit</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive">
           <Form action={formAction}>

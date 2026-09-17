@@ -46,23 +46,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </CardContent>
       </Card>
 
-      {/* Tags */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">Tags</CardTitle>
-          <CardDescription>Associated tags for this workload.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {tags.length === 0 && <p>No tags associated with this workload.</p>}
-          {tags.length > 0 &&
-            tags.map((tag, index) => (
-              <Badge className="mx-2" key={index}>
-                {tag.name} : {tag.value}
-              </Badge>
-            ))}
-        </CardContent>
-      </Card>
-
       {/* Lenses */}
       <Card>
         <CardHeader>
@@ -93,6 +76,23 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </CardHeader>
         <CardContent>
           <EnvironmentsDataTable data={environments} />
+        </CardContent>
+      </Card>
+
+      {/* Tags */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">Tags</CardTitle>
+          <CardDescription>Associated tags for this workload.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {tags.length === 0 && <p>No tags associated with this workload.</p>}
+          {tags.length > 0 &&
+            tags.map((tag, index) => (
+              <Badge className="mx-2" key={index}>
+                {tag.name} : {tag.value}
+              </Badge>
+            ))}
         </CardContent>
       </Card>
 

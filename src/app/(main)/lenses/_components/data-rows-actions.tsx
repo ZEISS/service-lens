@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+import Link from "next/link"
 import type { Row } from "@tanstack/react-table"
 import { EllipsisVertical } from "lucide-react"
 import Form from "next/form"
@@ -20,7 +20,6 @@ interface DataTableRowActionsProps<TData> {
 }
 
 export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<TDesign>) {
-  const { id } = row
   const [_state, formAction, pending] = useActionState(deleteLensAction, null)
 
   return (
@@ -32,16 +31,17 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-32">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/lenses/${row.id}`}>Edit</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive">
           <Form action={formAction}>
-            <Input id="id" name="id" value={row.id} hidden readOnly />
-            <Button type="submit" disabled={pending} variant="ghost" size="sm" className="w-full">
+            <input type="hidden" id="id" name="id" value={row.id} />
+            <button type="submit" disabled={pending}>
               Trash
-            </Button>
+            </button>
           </Form>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -13,14 +13,14 @@ import type { Row } from "@tanstack/react-table"
 import { EllipsisVertical } from "lucide-react"
 import Form from "next/form"
 import { useActionState } from "react"
-import { deleteProfileAction } from "./data-rows-actions.action"
+import { deleteWorkloadAction } from "./data-rows-actions.action"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
 export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<TDesign>) {
-  const [_state, formAction, pending] = useActionState(deleteProfileAction, null)
+  const [_state, formAction, pending] = useActionState(deleteWorkloadAction, null)
 
   return (
     <DropdownMenu>
@@ -32,7 +32,7 @@ export function DataTableRowActions<TDesign>({ row }: DataTableRowActionsProps<T
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-32">
         <DropdownMenuItem>
-          <Link href={`/profiles/${row.id}`}>Edit</Link>
+          <Link href={`/workloads/${row.id}`}>Edit</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuSeparator />
