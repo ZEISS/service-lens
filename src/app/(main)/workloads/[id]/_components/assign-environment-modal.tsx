@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 
 import Form from "next/form"
 
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { ApiComboBox } from "@/components/api-combobox"
 
 import { createWorkloadAction } from "../../_components/add-workload-modal.action"
 
@@ -26,11 +27,14 @@ interface AddEnvironmentModalProps {
 
 export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps) {
   const [state, formAction, pending] = useActionState(createWorkloadAction, null)
+  const [environment, setEnvironment] = useState({label: "", value: ""});
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">Assign</Button>
+        <Button size="sm" variant="outline">
+          Assign
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
@@ -39,33 +43,20 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
         </DialogHeader>
         <Form action={formAction} id={`assign-environment-form-${workloadId}`}>
           <Input type="hidden" name="workloadId" value={workloadId} />
+          <Input type="hidden" name="environmentId" value={environment.value} />
           <FieldGroup>
             <Field data-invalid={!!state?.errors?.properties?.name}>
-              <FieldLabel htmlFor="title">Name</FieldLabel>
-              <Input
-                id="name"
-                name="name"
-                defaultValue={state?.values?.name}
-                disabled={pending}
-                placeholder="Fate of Atlantis"
-                autoComplete="off"
+              <FieldLabel htmlFor="title">Environment</FieldLabel>
+              <ApiComboBox
+                className="w-full"
+                selectedItem={environment}
+                url=""
+                onSelect={(item) => {
+                  setEnvironment(item)
+                }}
               />
               {state?.errors?.properties?.name && (
                 <FieldError>{state?.errors?.properties?.name.errors.pop()}</FieldError>
-              )}
-            </Field>
-            <Field data-invalid={!!state?.errors?.properties?.description}>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Input
-                id="description"
-                name="description"
-                defaultValue={state?.values?.description}
-                disabled={pending}
-                placeholder="Good old Mother Nature."
-                autoComplete="off"
-              />
-              {state?.errors?.properties?.description && (
-                <FieldError>{state?.errors?.properties?.description.errors.pop()}</FieldError>
               )}
             </Field>
           </FieldGroup>

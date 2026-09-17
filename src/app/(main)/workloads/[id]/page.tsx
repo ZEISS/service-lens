@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation"
 
 import { Muted } from "@/components/typography/muted"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { AssignEnvironmentModal } from "./_components/assign-environment-modal"
 import { getWorkloadById } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "../_components/breadcrumbs"
@@ -73,6 +74,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Environments</CardTitle>
           <CardDescription>Associated environments for this workload.</CardDescription>
+          <CardAction>
+            <AssignEnvironmentModal workloadId={id} />
+          </CardAction>
         </CardHeader>
         <CardContent>
           <EnvironmentsDataTable data={environments} />
