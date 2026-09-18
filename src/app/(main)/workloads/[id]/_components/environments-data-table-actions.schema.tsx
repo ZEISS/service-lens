@@ -1,4 +1,4 @@
-import type { TProfileSelectSchema } from "@/db/schema"
+import type { TWorkloadRemoveEnvironmentSchema } from "@/db/schema"
 import type { ZodFormState } from "@/types"
 
-export type DeleteProfileSchema = ZodFormState<TProfileSelectSchema> | null
+export type RemoveEnvironmentSchema = ZodFormState<TWorkloadRemoveEnvironmentSchema> | null

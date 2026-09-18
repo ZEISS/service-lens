@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input"
 import { ApiComboBox } from "@/components/api-combobox"
 import type { ApiComboBoxFetchFunc } from "@/components/api-combobox"
 
-
 import { assignEnvironmentAction } from "./assign-environment-modal.action"
 import type { GetEnvironmentResponse } from "@/app/api/environments/route"
 
@@ -30,7 +29,7 @@ interface AddEnvironmentModalProps {
 
 export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps) {
   const [state, formAction, pending] = useActionState(assignEnvironmentAction, null)
-  const [environment, setEnvironment] = useState({ label: "", value: "" });
+  const [environment, setEnvironment] = useState({ label: "", value: "" })
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -41,13 +40,14 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
 
   const fetchItems: ApiComboBoxFetchFunc<any> = (e, setItems) => {
     fetch(`/api/environments?search=${e}`)
-      .then(res => res.json() as Promise<GetEnvironmentResponse>)
+      .then((res) => res.json() as Promise<GetEnvironmentResponse>)
       .then((v) => {
-         setItems(v.items.map((item) => ({ value: item.id, label: item.name })))
-     }).catch(() => {
-       setItems([]);
-     })
-   }
+        setItems(v.items.map((item) => ({ value: item.id, label: item.name })))
+      })
+      .catch(() => {
+        setItems([])
+      })
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -75,6 +75,11 @@ export const assignEnvironmentSchema = createInsertSchema(workloadEnvironment).p
   environmentId: true,
 })
 
+export const removeEnvironmentSchema = createSelectSchema(workloadEnvironment).pick({
+  workloadId: true,
+  environmentId: true,
+})
+
 export const workloadSelectSchema = createSelectSchema(workloads)
 export const workloadDeleteSchema = createSelectSchema(workloads).pick({
   id: true,
@@ -84,3 +89,4 @@ export type TWorkloadInsertSchema = ReturnType<typeof workloadInsertSchema.parse
 export type TWorkloadSelectSchema = ReturnType<typeof workloadSelectSchema.parse>
 export type TWorkloadDeleteSchema = ReturnType<typeof workloadDeleteSchema.parse>
 export type TWorkloadAssignEnvironmentSchema = ReturnType<typeof assignEnvironmentSchema.parse>
+export type TWorkloadRemoveEnvironmentSchema = ReturnType<typeof removeEnvironmentSchema.parse>

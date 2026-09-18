@@ -1,10 +1,22 @@
 import "server-only"
 
-import { count, eq } from "drizzle-orm"
+import { count, eq, and } from "drizzle-orm"
 
 import { db } from "@/db"
-import { workloadDeleteSchema, workloadInsertSchema, assignEnvironmentSchema, workloads, workloadEnvironment } from "@/db/schema"
-import type { TAssignEnvironmentSchema, TWorkloadDeleteSchema, TWorkloadInsertSchema } from "@/db/schemas/workload"
+import {
+  workloadDeleteSchema,
+  removeEnvironmentSchema,
+  workloadInsertSchema,
+  assignEnvironmentSchema,
+  workloads,
+  workloadEnvironment,
+} from "@/db/schema"
+import type {
+  TWorkloadRemoveEnvironmentSchema,
+  TWorkloadAssignEnvironmentSchema,
+  TWorkloadDeleteSchema,
+  TWorkloadInsertSchema,
+} from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
 import type { paginationParams } from "./pagination"
@@ -44,9 +56,23 @@ export const insertWorkload = async (input: TWorkloadInsertSchema) => {
   return takeFirstOrNull(result)
 }
 
-export const assignEnvironment = async (input: TAssignEnvironmentSchema) => {
+export const assignEnvironment = async (input: TWorkloadAssignEnvironmentSchema) => {
   const parsed = await assignEnvironmentSchema.parseAsync(input)
   const result = await db.insert(workloadEnvironment).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const removeEnvironment = async (input: TWorkloadRemoveEnvironmentSchema) => {
+  const parsed = await removeEnvironmentSchema.parseAsync(input)
+  const result = await db
+    .delete(workloadEnvironment)
+    .where(
+      and(
+        eq(workloadEnvironment.workloadId, parsed.workloadId),
+        eq(workloadEnvironment.environmentId, parsed.environmentId),
+      ),
+    )
+    .returning()
   return takeFirstOrNull(result)
 }
 

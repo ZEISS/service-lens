@@ -34,7 +34,7 @@ export const environmentColumns: ColumnDef<TEnvironment>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <EnvironmentsTableRowActions row={row} />,
+    cell: ({ row }) => <EnvironmentsTableRowActions workloadId={row.original.id} environmentId={row.original.id} />,
     enableSorting: false,
   },
 ]

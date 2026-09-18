@@ -27,7 +27,12 @@ export async function getEnvironments(input: getEnvironmentsSchema) {
         filters.push(ilike(environments.name, `${input.search}%`))
       }
 
-      const data = await tx.select().from(environments).where(and(...filters)).limit(input.perPage).offset(offset)
+      const data = await tx
+        .select()
+        .from(environments)
+        .where(and(...filters))
+        .limit(input.perPage)
+        .offset(offset)
 
       const total = await tx
         .select({
