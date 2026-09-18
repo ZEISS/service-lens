@@ -6,6 +6,7 @@ export const paginationParams = z.object({
   perPage: z.coerce.number().min(1).default(10),
   order: z.enum(["asc", "desc"]).default("asc"),
   orderBy: z.string().default("id"),
+  search: z.string().optional(),
 })
 
 export const searchParamsSchema = z.object({
@@ -16,3 +17,4 @@ export const searchParamsSchema = z.object({
 })
 
 export type PaginationSchema = z.infer<typeof paginationParams>
+export type SearchParamsSchema = z.infer<typeof searchParamsSchema>

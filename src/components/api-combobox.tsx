@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { ALIGN_OPTIONS } from "@radix-ui/react-popper";
 
 export type ComboBoxItem = {
@@ -26,33 +27,33 @@ export type ComboBoxItem = {
   label: string;
 };
 
-type ComboboxProps = {
+export type ApiComboBoxFetchFunc<R> = (e: string, setItems: React.Dispatch<React.SetStateAction<ComboBoxItem[]>>) => R;
+
+type ComboboxProps<R = any> = {
   selectedItem: ComboBoxItem,
-  url: string;
   onSelect: (item: ComboBoxItem) => void;
   searchPlaceholder?: string;
   className?: string;
   disabled?: boolean;
   align?: (typeof ALIGN_OPTIONS)[number];
+  onFetch: ApiComboBoxFetchFunc<R>
 };
 
 export function ApiComboBox({
   selectedItem,
-  url,
   onSelect,
   searchPlaceholder = "Search...",
   className,
   disabled = false,
   align,
+  onFetch,
 }: ComboboxProps) {
 
   const [open, setOpenState] = React.useState(false);
   const [items, setItems] = React.useState<ComboBoxItem[]>([selectedItem])
 
-  const fetchItems = (e: string) => ({})
-
-  const debouncedFetchItems = useDebouncedCallback(fetchItems, 300);
-  const handleOnSearchChange = (e: string) => e === "" && fetchItems(e) || debouncedFetchItems(e)
+  const debouncedFetchItems = useDebouncedCallback(onFetch, 300);
+  const handleOnSearchChange = (e: string) => e === "" && onFetch(e, setItems) || debouncedFetchItems(e, setItems)
 
   function setOpen(isOpen: boolean) {
     if (isOpen) {

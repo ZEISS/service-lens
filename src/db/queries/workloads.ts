@@ -3,8 +3,8 @@ import "server-only"
 import { count, eq } from "drizzle-orm"
 
 import { db } from "@/db"
-import { workloadDeleteSchema, workloadInsertSchema, workloads } from "@/db/schema"
-import type { TWorkloadDeleteSchema, TWorkloadInsertSchema } from "@/db/schemas/workload"
+import { workloadDeleteSchema, workloadInsertSchema, assignEnvironmentSchema, workloads, workloadEnvironment } from "@/db/schema"
+import type { TAssignEnvironmentSchema, TWorkloadDeleteSchema, TWorkloadInsertSchema } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
 import type { paginationParams } from "./pagination"
@@ -41,6 +41,12 @@ export async function getWorkloads(input: getWorkloadsSchema) {
 export const insertWorkload = async (input: TWorkloadInsertSchema) => {
   const parsed = await workloadInsertSchema.parseAsync(input)
   const result = await db.insert(workloads).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const assignEnvironment = async (input: TAssignEnvironmentSchema) => {
+  const parsed = await assignEnvironmentSchema.parseAsync(input)
+  const result = await db.insert(workloadEnvironment).values(parsed).returning()
   return takeFirstOrNull(result)
 }
 

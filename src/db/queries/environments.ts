@@ -1,6 +1,7 @@
 import "server-only"
 
-import { count, eq } from "drizzle-orm"
+import { count, eq, ilike, and } from "drizzle-orm"
+import type { SQL } from "drizzle-orm"
 
 import { db } from "@/db"
 import {
@@ -20,7 +21,13 @@ export async function getEnvironments(input: getEnvironmentsSchema) {
   try {
     const offset = (input.page - 1) * input.perPage
     const { data, total } = await db.transaction(async (tx) => {
-      const data = await tx.select().from(environments).limit(input.perPage).offset(offset)
+      const filters: SQL[] = []
+
+      if (input.search) {
+        filters.push(ilike(environments.name, `${input.search}%`))
+      }
+
+      const data = await tx.select().from(environments).where(and(...filters)).limit(input.perPage).offset(offset)
 
       const total = await tx
         .select({

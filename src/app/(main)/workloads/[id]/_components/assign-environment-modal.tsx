@@ -18,16 +18,29 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ApiComboBox } from "@/components/api-combobox"
+import type { ApiComboBoxFetchFunc } from "@/components/api-combobox"
 
-import { createWorkloadAction } from "../../_components/add-workload-modal.action"
+
+import { assignEnvironmentAction } from "./assign-environment-modal.action"
+import type { GetEnvironmentResponse } from "@/app/api/environments/route"
 
 interface AddEnvironmentModalProps {
   workloadId: string
 }
 
 export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps) {
-  const [state, formAction, pending] = useActionState(createWorkloadAction, null)
-  const [environment, setEnvironment] = useState({label: "", value: ""});
+  const [state, formAction, pending] = useActionState(assignEnvironmentAction, null)
+  const [environment, setEnvironment] = useState({ label: "", value: "" });
+
+  const fetchItems: ApiComboBoxFetchFunc<any> = (e, setItems) => {
+    fetch(`/api/environments?search=${e}`)
+      .then(res => res.json() as Promise<GetEnvironmentResponse>)
+      .then((v) => {
+         setItems(v.items.map((item) => ({ value: item.id, label: item.name })))
+     }).catch(() => {
+       setItems([]);
+     })
+   }
 
   return (
     <Dialog>
@@ -41,7 +54,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
           <DialogTitle>Assign Environment</DialogTitle>
           <DialogDescription>Fill in the information below to create a new workload.</DialogDescription>
         </DialogHeader>
-        <Form action={formAction} id={`assign-environment-form-${workloadId}`}>
+        <Form action={formAction} id={`assign-environment-form`}>
           <Input type="hidden" name="workloadId" value={workloadId} />
           <Input type="hidden" name="environmentId" value={environment.value} />
           <FieldGroup>
@@ -50,10 +63,10 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
               <ApiComboBox
                 className="w-full"
                 selectedItem={environment}
-                url=""
                 onSelect={(item) => {
                   setEnvironment(item)
                 }}
+                onFetch={fetchItems}
               />
               {state?.errors?.properties?.name && (
                 <FieldError>{state?.errors?.properties?.name.errors.pop()}</FieldError>
@@ -65,7 +78,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="add-workload-form" disabled={pending}>
+          <Button type="submit" form="assign-environment-form" disabled={pending}>
             Save
           </Button>
         </DialogFooter>
