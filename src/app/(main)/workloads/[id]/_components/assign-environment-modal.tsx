@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useState } from "react"
+import { useEffect, useActionState, useState } from "react"
 
 import Form from "next/form"
 
@@ -31,6 +31,13 @@ interface AddEnvironmentModalProps {
 export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps) {
   const [state, formAction, pending] = useActionState(assignEnvironmentAction, null)
   const [environment, setEnvironment] = useState({ label: "", value: "" });
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (state?.success) {
+      setOpen(false)
+    }
+  }, [state])
 
   const fetchItems: ApiComboBoxFetchFunc<any> = (e, setItems) => {
     fetch(`/api/environments?search=${e}`)
@@ -43,7 +50,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
    }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
           Assign
@@ -58,7 +65,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
           <Input type="hidden" name="workloadId" value={workloadId} />
           <Input type="hidden" name="environmentId" value={environment.value} />
           <FieldGroup>
-            <Field data-invalid={!!state?.errors?.properties?.name}>
+            <Field data-invalid={!!state?.errors?.properties?.environmentId}>
               <FieldLabel htmlFor="title">Environment</FieldLabel>
               <ApiComboBox
                 className="w-full"
@@ -68,8 +75,8 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
                 }}
                 onFetch={fetchItems}
               />
-              {state?.errors?.properties?.name && (
-                <FieldError>{state?.errors?.properties?.name.errors.pop()}</FieldError>
+              {state?.errors?.properties?.environmentId && (
+                <FieldError>{state?.errors?.properties?.environmentId.errors.pop()}</FieldError>
               )}
             </Field>
           </FieldGroup>
