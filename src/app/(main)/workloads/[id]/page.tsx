@@ -59,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </CardAction>
         </CardHeader>
         <CardContent>
-          <LensesDataTable data={lenses} />
+          <LensesDataTable data={lenses} workloadId={workload.id} />
         </CardContent>
       </Card>
 

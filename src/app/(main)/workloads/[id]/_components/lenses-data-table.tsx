@@ -9,12 +9,13 @@ import { lensColumns } from "./lenses-data-table-columns"
 
 interface DataTableProps {
   data: TLens[]
+  workloadId: string
 }
 
-export function LensesDataTable({ data }: DataTableProps) {
+export function LensesDataTable({ data, workloadId }: DataTableProps) {
   const table = useReactTable({
     data,
-    columns: lensColumns,
+    columns: lensColumns(workloadId),
     getCoreRowModel: getCoreRowModel(),
   })
 

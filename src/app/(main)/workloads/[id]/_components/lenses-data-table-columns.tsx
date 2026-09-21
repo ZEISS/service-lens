@@ -4,17 +4,16 @@ import type { ColumnDef } from "@tanstack/react-table"
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import type { TLens } from "@/db/schema"
 
-export const lensColumns: ColumnDef<TLens>[] = [
+export const lensColumns = (workloadId: string): ColumnDef<TLens>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (
         <Button variant="link" className="w-fit px-0 text-left text-foreground" asChild>
-          <Link href={`/environments/${row.original.id}`}>{row.original.name}</Link>
+          <Link href={`/workloads/${workloadId}/lenses/${row.original.id}`}>{row.original.name}</Link>
         </Button>
       )
     },

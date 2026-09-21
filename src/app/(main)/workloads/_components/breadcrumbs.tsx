@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,7 +9,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import type { TWorkload } from "@/db/schema"
-import Link from "next/link"
 
 export interface BreadcrumbsProps {
   workload: TWorkload
