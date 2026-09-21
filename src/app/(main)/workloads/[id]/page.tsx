@@ -1,16 +1,18 @@
 import { notFound } from "next/navigation"
 
 import { Muted } from "@/components/typography/muted"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { AssignEnvironmentModal } from "./_components/assign-environment-modal"
 import { getWorkloadById } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "../_components/breadcrumbs"
+import { AssignEnvironmentModal } from "./_components/assign-environment-modal"
 import { EnvironmentsDataTable } from "./_components/environments-data-table"
 import { LensesDataTable } from "./_components/lenses-data-table"
+import { ProfilesAssignModal } from "./_components/profiles-assign-modal"
 import { ProfilesDataTable } from "./_components/profiles-data-table"
-import { Badge } from "@/components/ui/badge"
+import { LensesAssignModal } from "./_components/lenses-assign-modal"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -52,6 +54,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Lenses</CardTitle>
           <CardDescription>Associated lenses for this workload.</CardDescription>
+          <CardAction>
+            <LensesAssignModal workloadId={id} />
+          </CardAction>
         </CardHeader>
         <CardContent>
           <LensesDataTable data={lenses} />
@@ -63,6 +68,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Profiles</CardTitle>
           <CardDescription>Associated profiles for this workload.</CardDescription>
+          <CardAction>
+            <ProfilesAssignModal workloadId={id} />
+          </CardAction>
         </CardHeader>
         <CardContent>
           <ProfilesDataTable data={profiles} />

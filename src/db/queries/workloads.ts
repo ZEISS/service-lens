@@ -1,21 +1,26 @@
 import "server-only"
 
-import { count, eq, and } from "drizzle-orm"
+import { and, count, eq } from "drizzle-orm"
 
 import { db } from "@/db"
 import {
-  workloadDeleteSchema,
-  removeEnvironmentSchema,
-  workloadInsertSchema,
   assignEnvironmentSchema,
-  workloads,
+  assignLensSchema,
+  removeEnvironmentSchema,
+  removeLensSchema,
+  workloadDeleteSchema,
   workloadEnvironment,
+  workloadInsertSchema,
+  workloadLens,
+  workloads,
 } from "@/db/schema"
 import type {
-  TWorkloadRemoveEnvironmentSchema,
   TWorkloadAssignEnvironmentSchema,
+  TWorkloadAssignLensSchema,
   TWorkloadDeleteSchema,
   TWorkloadInsertSchema,
+  TWorkloadRemoveEnvironmentSchema,
+  TWorkloadRemoveLensSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
@@ -59,6 +64,21 @@ export const insertWorkload = async (input: TWorkloadInsertSchema) => {
 export const assignEnvironment = async (input: TWorkloadAssignEnvironmentSchema) => {
   const parsed = await assignEnvironmentSchema.parseAsync(input)
   const result = await db.insert(workloadEnvironment).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const assignLens = async (input: TWorkloadAssignLensSchema) => {
+  const parsed = await assignLensSchema.parseAsync(input)
+  const result = await db.insert(workloadLens).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const removeLens = async (input: TWorkloadRemoveLensSchema) => {
+  const parsed = await removeLensSchema.parseAsync(input)
+  const result = await db
+    .delete(workloadLens)
+    .where(and(eq(workloadLens.workloadId, parsed.workloadId), eq(workloadLens.lensId, parsed.lensId)))
+    .returning()
   return takeFirstOrNull(result)
 }
 

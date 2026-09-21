@@ -81,6 +81,16 @@ export const workloadInsertSchema = createInsertSchema(workloads, {
   description: true,
 })
 
+export const assignLensSchema = createInsertSchema(workloadLens).pick({
+  workloadId: true,
+  lensId: true,
+})
+
+export const removeLensSchema = createSelectSchema(workloadLens).pick({
+  workloadId: true,
+  lensId: true,
+})
+
 export const assignEnvironmentSchema = createInsertSchema(workloadEnvironment).pick({
   workloadId: true,
   environmentId: true,
@@ -101,3 +111,5 @@ export type TWorkloadSelectSchema = ReturnType<typeof workloadSelectSchema.parse
 export type TWorkloadDeleteSchema = ReturnType<typeof workloadDeleteSchema.parse>
 export type TWorkloadAssignEnvironmentSchema = ReturnType<typeof assignEnvironmentSchema.parse>
 export type TWorkloadRemoveEnvironmentSchema = ReturnType<typeof removeEnvironmentSchema.parse>
+export type TWorkloadAssignLensSchema = ReturnType<typeof assignLensSchema.parse>
+export type TWorkloadRemoveLensSchema = ReturnType<typeof removeLensSchema.parse>

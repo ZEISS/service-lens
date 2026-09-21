@@ -9,39 +9,27 @@ import type { TLens } from "@/db/schema"
 
 export const lensColumns: ColumnDef<TLens>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
-      // return <TableCellViewer item={row.original} />
       return (
         <Button variant="link" className="w-fit px-0 text-left text-foreground" asChild>
-          <Link href={`/workloads/${row.original.id}`}>{row.original.name}</Link>
+          <Link href={`/environments/${row.original.id}`}>{row.original.name}</Link>
         </Button>
       )
     },
+    enableSorting: false,
+  },
+  {
+    accessorKey: "description",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+    cell: ({ row }) => <div>{row.original.description}</div>,
+    enableSorting: false,
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+    cell: ({ row }) => <div>{row.original?.createdAt?.toDateString()}</div>,
     enableSorting: false,
   },
 ]

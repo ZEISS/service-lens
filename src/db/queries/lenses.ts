@@ -1,19 +1,20 @@
 import "server-only"
 
-import { count, eq } from "drizzle-orm"
+import type { SQL } from "drizzle-orm"
+import { and, count, eq, ilike } from "drizzle-orm"
 
 import { db } from "@/db"
 import {
+  insertLensWithPillarsAndQuestionsSchema,
   lensDeleteSchema,
-  lensPillars,
   lenses,
-  lensPillarQuestions,
   lensPillarQuestionChoices,
   lensPillarQuestionResources,
   lensPillarQuestionRisks,
+  lensPillarQuestions,
+  lensPillars,
   type TLensDeleteSchema,
   type TLensWithPillarsSchema,
-  insertLensWithPillarsAndQuestionsSchema,
 } from "@/db/schema"
 import { takeFirstOrNull } from "@/db/utils"
 
@@ -24,12 +25,34 @@ export type getLensesSchema = ReturnType<typeof paginationParams.parse>
 export async function getLenses(input: getLensesSchema) {
   try {
     const offset = (input.page - 1) * input.perPage
-    const total = await db
-      .select({ count: count() })
-      .from(lenses)
-      .execute()
-      .then((res) => res[0]?.count ?? 0)
-    const data = await db.query.lenses.findMany({ with: { lensPillars: true }, limit: input.perPage, offset })
+    const { data, total } = await db.transaction(async (tx) => {
+      const filters: SQL[] = []
+
+      if (input.search) {
+        filters.push(ilike(lenses.name, `${input.search}%`))
+      }
+
+      const data = await tx
+        .select()
+        .from(lenses)
+        .where(and(...filters))
+        .limit(input.perPage)
+        .offset(offset)
+
+      const total = await tx
+        .select({
+          count: count(),
+        })
+        .from(lenses)
+        .execute()
+        .then((res) => res[0]?.count ?? 0)
+
+      return {
+        data,
+        total,
+      }
+    })
+
     const pageCount = Math.ceil(total / input.perPage)
     return { data, pageCount }
   } catch {

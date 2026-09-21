@@ -2,22 +2,22 @@
 
 import { revalidatePath } from "next/cache"
 
-import { assignEnvironment } from "@/db/queries/workloads"
-import { assignEnvironmentSchema } from "@/db/schema"
+import { assignLens } from "@/db/queries/workloads"
+import { assignLensSchema } from "@/db/schema"
 
 import "server-only"
 
 import { z } from "zod"
 
-import type { AssignEnvironmentModalFormState } from "./assign-environment-modal.schema"
+import type { AssignLensesModalFormState } from "./lenses-assign-modal.schema"
 
-export async function assignEnvironmentAction(_: AssignEnvironmentModalFormState, data: FormData) {
+export async function lensesAssignAction(_: AssignLensesModalFormState, data: FormData) {
   const values = {
     workloadId: data.get("workloadId") as string,
-    environmentId: data.get("environmentId") as string,
+    lensId: data.get("lensId") as string,
   }
 
-  const result = assignEnvironmentSchema.safeParse(values)
+  const result = assignLensSchema.safeParse(values)
 
   if (!result.success) {
     const errors = z.treeifyError(result.error)
@@ -30,7 +30,7 @@ export async function assignEnvironmentAction(_: AssignEnvironmentModalFormState
   }
 
   try {
-    await assignEnvironment(result.data)
+    await assignLens(result.data)
   } catch (_error) {
     return {
       success: false,
