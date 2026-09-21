@@ -1,6 +1,9 @@
+import { headers } from "next/headers"
+
 import { getLenses } from "@/db/queries/lenses"
 import { paginationParams } from "@/db/queries/pagination"
 import type { TEnvironment, TLens } from "@/db/schema"
+import { auth } from "@/lib/auth"
 
 export type CreateLensRequest = Omit<TLens, "id" | "createdAt" | "updatedAt">
 export type UpdateLensRequest = Partial<Omit<TLens, "id">> & { id: TLens["id"] }
@@ -31,6 +34,17 @@ export type GetLensRequest = ApiRequest<TLens>
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: "User is not authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
 
   const parsedParams = paginationParams.parse(Object.fromEntries(searchParams))
   const lenses = await getLenses(parsedParams)

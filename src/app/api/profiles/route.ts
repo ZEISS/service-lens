@@ -1,6 +1,9 @@
+import { headers } from "next/headers"
+
 import { paginationParams } from "@/db/queries/pagination"
 import { getProfiles } from "@/db/queries/profiles"
 import type { TProfile } from "@/db/schema"
+import { auth } from "@/lib/auth"
 
 export type CreateProfileRequest = Omit<TProfile, "id" | "createdAt" | "updatedAt">
 export type UpdateProfileRequest = Partial<Omit<TProfile, "id">> & { id: TProfile["id"] }
@@ -31,6 +34,17 @@ export type GetProfileRequest = ApiRequest<TProfile>
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: "User is not authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
 
   const parsedParams = paginationParams.parse(Object.fromEntries(searchParams))
   const profiles = await getProfiles(parsedParams)

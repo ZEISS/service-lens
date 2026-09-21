@@ -1,6 +1,9 @@
+import { headers } from "next/headers"
+
 import { getEnvironments } from "@/db/queries/environments"
 import { paginationParams } from "@/db/queries/pagination"
 import type { TEnvironment } from "@/db/schema"
+import { auth } from "@/lib/auth"
 
 export type CreateEnvironmentRequest = Omit<TEnvironment, "id" | "createdAt" | "updatedAt">
 export type UpdateEnvironmentRequest = Partial<Omit<TEnvironment, "id">> & { id: TEnvironment["id"] }
@@ -31,6 +34,17 @@ export type GetEnvironmentRequest = ApiRequest<TEnvironment>
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: "User is not authenticated" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    })
+  }
 
   const parsedParams = paginationParams.parse(Object.fromEntries(searchParams))
   const environments = await getEnvironments(parsedParams)
