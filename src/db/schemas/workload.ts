@@ -106,6 +106,16 @@ export const workloadDeleteSchema = createSelectSchema(workloads).pick({
   id: true,
 })
 
+export const assignProfileSchema = createInsertSchema(workloadProfile).pick({
+  workloadId: true,
+  profileId: true,
+})
+
+export const removeProfileSchema = createSelectSchema(workloadProfile).pick({
+  workloadId: true,
+  profileId: true,
+})
+
 export type TWorkloadInsertSchema = ReturnType<typeof workloadInsertSchema.parse>
 export type TWorkloadSelectSchema = ReturnType<typeof workloadSelectSchema.parse>
 export type TWorkloadDeleteSchema = ReturnType<typeof workloadDeleteSchema.parse>
@@ -113,3 +123,5 @@ export type TWorkloadAssignEnvironmentSchema = ReturnType<typeof assignEnvironme
 export type TWorkloadRemoveEnvironmentSchema = ReturnType<typeof removeEnvironmentSchema.parse>
 export type TWorkloadAssignLensSchema = ReturnType<typeof assignLensSchema.parse>
 export type TWorkloadRemoveLensSchema = ReturnType<typeof removeLensSchema.parse>
+export type TWorkloadAssignProfileSchema = ReturnType<typeof assignProfileSchema.parse>
+export type TWorkloadRemoveProfileSchema = ReturnType<typeof removeProfileSchema.parse>

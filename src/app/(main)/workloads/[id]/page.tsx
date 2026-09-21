@@ -9,10 +9,10 @@ import { getWorkloadById } from "@/db/queries/workloads"
 import { Breadcrumbs } from "../_components/breadcrumbs"
 import { AssignEnvironmentModal } from "./_components/assign-environment-modal"
 import { EnvironmentsDataTable } from "./_components/environments-data-table"
+import { LensesAssignModal } from "./_components/lenses-assign-modal"
 import { LensesDataTable } from "./_components/lenses-data-table"
 import { ProfilesAssignModal } from "./_components/profiles-assign-modal"
 import { ProfilesDataTable } from "./_components/profiles-data-table"
-import { LensesAssignModal } from "./_components/lenses-assign-modal"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

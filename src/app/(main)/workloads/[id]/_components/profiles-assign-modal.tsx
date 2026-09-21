@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from "react"
 
 import Form from "next/form"
 
-import type { GetEnvironmentResponse } from "@/app/api/environments/route"
+import type { GetProfileResponse } from "@/app/api/profiles/route"
 import type { ApiComboBoxFetchFunc } from "@/components/api-combobox"
 import { ApiComboBox } from "@/components/api-combobox"
 import { Button } from "@/components/ui/button"
@@ -21,15 +21,15 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-import { assignEnvironmentAction } from "./assign-environment-modal.action"
+import { profilesAssignAction } from "./profiles-assign-modal.action"
 
 interface AddProfileModalProps {
   workloadId: string
 }
 
 export function ProfilesAssignModal({ workloadId }: AddProfileModalProps) {
-  const [state, formAction, pending] = useActionState(assignEnvironmentAction, null)
-  const [environment, setEnvironment] = useState({ label: "", value: "" })
+  const [state, formAction, pending] = useActionState(profilesAssignAction, null)
+  const [lens, setLens] = useState({ label: "", value: "" })
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -39,8 +39,8 @@ export function ProfilesAssignModal({ workloadId }: AddProfileModalProps) {
   }, [state])
 
   const fetchItems: ApiComboBoxFetchFunc<any> = (e, setItems) => {
-    fetch(`/api/environments?search=${e}`)
-      .then((res) => res.json() as Promise<GetEnvironmentResponse>)
+    fetch(`/api/profiles?search=${e}`)
+      .then((res) => res.json() as Promise<GetProfileResponse>)
       .then((v) => {
         setItems(v.items.map((item) => ({ value: item.id, label: item.name })))
       })
@@ -63,20 +63,20 @@ export function ProfilesAssignModal({ workloadId }: AddProfileModalProps) {
         </DialogHeader>
         <Form action={formAction} id={`assign-environment-form`}>
           <Input type="hidden" name="workloadId" value={workloadId} />
-          <Input type="hidden" name="environmentId" value={environment.value} />
+          <Input type="hidden" name="profileId" value={lens.value} />
           <FieldGroup>
-            <Field data-invalid={!!state?.errors?.properties?.environmentId}>
-              <FieldLabel htmlFor="title">Environment</FieldLabel>
+            <Field data-invalid={!!state?.errors?.properties?.profileId}>
+              <FieldLabel htmlFor="title">Lens</FieldLabel>
               <ApiComboBox
                 className="w-full"
-                selectedItem={environment}
+                selectedItem={lens}
                 onSelect={(item) => {
-                  setEnvironment(item)
+                  setLens(item)
                 }}
                 onFetch={fetchItems}
               />
-              {state?.errors?.properties?.environmentId && (
-                <FieldError>{state?.errors?.properties?.environmentId.errors.pop()}</FieldError>
+              {state?.errors?.properties?.profileId && (
+                <FieldError>{state?.errors?.properties?.profileId.errors.pop()}</FieldError>
               )}
             </Field>
           </FieldGroup>

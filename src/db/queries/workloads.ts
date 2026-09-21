@@ -13,6 +13,9 @@ import {
   workloadInsertSchema,
   workloadLens,
   workloads,
+  assignProfileSchema,
+  removeProfileSchema,
+  workloadProfile,
 } from "@/db/schema"
 import type {
   TWorkloadAssignEnvironmentSchema,
@@ -21,6 +24,8 @@ import type {
   TWorkloadInsertSchema,
   TWorkloadRemoveEnvironmentSchema,
   TWorkloadRemoveLensSchema,
+  TWorkloadAssignProfileSchema,
+  TWorkloadRemoveProfileSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
@@ -70,6 +75,26 @@ export const assignEnvironment = async (input: TWorkloadAssignEnvironmentSchema)
 export const assignLens = async (input: TWorkloadAssignLensSchema) => {
   const parsed = await assignLensSchema.parseAsync(input)
   const result = await db.insert(workloadLens).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const assignProfile = async (input: TWorkloadAssignProfileSchema) => {
+  const parsed = await assignProfileSchema.parseAsync(input)
+  const result = await db.insert(workloadProfile).values(parsed).returning()
+  return takeFirstOrNull(result)
+}
+
+export const removeProfile = async (input: TWorkloadRemoveProfileSchema) => {
+  const parsed = await removeProfileSchema.parseAsync(input)
+  const result = await db
+    .delete(workloadProfile)
+    .where(
+      and(
+        eq(workloadProfile.workloadId, parsed.workloadId),
+        eq(workloadProfile.profileId, parsed.profileId),
+      ),
+    )
+    .returning()
   return takeFirstOrNull(result)
 }
 

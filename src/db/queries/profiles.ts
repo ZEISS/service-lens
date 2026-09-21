@@ -1,11 +1,14 @@
 import "server-only"
 
+import type { SQL } from "drizzle-orm"
+import { and, count, eq, ilike } from "drizzle-orm"
+
 import { db } from "@/db"
 import { profiles } from "@/db/schema"
 import type { TProfile, TProfileDeleteSchema, TProfileInsertSchema } from "@/db/schemas/profile"
 import { profileDeleteSchema, profileInsertSchema } from "@/db/schemas/profile"
 import { takeFirstOrNull } from "@/db/utils"
-import { count, eq } from "drizzle-orm"
+
 import type { paginationParams } from "./pagination"
 
 export type getProfilesSchema = ReturnType<typeof paginationParams.parse>
@@ -14,7 +17,18 @@ export async function getProfiles(input: getProfilesSchema) {
   try {
     const offset = (input.page - 1) * input.perPage
     const { data, total } = await db.transaction(async (tx) => {
-      const data = await tx.select().from(profiles).limit(input.perPage).offset(offset)
+      const filters: SQL[] = []
+
+      if (input.search) {
+        filters.push(ilike(profiles.name, `${input.search}%`))
+      }
+
+      const data = await tx
+        .select()
+        .from(profiles)
+        .where(and(...filters))
+        .limit(input.perPage)
+        .offset(offset)
 
       const total = await tx
         .select({
