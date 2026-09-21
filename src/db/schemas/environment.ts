@@ -5,7 +5,6 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { pgTable } from "@/db/utils"
 
 import { tags } from "./tag"
-import { workloadEnvironment } from "./workload"
 
 export const environments = pgTable("environment", {
   id: uuid().primaryKey().defaultRandom(),

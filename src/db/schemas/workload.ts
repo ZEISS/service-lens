@@ -1,6 +1,5 @@
 import { pgTable } from "@/db/utils"
-import { defineRelations } from "drizzle-orm"
-import { bigint, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
+import { bigint, timestamp, uuid, varchar, uniqueIndex } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { environments } from "./environment"
 import { lenses } from "./lens"
@@ -21,45 +20,57 @@ export const workloads = pgTable("workload", {
 export type TWorkload = typeof workloads.$inferSelect
 export type TNewWorkload = typeof workloads.$inferInsert
 
-export const workloadLens = pgTable("workload_lens", {
-  workloadId: uuid()
-    .notNull()
-    .references(() => workloads.id, { onDelete: "cascade" }),
-  lensId: uuid()
-    .notNull()
-    .references(() => lenses.id),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+export const workloadLens = pgTable(
+  "workload_lens",
+  {
+    workloadId: uuid()
+      .notNull()
+      .references(() => workloads.id, { onDelete: "cascade" }),
+    lensId: uuid()
+      .notNull()
+      .references(() => lenses.id),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadLens").on(table.workloadId, table.lensId)],
+)
 
-export const workloadProfile = pgTable("workload_profile", {
-  workloadId: uuid()
-    .notNull()
-    .references(() => workloads.id, { onDelete: "cascade" }),
-  profileId: uuid()
-    .notNull()
-    .references(() => profiles.id),
-})
+export const workloadProfile = pgTable(
+  "workload_profile",
+  {
+    workloadId: uuid()
+      .notNull()
+      .references(() => workloads.id, { onDelete: "cascade" }),
+    profileId: uuid()
+      .notNull()
+      .references(() => profiles.id),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadProfile").on(table.workloadId, table.profileId)],
+)
 
-export const workloadEnvironment = pgTable("workload_environment", {
-  workloadId: uuid()
-    .notNull()
-    .references(() => workloads.id, { onDelete: "cascade" }),
-  environmentId: uuid()
-    .notNull()
-    .references(() => environments.id),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-})
+export const workloadEnvironment = pgTable(
+  "workload_environment",
+  {
+    workloadId: uuid()
+      .notNull()
+      .references(() => workloads.id, { onDelete: "cascade" }),
+    environmentId: uuid()
+      .notNull()
+      .references(() => environments.id),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadEnvironment").on(table.workloadId,table.environmentId)],
+)
 
-export const workloadTag = pgTable("workload_tag", {
-  workloadId: uuid()
-    .notNull()
-    .references(() => workloads.id, { onDelete: "cascade" }),
-  tagId: bigint({ mode: "bigint" })
-    .notNull()
-    .references(() => tags.id, { onDelete: "cascade" }),
-})
+export const workloadTag = pgTable(
+  "workload_tag",
+  {
+    workloadId: uuid()
+      .notNull()
+      .references(() => workloads.id, { onDelete: "cascade" }),
+    tagId: bigint({ mode: "bigint" })
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadTag").on(table.workloadId, table.tagId)],
+)
 
 export const workloadInsertSchema = createInsertSchema(workloads, {
   name: (schema) => schema.min(1, "Name is required").max(255, "Name must be at most 255 characters"),

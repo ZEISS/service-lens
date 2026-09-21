@@ -1,5 +1,4 @@
 import { pgTable } from "@/db/utils"
-import { defineRelations } from "drizzle-orm"
 import { bigint, timestamp, uuid, varchar, primaryKey } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { lenses } from "./lens"

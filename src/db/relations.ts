@@ -1,29 +1,30 @@
+import { defineRelations } from "drizzle-orm"
+
 import {
-  user,
-  session,
-  tags,
   account,
-  profiles,
-  verification,
-  workloads,
-  organization,
-  team,
-  teamMember,
-  member,
-  invitation,
   environments,
+  invitation,
   lenses,
-  lensPillars,
-  lensPillarQuestions,
-  lensPillarQuestionRisks,
   lensPillarQuestionChoices,
   lensPillarQuestionResources,
+  lensPillarQuestionRisks,
+  lensPillarQuestions,
+  lensPillars,
+  member,
+  organization,
+  profiles,
+  session,
+  tags,
+  team,
+  teamMember,
+  user,
+  verification,
   workloadEnvironment,
-  workloadTag,
-  workloadProfile,
   workloadLens,
+  workloadProfile,
+  workloads,
+  workloadTag,
 } from "./schema"
-import { defineRelations } from "drizzle-orm"
 
 export const relations = defineRelations(
   {
