@@ -5,16 +5,21 @@ import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-tabl
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import type { TLensPillar } from "@/db/schema"
 
-import { environmentColumns } from "./pillars-data-table-columns"
+import { pillarsColumns } from "./pillars-data-table-columns"
+import { parentPort } from "worker_threads"
+import { circIn } from "framer-motion"
 
 interface PillarsDataTableProps {
   data: TLensPillar[]
+  workloadId: string
+  lensId: string
 }
 
-export function PillarsDataTable({ data }: PillarsDataTableProps) {
+export function PillarsDataTable({ data, workloadId, lensId }: PillarsDataTableProps) {
+  const columns = pillarsColumns(workloadId, lensId)
   const table = useReactTable({
     data,
-    columns: environmentColumns,
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -45,7 +50,7 @@ export function PillarsDataTable({ data }: PillarsDataTableProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={environmentColumns.length} className="h-24 text-center">
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>

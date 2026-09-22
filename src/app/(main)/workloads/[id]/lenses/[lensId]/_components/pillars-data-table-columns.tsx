@@ -6,14 +6,14 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { Button } from "@/components/ui/button"
 import type { TEnvironment } from "@/db/schema"
 
-export const environmentColumns: ColumnDef<TEnvironment>[] = [
+export const pillarsColumns = (workloadId: string, lensId: string): ColumnDef<TEnvironment>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
       return (
         <Button variant="link" className="w-fit px-0 text-left text-foreground" asChild>
-          <Link href={`/environments/${row.original.id}`}>{row.original.name}</Link>
+          <Link href={`/workloads/${workloadId}/lenses/${lensId}/review?lensId=${row.original.id}`}>{row.original.name}</Link>
         </Button>
       )
     },

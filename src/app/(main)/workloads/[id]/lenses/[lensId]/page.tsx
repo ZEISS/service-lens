@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 
-import { Muted } from "@/components/typography/muted"
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getWorkloadById } from "@/db/queries/workloads"
@@ -78,9 +78,14 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Pillars</CardTitle>
           <CardDescription>Pillars of the lens to assess.</CardDescription>
+          <CardAction>
+            <Button variant="outline" asChild>
+              <Link href={`/workloads/${workload.id}/lenses/${lens.id}/review`}>Review</Link>
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent>
-          <PillarsDataTable data={lens.lensPillars} />
+          <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />
         </CardContent>
       </Card>
 
