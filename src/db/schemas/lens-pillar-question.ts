@@ -1,11 +1,12 @@
-import { pgTable } from "@/db/utils"
-import { timestamp, uuid, varchar, index, uniqueIndex } from "drizzle-orm/pg-core"
-import { lensPillars } from "./lens-pillar"
+import { timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
+
+import { pgTable } from "@/db/utils"
+
 import { insertLensPillarQuestionChoicesSchema } from "./lens-pillar-question-choices"
-import { insertLensPillarQuestionRisksSchema } from "./lens-pillar-question-risks"
 import { insertLensPillarQuestionResourcesSchema } from "./lens-pillar-question-resources"
+import { insertLensPillarQuestionRisksSchema } from "./lens-pillar-question-risks"
 
 export const lensPillarQuestions = pgTable("lens_pillars_questions", {
   id: uuid().primaryKey().defaultRandom(),
@@ -19,20 +20,6 @@ export const lensPillarQuestions = pgTable("lens_pillars_questions", {
     .$onUpdate(() => new Date()),
   deletedAt: timestamp("deleted_at"),
 })
-
-export const lensPillarQuestionAnswers = pgTable(
-  "lens_pillars_question_answers",
-  {
-    workloadId: uuid().notNull(),
-    questionId: uuid().notNull(),
-    choiceId: uuid().notNull(),
-    reason: varchar({ length: 1024 }),
-  },
-  (table) => [
-    index("workload_id_index").on(table.workloadId),
-    uniqueIndex("question_choice_unique_index").on(table.workloadId, table.questionId, table.choiceId), // Ensure unique combination of question and choice
-  ],
-)
 
 export const insertLensPillarQuestionSchema = createInsertSchema(lensPillarQuestions, {
   title: (schema) => schema.min(1, "Title is required").max(255, "Title must be at most 255 characters"),

@@ -142,13 +142,6 @@ CREATE TABLE "service_lens_lens_pillars" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "service_lens_lens_pillars_question_answers" (
-	"workloadId" uuid NOT NULL,
-	"questionId" uuid NOT NULL,
-	"choiceId" uuid NOT NULL,
-	"reason" varchar(1024)
-);
---> statement-breakpoint
 CREATE TABLE "service_lens_lens_pillars_questions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"ref" varchar(255) NOT NULL,
@@ -171,20 +164,20 @@ CREATE TABLE "service_lens_lens_pillars_questions_choices" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "service_lens_lens_pillars_questions_risks" (
+CREATE TABLE "service_lens_lens_pillars_questions_resources" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-	"risk" "risk" DEFAULT 'NO_RISK'::"risk",
-	"condition" varchar(1024) NOT NULL,
+	"url" varchar(1024) NOT NULL,
+	"description" varchar(1024),
 	"questionId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "service_lens_lens_pillars_questions_resources" (
+CREATE TABLE "service_lens_lens_pillars_questions_risks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-	"url" varchar(1024) NOT NULL,
-	"description" varchar(1024),
+	"risk" "risk" DEFAULT 'NO_RISK'::"risk",
+	"condition" varchar(1024) NOT NULL,
 	"questionId" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
@@ -233,6 +226,21 @@ CREATE TABLE "service_lens_tag" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
+CREATE TABLE "service_lens_workload_answers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"workloadId" uuid NOT NULL,
+	"lensId" uuid NOT NULL,
+	"questionId" uuid NOT NULL,
+	"notApplicable" boolean NOT NULL,
+	"reason" varchar(1024),
+	"notes" varchar(1024)
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_workload_answer_choices" (
+	"answerId" uuid NOT NULL,
+	"choice" uuid NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "service_lens_workload_environment" (
 	"workloadId" uuid NOT NULL,
 	"environmentId" uuid NOT NULL
@@ -273,10 +281,9 @@ CREATE INDEX "team_organizationId_idx" ON "service_lens_team" ("organization_id"
 CREATE INDEX "teamMember_teamId_idx" ON "service_lens_team_member" ("team_id");--> statement-breakpoint
 CREATE INDEX "teamMember_userId_idx" ON "service_lens_team_member" ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "service_lens_verification" ("identifier");--> statement-breakpoint
-CREATE INDEX "workload_id_index" ON "service_lens_lens_pillars_question_answers" ("workloadId");--> statement-breakpoint
-CREATE UNIQUE INDEX "question_choice_unique_index" ON "service_lens_lens_pillars_question_answers" ("workloadId","questionId","choiceId");--> statement-breakpoint
 CREATE INDEX "tag_name_index" ON "service_lens_tag" ("name");--> statement-breakpoint
 CREATE UNIQUE INDEX "tag_name_value_unique_index" ON "service_lens_tag" ("name","value");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniqueWorkloadAnswerChoice" ON "service_lens_workload_answer_choices" ("answerId","choice");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadEnvironment" ON "service_lens_workload_environment" ("workloadId","environmentId");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadLens" ON "service_lens_workload_lens" ("workloadId","lensId");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadProfile" ON "service_lens_workload_profile" ("workloadId","profileId");--> statement-breakpoint

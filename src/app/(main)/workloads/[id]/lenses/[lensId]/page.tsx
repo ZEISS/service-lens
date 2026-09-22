@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getWorkloadById } from "@/db/queries/workloads"
+import { PillarsDataTable } from "./_components/pillars-data-table"
 
 import { Breadcrumbs } from "./_components/breadcrumbs"
 
@@ -16,11 +17,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
   }
 
   const workload = await getWorkloadById(id)
-  const environments = workload?.environments.map((env) => ({ ...env })) ?? []
-  const lenses = workload?.lenses.map((lens) => ({ ...lens })) ?? []
-  const profiles = workload?.profiles.map((profile) => ({ ...profile })) ?? []
-  const tags = workload?.tags.map((tag) => ({ ...tag })) ?? []
-
   const lens = workload?.lenses.find((l) => l.id === lensId) ?? null
 
   if (!(workload && lens)) {
@@ -74,6 +70,17 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
             <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Last Modified</label>
             <p className="mt-1 text-sm">{lens.updatedAt?.toLocaleString()}</p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Pillars */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">Pillars</CardTitle>
+          <CardDescription>Pillars of the lens to assess.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <PillarsDataTable data={lens.lensPillars} />
         </CardContent>
       </Card>
 

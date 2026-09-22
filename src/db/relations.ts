@@ -24,6 +24,8 @@ import {
   workloadProfile,
   workloads,
   workloadTag,
+  workloadAnswer,
+  workloadAnswerChoices,
 } from "./schema"
 
 export const relations = defineRelations(
@@ -44,6 +46,8 @@ export const relations = defineRelations(
     workloadLens,
     workloadProfile,
     workloadTag,
+    workloadAnswer,
+    workloadAnswerChoices,
     profiles,
     lenses,
     lensPillars,
@@ -70,6 +74,8 @@ export const relations = defineRelations(
     workloadTag,
     workloadProfile,
     workloadLens,
+    workloadAnswer,
+    workloadAnswerChoices,
     environments,
     lenses,
     lensPillars,
@@ -95,7 +101,15 @@ export const relations = defineRelations(
         from: workloads.id.through(workloadTag.workloadId),
         to: tags.id.through(workloadTag.tagId),
       }),
+      answers: many.workloadAnswer({
+        from: workloads.id,
+        to: workloadAnswer.workloadId,
+      }),
     },
+    answerChoices: many.workloadAnswerChoices({
+      from: workloadAnswer.id,
+      to: workloadAnswerChoices.answerId,
+    }),
     lenses: {
       lensPillars: many.lensPillars({
         from: lenses.id,

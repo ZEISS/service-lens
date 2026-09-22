@@ -1,6 +1,8 @@
-import { pgTable } from "@/db/utils"
-import { bigint, timestamp, uuid, varchar, uniqueIndex } from "drizzle-orm/pg-core"
+import { bigint, boolean, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+
+import { pgTable } from "@/db/utils"
+
 import { environments } from "./environment"
 import { lenses } from "./lens"
 import { profiles } from "./profile"
@@ -56,7 +58,7 @@ export const workloadEnvironment = pgTable(
       .notNull()
       .references(() => environments.id),
   },
-  (table) => [uniqueIndex("uniqueWorkloadEnvironment").on(table.workloadId,table.environmentId)],
+  (table) => [uniqueIndex("uniqueWorkloadEnvironment").on(table.workloadId, table.environmentId)],
 )
 
 export const workloadTag = pgTable(
@@ -70,6 +72,26 @@ export const workloadTag = pgTable(
       .references(() => tags.id, { onDelete: "cascade" }),
   },
   (table) => [uniqueIndex("uniqueWorkloadTag").on(table.workloadId, table.tagId)],
+)
+
+// Answers to questions for a workload
+export const workloadAnswer = pgTable("workload_answers", {
+  id: uuid().primaryKey().defaultRandom(),
+  workloadId: uuid().notNull(),
+  lensId: uuid().notNull(),
+  questionId: uuid().notNull(),
+  notApplicable: boolean().notNull(),
+  reason: varchar({ length: 1024 }),
+  notes: varchar({ length: 1024 }),
+})
+
+// Choices for answer options for a workload
+export const workloadAnswerChoices = pgTable("workload_answer_choices",
+  {
+    answerId: uuid().notNull(),
+    choice: uuid().notNull(),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadAnswerChoice").on(table.answerId, table.choice)],
 )
 
 export const workloadInsertSchema = createInsertSchema(workloads, {

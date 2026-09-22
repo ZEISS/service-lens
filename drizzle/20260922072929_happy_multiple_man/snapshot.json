@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "50997751-a52a-499e-9fd6-038ef985e8a9",
+  "id": "865a9cc3-2424-4599-8aea-6e099fcfa411",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -109,12 +109,6 @@
     },
     {
       "isRlsEnabled": false,
-      "name": "service_lens_lens_pillars_question_answers",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
       "name": "service_lens_lens_pillars_questions",
       "entityType": "tables",
       "schema": "public"
@@ -127,13 +121,13 @@
     },
     {
       "isRlsEnabled": false,
-      "name": "service_lens_lens_pillars_questions_risks",
+      "name": "service_lens_lens_pillars_questions_resources",
       "entityType": "tables",
       "schema": "public"
     },
     {
       "isRlsEnabled": false,
-      "name": "service_lens_lens_pillars_questions_resources",
+      "name": "service_lens_lens_pillars_questions_risks",
       "entityType": "tables",
       "schema": "public"
     },
@@ -164,6 +158,18 @@
     {
       "isRlsEnabled": false,
       "name": "service_lens_tag",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_workload_answers",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "service_lens_workload_answer_choices",
       "entityType": "tables",
       "schema": "public"
     },
@@ -1476,58 +1482,6 @@
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "workloadId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "questionId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "choiceId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "type": "varchar(1024)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "reason",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
@@ -1742,97 +1696,6 @@
       "name": "id",
       "entityType": "columns",
       "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "risk",
-      "typeSchema": "public",
-      "notNull": false,
-      "dimensions": 0,
-      "default": "'NO_RISK'",
-      "generated": null,
-      "identity": null,
-      "name": "risk",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "varchar(1024)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "condition",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "questionId",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "timestamp",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "deleted_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "gen_random_uuid()",
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
       "table": "service_lens_lens_pillars_questions_resources"
     },
     {
@@ -1912,6 +1775,97 @@
       "entityType": "columns",
       "schema": "public",
       "table": "service_lens_lens_pillars_questions_resources"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "risk",
+      "typeSchema": "public",
+      "notNull": false,
+      "dimensions": 0,
+      "default": "'NO_RISK'",
+      "generated": null,
+      "identity": null,
+      "name": "risk",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "condition",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deleted_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_lens_pillars_questions_risks"
     },
     {
       "type": "bigint",
@@ -2250,6 +2204,123 @@
       "entityType": "columns",
       "schema": "public",
       "table": "service_lens_tag"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "workloadId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "lensId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "questionId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "notApplicable",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "reason",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "varchar(1024)",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "notes",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "answerId",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answer_choices"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "choice",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "service_lens_workload_answer_choices"
     },
     {
       "type": "uuid",
@@ -2668,62 +2739,6 @@
       "nameExplicit": true,
       "columns": [
         {
-          "value": "workloadId",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "workload_id_index",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "workloadId",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "questionId",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "choiceId",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": true,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "question_choice_unique_index",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "service_lens_lens_pillars_question_answers"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
           "value": "name",
           "isExpression": false,
           "asc": true,
@@ -2768,6 +2783,34 @@
       "entityType": "indexes",
       "schema": "public",
       "table": "service_lens_tag"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "answerId",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        },
+        {
+          "value": "choice",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "uniqueWorkloadAnswerChoice",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "service_lens_workload_answer_choices"
     },
     {
       "nameExplicit": true,
@@ -3455,9 +3498,9 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "service_lens_lens_pillars_questions_risks_pkey",
+      "name": "service_lens_lens_pillars_questions_resources_pkey",
       "schema": "public",
-      "table": "service_lens_lens_pillars_questions_risks",
+      "table": "service_lens_lens_pillars_questions_resources",
       "entityType": "pks"
     },
     {
@@ -3465,9 +3508,9 @@
         "id"
       ],
       "nameExplicit": false,
-      "name": "service_lens_lens_pillars_questions_resources_pkey",
+      "name": "service_lens_lens_pillars_questions_risks_pkey",
       "schema": "public",
-      "table": "service_lens_lens_pillars_questions_resources",
+      "table": "service_lens_lens_pillars_questions_risks",
       "entityType": "pks"
     },
     {
@@ -3508,6 +3551,16 @@
       "name": "service_lens_tag_pkey",
       "schema": "public",
       "table": "service_lens_tag",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "service_lens_workload_answers_pkey",
+      "schema": "public",
+      "table": "service_lens_workload_answers",
       "entityType": "pks"
     },
     {
