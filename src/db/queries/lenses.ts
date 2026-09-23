@@ -64,13 +64,27 @@ export async function getLensById(id: string) {
   try {
     const lens = await db.query.lenses.findFirst({
       where: { id },
-      with: { lensPillars: { with: { questions: { with: { choices: true, risks: true, resources: true } } } } },
+      with: {
+        lensPillars: {
+          with: {
+            questions: {
+              with: {
+                choices: true,
+                risks: true,
+                resources: true,
+              },
+            },
+          },
+        },
+      },
     })
     return lens
   } catch {
     return null
   }
 }
+
+export type TLensWithPillarsQuestions = Awaited<ReturnType<typeof getLensById>>
 
 export const insertLensWithPillarsAndQuestions = async (input: TLensWithPillarsSchema) =>
   await db.transaction(async (tx) => {

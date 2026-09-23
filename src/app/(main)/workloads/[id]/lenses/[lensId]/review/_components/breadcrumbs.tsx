@@ -5,7 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import type { TLens, TWorkload } from "@/db/schema"
@@ -32,9 +31,9 @@ export function Breadcrumbs({ workload, lens }: BreadcrumbsProps) {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-           <BreadcrumbLink asChild>
+          <BreadcrumbLink asChild>
             <Link href={`/workloads/${workload.id}`}>{workload.name}</Link>
-           </BreadcrumbLink>
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

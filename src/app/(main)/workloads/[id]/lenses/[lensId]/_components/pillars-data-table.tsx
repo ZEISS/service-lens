@@ -6,8 +6,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { TLensPillar } from "@/db/schema"
 
 import { pillarsColumns } from "./pillars-data-table-columns"
-import { parentPort } from "worker_threads"
-import { circIn } from "framer-motion"
 
 interface PillarsDataTableProps {
   data: TLensPillar[]

@@ -1,13 +1,13 @@
+import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getWorkloadById } from "@/db/queries/workloads"
-import { PillarsDataTable } from "./_components/pillars-data-table"
 
 import { Breadcrumbs } from "./_components/breadcrumbs"
+import { PillarsDataTable } from "./_components/pillars-data-table"
 
 export default async function Page({ params }: { params: Promise<{ id: string; lensId: string }> }) {
   const { id, lensId } = await params
@@ -88,7 +88,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
           <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />
         </CardContent>
       </Card>
-
     </div>
   )
 }

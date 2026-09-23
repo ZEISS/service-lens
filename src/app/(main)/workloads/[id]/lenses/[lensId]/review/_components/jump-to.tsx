@@ -1,10 +1,9 @@
 "use client"
 
 import * as React from "react"
+
 import { toast } from "sonner"
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -16,15 +15,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-  FieldTitle,
-} from "@/components/ui/field"
+import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from "@/components/ui/field"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { type TLensPillar } from "@/db/schema"
+import type { TLensPillar } from "@/db/schema"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 const deliveryTimes = [
   {
@@ -67,7 +61,6 @@ export interface JumpToProps {
 export function JumpTo({ pillars = [] }: JumpToProps) {
   const [open, setOpen] = React.useState(false)
   const [deliveryTime, setDeliveryTime] = React.useState("asap")
-  const isMobile = useIsMobile()
 
   function handleConfirm() {
     const selected = deliveryTimes.find((time) => time.value === deliveryTime)
@@ -83,34 +76,22 @@ export function JumpTo({ pillars = [] }: JumpToProps) {
   }
 
   return (
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      direction="right"
-    >
+    <Drawer open={open} onOpenChange={setOpen} direction="right">
       <DrawerTrigger asChild>
         <Button variant="outline">Jump to</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Pick a Pillar</DrawerTitle>
-          <DrawerDescription>
-            You should trust the process and move pillar by pillar.
-          </DrawerDescription>
+          <DrawerDescription>You should trust the process and move pillar by pillar.</DrawerDescription>
         </DrawerHeader>
         <div className="flex-1 scroll-fade overflow-y-auto p-4">
-          <RadioGroup
-            value={deliveryTime}
-            onValueChange={setDeliveryTime}
-            className="gap-2"
-          >
+          <RadioGroup value={deliveryTime} onValueChange={setDeliveryTime} className="gap-2">
             {pillars.map((pillar) => (
               <FieldLabel key={pillar.id} htmlFor={pillar.id}>
                 <Field orientation="horizontal">
                   <FieldContent>
-                    <FieldTitle className="flex items-center gap-2">
-                      {pillar.name}
-                    </FieldTitle>
+                    <FieldTitle className="flex items-center gap-2">{pillar.name}</FieldTitle>
                     <FieldDescription>{pillar.description}</FieldDescription>
                   </FieldContent>
                   <RadioGroupItem value={pillar.id} id={pillar.id} />
@@ -123,8 +104,10 @@ export function JumpTo({ pillars = [] }: JumpToProps) {
           <Button onClick={handleConfirm} className="w-full">
             Jump to Pillar
           </Button>
-          <DrawerClose>
-            <Button variant="outline" className="w-full">Cancel</Button>
+          <DrawerClose asChild>
+            <Button variant="outline" className="w-full">
+              Cancel
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

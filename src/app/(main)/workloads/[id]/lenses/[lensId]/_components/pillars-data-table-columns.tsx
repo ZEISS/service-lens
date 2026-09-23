@@ -13,7 +13,9 @@ export const pillarsColumns = (workloadId: string, lensId: string): ColumnDef<TE
     cell: ({ row }) => {
       return (
         <Button variant="link" className="w-fit px-0 text-left text-foreground" asChild>
-          <Link href={`/workloads/${workloadId}/lenses/${lensId}/review?lensId=${row.original.id}`}>{row.original.name}</Link>
+          <Link href={`/workloads/${workloadId}/lenses/${lensId}/review?pillarId=${row.original.id}`}>
+            {row.original.name}
+          </Link>
         </Button>
       )
     },

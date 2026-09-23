@@ -86,7 +86,8 @@ export const workloadAnswer = pgTable("workload_answers", {
 })
 
 // Choices for answer options for a workload
-export const workloadAnswerChoices = pgTable("workload_answer_choices",
+export const workloadAnswerChoices = pgTable(
+  "workload_answer_choices",
   {
     answerId: uuid().notNull(),
     choice: uuid().notNull(),

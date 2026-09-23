@@ -2,17 +2,10 @@
   "version": "8",
   "dialect": "postgres",
   "id": "865a9cc3-2424-4599-8aea-6e099fcfa411",
-  "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
-  ],
+  "prevIds": ["00000000-0000-0000-0000-000000000000"],
   "ddl": [
     {
-      "values": [
-        "NO_RISK",
-        "LOW_RISK",
-        "MEDIUM_RISK",
-        "HIGH_RISK"
-      ],
+      "values": ["NO_RISK", "LOW_RISK", "MEDIUM_RISK", "HIGH_RISK"],
       "name": "risk",
       "entityType": "enums",
       "schema": "public"
@@ -2926,14 +2919,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_user",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_account_user_id_service_lens_user_id_fkey",
@@ -2943,14 +2932,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "organization_id"
-      ],
+      "columns": ["organization_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_organization",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_invitation_xWJvyCK1dhEN_fkey",
@@ -2960,14 +2945,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "inviter_id"
-      ],
+      "columns": ["inviter_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_user",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_invitation_inviter_id_service_lens_user_id_fkey",
@@ -2977,14 +2958,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "organization_id"
-      ],
+      "columns": ["organization_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_organization",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_member_2pkb2TI2IqU4_fkey",
@@ -2994,14 +2971,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_user",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_member_user_id_service_lens_user_id_fkey",
@@ -3011,14 +2984,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_user",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_session_user_id_service_lens_user_id_fkey",
@@ -3028,14 +2997,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "organization_id"
-      ],
+      "columns": ["organization_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_organization",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_team_PO2vpkast7uz_fkey",
@@ -3045,14 +3010,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "team_id"
-      ],
+      "columns": ["team_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_team",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_team_member_team_id_service_lens_team_id_fkey",
@@ -3062,14 +3023,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
+      "columns": ["user_id"],
       "schemaTo": "public",
       "tableTo": "service_lens_user",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_team_member_user_id_service_lens_user_id_fkey",
@@ -3079,14 +3036,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "designId"
-      ],
+      "columns": ["designId"],
       "schemaTo": "public",
       "tableTo": "service_lens_design",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_design_tag_designId_service_lens_design_id_fkey",
@@ -3096,14 +3049,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "tagId"
-      ],
+      "columns": ["tagId"],
       "schemaTo": "public",
       "tableTo": "service_lens_tag",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_design_tag_tagId_service_lens_tag_id_fkey",
@@ -3113,14 +3062,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "environmentId"
-      ],
+      "columns": ["environmentId"],
       "schemaTo": "public",
       "tableTo": "service_lens_environment",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_environment_tag_ezmRgStUuzEN_fkey",
@@ -3130,14 +3075,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "tagId"
-      ],
+      "columns": ["tagId"],
       "schemaTo": "public",
       "tableTo": "service_lens_tag",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_environment_tag_tagId_service_lens_tag_id_fkey",
@@ -3147,14 +3088,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "profileQuestionId"
-      ],
+      "columns": ["profileQuestionId"],
       "schemaTo": "public",
       "tableTo": "service_lens_profile_question",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_profile_question_answer_jJkPKuu2RbkT_fkey",
@@ -3164,14 +3101,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "profileId"
-      ],
+      "columns": ["profileId"],
       "schemaTo": "public",
       "tableTo": "service_lens_profile",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_profiles_to_lenses_ueHXsbJ97loY_fkey",
@@ -3181,14 +3114,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "lensId"
-      ],
+      "columns": ["lensId"],
       "schemaTo": "public",
       "tableTo": "service_lens_lens",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_profiles_to_lenses_KnqSTDWFhKHo_fkey",
@@ -3198,14 +3127,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "workloadId"
-      ],
+      "columns": ["workloadId"],
       "schemaTo": "public",
       "tableTo": "service_lens_workload",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_workload_environment_MSTYml5n7qWw_fkey",
@@ -3215,14 +3140,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "environmentId"
-      ],
+      "columns": ["environmentId"],
       "schemaTo": "public",
       "tableTo": "service_lens_environment",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_workload_environment_QWV2uS6DKg9W_fkey",
@@ -3232,14 +3153,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "workloadId"
-      ],
+      "columns": ["workloadId"],
       "schemaTo": "public",
       "tableTo": "service_lens_workload",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_workload_lens_Mryn4m9E7Cmh_fkey",
@@ -3249,14 +3166,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "lensId"
-      ],
+      "columns": ["lensId"],
       "schemaTo": "public",
       "tableTo": "service_lens_lens",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_workload_lens_lensId_service_lens_lens_id_fkey",
@@ -3266,14 +3179,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "workloadId"
-      ],
+      "columns": ["workloadId"],
       "schemaTo": "public",
       "tableTo": "service_lens_workload",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_workload_profile_nDlpPEwHV7aQ_fkey",
@@ -3283,14 +3192,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "profileId"
-      ],
+      "columns": ["profileId"],
       "schemaTo": "public",
       "tableTo": "service_lens_profile",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
       "name": "service_lens_workload_profile_wr3rb1RfgR6U_fkey",
@@ -3300,14 +3205,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "workloadId"
-      ],
+      "columns": ["workloadId"],
       "schemaTo": "public",
       "tableTo": "service_lens_workload",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_workload_tag_R0p9HWBHXaw3_fkey",
@@ -3317,14 +3218,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "tagId"
-      ],
+      "columns": ["tagId"],
       "schemaTo": "public",
       "tableTo": "service_lens_tag",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "service_lens_workload_tag_tagId_service_lens_tag_id_fkey",
@@ -3333,10 +3230,7 @@
       "table": "service_lens_workload_tag"
     },
     {
-      "columns": [
-        "profileId",
-        "lensId"
-      ],
+      "columns": ["profileId", "lensId"],
       "nameExplicit": false,
       "name": "service_lens_profiles_to_lenses_pkey",
       "entityType": "pks",
@@ -3344,9 +3238,7 @@
       "table": "service_lens_profiles_to_lenses"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_account_pkey",
       "schema": "public",
@@ -3354,9 +3246,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_invitation_pkey",
       "schema": "public",
@@ -3364,9 +3254,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_member_pkey",
       "schema": "public",
@@ -3374,9 +3262,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_organization_pkey",
       "schema": "public",
@@ -3384,9 +3270,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_session_pkey",
       "schema": "public",
@@ -3394,9 +3278,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_team_pkey",
       "schema": "public",
@@ -3404,9 +3286,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_team_member_pkey",
       "schema": "public",
@@ -3414,9 +3294,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_user_pkey",
       "schema": "public",
@@ -3424,9 +3302,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_verification_pkey",
       "schema": "public",
@@ -3434,9 +3310,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_design_pkey",
       "schema": "public",
@@ -3444,9 +3318,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_environment_pkey",
       "schema": "public",
@@ -3454,9 +3326,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pkey",
       "schema": "public",
@@ -3464,9 +3334,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pillars_pkey",
       "schema": "public",
@@ -3474,9 +3342,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pillars_questions_pkey",
       "schema": "public",
@@ -3484,9 +3350,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pillars_questions_choices_pkey",
       "schema": "public",
@@ -3494,9 +3358,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pillars_questions_resources_pkey",
       "schema": "public",
@@ -3504,9 +3366,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_lens_pillars_questions_risks_pkey",
       "schema": "public",
@@ -3514,9 +3374,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_profile_question_pkey",
       "schema": "public",
@@ -3524,9 +3382,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_profile_question_answer_pkey",
       "schema": "public",
@@ -3534,9 +3390,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_profile_pkey",
       "schema": "public",
@@ -3544,9 +3398,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_tag_pkey",
       "schema": "public",
@@ -3554,9 +3406,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_workload_answers_pkey",
       "schema": "public",
@@ -3564,9 +3414,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "service_lens_workload_pkey",
       "schema": "public",
@@ -3575,9 +3423,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "slug"
-      ],
+      "columns": ["slug"],
       "nullsNotDistinct": false,
       "name": "service_lens_organization_slug_key",
       "schema": "public",
@@ -3586,9 +3432,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "token"
-      ],
+      "columns": ["token"],
       "nullsNotDistinct": false,
       "name": "service_lens_session_token_key",
       "schema": "public",
@@ -3597,9 +3441,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "email"
-      ],
+      "columns": ["email"],
       "nullsNotDistinct": false,
       "name": "service_lens_user_email_key",
       "schema": "public",

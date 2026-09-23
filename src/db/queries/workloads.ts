@@ -6,25 +6,25 @@ import { db } from "@/db"
 import {
   assignEnvironmentSchema,
   assignLensSchema,
+  assignProfileSchema,
   removeEnvironmentSchema,
   removeLensSchema,
+  removeProfileSchema,
   workloadDeleteSchema,
   workloadEnvironment,
   workloadInsertSchema,
   workloadLens,
-  workloads,
-  assignProfileSchema,
-  removeProfileSchema,
   workloadProfile,
+  workloads,
 } from "@/db/schema"
 import type {
   TWorkloadAssignEnvironmentSchema,
   TWorkloadAssignLensSchema,
+  TWorkloadAssignProfileSchema,
   TWorkloadDeleteSchema,
   TWorkloadInsertSchema,
   TWorkloadRemoveEnvironmentSchema,
   TWorkloadRemoveLensSchema,
-  TWorkloadAssignProfileSchema,
   TWorkloadRemoveProfileSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
@@ -88,12 +88,7 @@ export const removeProfile = async (input: TWorkloadRemoveProfileSchema) => {
   const parsed = await removeProfileSchema.parseAsync(input)
   const result = await db
     .delete(workloadProfile)
-    .where(
-      and(
-        eq(workloadProfile.workloadId, parsed.workloadId),
-        eq(workloadProfile.profileId, parsed.profileId),
-      ),
-    )
+    .where(and(eq(workloadProfile.workloadId, parsed.workloadId), eq(workloadProfile.profileId, parsed.profileId)))
     .returning()
   return takeFirstOrNull(result)
 }

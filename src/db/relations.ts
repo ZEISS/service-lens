@@ -19,13 +19,13 @@ import {
   teamMember,
   user,
   verification,
+  workloadAnswer,
+  workloadAnswerChoices,
   workloadEnvironment,
   workloadLens,
   workloadProfile,
   workloads,
   workloadTag,
-  workloadAnswer,
-  workloadAnswerChoices,
 } from "./schema"
 
 export const relations = defineRelations(

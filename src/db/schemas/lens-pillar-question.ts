@@ -4,6 +4,7 @@ import { z } from "zod"
 
 import { pgTable } from "@/db/utils"
 
+import type { TLensPillarQuestionChoice } from "./lens-pillar-question-choices"
 import { insertLensPillarQuestionChoicesSchema } from "./lens-pillar-question-choices"
 import { insertLensPillarQuestionResourcesSchema } from "./lens-pillar-question-resources"
 import { insertLensPillarQuestionRisksSchema } from "./lens-pillar-question-risks"
@@ -40,6 +41,7 @@ export const insertLensPillarQuestionSchema = createInsertSchema(lensPillarQuest
   })
 
 export type TLensPillarQuestion = typeof lensPillarQuestions.$inferSelect
+export type TLensPillarQuestionWithChoices = TLensPillarQuestion & { choices: TLensPillarQuestionChoice[] }
 export type TNewLensPillarQuestion = typeof lensPillarQuestions.$inferInsert
 
 export const lensPillarQuestionSelectSchema = createSelectSchema(lensPillarQuestions)
