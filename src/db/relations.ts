@@ -19,8 +19,9 @@ import {
   teamMember,
   user,
   verification,
-  workloadAnswer,
-  workloadAnswerChoices,
+  workloadReview,
+  workloadReviewAnswer,
+  workloadReviewAnswersChoice,
   workloadEnvironment,
   workloadLens,
   workloadProfile,
@@ -46,8 +47,9 @@ export const relations = defineRelations(
     workloadLens,
     workloadProfile,
     workloadTag,
-    workloadAnswer,
-    workloadAnswerChoices,
+    workloadReview,
+    workloadReviewAnswer,
+    workloadReviewAnswersChoice,
     profiles,
     lenses,
     lensPillars,
@@ -74,8 +76,9 @@ export const relations = defineRelations(
     workloadTag,
     workloadProfile,
     workloadLens,
-    workloadAnswer,
-    workloadAnswerChoices,
+    workloadReview,
+    workloadReviewAnswer,
+    workloadReviewAnswersChoice,
     environments,
     lenses,
     lensPillars,
@@ -101,14 +104,22 @@ export const relations = defineRelations(
         from: workloads.id.through(workloadTag.workloadId),
         to: tags.id.through(workloadTag.tagId),
       }),
-      answers: many.workloadAnswer({
+      reviews: many.workloadReview({
         from: workloads.id,
-        to: workloadAnswer.workloadId,
+        to: workloadReview.workloadId,
       }),
     },
-    answerChoices: many.workloadAnswerChoices({
-      from: workloadAnswer.id,
-      to: workloadAnswerChoices.answerId,
+    workloadReviews: many.workloadReview({
+      from: workloads.id,
+      to: workloadReview.workloadId,
+    }),
+    workloadReviewAnswers: many.workloadReviewAnswer({
+      from: workloadReview.id,
+      to: workloadReviewAnswer.id,
+    }),
+    workloadReviewAnswersChoices: many.lensPillarQuestionChoices({
+      from: workloadReviewAnswer.id,
+      to: workloadReviewAnswersChoice.answerId,
     }),
     lenses: {
       lensPillars: many.lensPillars({

@@ -226,21 +226,6 @@ CREATE TABLE "service_lens_tag" (
 	"deleted_at" timestamp
 );
 --> statement-breakpoint
-CREATE TABLE "service_lens_workload_answers" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-	"workloadId" uuid NOT NULL,
-	"lensId" uuid NOT NULL,
-	"questionId" uuid NOT NULL,
-	"notApplicable" boolean NOT NULL,
-	"reason" varchar(1024),
-	"notes" varchar(1024)
-);
---> statement-breakpoint
-CREATE TABLE "service_lens_workload_answer_choices" (
-	"answerId" uuid NOT NULL,
-	"choice" uuid NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "service_lens_workload_environment" (
 	"workloadId" uuid NOT NULL,
 	"environmentId" uuid NOT NULL
@@ -254,6 +239,33 @@ CREATE TABLE "service_lens_workload_lens" (
 CREATE TABLE "service_lens_workload_profile" (
 	"workloadId" uuid NOT NULL,
 	"profileId" uuid NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_workload_reviews" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"workloadId" uuid NOT NULL,
+	"lensId" uuid NOT NULL,
+	"notes" varchar(1024),
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_workload_review_answers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"reviewId" uuid NOT NULL,
+	"questionId" uuid NOT NULL,
+	"notApplicable" boolean NOT NULL,
+	"notApplicableReason" varchar(1024),
+	"notes" varchar(1024),
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_workload_review_answer_choices" (
+	"answerId" uuid NOT NULL,
+	"choiceId" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "service_lens_workload_tag" (
@@ -283,10 +295,10 @@ CREATE INDEX "teamMember_userId_idx" ON "service_lens_team_member" ("user_id");-
 CREATE INDEX "verification_identifier_idx" ON "service_lens_verification" ("identifier");--> statement-breakpoint
 CREATE INDEX "tag_name_index" ON "service_lens_tag" ("name");--> statement-breakpoint
 CREATE UNIQUE INDEX "tag_name_value_unique_index" ON "service_lens_tag" ("name","value");--> statement-breakpoint
-CREATE UNIQUE INDEX "uniqueWorkloadAnswerChoice" ON "service_lens_workload_answer_choices" ("answerId","choice");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadEnvironment" ON "service_lens_workload_environment" ("workloadId","environmentId");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadLens" ON "service_lens_workload_lens" ("workloadId","lensId");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadProfile" ON "service_lens_workload_profile" ("workloadId","profileId");--> statement-breakpoint
+CREATE UNIQUE INDEX "uniqueWorkloadAnswerChoice" ON "service_lens_workload_review_answer_choices" ("answerId","choiceId");--> statement-breakpoint
 CREATE UNIQUE INDEX "uniqueWorkloadTag" ON "service_lens_workload_tag" ("workloadId","tagId");--> statement-breakpoint
 ALTER TABLE "service_lens_account" ADD CONSTRAINT "service_lens_account_user_id_service_lens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "service_lens_user"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "service_lens_invitation" ADD CONSTRAINT "service_lens_invitation_xWJvyCK1dhEN_fkey" FOREIGN KEY ("organization_id") REFERENCES "service_lens_organization"("id") ON DELETE CASCADE;--> statement-breakpoint

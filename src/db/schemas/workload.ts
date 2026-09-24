@@ -74,25 +74,42 @@ export const workloadTag = pgTable(
   (table) => [uniqueIndex("uniqueWorkloadTag").on(table.workloadId, table.tagId)],
 )
 
-// Answers to questions for a workload
-export const workloadAnswer = pgTable("workload_answers", {
+// Review answers for a workload review.
+export const workloadReview = pgTable("workload_reviews", {
   id: uuid().primaryKey().defaultRandom(),
   workloadId: uuid().notNull(),
   lensId: uuid().notNull(),
+  notes: varchar({ length: 1024 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+  deletedAt: timestamp("deleted_at"),
+})
+
+// Answers for a workload review.
+export const workloadReviewAnswer = pgTable("workload_review_answers", {
+  id: uuid().primaryKey().defaultRandom(),
+  reviewId: uuid().notNull(),
   questionId: uuid().notNull(),
   notApplicable: boolean().notNull(),
-  reason: varchar({ length: 1024 }),
+  notApplicableReason: varchar({ length: 1024 }),
   notes: varchar({ length: 1024 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+  deletedAt: timestamp("deleted_at"),
 })
 
 // Choices for answer options for a workload
-export const workloadAnswerChoices = pgTable(
-  "workload_answer_choices",
+export const workloadReviewAnswersChoice = pgTable(
+  "workload_review_answer_choices",
   {
     answerId: uuid().notNull(),
-    choice: uuid().notNull(),
+    choiceId: uuid().notNull(),
   },
-  (table) => [uniqueIndex("uniqueWorkloadAnswerChoice").on(table.answerId, table.choice)],
+  (table) => [uniqueIndex("uniqueWorkloadAnswerChoice").on(table.answerId, table.choiceId)],
 )
 
 export const workloadInsertSchema = createInsertSchema(workloads, {
