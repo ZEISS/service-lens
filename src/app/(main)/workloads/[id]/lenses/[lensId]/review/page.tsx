@@ -56,10 +56,6 @@ export default async function Page({ params, searchParams }: ReviewPageProps) {
           <Button variant="outline">Revert</Button>
           <JumpTo pillars={lens.lensPillars} />
         </ButtonGroup>
-        <ButtonGroup>
-          <Button variant="outline">Save</Button>
-          <Button variant="outline">Save & Next</Button>
-        </ButtonGroup>
       </ButtonGroup>
 
       {/* Question Form */}
