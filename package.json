@@ -17,6 +17,7 @@
     "prelaunch": "docker compose up -d",
     "postdebug": "docker compose down",
     "db:generate": "dotenv run -- drizzle-kit generate",
+    "db:generate:auth": "dotenv run -- pnpx auth generate",
     "db:introspect": "dotenv run -- drizzle-kit introspect",
     "db:push": "dotenv run -- drizzle-kit push",
     "db:migrate": "dotenv run -- tsx src/db/migrate.ts",

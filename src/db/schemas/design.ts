@@ -1,7 +1,9 @@
-import { pgTable } from "@/db/utils"
 import { defineRelations } from "drizzle-orm"
 import { bigint, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+
+import { pgTable } from "@/db/utils"
+
 import { tags } from "./tag"
 
 export const designs = pgTable("design", {

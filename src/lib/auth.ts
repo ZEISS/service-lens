@@ -1,13 +1,16 @@
 import "@/config/env-config"
 
-import { db } from "@/db"
-import * as schema from "@/db/schema"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { organization } from "better-auth/plugins"
-import { twoFactor } from "better-auth/plugins"
+import { organization, twoFactor } from "better-auth/plugins"
+
+import { db } from "@/db"
+import * as schema from "@/db/schema"
 
 export const auth = betterAuth({
+  advanced: {
+    trustedProxyHeaders: true,
+  },
   plugins: [
     twoFactor(),
     organization({
@@ -30,7 +33,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    autoSignIn: false, //defaults to true
+    autoSignIn: true, //defaults to true
   },
   database: drizzleAdapter(db, {
     schema: { ...schema },

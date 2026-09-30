@@ -1,0 +1,194 @@
+{
+  "version": 1,
+  "name": "Enterprise Data Architecture Lens",
+  "description": "Evaluates whether a solution is sufficiently aligned with Enterprise Data Architecture principles.",
+  "pillars": [
+    {
+      "ref": "eda",
+      "name": "Enterprise Data Architecture",
+      "description": "Checks whether business context, data objects, authoritative sources and reusable access paths are sufficiently understood before introducing new data integrations.",
+      "questions": [
+        {
+          "ref": "EDA1",
+          "title": "Is the Business Context known and defined?",
+          "description": "Verify that the relevant Legal Entity, Location, Business Capability, Business Process and Business Data Objects are identified.",
+          "choices": [
+            {
+              "ref": "complete",
+              "title": "Yes",
+              "description": "The relevant business context and Business Data Objects are known and documented."
+            },
+            {
+              "ref": "partial",
+              "title": "Partially",
+              "description": "Some elements of the business context are known, but important elements are still unclear."
+            },
+            {
+              "ref": "missing",
+              "title": "No",
+              "description": "The solution is primarily described from a technical perspective without sufficient business context."
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "complete"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "partial"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        },
+        {
+          "ref": "EDA2",
+          "title": "Are the Business Data Objects sufficiently qualified?",
+          "description": "Verify that the relevant Business Data Objects are maintained in Collibra and that definitions, ownership, policies and semantic relationships are available and current.",
+          "choices": [
+            {
+              "ref": "qualified",
+              "title": "Yes",
+              "description": "The relevant BDOs are sufficiently documented and governed."
+            },
+            {
+              "ref": "partially_qualified",
+              "title": "Partially",
+              "description": "The BDOs exist, but metadata, policies, ownership or semantic relationships are incomplete."
+            },
+            {
+              "ref": "not_qualified",
+              "title": "No",
+              "description": "The required Business Data Objects are not sufficiently described or governed."
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "qualified"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "partially_qualified"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        },
+        {
+          "ref": "EDA3",
+          "title": "Does a qualified access path to the required Business Data Objects already exist?",
+          "description": "Check whether an existing Data Product, ESB API, eVa integration or another governed access path can provide the required data.",
+          "choices": [
+            {
+              "ref": "existing_access",
+              "title": "Yes",
+              "description": "A suitable governed access path already exists."
+            },
+            {
+              "ref": "partial_access",
+              "title": "Partially",
+              "description": "Existing access paths cover parts of the requirement but require extension or clarification."
+            },
+            {
+              "ref": "no_access",
+              "title": "No",
+              "description": "No suitable governed access path has been identified."
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "existing_access"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "partial_access"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        },
+        {
+          "ref": "EDA4",
+          "title": "Is the authoritative source for the required data clear?",
+          "description": "Verify that the authoritative source or System of Record for the required Business Data Objects is known.",
+          "choices": [
+            {
+              "ref": "source_clear",
+              "title": "Yes",
+              "description": "The authoritative source is clearly identified."
+            },
+            {
+              "ref": "source_partial",
+              "title": "Partially",
+              "description": "The source is known for parts of the required data, but ambiguities remain."
+            },
+            {
+              "ref": "source_unclear",
+              "title": "No",
+              "description": "The solution relies on data whose authoritative source is unclear."
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "source_clear"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "source_partial"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        },
+        {
+          "ref": "EDA5",
+          "title": "Can existing enterprise data assets be reused?",
+          "description": "Verify that existing Data Products, APIs, integrations and semantic assets have been evaluated before creating a new data flow or copy.",
+          "choices": [
+            {
+              "ref": "reuse",
+              "title": "Yes",
+              "description": "Existing enterprise assets can satisfy the requirement."
+            },
+            {
+              "ref": "extend",
+              "title": "Partially",
+              "description": "Existing assets can be reused but require extension."
+            },
+            {
+              "ref": "new_required",
+              "title": "No",
+              "description": "A genuine capability gap exists and a new enterprise asset is required."
+            }
+          ],
+          "risks": [
+            {
+              "risk": "NO_RISK",
+              "condition": "reuse"
+            },
+            {
+              "risk": "MEDIUM_RISK",
+              "condition": "extend"
+            },
+            {
+              "risk": "HIGH_RISK",
+              "condition": "default"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

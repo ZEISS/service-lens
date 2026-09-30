@@ -1,5 +1,7 @@
 import { seedDesign } from "@/db/seeds/design"
 import { seedUser } from "@/db/seeds/user"
+import "dotenv/config"
+
 import { seedEnvironment } from "./seeds/environment"
 import { seedWorkload } from "./seeds/workload"
 

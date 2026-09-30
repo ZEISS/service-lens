@@ -1,9 +1,11 @@
-import { pgTable } from "@/db/utils"
 import { integer, json, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
+
+import { pgTable } from "@/db/utils"
+
 import { insertLensPillarSchema } from "./lens-pillar"
 import { insertLensPillarQuestionSchema } from "./lens-pillar-question"
-import { z } from "zod"
 
 export const lenses = pgTable("lens", {
   id: uuid().primaryKey().defaultRandom(),

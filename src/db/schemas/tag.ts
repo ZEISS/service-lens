@@ -1,6 +1,7 @@
-import { pgTable } from "@/db/utils"
 import { bigserial, index, timestamp, uniqueIndex, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+
+import { pgTable } from "@/db/utils"
 
 export const tags = pgTable(
   "tag",

@@ -60,6 +60,7 @@ CREATE TABLE "service_lens_session" (
 CREATE TABLE "service_lens_team" (
 	"id" text PRIMARY KEY,
 	"name" text NOT NULL,
+	"member_count" integer DEFAULT 0 NOT NULL,
 	"organization_id" text NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp
@@ -69,7 +70,18 @@ CREATE TABLE "service_lens_team_member" (
 	"id" text PRIMARY KEY,
 	"team_id" text NOT NULL,
 	"user_id" text NOT NULL,
+	"membership_key" text UNIQUE,
 	"created_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE "service_lens_two_factor" (
+	"id" text PRIMARY KEY,
+	"secret" text NOT NULL,
+	"backup_codes" text NOT NULL,
+	"user_id" text NOT NULL,
+	"verified" boolean DEFAULT true,
+	"failed_verification_count" integer DEFAULT 0,
+	"locked_until" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE "service_lens_user" (
@@ -79,7 +91,8 @@ CREATE TABLE "service_lens_user" (
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"image" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"two_factor_enabled" boolean DEFAULT false
 );
 --> statement-breakpoint
 CREATE TABLE "service_lens_verification" (
@@ -287,11 +300,12 @@ CREATE INDEX "invitation_organizationId_idx" ON "service_lens_invitation" ("orga
 CREATE INDEX "invitation_email_idx" ON "service_lens_invitation" ("email");--> statement-breakpoint
 CREATE INDEX "member_organizationId_idx" ON "service_lens_member" ("organization_id");--> statement-breakpoint
 CREATE INDEX "member_userId_idx" ON "service_lens_member" ("user_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "organization_slug_uidx" ON "service_lens_organization" ("slug");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "service_lens_session" ("user_id");--> statement-breakpoint
 CREATE INDEX "team_organizationId_idx" ON "service_lens_team" ("organization_id");--> statement-breakpoint
 CREATE INDEX "teamMember_teamId_idx" ON "service_lens_team_member" ("team_id");--> statement-breakpoint
 CREATE INDEX "teamMember_userId_idx" ON "service_lens_team_member" ("user_id");--> statement-breakpoint
+CREATE INDEX "twoFactor_secret_idx" ON "service_lens_two_factor" ("secret");--> statement-breakpoint
+CREATE INDEX "twoFactor_userId_idx" ON "service_lens_two_factor" ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "service_lens_verification" ("identifier");--> statement-breakpoint
 CREATE INDEX "tag_name_index" ON "service_lens_tag" ("name");--> statement-breakpoint
 CREATE UNIQUE INDEX "tag_name_value_unique_index" ON "service_lens_tag" ("name","value");--> statement-breakpoint
@@ -309,6 +323,7 @@ ALTER TABLE "service_lens_session" ADD CONSTRAINT "service_lens_session_user_id_
 ALTER TABLE "service_lens_team" ADD CONSTRAINT "service_lens_team_PO2vpkast7uz_fkey" FOREIGN KEY ("organization_id") REFERENCES "service_lens_organization"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "service_lens_team_member" ADD CONSTRAINT "service_lens_team_member_team_id_service_lens_team_id_fkey" FOREIGN KEY ("team_id") REFERENCES "service_lens_team"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "service_lens_team_member" ADD CONSTRAINT "service_lens_team_member_user_id_service_lens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "service_lens_user"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "service_lens_two_factor" ADD CONSTRAINT "service_lens_two_factor_user_id_service_lens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "service_lens_user"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "service_lens_design_tag" ADD CONSTRAINT "service_lens_design_tag_designId_service_lens_design_id_fkey" FOREIGN KEY ("designId") REFERENCES "service_lens_design"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "service_lens_design_tag" ADD CONSTRAINT "service_lens_design_tag_tagId_service_lens_tag_id_fkey" FOREIGN KEY ("tagId") REFERENCES "service_lens_tag"("id");--> statement-breakpoint
 ALTER TABLE "service_lens_environment_tag" ADD CONSTRAINT "service_lens_environment_tag_ezmRgStUuzEN_fkey" FOREIGN KEY ("environmentId") REFERENCES "service_lens_environment"("id") ON DELETE CASCADE;--> statement-breakpoint

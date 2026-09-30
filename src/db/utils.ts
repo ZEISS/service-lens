@@ -2,8 +2,9 @@
  * @see https://gist.github.com/rphlmr/0d1722a794ed5a16da0fdf6652902b15
  */
 
-import { DATABASE_PREFIX } from "@/config/db-config"
 import { pgTableCreator } from "drizzle-orm/pg-core"
+
+import { DATABASE_PREFIX } from "@/config/db-config"
 
 /**
  * Allows a single database instance for multiple projects.

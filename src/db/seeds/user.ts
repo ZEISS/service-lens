@@ -1,24 +1,24 @@
-import { db } from "@/db/index"
-import { type NewAccount, type NewUser, account, user } from "@/db/schema"
 import { generateId } from "better-auth"
 import { hashPassword } from "better-auth/crypto"
+
+import { db } from "@/db/index"
+import { account, type TNewAccount, type TNewUser, user } from "@/db/schema"
 
 export async function seedUser() {
   try {
     const userId = generateId()
-    const accountId = generateId()
     const rootId = generateId()
 
-    const root: NewUser = {
+    const root: TNewUser = {
       id: userId,
       name: "Indy Jones",
       email: "indy@jones.com",
-      emailVerified: true,
+      emailVerified: false,
     }
 
-    const rootAccount: NewAccount = {
+    const rootAccount: TNewAccount = {
       id: rootId,
-      accountId: accountId,
+      accountId: userId,
       userId: root.id,
       providerId: "credential",
       password: await hashPassword("password123"),
