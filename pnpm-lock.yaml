@@ -37,10 +37,10 @@ importers:
         version: 1.14.15
       '@orpc/openapi':
         specifier: ^1.15.0
-        version: 1.15.0(ws@8.21.3)
+        version: 1.15.0(ws@8.22.0)
       '@orpc/server':
         specifier: ^1.15.0
-        version: 1.15.0(ws@8.21.3)
+        version: 1.15.0(ws@8.22.0)
       '@radix-ui/react-direction':
         specifier: ^1.1.4
         version: 1.1.4(@types/react@19.3.0)(react@19.3.0)
@@ -112,7 +112,7 @@ importers:
         version: 7.4.0(graphql@16.14.2)
       graphql-ws:
         specifier: ^6.2.1
-        version: 6.2.1(graphql@16.14.2)(ws@8.21.3)
+        version: 6.2.1(graphql@16.14.2)(ws@8.22.0)
       input-otp:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -180,8 +180,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       ws:
-        specifier: ^8.21.3
-        version: 8.21.3
+        specifier: ^8.22.0
+        version: 8.22.0
       zod:
         specifier: ^4.6.5
         version: 4.6.5
@@ -4283,8 +4283,8 @@ packages:
     resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
     engines: {node: '>=18'}
 
-  ws@8.21.3:
-    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -5097,13 +5097,13 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
-  '@orpc/openapi@1.15.0(ws@8.21.3)':
+  '@orpc/openapi@1.15.0(ws@8.22.0)':
     dependencies:
       '@orpc/client': 1.15.0
       '@orpc/contract': 1.15.0
       '@orpc/interop': 1.15.0
       '@orpc/openapi-client': 1.15.0
-      '@orpc/server': 1.15.0(ws@8.21.3)
+      '@orpc/server': 1.15.0(ws@8.22.0)
       '@orpc/shared': 1.15.0
       '@orpc/standard-server': 1.15.0
       json-schema-typed: 8.0.2
@@ -5114,7 +5114,7 @@ snapshots:
       - fastify
       - ws
 
-  '@orpc/server@1.15.0(ws@8.21.3)':
+  '@orpc/server@1.15.0(ws@8.22.0)':
     dependencies:
       '@orpc/client': 1.15.0
       '@orpc/contract': 1.15.0
@@ -5128,7 +5128,7 @@ snapshots:
       '@orpc/standard-server-peer': 1.15.0
       cookie: 1.1.1
     optionalDependencies:
-      ws: 8.21.3
+      ws: 8.22.0
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - fastify
@@ -6803,11 +6803,11 @@ snapshots:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.14.2)
       graphql: 16.14.2
 
-  graphql-ws@6.2.1(graphql@16.14.2)(ws@8.21.3):
+  graphql-ws@6.2.1(graphql@16.14.2)(ws@8.22.0):
     dependencies:
       graphql: 16.14.2
     optionalDependencies:
-      ws: 8.21.3
+      ws: 8.22.0
 
   graphql-yoga@5.24.1(graphql@16.14.2):
     dependencies:
@@ -8310,7 +8310,7 @@ snapshots:
       string-width: 7.2.0
       strip-ansi: 7.2.0
 
-  ws@8.21.3: {}
+  ws@8.22.0: {}
 
   xtend@4.0.2: {}
 
