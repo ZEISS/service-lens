@@ -41,7 +41,8 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    autoSignIn: true, //defaults to true
+    autoSignIn: true,
+    disableSignUp: process.env.BETTER_AUTH_ENABLE_SIGNUP === "true", // defaults to false
   },
   database: drizzleAdapter(db, {
     schema: { ...schema },
