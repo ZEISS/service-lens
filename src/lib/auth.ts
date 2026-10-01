@@ -3,10 +3,10 @@ import "@/config/env-config"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { organization, twoFactor } from "better-auth/plugins"
-import { genericOAuth } from "better-auth/plugins"
 
 import { db } from "@/db"
 import * as schema from "@/db/schema"
+import { ghec } from "@/lib/providers/ghec"
 
 export const auth = betterAuth({
   advanced: {
@@ -17,21 +17,12 @@ export const auth = betterAuth({
     organization({
       teams: { enabled: true },
     }),
-    genericOAuth({
-      config: [
-        {
-          providerId: "ghec",
-          name: "GitHub Enterprise Cloud",
-          clientId: process.env.BETTER_AUTH_GENERIC_OAUTH_CLIENT_ID ?? "",
-          clientSecret: process.env.BETTER_AUTH_GENERIC_OAUTH_CLIENT_SECRET ?? "",
-          tokenUrl: process.env.BETTER_AUTH_GENERIC_OAUTH_TOKEN_URL ?? "",
-          authorizationUrl: process.env.BETTER_AUTH_GENERIC_OAUTH_AUTH_URL ?? "",
-          tokenEndpointAuth: {
-            method: "client_secret_post",
-          },
-          scopes: ["email", "read:user"]
-        },
-      ],
+    ghec({
+      hostName: process.env.BETTER_AUTH_GHEC_HOSTNAME,
+      clientId: process.env.BETTER_AUTH_GHEC_CLIENT_ID ?? "",
+      clientSecret: process.env.BETTER_AUTH_GHEC_CLIENT_SECRET ?? "",
+      tokenUrl: process.env.BETTER_AUTH_GHEC_TOKEN_URL ?? "",
+      authorizationUrl: process.env.BETTER_AUTH_GHEC_AUTH_URL ?? "",
     }),
   ],
   socialProviders: {

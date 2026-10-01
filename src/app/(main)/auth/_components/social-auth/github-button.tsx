@@ -12,7 +12,7 @@ export function GitHubButton({ className, ...props }: React.ComponentProps<typeo
     <Button
       variant="secondary"
       className={cn(className)}
-      onClick={() => signIn.social({ provider: "github" })}
+      onClick={() => signIn.social({ provider: "ghec" })}
       {...props}
     >
       <SimpleIcon icon={siGithub} className="size-4" />

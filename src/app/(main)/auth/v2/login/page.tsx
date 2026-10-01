@@ -4,7 +4,6 @@ import { Globe } from "lucide-react"
 
 import { APP_CONFIG } from "@/config/app-config"
 
-import { GenericOAuthButton } from "../../_components/generic/oauth"
 import { LoginForm } from "../../_components/login-form"
 import { GitHubButton } from "../../_components/social-auth/github-button"
 import { GoogleButton } from "../../_components/social-auth/google-button"
@@ -21,7 +20,6 @@ export default function LoginV2() {
           <MicrosoftButton className="w-full" />
           <GoogleButton className="w-full" />
           <GitHubButton className="w-full" />
-          <GenericOAuthButton className="w-full" />
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">Or continue with</span>
           </div>
