@@ -162,8 +162,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       simple-icons:
-        specifier: ^16.28.0
-        version: 16.28.0
+        specifier: ^16.33.0
+        version: 16.33.0
       sonner:
         specifier: ^2.0.8
         version: 2.0.8(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -4017,8 +4017,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  simple-icons@16.28.0:
-    resolution: {integrity: sha512-sQPR5AtK/ijRjou7zw7mlLp08oB6FH7i0lOy5XJ2zp9mJs/yejgiOn7KvQoe2q4YJIx6VmgUSW5AOefebPt5kg==}
+  simple-icons@16.33.0:
+    resolution: {integrity: sha512-z14u6A8ngAg9mgERRsNO8YkjIMefehIpBk7A8Dz3Gd91945qFP19MLPSHgV4z8P5u/MRYd5e07OTzaDoB4d6qA==}
     engines: {node: '>=0.12.18'}
 
   simple-update-notifier@2.0.0:
@@ -8134,7 +8134,7 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  simple-icons@16.28.0: {}
+  simple-icons@16.33.0: {}
 
   simple-update-notifier@2.0.0:
     dependencies:
