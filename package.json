@@ -87,7 +87,7 @@
     "reflect-metadata": "^0.2.2",
     "simple-icons": "^16.33.0",
     "sonner": "^2.0.8",
-    "tailwind-merge": "^3.6.0",
+    "tailwind-merge": "^3.7.0",
     "typeorm": "^1.1.1",
     "use-debounce": "^10.1.1",
     "vaul": "^1.1.2",
