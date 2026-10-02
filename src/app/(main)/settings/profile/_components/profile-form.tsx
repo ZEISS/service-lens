@@ -14,7 +14,7 @@ import { client } from "@/lib/auth-client"
 
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  email: z.email({ message: "Please enter a valid email address." }),
 })
 
 type ProfileFormValues = z.infer<typeof FormSchema>

@@ -1,18 +1,19 @@
 "use server"
 
 import { deleteEnvironment } from "@/db/queries/environments"
-import { environmentDeleteSchema } from "@/db/schema"
+import { tagDeleteSchema } from "@/db/schema"
 import { revalidatePath } from "next/cache"
 import "server-only"
 import { z } from "zod"
-import type { DeleteEnvironmentSchema } from "./data-rows-actions.schema"
+import type { DeleteTagSchema } from "./data-rows-actions.schema"
+import { deleteTag } from "@/db/queries/tags"
 
-export async function deleteEnvironmentAction(_: DeleteEnvironmentSchema, data: FormData) {
+export async function deleteTagAction(_: DeleteTagSchema, data: FormData) {
   const values = {
     id: data.get("id") as string,
   }
 
-  const result = environmentDeleteSchema.safeParse(values)
+  const result = tagDeleteSchema.safeParse(values)
 
   if (!result.success) {
     const errors = z.treeifyError(result.error)
@@ -25,7 +26,7 @@ export async function deleteEnvironmentAction(_: DeleteEnvironmentSchema, data: 
   }
 
   try {
-    await deleteEnvironment(result.data)
+    await deleteTag(result.data)
   } catch (_error) {
     return {
       success: false,

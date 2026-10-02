@@ -34,7 +34,6 @@ export const tagsColumns: ColumnDef<TTag>[] = [
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
     cell: ({ row }) => {
-      // return <TableCellViewer item={row.original} />
       return (
         <Button variant="link" className="w-fit px-0 text-left text-foreground" asChild>
           <Link href={`/tags/${row.original.id}`}>{row.original.name}</Link>
@@ -47,7 +46,6 @@ export const tagsColumns: ColumnDef<TTag>[] = [
     accessorKey: "value",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Value" />,
     cell: ({ row }) => {
-      // return <TableCellViewer item={row.original} />
       return row.original.value
     },
     enableSorting: false,

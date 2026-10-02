@@ -38,7 +38,7 @@ export function TagsDataTable({ promises, queryKeys }: TagsTableProps) {
       sorting: [{ id: "createdAt", desc: true }],
       columnPinning: { right: ["actions"] },
     },
-    getRowId: (row) => row.name,
+    getRowId: (row) => row.id,
     shallow: false,
     clearOnDefault: true,
   })
