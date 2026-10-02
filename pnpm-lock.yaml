@@ -217,8 +217,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       dotenv:
-        specifier: ^18.0.2
-        version: 18.0.2
+        specifier: ^18.0.4
+        version: 18.0.4
       dotenv-cli:
         specifier: ^11.0.0
         version: 11.0.0
@@ -2828,8 +2828,8 @@ packages:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
-  dotenv@18.0.2:
-    resolution: {integrity: sha512-wl0U3CxC0iobaryqEKpFJxzyp4AxQFYAKj/WWszXZr87vVHLi2yJv2syax5Vxt+u02xqNgE277rsc3lOKg9sPg==}
+  dotenv@18.0.4:
+    resolution: {integrity: sha512-jGt9uI5BIxpVO15kvy+iEFqNAwxYClKWnkptLjSNPnFLC003Imd0ofr3aEVsbpHdSBdSsbcApNIlz4nbyGMwdA==}
     engines: {node: '>=12'}
     hasBin: true
 
@@ -6714,7 +6714,7 @@ snapshots:
 
   dotenv@17.4.2: {}
 
-  dotenv@18.0.2: {}
+  dotenv@18.0.4: {}
 
   drizzle-kit@1.0.0-rc.5-ab785fc:
     dependencies:
