@@ -104,13 +104,7 @@ export const sidebarItems: NavGroup[] = [
             url: "/settings/profile",
             icon: UserCog,
             newTab: false,
-          },
-          {
-            title: "Account",
-            url: "/settings/account",
-            icon: Wrench,
-            newTab: false,
-          },
+          }
         ],
       },
     ],

@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useSession } from "@/lib/auth-client"
+import { useMemo, useEffect } from "react"
 import { useForm } from "react-hook-form"
-// import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import type { User } from "better-auth"
 import { z } from "zod"
+import { client } from "@/lib/auth-client"
 
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -26,26 +28,37 @@ const defaultValues: Partial<User> = {
 export function ProfileForm() {
   const session = useSession()
 
+  useEffect(() => {
+     form.reset({
+       name: session.data?.user.name || defaultValues.name,
+       email: session.data?.user.email || defaultValues.email,
+     });
+  }, [session]);
+
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: session.data?.user.name || defaultValues.name,
-      email: session.data?.user.email || defaultValues.email,
-    },
-    mode: "onChange",
+    defaultValues: useMemo(() => {
+            return {
+              name: session.data?.user.name || defaultValues.name,
+              email: session.data?.user.email || defaultValues.email,
+            }
+        }, [session]),
+    mode: "onChange"
   })
 
-  // const { fields, append } = useFieldArray({
-  //     name: 'urls',
-  //     control: form.control,
-  // })
+  const onSubmit = form.handleSubmit(async (data) => {
+    try {
+      await client.updateUser(data)
+      toast.success("Successfully updated profile")
+    } catch (error) {
+      toast.error("Failed to update profile")
+    }
+  })
 
   return (
     <Form {...form}>
-      <form
-        // onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-        className="space-y-8"
-      >
+      <form className="space-y-8" onSubmit={onSubmit}>
         <FormField
           control={form.control}
           name="name"
@@ -78,36 +91,6 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <div>
-          {/* {fields.map((field, index) => (
-                        <FormField
-                            control={form.control}
-                            key={field.id}
-                            name={`urls.${index}.value`}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel
-                                        className={cn(index !== 0 && 'sr-only')}
-                                    >
-                                        URLs
-                                    </FormLabel>
-                                    <FormDescription
-                                        className={cn(index !== 0 && 'sr-only')}
-                                    >
-                                        Add links to your website, blog, or
-                                        social media profiles.
-                                    </FormDescription>
-                                    <FormControl
-                                        className={cn(index !== 0 && 'mt-1.5')}
-                                    >
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    ))} */}
-        </div>
         <Button type="submit">Update profile</Button>
       </form>
     </Form>
