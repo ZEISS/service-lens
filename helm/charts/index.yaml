@@ -198,6 +198,20 @@ entries:
     - https://github.com/ZEISS/service-lens/releases/download/service-lens-1.0.32/service-lens-1.0.32.tgz
     version: 1.0.32
   - apiVersion: v2
+    appVersion: 1.0.0-beta.9
+    created: "2026-10-06T07:31:21.108465031Z"
+    description: A helm chart for Service Lens
+    digest: 6f5d8772a9eb534e3bfb7db835c1499326caef884c3bd1c5d9178248fe5f0827
+    home: http://github.com/open-cloud-initiative/service-lens
+    keywords:
+    - productivity
+    name: service-lens
+    sources:
+    - https://github.com/open-cloud-initiative/service-lens
+    urls:
+    - https://github.com/ZEISS/service-lens/releases/download/service-lens-1.0.0-beta.9/service-lens-1.0.0-beta.9.tgz
+    version: 1.0.0-beta.9
+  - apiVersion: v2
     appVersion: 1.0.0-beta.7
     created: "2026-10-01T14:26:31.321012969Z"
     description: A helm chart for Service Lens
@@ -603,4 +617,4 @@ entries:
     urls:
     - https://github.com/ZEISS/service-lens/releases/download/service-lens-0.1.8/service-lens-0.1.8.tgz
     version: 0.1.8
-generated: "2026-10-01T14:26:31.321195955Z"
+generated: "2026-10-06T07:31:21.108661606Z"
