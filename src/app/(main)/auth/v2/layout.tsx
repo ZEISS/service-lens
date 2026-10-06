@@ -1,8 +1,8 @@
 import type { ReactNode } from "react"
 
-import { Command } from "lucide-react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+
+import { Command } from "lucide-react"
 
 import { APP_CONFIG } from "@/config/app-config"
 

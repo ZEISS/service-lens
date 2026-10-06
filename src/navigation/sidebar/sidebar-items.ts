@@ -10,7 +10,6 @@ import {
   Tags,
   UserCog,
   Users,
-  Wrench,
 } from "lucide-react"
 
 export interface NavSubItem {
@@ -104,7 +103,7 @@ export const sidebarItems: NavGroup[] = [
             url: "/settings/profile",
             icon: UserCog,
             newTab: false,
-          }
+          },
         ],
       },
     ],
