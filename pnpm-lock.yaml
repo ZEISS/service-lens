@@ -73,7 +73,7 @@ importers:
         version: 1.20.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
       better-auth:
         specifier: 1.7.7
-        version: 1.7.7(drizzle-kit@1.0.0-rc.5-ab785fc)(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(next@16.3.8(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 1.7.7(drizzle-kit@1.0.0-rc.5-ab785fc)(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(next@16.3.8(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -93,14 +93,14 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       drizzle-orm:
-        specifier: 1.0.0-rc.5-169397b
-        version: 1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
+        specifier: 1.0.0-rc.5-5935859
+        version: 1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
       drizzle-seed:
         specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))
+        version: 0.3.1(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(zod@4.6.5)
+        version: 0.8.3(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(zod@4.6.5)
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.3.0)
@@ -2670,8 +2670,8 @@ packages:
     resolution: {integrity: sha512-TSg7sK1finOxdo48O9mDfyMY3lhi/aHCVIil5TFhthyq/H/89H/3nwX5V9Gdp7HYMUGFHyWJD5iowSn98l0elw==}
     hasBin: true
 
-  drizzle-orm@1.0.0-rc.5-169397b:
-    resolution: {integrity: sha512-xf5TudQhFplMMzjwgmMY5f64Sqbv4iwXxdTHBHqvLMt+SHyY8rAYhzNLQchEkDxiqMclTS/txPEOg5pdQy0Tcw==}
+  drizzle-orm@1.0.0-rc.5-5935859:
+    resolution: {integrity: sha512-PkVjyxhamD7IOVfpDMn3BmV9afyvj3eeLvIPind3NmPv+cfv6/jh6GN0fHP0zzgrprGx/jGE4mkE0ttRFlzHwA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -4227,12 +4227,12 @@ snapshots:
       nanostores: 1.5.4
       zod: 4.6.5
 
-  '@better-auth/drizzle-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))':
+  '@better-auth/drizzle-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))':
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
       '@better-auth/utils': 0.4.2
     optionalDependencies:
-      drizzle-orm: 1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
+      drizzle-orm: 1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
 
   '@better-auth/kysely-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(kysely@0.29.6)':
     dependencies:
@@ -6006,10 +6006,10 @@ snapshots:
 
   bcp-47-match@2.0.3: {}
 
-  better-auth@1.7.7(drizzle-kit@1.0.0-rc.5-ab785fc)(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(next@16.3.8(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  better-auth@1.7.7(drizzle-kit@1.0.0-rc.5-ab785fc)(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(next@16.3.8(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(pg@8.23.1)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
-      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))
+      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))
       '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)(kysely@0.29.6)
       '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)
       '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.4.2)
@@ -6027,7 +6027,7 @@ snapshots:
       zod: 4.6.5
     optionalDependencies:
       drizzle-kit: 1.0.0-rc.5-ab785fc
-      drizzle-orm: 1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
+      drizzle-orm: 1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
       next: 16.3.8(@types/node@26.6.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       pg: 8.23.1
       react: 19.3.0
@@ -6237,22 +6237,22 @@ snapshots:
       get-tsconfig: 4.14.3
       jiti: 2.7.0
 
-  drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5):
+  drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5):
     optionalDependencies:
       '@types/pg': 8.23.1
       pg: 8.23.1
       postgres: 3.4.9
       zod: 4.6.5
 
-  drizzle-seed@0.3.1(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)):
+  drizzle-seed@0.3.1(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)):
     dependencies:
       pure-rand: 6.1.0
     optionalDependencies:
-      drizzle-orm: 1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
+      drizzle-orm: 1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
 
-  drizzle-zod@0.8.3(drizzle-orm@1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(zod@4.6.5):
+  drizzle-zod@0.8.3(drizzle-orm@1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5))(zod@4.6.5):
     dependencies:
-      drizzle-orm: 1.0.0-rc.5-169397b(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
+      drizzle-orm: 1.0.0-rc.5-5935859(@types/pg@8.23.1)(pg@8.23.1)(postgres@3.4.9)(zod@4.6.5)
       zod: 4.6.5
 
   dunder-proto@1.0.1:
