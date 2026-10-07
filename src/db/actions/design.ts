@@ -1,9 +1,12 @@
 "use server"
 
-import { deleteDesign } from "@/db/queries/designs"
 import { revalidatePath } from "next/cache"
+
 import { z } from "zod"
-import { type TDeleteDesignAction, deleteDesignSchema } from "./schema"
+
+import { deleteDesign } from "@/db/queries/designs"
+
+import { deleteDesignSchema, type TDeleteDesignAction } from "./schema"
 
 export const deleteAction: TDeleteDesignAction = async (_, data) => {
   try {

@@ -15,6 +15,9 @@ import {
   workloadInsertSchema,
   workloadLens,
   workloadProfile,
+  workloadReview,
+  workloadReviewDeleteSchema,
+  workloadReviewInsertSchema,
   workloads,
 } from "@/db/schema"
 import type {
@@ -26,12 +29,16 @@ import type {
   TWorkloadRemoveEnvironmentSchema,
   TWorkloadRemoveLensSchema,
   TWorkloadRemoveProfileSchema,
+  TWorkloadReviewDeleteSchema,
+  TWorkloadReviewInsertSchema,
+  TWorkloadReviewSelectSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
 import type { paginationParams } from "./pagination"
 
 export type getWorkloadsSchema = ReturnType<typeof paginationParams.parse>
+export type listWorkloadReviewsSchema = ReturnType<typeof paginationParams.parse>
 
 export async function getWorkloads(input: getWorkloadsSchema) {
   try {
@@ -158,4 +165,23 @@ export const getTotalNumberOfWorkloads = async () => {
     console.error("Error fetching total number of workloads:", e)
     return 0
   }
+}
+
+export const deleteWorkloadReview = async (input: TWorkloadReviewDeleteSchema) => {
+  const parsed = await workloadReviewDeleteSchema.parseAsync(input)
+  return await db.transaction(async (tx) => {
+    await tx.delete(workloadReview).where(eq(workloadReview.id, parsed.id))
+  })
+}
+
+export type TWorkloadReviewSelectByLensId = Pick<TWorkloadReviewSelectSchema, "workloadId" | "lensId">
+export const getWorkloadReviewByLensId = async ({ workloadId, lensId }: TWorkloadReviewSelectByLensId) =>
+  await db.query.workloadReview.findFirst({
+    where: { workloadId, lensId },
+  })
+
+export const insertWorkloadReview = async (input: TWorkloadReviewInsertSchema) => {
+  const parsed = await workloadReviewInsertSchema.parseAsync(input)
+  const result = await db.insert(workloadReview).values(parsed).returning()
+  return takeFirstOrNull(result)
 }

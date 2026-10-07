@@ -7,6 +7,7 @@ import { ButtonGroup } from "@/components/ui/button-group"
 import { getWorkloadById } from "@/db/queries/workloads"
 import type { SearchParams } from "@/types"
 
+import { ReviewCard } from "../_components/review-card"
 import { Breadcrumbs } from "./_components/breadcrumbs"
 import { JumpTo } from "./_components/jump-to"
 import { QuestionForm } from "./_components/questions-form"
@@ -39,7 +40,7 @@ export default async function Page({ params, searchParams }: ReviewPageProps) {
       {/* Navigation */}
       <Breadcrumbs workload={workload} lens={lens} />
 
-      {/* */}
+      {/* Navigation */}
       <ButtonGroup>
         <ButtonGroup className="hidden sm:flex">
           <Button variant="outline" size="icon" aria-label="Previous">
@@ -54,6 +55,9 @@ export default async function Page({ params, searchParams }: ReviewPageProps) {
           <JumpTo pillars={lens.lensPillars} />
         </ButtonGroup>
       </ButtonGroup>
+
+      {/* Review Card */}
+      <ReviewCard workloadId={id} lensId={lensId} />
 
       {/* Question Form */}
       <QuestionForm question={question} />

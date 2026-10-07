@@ -1,5 +1,6 @@
-import { bigint, boolean, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core"
+import { bigint, boolean, pgEnum, timestamp, uniqueIndex, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+import { z } from "zod"
 
 import { pgTable } from "@/db/utils"
 
@@ -87,13 +88,32 @@ export const workloadReview = pgTable("workload_reviews", {
   deletedAt: timestamp("deleted_at"),
 })
 
+export type TWorkloadReview = typeof workloadReview.$inferSelect
+export const workloadReviewSelectSchema = createSelectSchema(workloadReview)
+export const workloadReviewDeleteSchema = createSelectSchema(workloadReview).pick({
+  id: true,
+})
+
+export const workloadReviewInsertSchema = createInsertSchema(workloadReview, {
+  workloadId: z.uuid(),
+  lensId: z.uuid(),
+  notes: z.string().max(1024).optional(),
+}).pick({ workloadId: true, lensId: true, notes: true })
+
+export const notApplicableReason = pgEnum("not_applicable_reason", [
+  "other",
+  "business_domain",
+  "business_priority",
+  "constraints",
+])
+
 // Answers for a workload review.
 export const workloadReviewAnswer = pgTable("workload_review_answers", {
   id: uuid().primaryKey().defaultRandom(),
   reviewId: uuid().notNull(),
   questionId: uuid().notNull(),
   notApplicable: boolean().notNull(),
-  notApplicableReason: varchar({ length: 1024 }),
+  notApplicableReason: notApplicableReason(),
   notes: varchar({ length: 1024 }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at")
@@ -159,9 +179,16 @@ export const removeProfileSchema = createSelectSchema(workloadProfile).pick({
 export type TWorkloadInsertSchema = ReturnType<typeof workloadInsertSchema.parse>
 export type TWorkloadSelectSchema = ReturnType<typeof workloadSelectSchema.parse>
 export type TWorkloadDeleteSchema = ReturnType<typeof workloadDeleteSchema.parse>
+
 export type TWorkloadAssignEnvironmentSchema = ReturnType<typeof assignEnvironmentSchema.parse>
 export type TWorkloadRemoveEnvironmentSchema = ReturnType<typeof removeEnvironmentSchema.parse>
+
 export type TWorkloadAssignLensSchema = ReturnType<typeof assignLensSchema.parse>
 export type TWorkloadRemoveLensSchema = ReturnType<typeof removeLensSchema.parse>
+
 export type TWorkloadAssignProfileSchema = ReturnType<typeof assignProfileSchema.parse>
 export type TWorkloadRemoveProfileSchema = ReturnType<typeof removeProfileSchema.parse>
+
+export type TWorkloadReviewInsertSchema = ReturnType<typeof workloadReviewInsertSchema.parse>
+export type TWorkloadReviewDeleteSchema = ReturnType<typeof workloadReviewDeleteSchema.parse>
+export type TWorkloadReviewSelectSchema = ReturnType<typeof workloadReviewSelectSchema.parse>

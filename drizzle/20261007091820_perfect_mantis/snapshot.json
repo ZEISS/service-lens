@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "a78c0d4a-d59f-4a9c-954d-6f6c840c65d1",
+  "id": "3f9b6ef8-a271-419a-afb3-9213ad905c0f",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -14,6 +14,17 @@
         "HIGH_RISK"
       ],
       "name": "risk",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
+      "values": [
+        "other",
+        "business_domain",
+        "business_priority",
+        "constraints"
+      ],
+      "name": "not_applicable_reason",
       "entityType": "enums",
       "schema": "public"
     },
@@ -2569,8 +2580,8 @@
       "table": "service_lens_workload_review_answers"
     },
     {
-      "type": "varchar(1024)",
-      "typeSchema": null,
+      "type": "not_applicable_reason",
+      "typeSchema": "public",
       "notNull": false,
       "dimensions": 0,
       "default": null,

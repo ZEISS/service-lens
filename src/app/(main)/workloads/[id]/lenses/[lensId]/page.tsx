@@ -1,23 +1,23 @@
-import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { getWorkloadById } from "@/db/queries/workloads"
+import { getWorkloadById, getWorkloadReviewByLensId } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "./_components/breadcrumbs"
 import { PillarsDataTable } from "./_components/pillars-data-table"
+import { ReviewCreateCardForm } from "./_components/review-create-card-form"
 
 export default async function Page({ params }: { params: Promise<{ id: string; lensId: string }> }) {
-  const { id, lensId } = await params
+  const { id: workloadId, lensId } = await params
 
-  if (!id) {
+  if (!workloadId) {
     notFound()
   }
 
-  const workload = await getWorkloadById(id)
+  const workload = await getWorkloadById(workloadId)
   const lens = workload?.lenses.find((l) => l.id === lensId) ?? null
+  const review = await getWorkloadReviewByLensId({ workloadId, lensId })
 
   if (!(workload && lens)) {
     return notFound()
@@ -73,16 +73,14 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
         </CardContent>
       </Card>
 
+      {/* Review */}
+      {review ? (null) : <ReviewCreateCardForm workloadId={workloadId} lensId={lensId} />}
+
       {/* Pillars */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Pillars</CardTitle>
           <CardDescription>Pillars of the lens to assess.</CardDescription>
-          <CardAction>
-            <Button variant="outline" asChild>
-              <Link href={`/workloads/${workload.id}/lenses/${lens.id}/review`}>Review</Link>
-            </Button>
-          </CardAction>
         </CardHeader>
         <CardContent>
           <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />

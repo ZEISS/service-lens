@@ -1,10 +1,12 @@
 "use server"
 
+import { redirect } from "next/navigation"
+
 import { insertEnvironment } from "@/db/queries/environments"
 import { environmentInsertSchema, type TEnvironment } from "@/db/schema"
-import { redirect } from "next/navigation"
 import "server-only"
 import { z } from "zod"
+
 import type { AddEnvironmentModalFormState } from "./add-environment-modal.schema"
 
 export async function createEnvironmentAction(_: AddEnvironmentModalFormState, data: FormData) {

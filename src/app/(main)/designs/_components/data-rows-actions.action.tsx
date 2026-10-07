@@ -1,10 +1,12 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { deleteDesign } from "@/db/queries/designs"
 import { designDeleteSchema } from "@/db/schema"
-import { revalidatePath } from "next/cache"
 import "server-only"
 import { z } from "zod"
+
 import type { DeleteDesignSchema } from "./data-rows-actions.schema"
 
 export async function deleteDesignAction(_: DeleteDesignSchema, data: FormData) {

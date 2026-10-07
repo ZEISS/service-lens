@@ -1,8 +1,9 @@
 "use server"
 
+import { z } from "zod"
+
 import { db } from "@/db"
 import { environmentInsertSchema, environments, type TNewEnvironment } from "@/db/schema"
-import { z } from "zod"
 
 export async function createEnvironment(environment: TNewEnvironment) {
   try {

@@ -1,4 +1,5 @@
 CREATE TYPE "risk" AS ENUM('NO_RISK', 'LOW_RISK', 'MEDIUM_RISK', 'HIGH_RISK');--> statement-breakpoint
+CREATE TYPE "not_applicable_reason" AS ENUM('other', 'business_domain', 'business_priority', 'constraints');--> statement-breakpoint
 CREATE TABLE "service_lens_account" (
 	"id" text PRIMARY KEY,
 	"account_id" text NOT NULL,
@@ -269,7 +270,7 @@ CREATE TABLE "service_lens_workload_review_answers" (
 	"reviewId" uuid NOT NULL,
 	"questionId" uuid NOT NULL,
 	"notApplicable" boolean NOT NULL,
-	"notApplicableReason" varchar(1024),
+	"notApplicableReason" "not_applicable_reason",
 	"notes" varchar(1024),
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),

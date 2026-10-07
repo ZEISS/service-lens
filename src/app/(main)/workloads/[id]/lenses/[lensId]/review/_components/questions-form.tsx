@@ -1,7 +1,5 @@
 "use client"
 
-import type * as React from "react"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { toast } from "sonner"
@@ -14,6 +12,15 @@ import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLab
 import { Form } from "@/components/ui/form"
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "@/components/ui/input-group"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import type { TLensPillarQuestionWithChoices } from "@/db/schema"
 
@@ -21,6 +28,7 @@ const formSchema = z.object({
   notes: z.string().max(1024, "Notes must be at most 1024 characters."),
   choices: z.array(z.string()),
   doesNotApply: z.boolean().optional(),
+  doesNotApplyReason: z.enum(["other", "business_domain", "business_priority", "constraints"]).optional(),
 })
 
 export interface QuestionFormProps {
@@ -68,20 +76,47 @@ export function QuestionForm({ question }: QuestionFormProps) {
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-2">
-              <Controller
-                name="doesNotApply"
-                control={form.control}
-                render={({ field }) => (
-                  <FieldGroup className="max-w-sm">
+              <FieldGroup className="max-w-sm">
+                <Controller
+                  name="doesNotApply"
+                  control={form.control}
+                  render={({ field }) => (
                     <Field orientation="horizontal">
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
                       <Label htmlFor="does-not-apply">
                         This question does not apply to the workload. {field.value}
                       </Label>
                     </Field>
-                  </FieldGroup>
+                  )}
+                />
+                {isDoesNotApply && (
+                  <Controller
+                    name="doesNotApplyReason"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FieldGroup className="max-w-sm">
+                        <Field>
+                          <Label htmlFor="doesNotApplyReason">Reason</Label>
+                          <Select onValueChange={field.onChange}>
+                            <SelectTrigger className="w-full max-w-48">
+                              <SelectValue placeholder="Select a reason" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectLabel>Reason</SelectLabel>
+                                <SelectItem value="business_domain">Business Domain</SelectItem>
+                                <SelectItem value="business_priority">Business Priority</SelectItem>
+                                <SelectItem value="constraints">Architecture Constraint</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                      </FieldGroup>
+                    )}
+                  />
                 )}
-              />
+              </FieldGroup>
             </div>
           </CardContent>
         </Card>
