@@ -86,13 +86,17 @@ export const workloadReview = pgTable("workload_reviews", {
     .defaultNow()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp("deleted_at"),
-})
+},
+  (table) => [uniqueIndex("uniqueWorkloadReview").on(table.workloadId, table.lensId)]
+)
 
 export type TWorkloadReview = typeof workloadReview.$inferSelect
 export const workloadReviewSelectSchema = createSelectSchema(workloadReview)
-export const workloadReviewDeleteSchema = createSelectSchema(workloadReview).pick({
-  id: true,
-})
+export const workloadReviewDeleteSchema = createSelectSchema(workloadReview).pick({ id: true })
+export const workloadReviewUpdateSchema = createInsertSchema(workloadReview, {
+  id: z.uuid(),
+  notes: z.string().max(1024).optional(),
+}).pick({ id: true, notes: true })
 
 export const workloadReviewInsertSchema = createInsertSchema(workloadReview, {
   workloadId: z.uuid(),
@@ -191,4 +195,5 @@ export type TWorkloadRemoveProfileSchema = ReturnType<typeof removeProfileSchema
 
 export type TWorkloadReviewInsertSchema = ReturnType<typeof workloadReviewInsertSchema.parse>
 export type TWorkloadReviewDeleteSchema = ReturnType<typeof workloadReviewDeleteSchema.parse>
+export type TWorkloadReviewUpdateSchema = ReturnType<typeof workloadReviewUpdateSchema.parse>
 export type TWorkloadReviewSelectSchema = ReturnType<typeof workloadReviewSelectSchema.parse>

@@ -7,7 +7,8 @@ import Form from "next/form"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { createWorkloadReview } from "@/db/actions"
+import { insertWorkloadReviewAction } from "@/db/actions"
+import { Input } from "@/components/ui/input"
 
 export interface ReviewCreateCardFormProps {
   workloadId: string
@@ -15,20 +16,21 @@ export interface ReviewCreateCardFormProps {
 }
 
 export function ReviewCreateCardForm({ workloadId, lensId }: ReviewCreateCardFormProps) {
-  const [_, formAction, pending] = useActionState(createWorkloadReview, null)
+  const [_, formAction, pending] = useActionState(insertWorkloadReviewAction, null)
 
   return (
     <Form action={formAction} id="create-review-form">
-      <input type="hidden" name="workloadId" value={workloadId} />
-      <input type="hidden" name="lensId" value={lensId} />
-      <input type="hidden" name="notes" value="" />
+      <Input type="hidden" name="workloadId" value={workloadId} />
+      <Input type="hidden" name="lensId" value={lensId} />
+      <Input type="hidden" name="notes" value="" />
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">Review</CardTitle>
           <CardDescription>The status of the review.</CardDescription>
           <CardAction>
             <Button variant="outline" type="submit" disabled={pending}>
-              Start Review
+              Create
             </Button>
           </CardAction>
         </CardHeader>

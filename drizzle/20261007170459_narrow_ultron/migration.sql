@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "uniqueWorkloadReview" ON "service_lens_workload_reviews" ("workloadId","lensId");

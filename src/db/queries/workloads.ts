@@ -18,6 +18,7 @@ import {
   workloadReview,
   workloadReviewDeleteSchema,
   workloadReviewInsertSchema,
+  workloadReviewUpdateSchema,
   workloads,
 } from "@/db/schema"
 import type {
@@ -32,6 +33,7 @@ import type {
   TWorkloadReviewDeleteSchema,
   TWorkloadReviewInsertSchema,
   TWorkloadReviewSelectSchema,
+  TWorkloadReviewUpdateSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
@@ -185,3 +187,8 @@ export const insertWorkloadReview = async (input: TWorkloadReviewInsertSchema) =
   const result = await db.insert(workloadReview).values(parsed).returning()
   return takeFirstOrNull(result)
 }
+
+export const updateWorkloadReview = async (input: TWorkloadReviewUpdateSchema) => await db.transaction(async (tx) => {
+  const parsed = await workloadReviewUpdateSchema.parseAsync(input)
+  return await tx.update(workloadReview).set(parsed).where(eq(workloadReview.id, parsed.id)).returning({id: workloadReview.id, notes: workloadReview.notes})
+})
