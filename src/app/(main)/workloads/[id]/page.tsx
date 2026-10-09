@@ -4,13 +4,13 @@ import { Muted } from "@/components/typography/muted"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { getWorkloadById } from "@/db/queries/workloads"
+import { getWorkload } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "../_components/breadcrumbs"
 import { AssignEnvironmentModal } from "./_components/assign-environment-modal"
 import { EnvironmentsDataTable } from "./_components/environments-data-table"
+import { LensCards } from "./_components/lens-cards"
 import { LensesAssignModal } from "./_components/lenses-assign-modal"
-import { LensesDataTable } from "./_components/lenses-data-table"
 import { ProfilesAssignModal } from "./_components/profiles-assign-modal"
 import { ProfilesDataTable } from "./_components/profiles-data-table"
 
@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     notFound()
   }
 
-  const workload = await getWorkloadById(id)
+  const workload = await getWorkload({ id })
   const environments = workload?.environments.map((env) => ({ ...env })) ?? []
   const lenses = workload?.lenses.map((lens) => ({ ...lens })) ?? []
   const profiles = workload?.profiles.map((profile) => ({ ...profile })) ?? []
@@ -44,9 +44,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <CardTitle className="flex items-center gap-2">Meta</CardTitle>
           <CardDescription>A brief description of the workload.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm">{workload.description || "No description provided."}</p>
-        </CardContent>
+        <CardContent>{workload.description || "No description provided."}</CardContent>
       </Card>
 
       {/* Lenses */}
@@ -59,7 +57,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </CardAction>
         </CardHeader>
         <CardContent>
-          <LensesDataTable data={lenses} workloadId={workload.id} />
+          {lenses.length > 0 ? <LensCards workloadId={id} lenses={lenses} /> : "No lenses assigned."}
         </CardContent>
       </Card>
 

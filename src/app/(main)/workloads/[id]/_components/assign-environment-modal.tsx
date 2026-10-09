@@ -1,9 +1,12 @@
 "use client"
 
-import { useEffect, useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 
 import Form from "next/form"
 
+import type { GetEnvironmentResponse } from "@/app/api/environments/route"
+import type { ApiComboBoxFetchFunc } from "@/components/api-combobox"
+import { ApiComboBox } from "@/components/api-combobox"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,11 +20,8 @@ import {
 } from "@/components/ui/dialog"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { ApiComboBox } from "@/components/api-combobox"
-import type { ApiComboBoxFetchFunc } from "@/components/api-combobox"
 
 import { assignEnvironmentAction } from "./assign-environment-modal.action"
-import type { GetEnvironmentResponse } from "@/app/api/environments/route"
 
 interface AddEnvironmentModalProps {
   workloadId: string
@@ -52,7 +52,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button variant="outline">
           Assign
         </Button>
       </DialogTrigger>

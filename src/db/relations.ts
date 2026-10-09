@@ -112,10 +112,20 @@ export const relations = defineRelations(
         to: workloadReview.workloadId,
       }),
     },
-    workloadReviews: many.workloadReview({
-      from: workloads.id,
-      to: workloadReview.workloadId,
-    }),
+    workloadReview: {
+      workload: one.workloads({
+        from: workloadReview.workloadId,
+        to: workloads.id,
+      }),
+      lens: one.lenses({
+        from: workloadReview.lensId,
+        to: lenses.id,
+      }),
+      workloadReviewAnswers: many.workloadReviewAnswer({
+        from: workloadReview.id,
+        to: workloadReviewAnswer.id,
+      }),
+    },
     workloadReviewAnswers: many.workloadReviewAnswer({
       from: workloadReview.id,
       to: workloadReviewAnswer.id,

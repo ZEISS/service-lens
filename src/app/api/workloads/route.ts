@@ -1,7 +1,7 @@
 import { headers } from "next/headers"
 
 import { paginationParams } from "@/db/queries/pagination"
-import { getWorkloads } from "@/db/queries/workloads"
+import { listWorkloadsWithPagination } from "@/db/queries/workloads"
 import type { TWorkload } from "@/db/schema"
 import type { TDesign } from "@/db/schemas/design"
 import { auth } from "@/lib/auth"
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
   }
 
   const parsedParams = paginationParams.parse(Object.fromEntries(searchParams))
-  const workloads = await getWorkloads(parsedParams)
+  const workloads = await listWorkloadsWithPagination(parsedParams)
 
   const res = new ApiResponse<TWorkload>()
   res.items = workloads.data

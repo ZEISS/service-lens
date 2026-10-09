@@ -34,6 +34,7 @@ import type {
   TWorkloadReviewInsertSchema,
   TWorkloadReviewSelectSchema,
   TWorkloadReviewUpdateSchema,
+  TWorkloadSelectSchema,
 } from "@/db/schemas/workload"
 import { takeFirstOrNull } from "@/db/utils"
 
@@ -42,7 +43,11 @@ import type { paginationParams } from "./pagination"
 export type getWorkloadsSchema = ReturnType<typeof paginationParams.parse>
 export type listWorkloadReviewsSchema = ReturnType<typeof paginationParams.parse>
 
-export async function getWorkloads(input: getWorkloadsSchema) {
+// List all workloads with pagination.
+//
+// @param input - The pagination parameters.
+// @returns The workloads and total count.
+export async function listWorkloadsWithPagination(input: getWorkloadsSchema) {
   try {
     const offset = (input.page - 1) * input.perPage
     const { data, total } = await db.transaction(async (tx) => {
@@ -68,6 +73,55 @@ export async function getWorkloads(input: getWorkloadsSchema) {
     return { data: [], pageCount: 0 }
   }
 }
+
+// Get a workload by its ID.
+//
+// @param id - The workload ID.
+// @returns The workload.
+export const getWorkload = async ({ id }: TWorkloadSelectByIDSchema) =>
+  await db.query.workloads.findFirst({
+    where: { id },
+    with: {
+      lenses: {
+        with: {
+          lensPillars: {
+            with: {
+              questions: {
+                with: {
+                  choices: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      environments: true,
+      reviews: true,
+      profiles: true,
+      tags: true,
+    },
+  })
+export type TWorkloadSelectByIDSchema = Pick<TWorkloadSelectSchema, "id">
+
+// Get workload with the reviews for the lens.
+export const getWorkloadWithReviewsForLens = async ({ id, lensId }: TWorkloadSelectWithReviewsAndLensSchema) => await db.query.workloads.findFirst({
+  where: { id },
+  with: {
+    lenses: {
+      where: {
+        id: lensId
+      },
+      with: {
+        lensPillars: true
+      },
+    },
+    reviews: {
+      where: { lensId },
+    },
+  },
+})
+
+export type TWorkloadSelectWithReviewsAndLensSchema = Pick<TWorkloadSelectSchema, "id"> & { lensId: string }
 
 export const insertWorkload = async (input: TWorkloadInsertSchema) => {
   const parsed = await workloadInsertSchema.parseAsync(input)
@@ -104,10 +158,9 @@ export const removeProfile = async (input: TWorkloadRemoveProfileSchema) => {
 
 export const removeLens = async (input: TWorkloadRemoveLensSchema) => {
   const parsed = await removeLensSchema.parseAsync(input)
-  const result = await db
-    .delete(workloadLens)
+  const result = await db.transaction((tx) => tx.delete(workloadLens)
     .where(and(eq(workloadLens.workloadId, parsed.workloadId), eq(workloadLens.lensId, parsed.lensId)))
-    .returning()
+    .returning())
   return takeFirstOrNull(result)
 }
 
@@ -130,28 +183,19 @@ export const deleteWorkload = async (input: TWorkloadDeleteSchema) => {
   await db.delete(workloads).where(eq(workloads.id, parsed.id))
 }
 
-export const getWorkloadById = async (id: string) =>
+// Get workload with its reviews.
+//
+// @param id - The workload ID.
+// @returns The workload with its reviews.
+export const getWorkloadWithReview = async ({ id }: TWorkloadWithReviewSelectSchema) =>
   await db.query.workloads.findFirst({
     where: { id },
     with: {
-      environments: true,
-      lenses: {
-        with: {
-          lensPillars: {
-            with: {
-              questions: {
-                with: {
-                  choices: true,
-                },
-              },
-            },
-          },
-        },
-      },
-      profiles: true,
-      tags: true,
+      reviews: true,
     },
   })
+export type TWorkloadWithReviewSelectSchema = Pick<TWorkloadSelectSchema, "id">
+export type TWorkloadWithReview = Awaited<ReturnType<typeof getWorkloadWithReview>>
 
 export const getTotalNumberOfWorkloads = async () => {
   try {

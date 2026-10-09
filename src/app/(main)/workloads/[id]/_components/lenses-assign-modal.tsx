@@ -52,7 +52,7 @@ export function LensesAssignModal({ workloadId }: LensesAssignModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button variant="outline">
           Assign
         </Button>
       </DialogTrigger>
