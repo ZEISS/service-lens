@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { getWorkloads } from "@/db/queries/workloads"
+import type { listWorkloadsWithPagination } from "@/db/queries/workloads"
 import { useDataTable } from "@/hooks/use-data-table"
 import type { QueryKeys } from "@/types/data-table"
 
@@ -21,7 +21,7 @@ import { AddWorkloadModal } from "./add-workload-modal"
 import { workloadColumns } from "./columns"
 
 interface WorkloadTableProps {
-  promises: Promise<[Awaited<ReturnType<typeof getWorkloads>>]>
+  promises: Promise<[Awaited<ReturnType<typeof listWorkloadsWithPagination>>]>
   queryKeys?: Partial<QueryKeys>
 }
 
