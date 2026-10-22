@@ -2,8 +2,7 @@ import { notFound } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { getWorkloadById, getWorkloadReviewByLensId } from "@/db/queries/workloads"
+import { getWorkloadWithReviewsForLens } from "@/db/queries/workloads"
 
 import { Breadcrumbs } from "./_components/breadcrumbs"
 import { PillarsDataTable } from "./_components/pillars-data-table"
@@ -11,19 +10,15 @@ import { ReviewCreateCardForm } from "./_components/review-create-card-form"
 import { ReviewUpdateCardForm } from "./_components/review-update-card-form"
 
 export default async function Page({ params }: { params: Promise<{ id: string; lensId: string }> }) {
-  const { id: workloadId, lensId } = await params
+  const { id, lensId } = await params
 
-  if (!workloadId) {
+  if (!id) {
     notFound()
   }
 
-  const workload = await getWorkloadById(workloadId)
-  const lens = workload?.lenses.find((l) => l.id === lensId) ?? null
-  const review = await getWorkloadReviewByLensId({ workloadId, lensId })
-
-  if (!(workload && lens)) {
-    return notFound()
-  }
+  const workload = await getWorkloadWithReviewsForLens({ id, lensId })
+  const lens = workload?.lenses.pop()
+  const review = workload?.reviews.pop()
 
   return (
     <div className="@container/main flex flex-col gap-4 md:gap-6">
@@ -31,7 +26,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
       <Breadcrumbs workload={workload} lens={lens} />
 
       {/* Title */}
-      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{lens.name}</h1>
+      <h1 className="scroll-m-20 text-balance font-extrabold text-4xl tracking-tight">{lens?.name}</h1>
 
       {/* Meta */}
       <Card>
@@ -43,25 +38,25 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
             {/* Version */}
             <div>
               <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Version</label>
-              <p className="mt-1 text-sm">{lens.version}</p>
+              <p className="mt-1 text-sm">{lens?.version}</p>
             </div>
 
             {/* Description */}
             <div>
               <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Description</label>
-              <p className="mt-1 text-sm">{lens.description}</p>
+              <p className="mt-1 text-sm">{lens?.description}</p>
             </div>
 
             {/* Created At */}
             <div>
               <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Created</label>
-              <p className="mt-1 text-sm">{lens.createdAt?.toLocaleString()}</p>
+              <p className="mt-1 text-sm">{lens?.createdAt?.toLocaleString()}</p>
             </div>
 
             {/* Updated At */}
             <div>
               <label className="flex items-center gap-2 font-medium text-muted-foreground text-sm">Last Modified</label>
-              <p className="mt-1 text-sm">{lens.updatedAt?.toLocaleString()}</p>
+              <p className="mt-1 text-sm">{lens?.updatedAt?.toLocaleString()}</p>
             </div>
           </div>
         </CardContent>
@@ -71,7 +66,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
       {review ? (
         <ReviewUpdateCardForm review={review} />
       ) : (
-        <ReviewCreateCardForm workloadId={workloadId} lensId={lensId} />
+        <ReviewCreateCardForm workloadId={id} lensId={lensId} />
       )}
 
       {/* Pillars */}
@@ -86,7 +81,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
           </CardAction>
         </CardHeader>
         <CardContent>
-          <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />
+          {(lens?.lensPillars && workload) && <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />}
         </CardContent>
       </Card>
     </div>

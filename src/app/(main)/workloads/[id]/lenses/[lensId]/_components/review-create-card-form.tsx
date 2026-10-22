@@ -6,9 +6,9 @@ import Form from "next/form"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { insertWorkloadReviewAction } from "@/db/actions"
-import { Input } from "@/components/ui/input"
 
 export interface ReviewCreateCardFormProps {
   workloadId: string

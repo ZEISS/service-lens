@@ -4,10 +4,9 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
-import { getWorkloadById } from "@/db/queries/workloads"
+import { getWorkload } from "@/db/queries/workloads"
 import type { SearchParams } from "@/types"
 
-import { ReviewCard } from "../_components/review-card"
 import { Breadcrumbs } from "./_components/breadcrumbs"
 import { JumpTo } from "./_components/jump-to"
 import { QuestionForm } from "./_components/questions-form"
@@ -25,7 +24,7 @@ export default async function Page({ params, searchParams }: ReviewPageProps) {
     notFound()
   }
 
-  const workload = await getWorkloadById(id)
+  const workload = await getWorkload({ id })
   const lens = workload?.lenses.find((l) => l.id === lensId) ?? null
 
   if (!(workload && lens)) {
@@ -55,9 +54,6 @@ export default async function Page({ params, searchParams }: ReviewPageProps) {
           <JumpTo pillars={lens.lensPillars} />
         </ButtonGroup>
       </ButtonGroup>
-
-      {/* Review Card */}
-      <ReviewCard workloadId={id} lensId={lensId} />
 
       {/* Question Form */}
       <QuestionForm question={question} />

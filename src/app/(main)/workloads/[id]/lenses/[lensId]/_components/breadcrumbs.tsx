@@ -11,8 +11,8 @@ import {
 import type { TLens, TWorkload } from "@/db/schema"
 
 export interface BreadcrumbsProps {
-  workload: TWorkload
-  lens: TLens
+  workload?: TWorkload
+  lens?: TLens
 }
 
 export function Breadcrumbs({ workload, lens }: BreadcrumbsProps) {
@@ -33,12 +33,12 @@ export function Breadcrumbs({ workload, lens }: BreadcrumbsProps) {
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link href={`/workloads/${workload.id}`}>{workload.name}</Link>
+            <Link href={`/workloads/${workload?.id}`}>{workload?.name}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>{lens.name}</BreadcrumbPage>
+          <BreadcrumbPage>{lens?.name}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
