@@ -7,6 +7,10 @@ import { pgTable } from "@/db/utils"
 import { insertLensPillarSchema } from "./lens-pillar"
 import { insertLensPillarQuestionSchema } from "./lens-pillar-question"
 
+// Lens table schema
+//
+// The lens table contains the lenses that can be associated with
+// a workload.
 export const lenses = pgTable("lens", {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 255 }).notNull(),
@@ -14,9 +18,7 @@ export const lenses = pgTable("lens", {
   description: varchar({ length: 1024 }),
   raw: json("raw").notNull().$type<Record<string, any>>(),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date()),
+  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
   deletedAt: timestamp("deleted_at"),
 })
 
@@ -30,6 +32,7 @@ export const lensInsertSchema = createInsertSchema(lenses, {
 }).pick({
   name: true,
   version: true,
+  description: true,
   raw: true,
 })
 
@@ -42,9 +45,7 @@ export const insertLensWithPillarsAndQuestionsSchema = insertLensWithPillarsSche
 })
 
 export const lensSelectSchema = createSelectSchema(lenses)
-export const lensDeleteSchema = createSelectSchema(lenses).pick({
-  id: true,
-})
+export const lensDeleteSchema = createSelectSchema(lenses).pick({ id: true })
 
 export type TLensInsertSchema = ReturnType<typeof lensInsertSchema.parse>
 export type TLensSelectSchema = ReturnType<typeof lensSelectSchema.parse>
