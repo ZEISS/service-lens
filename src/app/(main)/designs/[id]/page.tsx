@@ -1,12 +1,15 @@
+import Link from "next/link"
+import { notFound } from "next/navigation"
+
+import { CalendarIcon, ClockIcon, EditIcon, TrashIcon, UserIcon } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getDesignById } from "@/db/queries/designs"
-import { CalendarIcon, ClockIcon, EditIcon, TrashIcon, UserIcon } from "lucide-react"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import ReactMarkdown from "react-markdown"
+
 import { Breadcrumbs } from "../_components/breadcrumbs"
 import { DeleteButton } from "./delete-button"
 

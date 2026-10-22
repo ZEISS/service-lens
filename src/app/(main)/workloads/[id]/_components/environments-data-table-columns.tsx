@@ -3,9 +3,10 @@ import Link from "next/link"
 import type { ColumnDef } from "@tanstack/react-table"
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import { EnvironmentsTableRowActions } from "./environments-data-table-actions"
 import { Button } from "@/components/ui/button"
 import type { TEnvironment } from "@/db/schema"
+
+import { EnvironmentsTableRowActions } from "./environments-data-table-actions"
 
 export const environmentColumns: ColumnDef<TEnvironment>[] = [
   {

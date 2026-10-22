@@ -18,7 +18,9 @@ export const lenses = pgTable("lens", {
   description: varchar({ length: 1024 }),
   raw: json("raw").notNull().$type<Record<string, any>>(),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date()),
   deletedAt: timestamp("deleted_at"),
 })
 

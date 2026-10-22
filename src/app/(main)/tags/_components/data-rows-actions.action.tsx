@@ -1,12 +1,16 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { deleteEnvironment } from "@/db/queries/environments"
 import { tagDeleteSchema } from "@/db/schema"
-import { revalidatePath } from "next/cache"
 import "server-only"
+
 import { z } from "zod"
-import type { DeleteTagSchema } from "./data-rows-actions.schema"
+
 import { deleteTag } from "@/db/queries/tags"
+
+import type { DeleteTagSchema } from "./data-rows-actions.schema"
 
 export async function deleteTagAction(_: DeleteTagSchema, data: FormData) {
   const values = {

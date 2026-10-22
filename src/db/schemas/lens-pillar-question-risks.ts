@@ -1,7 +1,8 @@
-import { pgTable } from "@/db/utils"
-import { timestamp, uuid, varchar, pgEnum } from "drizzle-orm/pg-core"
+import { pgEnum, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
 import { z } from "zod"
+
+import { pgTable } from "@/db/utils"
 
 export const riskEnum = pgEnum("risk", ["NO_RISK", "LOW_RISK", "MEDIUM_RISK", "HIGH_RISK"])
 

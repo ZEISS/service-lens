@@ -15,10 +15,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { APP_CONFIG } from "@/config/app-config"
+import { useSession } from "@/lib/auth-client"
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items"
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider"
 
-import { useSession } from "@/lib/auth-client"
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 

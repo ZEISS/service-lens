@@ -1,10 +1,12 @@
 "use server"
 
-import { insertTag } from "@/db/queries/tags"
-import { tagInsertSchema, type TTag } from "@/db/schema"
 import { redirect } from "next/navigation"
+
+import { insertTag } from "@/db/queries/tags"
+import { type TTag, tagInsertSchema } from "@/db/schema"
 import "server-only"
 import { z } from "zod"
+
 import type { AddTagModalFormState } from "./add-tag-modal.schema"
 
 export async function createTagAction(_: AddTagModalFormState, data: FormData) {

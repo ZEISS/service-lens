@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+
 import {
   ArchiveIcon,
   CalendarPlusIcon,
@@ -26,7 +28,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState } from "react"
 
 export function ActionGroup() {
   const [label, setLabel] = useState("personal")

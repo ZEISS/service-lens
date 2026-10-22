@@ -47,8 +47,6 @@ export function ProfileForm() {
     })
   }, [session, form])
 
-
-
   const onSubmit = form.handleSubmit(async (data) => {
     try {
       await client.updateUser(data)

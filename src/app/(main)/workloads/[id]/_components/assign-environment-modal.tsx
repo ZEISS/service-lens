@@ -52,9 +52,7 @@ export function AssignEnvironmentModal({ workloadId }: AddEnvironmentModalProps)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          Assign
-        </Button>
+        <Button variant="outline">Assign</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>

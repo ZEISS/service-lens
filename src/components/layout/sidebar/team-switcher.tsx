@@ -1,8 +1,10 @@
 "use client"
 
-import { signOut } from "@/lib/auth-client"
-import { UserCog, Wrench, EllipsisVertical, LogOut } from "lucide-react"
+import Link from "next/link"
 import { redirect } from "next/navigation"
+
+import type { User } from "better-auth"
+import { EllipsisVertical, LogOut, UserCog, Wrench } from "lucide-react"
 import { toast } from "sonner"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -14,9 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { signOut } from "@/lib/auth-client"
 import { getInitials } from "@/lib/utils"
-import type { User } from "better-auth"
-import Link from "next/link"
 
 const TeamSwitcherItems = [
   {

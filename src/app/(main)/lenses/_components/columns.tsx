@@ -1,9 +1,12 @@
+import Link from "next/link"
+
+import type { ColumnDef } from "@tanstack/react-table"
+
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { TLens } from "@/db/schema"
-import type { ColumnDef } from "@tanstack/react-table"
-import Link from "next/link"
+
 import { DataTableRowActions } from "./data-rows-actions"
 
 export const lensColumns: ColumnDef<TLens>[] = [

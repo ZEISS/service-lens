@@ -1,11 +1,12 @@
 "use client"
 
-import { signOut } from "@/lib/auth-client"
-import { LogOut } from "lucide-react"
-import { redirect } from "next/navigation"
 import { useState } from "react"
-import { toast } from "sonner"
+
 import Link from "next/link"
+import { redirect } from "next/navigation"
+
+import { LogOut, UserCog, Wrench } from "lucide-react"
+import { toast } from "sonner"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -16,8 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { signOut } from "@/lib/auth-client"
 import { cn, getInitials } from "@/lib/utils"
-import { UserCog, Wrench } from "lucide-react"
 
 const accountSwitcherItems = [
   {

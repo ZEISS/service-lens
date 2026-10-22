@@ -11,7 +11,7 @@ import { insertWorkloadReview } from "../queries/workloads"
 import { workloadReviewInsertSchema } from "../schema"
 import type { UpsertWorkloadReviewFormState } from "./workload.schema"
 
-export async function insertWorkloadReviewAction(_: UpsertWorkloadReviewFormState,data: FormData) {
+export async function insertWorkloadReviewAction(_: UpsertWorkloadReviewFormState, data: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })

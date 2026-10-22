@@ -1,10 +1,12 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { deleteWorkload } from "@/db/queries/workloads"
 import { workloadDeleteSchema } from "@/db/schema"
-import { revalidatePath } from "next/cache"
 import "server-only"
 import { z } from "zod"
+
 import type { DeleteWorkloadSchema } from "./data-rows-actions.schema"
 
 export async function deleteWorkloadAction(_: DeleteWorkloadSchema, data: FormData) {

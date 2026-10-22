@@ -1,6 +1,11 @@
 "use client"
 
-import { UserCog, Wrench, EllipsisVertical, LogOut } from "lucide-react"
+import Link from "next/link"
+import { redirect } from "next/navigation"
+
+import type { User } from "better-auth"
+import { EllipsisVertical, LogOut, UserCog, Wrench } from "lucide-react"
+import { toast } from "sonner"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -14,10 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { signOut } from "@/lib/auth-client"
-import type { User } from "better-auth"
-import { redirect } from "next/navigation"
-import { toast } from "sonner"
-import Link from "next/link"
 
 const navUserItems = [
   {

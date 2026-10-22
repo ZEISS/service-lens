@@ -1,7 +1,9 @@
+import { notFound } from "next/navigation"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { getProfileById } from "@/db/queries/profiles"
-import { notFound } from "next/navigation"
+
 import { Breadcrumbs } from "../_components/breadcrumbs"
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

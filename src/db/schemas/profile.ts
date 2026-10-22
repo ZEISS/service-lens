@@ -1,6 +1,8 @@
-import { pgTable } from "@/db/utils"
-import { bigint, timestamp, uuid, varchar, primaryKey } from "drizzle-orm/pg-core"
+import { bigint, primaryKey, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 import { createInsertSchema, createSelectSchema } from "drizzle-zod"
+
+import { pgTable } from "@/db/utils"
+
 import { lenses } from "./lens"
 
 export const profiles = pgTable("profile", {

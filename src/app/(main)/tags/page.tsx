@@ -1,6 +1,7 @@
 import { paginationParams } from "@/db/queries/pagination"
 import { getTags } from "@/db/queries/tags"
 import type { SearchParams } from "@/types"
+
 import { TagsDataTable } from "./_components/data-table"
 
 interface IndexPageProps {

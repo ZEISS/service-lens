@@ -1,5 +1,12 @@
 "use client"
 
+import { useActionState } from "react"
+
+import Form from "next/form"
+
+import type { Row } from "@tanstack/react-table"
+import { EllipsisVertical, Trash2Icon } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -9,10 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import type { Row } from "@tanstack/react-table"
-import { EllipsisVertical, Trash2Icon } from "lucide-react"
-import Form from "next/form"
-import { useActionState } from "react"
+
 import { deleteTagAction } from "./data-rows-actions.action"
 
 interface DataTableRowActionsProps<TData> {

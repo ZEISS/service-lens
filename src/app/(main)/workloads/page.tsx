@@ -16,7 +16,7 @@ export default async function Page({ searchParams }: IndexPageProps) {
 
   return (
     <div className="@container/main flex flex-col gap-4 md:gap-6">
-      <WorkloadDataTable promises={Promise.all([listWorkloadsWithPagination({...parsedParams})])} />
+      <WorkloadDataTable promises={Promise.all([listWorkloadsWithPagination({ ...parsedParams })])} />
     </div>
   )
 }

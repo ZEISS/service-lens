@@ -1,10 +1,12 @@
 "use client"
 
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { useState } from "react"
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type { ThemeProviderProps } from "next-themes"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
-import { useState } from "react"
+
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 export function QueryProvider({ children, ...props }: ThemeProviderProps) {
   const [queryClient] = useState(

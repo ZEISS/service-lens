@@ -1,8 +1,10 @@
 // Proxy disabled.
 // Rename this file to `proxy.ts` to enable it.
-import { auth } from "@/lib/auth"
+
 import { headers } from "next/headers"
 import { type NextRequest, NextResponse } from "next/server"
+
+import { auth } from "@/lib/auth"
 
 /**
  * Runs before requests complete.

@@ -1,6 +1,7 @@
 import { paginationParams } from "@/db/queries/pagination"
 import { getProfiles } from "@/db/queries/profiles"
 import type { SearchParams } from "@/types"
+
 import { ProfileDataTable } from "./_components/data-table"
 
 interface IndexPageProps {

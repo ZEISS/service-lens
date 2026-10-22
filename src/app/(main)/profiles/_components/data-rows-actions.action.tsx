@@ -1,10 +1,12 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { deleteProfile } from "@/db/queries/profiles"
 import { profileDeleteSchema } from "@/db/schema"
-import { revalidatePath } from "next/cache"
 import "server-only"
 import { z } from "zod"
+
 import type { DeleteProfileSchema } from "./data-rows-actions.schema"
 
 export async function deleteProfileAction(_: DeleteProfileSchema, data: FormData) {

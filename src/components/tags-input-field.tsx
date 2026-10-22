@@ -1,13 +1,15 @@
 "use client"
 
+import { type KeyboardEvent, memo, type ReactNode, useEffect, useRef, useState } from "react"
+
+import { AnimatePresence, motion } from "framer-motion"
+import { Plus, Tag, X } from "lucide-react"
+import { type FieldValues, type Path, useFormContext } from "react-hook-form"
+
 import { Badge } from "@/components/ui/badge"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { AnimatePresence, motion } from "framer-motion"
-import { Plus, Tag, X } from "lucide-react"
-import { type KeyboardEvent, memo, type ReactNode, useEffect, useRef, useState } from "react"
-import { type FieldValues, type Path, useFormContext } from "react-hook-form"
 
 interface TagsInputFieldProps<TFieldValues extends FieldValues> {
   name: Path<TFieldValues>

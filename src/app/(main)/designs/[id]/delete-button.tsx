@@ -1,6 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
+
+import { useRouter } from "next/navigation"
+
+import { TrashIcon } from "lucide-react"
+import { toast } from "sonner"
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,11 +18,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import type { TDesign } from "@/db/schemas/design"
-import { TrashIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { toast } from "sonner"
+
 import { deleteDesignAction } from "../_components/data-rows-actions.action"
 
 interface DeleteButtonProps {

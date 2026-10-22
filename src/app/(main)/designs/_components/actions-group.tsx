@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+
 import {
   ArchiveIcon,
   CalendarPlusIcon,
@@ -10,7 +12,6 @@ import {
   TagIcon,
   Trash2Icon,
 } from "lucide-react"
-import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"

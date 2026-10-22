@@ -63,11 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
       </Card>
 
       {/* Review */}
-      {review ? (
-        <ReviewUpdateCardForm review={review} />
-      ) : (
-        <ReviewCreateCardForm workloadId={id} lensId={lensId} />
-      )}
+      {review ? <ReviewUpdateCardForm review={review} /> : <ReviewCreateCardForm workloadId={id} lensId={lensId} />}
 
       {/* Pillars */}
       <Card>
@@ -81,7 +77,9 @@ export default async function Page({ params }: { params: Promise<{ id: string; l
           </CardAction>
         </CardHeader>
         <CardContent>
-          {(lens?.lensPillars && workload) && <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />}
+          {lens?.lensPillars && workload && (
+            <PillarsDataTable data={lens.lensPillars} lensId={lens.id} workloadId={workload.id} />
+          )}
         </CardContent>
       </Card>
     </div>

@@ -1,15 +1,15 @@
 "use client"
 
 import * as React from "react"
+
+import type { ALIGN_OPTIONS } from "@radix-ui/react-popper"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useDebouncedCallback } from "use-debounce"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-
-import { ALIGN_OPTIONS } from "@radix-ui/react-popper"
+import { cn } from "@/lib/utils"
 
 export type ComboBoxItem = {
   value: string

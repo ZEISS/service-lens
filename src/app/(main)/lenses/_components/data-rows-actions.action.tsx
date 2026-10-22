@@ -1,10 +1,12 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
+
 import { deleteLens } from "@/db/queries/lenses"
 import { lensDeleteSchema } from "@/db/schema"
-import { revalidatePath } from "next/cache"
 import "server-only"
 import { z } from "zod"
+
 import type { DeleteLensSchema } from "./data-rows-actions.schema"
 
 export async function deleteLensAction(_: DeleteLensSchema, data: FormData) {

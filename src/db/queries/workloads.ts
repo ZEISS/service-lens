@@ -104,22 +104,23 @@ export const getWorkload = async ({ id }: TWorkloadSelectByIDSchema) =>
 export type TWorkloadSelectByIDSchema = Pick<TWorkloadSelectSchema, "id">
 
 // Get workload with the reviews for the lens.
-export const getWorkloadWithReviewsForLens = async ({ id, lensId }: TWorkloadSelectWithReviewsAndLensSchema) => await db.query.workloads.findFirst({
-  where: { id },
-  with: {
-    lenses: {
-      where: {
-        id: lensId
+export const getWorkloadWithReviewsForLens = async ({ id, lensId }: TWorkloadSelectWithReviewsAndLensSchema) =>
+  await db.query.workloads.findFirst({
+    where: { id },
+    with: {
+      lenses: {
+        where: {
+          id: lensId,
+        },
+        with: {
+          lensPillars: true,
+        },
       },
-      with: {
-        lensPillars: true
+      reviews: {
+        where: { lensId },
       },
     },
-    reviews: {
-      where: { lensId },
-    },
-  },
-})
+  })
 
 export type TWorkloadSelectWithReviewsAndLensSchema = Pick<TWorkloadSelectSchema, "id"> & { lensId: string }
 
@@ -158,9 +159,12 @@ export const removeProfile = async (input: TWorkloadRemoveProfileSchema) => {
 
 export const removeLens = async (input: TWorkloadRemoveLensSchema) => {
   const parsed = await removeLensSchema.parseAsync(input)
-  const result = await db.transaction((tx) => tx.delete(workloadLens)
-    .where(and(eq(workloadLens.workloadId, parsed.workloadId), eq(workloadLens.lensId, parsed.lensId)))
-    .returning())
+  const result = await db.transaction((tx) =>
+    tx
+      .delete(workloadLens)
+      .where(and(eq(workloadLens.workloadId, parsed.workloadId), eq(workloadLens.lensId, parsed.lensId)))
+      .returning(),
+  )
   return takeFirstOrNull(result)
 }
 
@@ -232,7 +236,12 @@ export const insertWorkloadReview = async (input: TWorkloadReviewInsertSchema) =
   return takeFirstOrNull(result)
 }
 
-export const updateWorkloadReview = async (input: TWorkloadReviewUpdateSchema) => await db.transaction(async (tx) => {
-  const parsed = await workloadReviewUpdateSchema.parseAsync(input)
-  return await tx.update(workloadReview).set(parsed).where(eq(workloadReview.id, parsed.id)).returning({id: workloadReview.id, notes: workloadReview.notes})
-})
+export const updateWorkloadReview = async (input: TWorkloadReviewUpdateSchema) =>
+  await db.transaction(async (tx) => {
+    const parsed = await workloadReviewUpdateSchema.parseAsync(input)
+    return await tx
+      .update(workloadReview)
+      .set(parsed)
+      .where(eq(workloadReview.id, parsed.id))
+      .returning({ id: workloadReview.id, notes: workloadReview.notes })
+  })

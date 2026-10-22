@@ -1,10 +1,12 @@
 "use server"
 
+import { redirect } from "next/navigation"
+
 import { insertProfile } from "@/db/queries/profiles"
 import { environmentInsertSchema, profileInsertSchema, type TProfile } from "@/db/schema"
-import { redirect } from "next/navigation"
 import "server-only"
 import { z } from "zod"
+
 import type { AddProfileModalFormState } from "./add-profile-modal.schema"
 
 export async function createProfileAction(_: AddProfileModalFormState, data: FormData) {

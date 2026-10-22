@@ -1,6 +1,8 @@
+import { Bell, Monitor, Palette, UserCog, Wrench } from "lucide-react"
+
 import { RootLayout } from "@/components/layout/root"
 import { Separator } from "@/components/ui/separator"
-import { Bell, Monitor, Palette, UserCog, Wrench } from "lucide-react"
+
 import { SidebarNav } from "./_components/sidebar-nav"
 
 const sidebarNavItems = [

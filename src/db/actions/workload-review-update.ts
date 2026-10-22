@@ -11,7 +11,7 @@ import { updateWorkloadReview } from "../queries/workloads"
 import { workloadReviewUpdateSchema } from "../schema"
 import type { UpdateWorkloadReviewFormState } from "./workload.schema"
 
-export async function updateWorkloadReviewAction(_: UpdateWorkloadReviewFormState,data: FormData) {
+export async function updateWorkloadReviewAction(_: UpdateWorkloadReviewFormState, data: FormData) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -37,7 +37,7 @@ export async function updateWorkloadReviewAction(_: UpdateWorkloadReviewFormStat
 
   try {
     await updateWorkloadReview(result.data)
-  } catch  {
+  } catch {
     return {
       success: false,
     }

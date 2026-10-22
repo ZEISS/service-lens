@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+
 import {
   type ColumnFiltersState,
   getCoreRowModel,
@@ -23,11 +25,10 @@ import {
   parseAsInteger,
   parseAsString,
   type SingleParser,
-  useQueryState,
   type UseQueryStateOptions,
+  useQueryState,
   useQueryStates,
 } from "nuqs"
-import * as React from "react"
 
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback"
 import { getSortingStateParser } from "@/lib/parsers"

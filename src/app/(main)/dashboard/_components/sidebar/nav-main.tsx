@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
+import { ChevronRight } from "lucide-react"
+
 import { QuickCreateDialog } from "@/components/quick-create-dialog"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -19,7 +21,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import type { NavGroup, NavMainItem } from "@/navigation/sidebar/sidebar-items"
-import { ChevronRight } from "lucide-react"
 
 interface NavMainProps {
   readonly items: readonly NavGroup[]

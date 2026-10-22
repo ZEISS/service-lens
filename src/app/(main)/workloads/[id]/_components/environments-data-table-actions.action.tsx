@@ -1,11 +1,15 @@
 "use server"
 
-import { removeEnvironmentSchema } from "@/db/schema"
 import { revalidatePath } from "next/cache"
+
+import { removeEnvironmentSchema } from "@/db/schema"
 import "server-only"
+
 import { z } from "zod"
-import type { RemoveEnvironmentSchema } from "./environments-data-table-actions.schema"
+
 import { removeEnvironment } from "@/db/queries/workloads"
+
+import type { RemoveEnvironmentSchema } from "./environments-data-table-actions.schema"
 
 export async function removeEnvironmentAction(_: RemoveEnvironmentSchema, data: FormData) {
   const values = {

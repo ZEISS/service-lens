@@ -1,6 +1,7 @@
 import { getLenses } from "@/db/queries/lenses"
 import { paginationParams } from "@/db/queries/pagination"
 import type { SearchParams } from "@/types"
+
 import { LensDataTable } from "./_components/data-table"
 
 interface IndexPageProps {

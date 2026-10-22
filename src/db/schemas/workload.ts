@@ -76,18 +76,20 @@ export const workloadTag = pgTable(
 )
 
 // Review answers for a workload review.
-export const workloadReview = pgTable("workload_reviews", {
-  id: uuid().primaryKey().defaultRandom(),
-  workloadId: uuid().notNull(),
-  lensId: uuid().notNull(),
-  notes: varchar({ length: 1024 }),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-  deletedAt: timestamp("deleted_at"),
-},
-  (table) => [uniqueIndex("uniqueWorkloadReview").on(table.workloadId, table.lensId)]
+export const workloadReview = pgTable(
+  "workload_reviews",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    workloadId: uuid().notNull(),
+    lensId: uuid().notNull(),
+    notes: varchar({ length: 1024 }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    deletedAt: timestamp("deleted_at"),
+  },
+  (table) => [uniqueIndex("uniqueWorkloadReview").on(table.workloadId, table.lensId)],
 )
 
 export type TWorkloadReview = typeof workloadReview.$inferSelect

@@ -1,4 +1,3 @@
-import type { QueryKeys } from "@/types/data-table"
 import * as React from "react"
 
 import {
@@ -14,6 +13,8 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table"
+
+import type { QueryKeys } from "@/types/data-table"
 
 type UseDataTableInstanceProps<TData, TValue> = {
   data: TData[]

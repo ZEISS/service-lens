@@ -1,8 +1,8 @@
 "use client"
 
-import { signIn } from "@/lib/auth-client"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { redirect } from "next/navigation"
+
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { signIn } from "@/lib/auth-client"
 
 const FormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
