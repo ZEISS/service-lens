@@ -44,7 +44,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^6.0.0",
     "@next/env": "^16.4.2",
-    "@orpc/client": "^1.16.0",
+    "@orpc/client": "^1.16.1",
     "@orpc/openapi": "^1.16.1",
     "@orpc/server": "^1.16.1",
     "@radix-ui/react-direction": "^1.2.0",

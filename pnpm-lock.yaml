@@ -36,8 +36,8 @@ importers:
         specifier: ^16.4.2
         version: 16.4.2
       '@orpc/client':
-        specifier: ^1.16.0
-        version: 1.16.0
+        specifier: ^1.16.1
+        version: 1.16.1
       '@orpc/openapi':
         specifier: ^1.16.1
         version: 1.16.1(ws@8.22.0)
