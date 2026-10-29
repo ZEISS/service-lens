@@ -45,7 +45,7 @@
     "@hookform/resolvers": "^6.0.0",
     "@next/env": "^16.4.2",
     "@orpc/client": "^1.16.0",
-    "@orpc/openapi": "^1.16.0",
+    "@orpc/openapi": "^1.16.1",
     "@orpc/server": "^1.16.0",
     "@radix-ui/react-direction": "^1.2.0",
     "@radix-ui/react-label": "^2.1.17",
