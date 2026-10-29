@@ -46,7 +46,7 @@
     "@next/env": "^16.4.2",
     "@orpc/client": "^1.16.0",
     "@orpc/openapi": "^1.16.1",
-    "@orpc/server": "^1.16.0",
+    "@orpc/server": "^1.16.1",
     "@radix-ui/react-direction": "^1.2.0",
     "@radix-ui/react-label": "^2.1.17",
     "@radix-ui/react-popper": "^1.4.0",
