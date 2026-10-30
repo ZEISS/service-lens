@@ -12,8 +12,8 @@ importers:
         specifier: ^1.11.3
         version: 1.11.3(pg@8.23.1)
       '@better-fetch/fetch':
-        specifier: ^1.3.2
-        version: 1.3.2
+        specifier: ^1.3.3
+        version: 1.3.3
       '@daypicker/react':
         specifier: ^10.0.2
         version: 10.0.2(@types/react@19.3.0)(react@19.3.1)
@@ -381,6 +381,9 @@ packages:
 
   '@better-fetch/fetch@1.3.2':
     resolution: {integrity: sha512-Gs7n99b5tqUC6cQAPbV0uED3IraHB6xQbHLQ/C3l7ZFafHScOx9pQ+DYmP5blbLFShVWLqxNUlI9wi4xU/X+ow==}
+
+  '@better-fetch/fetch@1.3.3':
+    resolution: {integrity: sha512-U6SlDt/GUWtK2JAxS/NhdoYTEim+EL1G5byz2TUj83KjLZBUpYzb5SmX0aXaCnbGkAjFKnV/o/0+cyXMbEcqqg==}
 
   '@biomejs/biome@2.5.15':
     resolution: {integrity: sha512-WZTW4slm/pdkh92K6t/3aEN++44JD1PQ7squ7RCMLI1flHGl43DVOIGXvCjHiZgBMO1V4uYxoFNtqrIA4qGuIQ==}
@@ -1210,9 +1213,6 @@ packages:
     resolution: {integrity: sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==}
     engines: {node: '>= 20.19.0'}
 
-  '@orpc/client@1.16.0':
-    resolution: {integrity: sha512-Klzm2Haz6X1rpyti68V0mud/vRClSZae80XimWfbwKsiDTlgxWXL5krDdjS5k8ox1/sBb/qi9uJPQq09kZS1vw==}
-
   '@orpc/client@1.16.1':
     resolution: {integrity: sha512-y2aEfZqD6QKAmTObFbzG0yCiMC1iP3PmCy8t+8y/u3P9iaIcB8Ur09OZdVSg+sbTWiqXfbm5smCukDaN/nmwBw==}
 
@@ -1239,14 +1239,6 @@ packages:
       ws:
         optional: true
 
-  '@orpc/shared@1.16.0':
-    resolution: {integrity: sha512-s7QGO1Qt7V6aLepx4D/63563YK0znxUSsV3w892S3SblSF8eATz+UhTaQtoWPoBKyzSPEoRLJYbBjy8DVQkKvA==}
-    peerDependencies:
-      '@opentelemetry/api': '>=1.9.0'
-    peerDependenciesMeta:
-      '@opentelemetry/api':
-        optional: true
-
   '@orpc/shared@1.16.1':
     resolution: {integrity: sha512-O8WIhgMXuQXMLVbPEmfeyJgXfNGPGLFRp/2vHFmoYgXlxgTZtMmybi8OWn17tt2uT7xQt4z/vWHpn1yD7EQ65g==}
     peerDependencies:
@@ -1266,23 +1258,14 @@ packages:
       fastify:
         optional: true
 
-  '@orpc/standard-server-fetch@1.16.0':
-    resolution: {integrity: sha512-/ETA9l1bClYvlXDuPqC4uOvgtS50bat6XnEbbEyQbRrxqvJDWRz+VCRLPdj861FOR8jOOINAiPMUntn6JPDgYw==}
-
   '@orpc/standard-server-fetch@1.16.1':
     resolution: {integrity: sha512-UoIVjrCbQ3R8+W6fArVpX18A66wTdty6W2L/aFegCsGDd3vq7rlCeVIo3R3hRDY0lV9iY392kAHe/9ul/ProOg==}
 
   '@orpc/standard-server-node@1.16.1':
     resolution: {integrity: sha512-0HnD8E4s6YBT5nAauevmntj5E3yrcW/LbloVLD3lWRY/6dWNiVGKJGtsBLDlR416/eOLjljW8CvAnCOaP6Llug==}
 
-  '@orpc/standard-server-peer@1.16.0':
-    resolution: {integrity: sha512-/v4oZKKD4G9TeEEItcJD63RA02mWW+QAxr5+YTAmeEluRPUDQ8Y1uwTMsChfTgX0sSzMEomQj5B19A5sdOshZg==}
-
   '@orpc/standard-server-peer@1.16.1':
     resolution: {integrity: sha512-AL9g2RxdM17APwkHbgqmqYv/9IIkuanpNSVuXw4+R27zQWx+4O2aq7ovfpmgGy3TJnoU5ZpZYh8ZBKt2fJPnUg==}
-
-  '@orpc/standard-server@1.16.0':
-    resolution: {integrity: sha512-WEcaLZoiK7PG5Lf5tDFjws8MO3bKUBB2fDTr1QTjGfAKIrRiZsCcdQS314nRH/hEylI5d2YKaRbvRvq/0xJG5w==}
 
   '@orpc/standard-server@1.16.1':
     resolution: {integrity: sha512-f8Ejzey83F/EXA1kugCyuPcE0TFJyUtxopEZ3vr/aqAOFdr45tIFlQl/v1VkpZAKmt3RP9KiAZGyesv5rhJltA==}
@@ -4293,6 +4276,8 @@ snapshots:
 
   '@better-fetch/fetch@1.3.2': {}
 
+  '@better-fetch/fetch@1.3.3': {}
+
   '@biomejs/biome@2.5.15':
     optionalDependencies:
       '@biomejs/cli-darwin-arm64': 2.5.15
@@ -4791,15 +4776,6 @@ snapshots:
 
   '@noble/hashes@2.4.0': {}
 
-  '@orpc/client@1.16.0':
-    dependencies:
-      '@orpc/shared': 1.16.0
-      '@orpc/standard-server': 1.16.0
-      '@orpc/standard-server-fetch': 1.16.0
-      '@orpc/standard-server-peer': 1.16.0
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-
   '@orpc/client@1.16.1':
     dependencies:
       '@orpc/shared': 1.16.1
@@ -4865,11 +4841,6 @@ snapshots:
       - '@opentelemetry/api'
       - fastify
 
-  '@orpc/shared@1.16.0':
-    dependencies:
-      radash: 12.1.1
-      type-fest: 5.10.0
-
   '@orpc/shared@1.16.1':
     dependencies:
       radash: 12.1.1
@@ -4892,13 +4863,6 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
-  '@orpc/standard-server-fetch@1.16.0':
-    dependencies:
-      '@orpc/shared': 1.16.0
-      '@orpc/standard-server': 1.16.0
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-
   '@orpc/standard-server-fetch@1.16.1':
     dependencies:
       '@orpc/shared': 1.16.1
@@ -4914,23 +4878,10 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
-  '@orpc/standard-server-peer@1.16.0':
-    dependencies:
-      '@orpc/shared': 1.16.0
-      '@orpc/standard-server': 1.16.0
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-
   '@orpc/standard-server-peer@1.16.1':
     dependencies:
       '@orpc/shared': 1.16.1
       '@orpc/standard-server': 1.16.1
-    transitivePeerDependencies:
-      - '@opentelemetry/api'
-
-  '@orpc/standard-server@1.16.0':
-    dependencies:
-      '@orpc/shared': 1.16.0
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
@@ -6087,7 +6038,7 @@ snapshots:
   better-call@1.4.4(zod@4.6.7):
     dependencies:
       '@better-auth/utils': 0.5.0
-      '@better-fetch/fetch': 1.3.2
+      '@better-fetch/fetch': 1.3.3
       rou3: 0.9.2
       set-cookie-parser: 3.1.4
     optionalDependencies:
