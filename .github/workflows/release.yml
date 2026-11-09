@@ -62,7 +62,7 @@ jobs:
           push-to-registry: true
       - uses: azure/setup-helm@v5
       - run: pnpm run build:helm
-      - uses: helm/chart-releaser-action@v1.7.0
+      - uses: helm/chart-releaser-action@v1.9.0
         with:
           charts_dir: helm/charts
           config: helm/cr.yaml
