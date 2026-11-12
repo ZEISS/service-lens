@@ -52,7 +52,7 @@
     "@radix-ui/react-popper": "^1.4.0",
     "@radix-ui/react-separator": "^1.2.0",
     "@radix-ui/react-slot": "^1.5.0",
-    "@tanstack/react-query": "^5.104.5",
+    "@tanstack/react-query": "^5.107.1",
     "@tanstack/react-table": "^8.21.3",
     "@uiw/react-md-editor": "^4.1.6",
     "axios": "^1.20.0",
