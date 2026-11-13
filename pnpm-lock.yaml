@@ -235,8 +235,8 @@ importers:
         specifier: ^16.14.2
         version: 16.14.2
       graphql-yoga:
-        specifier: ^6.0.0
-        version: 6.0.0(graphql@16.14.2)
+        specifier: ^6.0.1
+        version: 6.0.1(graphql@16.14.2)
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -3018,8 +3018,8 @@ packages:
       ws:
         optional: true
 
-  graphql-yoga@6.0.0:
-    resolution: {integrity: sha512-XOXLeDpB4zCOPDz3c3ai8Hqo2aoJKS1bqaBlKNW00z16PlgsmXiBvTUKAzA+b7/AUHo8Rc+oCyHfLCDMS1b3RQ==}
+  graphql-yoga@6.0.1:
+    resolution: {integrity: sha512-uGfyZNivj4HaNvFi25ce9YLoywWLwxzlt9lM9dYETep00qsPOyGr5jR2Jeg/KxTCqOKMiyqS3oWuM0uhL8QgaQ==}
     engines: {node: '>=22.15.0'}
     peerDependencies:
       graphql: ^16.0.0 || ^17.0.0
@@ -6447,7 +6447,7 @@ snapshots:
     optionalDependencies:
       ws: 8.22.0
 
-  graphql-yoga@6.0.0(graphql@16.14.2):
+  graphql-yoga@6.0.1(graphql@16.14.2):
     dependencies:
       '@envelop/core': 6.0.0
       '@envelop/instrumentation': 2.0.0
