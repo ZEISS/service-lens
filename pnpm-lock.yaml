@@ -66,8 +66,8 @@ importers:
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@uiw/react-md-editor':
-        specifier: ^4.1.6
-        version: 4.1.6(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@5.5.0)
+        specifier: ^4.2.3
+        version: 4.2.3(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@5.5.0)
       axios:
         specifier: ^1.21.0
         version: 1.21.0(debug@4.4.3(supports-color@5.5.0))(supports-color@5.5.0)
@@ -2355,8 +2355,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@uiw/react-md-editor@4.1.6':
-    resolution: {integrity: sha512-KW8TYs6BTh1o8STzUPqQd2TOdraEx9ynGSyLNT58yV28+Nn8I/Bi2rxiHZz2RoJugSe1vdKbNlhnaov+uAEkKQ==}
+  '@uiw/react-md-editor@4.2.3':
+    resolution: {integrity: sha512-m9yDudonDFbhLgDx1OJq1XBM3XBzRkQ99GABV0tB5I6hLjClPEy2nnxYB1qtFnSPqVEf+N2yOieC2DTWUJa6eA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -6050,7 +6050,7 @@ snapshots:
       - '@types/react'
       - supports-color
 
-  '@uiw/react-md-editor@4.1.6(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@5.5.0)':
+  '@uiw/react-md-editor@4.2.3(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@5.5.0)':
     dependencies:
       '@babel/runtime': 7.29.10
       '@uiw/react-markdown-preview': 5.2.1(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@5.5.0)
