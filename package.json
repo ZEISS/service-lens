@@ -70,7 +70,7 @@
     "framer-motion": "^14.11.1",
     "graphql-codegen-typescript-typedefs": "^0.0.10",
     "graphql-request": "^7.4.0",
-    "graphql-ws": "^6.4.1",
+    "graphql-ws": "^6.4.2",
     "input-otp": "^1.5.0",
     "lucide-react": "^1.61.0",
     "next": "^16.4.2",
